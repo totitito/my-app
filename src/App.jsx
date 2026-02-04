@@ -1,0 +1,400 @@
+import { useEffect, useState } from "react";
+
+const games = ["World of Warcraft", "Lost Ark", "AION 2"];
+
+const initialHomeworks = [
+  // 와우 - 반복
+  { id: "wow-raid", game: "World of Warcraft", name: "레이드", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "" },
+  { id: "wow-mythic+", game: "World of Warcraft", name: "쐐기주차", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "" },
+
+  // 로아 - 반복
+  { id: "loa-login", game: "Lost Ark", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
+  { id: "loa-chaos-dungeon", game: "Lost Ark", name: "카오스 던전", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
+  { id: "loa-guardian-raid", game: "Lost Ark", name: "가디언 토벌", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
+  { id: "loa-aufakd", game: "Lost Ark", name: "멸망", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
+  //{ id: "loa-raid1", game: "Lost Ark", name: "레이드1", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
+  //{ id: "loa-raid2", game: "Lost Ark", name: "레이드2", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
+  //{ id: "loa-raid3", game: "Lost Ark", name: "레이드3", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
+
+  // 아이온2 - 반복
+  { id: "aion2-login", game: "AION 2", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-quest", game: "AION 2", name: "사명퀘", max: 5, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-nightmare", game: "AION 2", name: "악몽", max: 14, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 2, resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-odd-energy", game: "AION 2", name: "오드에너지", max: 840, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1 },
+  { id: "aion2-weeklydungeon", game: "AION 2", name: "일일던전", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-awaken", game: "AION 2", name: "각성전", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-weeklyraid", game: "AION 2", name: "토벌전", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-rudra-named", game: "AION 2", name: "루드라 1,2넴", max: 4, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-rudra-boss", game: "AION 2", name: "루드라", max: 2, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-odd-change", game: "AION 2", name: "오드 변환", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "" },
+  { id: "aion2-odd-buy", game: "AION 2", name: "오드 구입", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "" },
+
+  // 아이온2 1회 - 기본
+  { id: "aion2-basic-foundation-quests", game: "AION 2", name: "지역퀘, 봉던, 주둔지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character" },
+  { id: "aion2-achievement-add-friends", game: "AION 2", name: "친추업적", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character" },
+
+  // 아이온2 1회 - 필드보스
+  { id: "aion2-tjWHrdml-zpfmshs", game: "AION 2", name: "서쪽의 케르논", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-ehdWHrdml-spdlzpf", game: "AION 2", name: "동쪽의 네이켈", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-Tjrdms-znxkfm", game: "AION 2", name: "썩은 쿠타르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-aksrogks-zhfls", game: "AION 2", name: "만개한코린", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-guard-tigant", game: "AION 2", name: "호위병 티간트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-berserker-kusan", game: "AION 2", name: "광투사 쿠산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-priest-garsim", game: "AION 2", name: "제사장 가르심", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-scholar-raula", game: "AION 2", name: "학자 라울라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-holy-ansas", game: "AION 2", name: "신성한 안사스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-dream-kassia", game: "AION 2", name: "환몽의 카시아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-chaser-taulo", game: "AION 2", name: "추격자 타울로", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-sentry-knash", game: "AION 2", name: "감시병기 크나쉬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-silent-tartan", game: "AION 2", name: "침묵의 타르탄", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+  { id: "aion2-deceiver-trid", game: "AION 2", name: "[알트가르드] 기만자 트리드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character" },
+
+  // 아이온2 1회 - 날개
+  { id: "aion2-fire-temple", game: "AION 2", name: "불의 신전", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character" },
+  { id: "aion2-horn-cave", game: "AION 2", name: "사나운 뿔 암굴", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character" },
+  { id: "aion2-dramata-nest", game: "AION 2", name: "죽은 드라마타의 둥지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character" },
+
+  // 아이온2 1회 - 명화
+  { id: "aion2-duduka-worker", game: "AION 2", name: "두두카 일꾼", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-shugo-alchemist", game: "AION 2", name: "슈고 연금술사", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-kantas-valley", game: "AION 2", name: "칸타스 계곡", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-verteron-ruin", game: "AION 2", name: "베르테론 요새 폐허", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-elun-mid", game: "AION 2", name: "엘룬강 중류", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-pilgrim-pass", game: "AION 2", name: "순례자의 고갯길", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-elun-swamp", game: "AION 2", name: "엘룬강 늪지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-dawn-base", game: "AION 2", name: "새벽의 레기온 기지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-teina-portrait", game: "AION 2", name: "테이나 초상화", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+  { id: "aion2-shurak", game: "AION 2", name: "슈라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character" },
+];
+
+function App() {
+  const [game, setGame] = useState(games[0]);
+  const [viewMode, setViewMode] = useState("repeat");
+  const [homeworks, setHomeworks] = useState(() => {
+    const saved = localStorage.getItem(`all-homeworks`);
+    return saved ? JSON.parse(saved) : initialHomeworks;
+  });
+
+  const [characters, setCharacters] = useState(() => {
+    const saved = localStorage.getItem(`characters-${games[0]}`);
+    const parsed = saved ? JSON.parse(saved) : [];
+    return parsed.length > 0 ? parsed : ["캐릭터1"];
+  });
+
+  const [accounts, setAccounts] = useState(() => {
+    const saved = localStorage.getItem(`accounts-${games[0]}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    const savedChar = localStorage.getItem(`characters-${game}`);
+    const savedAcc = localStorage.getItem(`accounts-${game}`);
+    setCharacters(savedChar && JSON.parse(savedChar).length > 0 ? JSON.parse(savedChar) : ["캐릭터1"]);
+    setAccounts(savedAcc ? JSON.parse(savedAcc) : []);
+  }, [game]);
+
+  useEffect(() => {
+    localStorage.setItem(`all-homeworks`, JSON.stringify(homeworks));
+    localStorage.setItem(`characters-${game}`, JSON.stringify(characters));
+    localStorage.setItem(`accounts-${game}`, JSON.stringify(accounts));
+  }, [homeworks, characters, accounts, game]);
+
+  const resetProgress = () => {
+    if (window.confirm(`[${game}] 모든 숙제 진행도를 남은 상태(max)로 변경하시겠습니까?`)) {
+      setHomeworks(prev => prev.map(hw => hw.game === game ? { ...hw, counts: {} } : hw));
+    }
+  };
+
+  const resetGameData = () => {
+    if (window.confirm(`[${game}] 캐릭터 명단 및 모든 진행도를 초기화하시겠습니까?`)) {
+      setCharacters(["캐릭터1"]);
+      setAccounts([]);
+      setHomeworks(prev => [
+        ...prev.filter(hw => hw.game !== game),
+        ...initialHomeworks.filter(hw => hw.game === game)
+      ]);
+    }
+  };
+
+  const updateSettings = () => {
+  if (window.confirm("코드의 최신 설정을 반영하시겠습니까? (삭제된 숙제는 제거되며, 진행도는 유지됩니다)")) {
+    setHomeworks(prev => {
+      // 1. 현재 게임에 해당하는 코드상의 최신 숙제들만 가져옴
+      const latestInitial = initialHomeworks.filter(h => h.game === game);
+      
+      // 2. 다른 게임의 숙제들은 그대로 유지
+      const otherGameHomeworks = prev.filter(h => h.game !== game);
+      
+      // 3. 현재 게임의 숙제들을 업데이트
+      const updatedCurrentGame = latestInitial.map(latest => {
+        // 기존에 이미 있던 숙제인지 확인
+        const existing = prev.find(h => h.id === latest.id);
+        if (existing) {
+          // 이름, MAX, 주기 등 설정은 '코드' 기준 / 진행도(counts)는 '기존' 기준
+          return { ...latest, counts: existing.counts, excluded: existing.excluded };
+        }
+        // 아예 새로운 숙제면 코드 설정 그대로 추가
+        return latest;
+      });
+
+      // 4. 사용자가 직접 버튼으로 추가한 '커스텀 숙제'들도 유지하고 싶다면 포함
+      const customHomeworks = prev.filter(h => h.game === game && h.id.startsWith("custom-"));
+
+      return [...otherGameHomeworks, ...updatedCurrentGame, ...customHomeworks];
+    });
+    alert("동기화가 완료되었습니다.");
+  }
+};
+
+  useEffect(() => {
+    const checkReset = () => {
+      const now = new Date();
+      const todayDate = now.toISOString().split('T')[0];
+      const currentDay = now.getDay();
+      const currentHour = now.getHours();
+      setHomeworks(prev => prev.map(hw => {
+        if (hw.resetPeriod === 'once') return hw;
+        let shouldTrigger = false;
+        const period = hw.resetPeriod || 'day';
+        const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
+        if (hw.resetType === 'reset') {
+          if (hw.lastResetDate !== todayDate) {
+            if (period === 'day' && currentHour >= times[0]) shouldTrigger = true;
+            if (period === 'week' && currentDay === (hw.resetDay || 0) && currentHour >= times[0]) shouldTrigger = true;
+          }
+        } else { if (times.includes(currentHour) && hw.lastResetHour !== currentHour) shouldTrigger = true; }
+        if (shouldTrigger) {
+          const newCounts = { ...hw.counts };
+          Object.keys(newCounts).forEach(key => { newCounts[key] = hw.resetType === 'recovery' ? Math.min((newCounts[key] || 0) + (hw.recoveryAmount || 0), hw.max) : hw.max; });
+          return { ...hw, counts: newCounts, lastResetDate: todayDate, lastResetHour: currentHour };
+        }
+        return hw;
+      }));
+    };
+    const timer = setInterval(checkReset, 60000); checkReset(); return () => clearInterval(timer);
+  }, []);
+
+  const btnStyle = { backgroundColor: "#444", color: "#fff", border: "1px solid #666", padding: "4px 8px", cursor: "pointer" };
+
+  const exportData = () => {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const ts = `${String(now.getFullYear()).slice(2)}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    const data = { homeworks, characters, accounts };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url; link.download = `GHW_${ts}.json`; link.click();
+  };
+
+  const importData = (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        if (window.confirm("복구하시겠습니까?")) {
+          setHomeworks(imported.homeworks); setCharacters(imported.characters || []); setAccounts(imported.accounts || []);
+          alert("완료");
+        }
+      } catch (err) { alert("오류"); }
+    };
+    reader.readAsText(file);
+  };
+
+  const addTargetAuto = (scope, dataList, setData) => {
+    const base = scope === "character" ? "캐릭터" : "계정";
+    let i = 1; while (dataList.includes(`${base}${i}`)) i++;
+    setData(prev => [...prev, `${base}${i}`]);
+  };
+
+  const moveTarget = (idx, direction, dataList, setData) => {
+    const newList = [...dataList];
+    const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= newList.length) return;
+    [newList[idx], newList[targetIdx]] = [newList[targetIdx], newList[idx]];
+    setData(newList);
+  };
+
+  const renameTarget = (oldName, idx, dataList, setData) => {
+    const newName = prompt("새 이름을 입력하세요", oldName);
+    if (!newName || oldName === newName) return;
+    if (dataList.includes(newName)) { alert("중복된 이름입니다."); return; }
+
+    const newList = [...dataList];
+    newList[idx] = newName;
+    setData(newList);
+
+    setHomeworks(prev => prev.map(hw => {
+      const newCounts = { ...(hw.counts || {}) };
+      const newExcluded = { ...(hw.excluded || {}) };
+
+      if (Object.prototype.hasOwnProperty.call(newCounts, oldName)) {
+        newCounts[newName] = newCounts[oldName];
+        delete newCounts[oldName];
+      }
+      if (Object.prototype.hasOwnProperty.call(newExcluded, oldName)) {
+        newExcluded[newName] = newExcluded[oldName];
+        delete newExcluded[oldName];
+      }
+
+      return { ...hw, counts: newCounts, excluded: newExcluded };
+    }));
+  };
+
+  const updateCount = (id, targetName, delta) => {
+    setHomeworks(prev => prev.map(hw => {
+      if (hw.id === id) {
+        const current = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
+        let next = typeof delta === 'number' ? current + delta : parseInt(delta) || 0;
+        next = Math.max(0, Math.min(hw.max, next));
+        return { ...hw, counts: { ...(hw.counts || {}), [targetName]: next } };
+      }
+      return hw;
+    }));
+  };
+
+  const toggleExclude = (id, targetName) => {
+    setHomeworks(prev => prev.map(hw => {
+      if (hw.id === id) {
+        const newExcluded = { ...(hw.excluded || {}) };
+        newExcluded[targetName] = !newExcluded[targetName];
+        return { ...hw, excluded: newExcluded };
+      }
+      return hw;
+    }));
+  };
+
+  const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
+  const renderTable = (title, scope, dataList, setData) => {
+    const filteredHws = homeworks.filter(hw => hw.game === game && hw.scope === scope && (viewMode === "once" ? hw.resetPeriod === "once" : hw.resetPeriod !== "once"));
+    
+    // Once 모드용 카테고리 분류
+    const onceBasic = filteredHws.filter(hw => hw.category === "기본");
+    const onceBoss = filteredHws.filter(hw => hw.category === "필드보스");
+    const onceWing = filteredHws.filter(hw => hw.category === "날개");
+    const onceArt = filteredHws.filter(hw => hw.category === "명화");
+    const onceEtc = filteredHws.filter(hw => hw.resetPeriod === "once" && !hw.category);
+
+    // 일반 반복 모드용 분류
+    const dailyHws = filteredHws.filter(hw => hw.resetPeriod === "day" && hw.id !== "aion2-odd-energy");
+    const etcHws = filteredHws.filter(hw => hw.id === "aion2-odd-energy");
+    const weeklyHws = filteredHws.filter(hw => hw.resetPeriod === "week");
+
+    const allFiltered = viewMode === "once" 
+      ? [...onceBasic, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc]
+      : [...dailyHws, ...etcHws, ...weeklyHws];
+
+    return (
+      <div style={{ overflowX: "auto", width: "100%", marginTop: "30px" }}>
+        <h3 style={{ marginBottom: "10px" }}>{title}</h3>
+        <table border="1" style={{ borderCollapse: "collapse", borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
+          <thead>
+            <tr style={{ backgroundColor: "#333" }}>
+              <th style={{ width: "140px", padding: "8px" }}>구분</th>
+              {viewMode === "once" ? (
+                <>
+                  {onceBoss.length > 0 && <th colSpan={onceBasic.length} style={{ padding: "8px" }}>기본</th>}
+                  {onceBoss.length > 0 && <th colSpan={onceBoss.length} style={{ padding: "8px" }}>필드보스</th>}
+                  {onceWing.length > 0 && <th colSpan={onceWing.length} style={{ padding: "8px" }}>날개</th>}
+                  {onceArt.length > 0 && <th colSpan={onceArt.length} style={{ padding: "8px" }}>명화</th>}
+                  {onceEtc.length > 0 && <th colSpan={onceEtc.length} style={{ padding: "8px" }}>기타</th>}
+                </>
+              ) : (
+                <>
+                  {dailyHws.length > 0 && <th colSpan={dailyHws.length} style={{ padding: "8px" }}>Daily</th>}
+                  {etcHws.length > 0 && <th colSpan={etcHws.length} style={{ padding: "8px" }}>etc</th>}
+                  {weeklyHws.length > 0 && <th colSpan={weeklyHws.length} style={{ padding: "8px" }}>Weekly</th>}
+                </>
+              )}
+            </tr>
+            <tr style={{ backgroundColor: "#333" }}>
+              <th style={{ padding: "10px" }}>이름</th>
+              {allFiltered.map(hw => (
+                <th key={hw.id} style={{ padding: "10px" }}>
+                  <div style={{ fontWeight: "bold", marginBottom: viewMode === "once" ? "0" : "4px" }}>{hw.name}</div>
+                  {viewMode !== "once" && (
+                    <div style={{ fontSize: "10px", color: "#bbb" }}>
+                      {hw.id === "aion2-odd-energy" ? "매 3시간 +15" : 
+                       (hw.resetType === 'recovery' ? `매일 05시 +${hw.recoveryAmount}` : 
+                       `${hw.resetPeriod === 'week' ? dayMap[hw.resetDay] : '매일'} ${String(Array.isArray(hw.resetTime)?hw.resetTime[0]:hw.resetTime).padStart(2,'0')}시`)}
+                    </div>
+                  )}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {/* 데이터 행 렌더링 (기존과 동일) */}
+            {dataList.map((targetName, idx) => (
+              <tr key={idx}>
+                <td style={{ textAlign: "center", padding: "10px" }}>
+                  <div style={{ display: "flex", justifyContent: "center", gap: "5px", marginBottom: "5px" }}>
+                    <button style={btnStyle} onClick={() => moveTarget(idx, "up", dataList, setData)}>▲</button>
+                    <button style={btnStyle} onClick={() => moveTarget(idx, "down", dataList, setData)}>▼</button>
+                  </div>
+                  <div style={{ fontWeight: "bold", marginBottom: "5px" }}>{targetName}</div>
+                  <div style={{ display: "flex", justifyContent: "center", gap: "5px" }}>
+                    <button style={btnStyle} onClick={() => renameTarget(targetName, idx, dataList, setData)}>변경</button>
+                    <button style={{ ...btnStyle, color: "#ff8888" }} onClick={() => setData(dataList.filter((_, i) => i !== idx))}>삭제</button>
+                  </div>
+                </td>
+                {allFiltered.map(hw => {
+                  const val = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
+                  const isExcluded = !!(hw.excluded && hw.excluded[targetName]);
+                  const isPending = val > 0 && !isExcluded;
+                  return (
+                    <td key={`${idx}-${hw.id}`} style={{ 
+                      textAlign: "center", padding: "10px", 
+                      backgroundColor: isPending ? "#4b4b20" : "transparent",
+                      position: "relative"
+                    }}>
+                      <div style={{ position: "absolute", top: "2px", right: "2px" }}>
+                        <input type="checkbox" checked={isExcluded} onChange={() => toggleExclude(hw.id, targetName)} />
+                      </div>
+                      {!isExcluded ? (
+                        <>
+                          <button style={btnStyle} onClick={() => updateCount(hw.id, targetName, -1)}>-</button>
+                          <input type="number" value={val} onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
+                            style={{ width: "45px", textAlign: "center", margin: "0 5px", backgroundColor: "#222", color: "#fff", border: "1px solid #444" }} />
+                          <span style={{ color: isPending ? "#ccc" : "#888" }}>/ {hw.max}</span>
+                          <button style={btnStyle} onClick={() => updateCount(hw.id, targetName, 1)}>+</button>
+                        </>
+                      ) : <div style={{ color: "#555", fontSize: "12px" }}>제외됨</div>}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
+      <h1>GHW</h1>
+      <div style={{ marginBottom: "20px" }}>
+        {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
+      </div>
+      <div style={{ marginBottom: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+        <button onClick={() => setViewMode(viewMode === "repeat" ? "once" : "repeat")} 
+                style={{ ...btnStyle, backgroundColor: "#333", fontWeight: "bold", border: "1px solid #777" }}>
+          모드: {viewMode === "repeat" ? "반복" : "1회성"}
+        </button>
+        <button onClick={exportData} style={{ ...btnStyle, backgroundColor: "#004080" }}>내보내기</button>
+        <label style={{ ...btnStyle, backgroundColor: "#1a5e20" }}>가져오기<input type="file" accept=".json" onChange={importData} style={{ display: "none" }} /></label>
+        <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>설정 업데이트</button>
+        <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button>
+        <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
+      </div>
+      {renderTable("계정별", "account", accounts, setAccounts)}
+      <button onClick={() => addTargetAuto("account", accounts, setAccounts)} style={{ ...btnStyle, marginTop: "10px", padding: "10px" }}>+ 계정 추가</button>
+      {renderTable("캐릭터별", "character", characters, setCharacters)}
+      <button onClick={() => addTargetAuto("character", characters, setCharacters)} style={{ ...btnStyle, marginTop: "10px", padding: "10px" }}>+ 캐릭터 추가</button>
+    </div>
+  );
+}
+
+export default App;
