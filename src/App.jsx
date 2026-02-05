@@ -201,7 +201,7 @@ function App() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `GHW_FULL_${ts}.json`;
+    link.download = `GHW_${ts}.json`;
     link.click();
   };
 
