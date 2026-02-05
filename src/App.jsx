@@ -170,20 +170,35 @@ function App() {
 
           targets.forEach(name => {
             const lastCellUpdate = hw.lastUpdated?.[name] || 0;
+            
+            // 기준 시각 설정 (배열일 경우 현재 시간보다 작거나 같은 마지막 시간 찾기)
+            const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
+            const lastTargetHour = [...times].reverse().find(t => now.getHours() >= t) ?? times[0];
+            
             const resetPoint = new Date();
-            resetPoint.setHours(resetHour, 0, 0, 0);
+            resetPoint.setHours(lastTargetHour, 0, 0, 0);
 
             if (hw.resetPeriod === 'week') {
               const diff = (now.getDay() - hw.resetDay + 7) % 7;
               resetPoint.setDate(now.getDate() - diff);
             }
 
-            // 마지막 수정이 리셋 기준 시각보다 옛날이면 리셋 실행
+            // 마지막 수정이 리셋/회복 기준 시각보다 옛날이라면 실행
             if (lastCellUpdate < resetPoint.getTime()) {
+              // 1. 리셋형 (로아 등)
               if (hw.resetType === 'reset' && (newCounts[name] === undefined || newCounts[name] !== hw.max)) {
                 newCounts[name] = hw.max;
-                newLastUpdated[name] = currentTime; // 리셋된 시점 기록
+                newLastUpdated[name] = currentTime;
                 hwChanged = true;
+              }
+              // 2. 회복형 (오드에너지 등) ★ 이 부분이 추가됨
+              else if (hw.resetType === 'recovery') {
+                const currentVal = newCounts[name] !== undefined ? newCounts[name] : hw.max;
+                if (currentVal < hw.max) {
+                  newCounts[name] = Math.min(currentVal + (hw.recoveryAmount || 0), hw.max);
+                  newLastUpdated[name] = currentTime;
+                  hwChanged = true;
+                }
               }
             }
           });
