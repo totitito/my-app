@@ -154,49 +154,45 @@ function App() {
     const checkReset = () => {
       const now = new Date();
       const todayDate = now.toISOString().split('T')[0];
-      const currentDay = now.getDay();
       const currentHour = now.getHours();
+      const currentDay = now.getDay();
 
       setHomeworks(prev => prev.map(hw => {
         if (hw.resetPeriod === 'once') return hw;
 
-        // 변수 정의 (이게 빠져서 에러 났던 거다)
-        const period = hw.resetPeriod || 'day';
         const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
-        const isResetTime = currentHour >= times[0]; 
-        const isDifferentDate = hw.lastResetDate !== todayDate;
-
-        let shouldTrigger = false;
-
-        // 1. 일반 리셋 로직 (일간/주간)
+        
+        // 1. 리셋형 (로아, 아이온2 일일/주간)
         if (hw.resetType === 'reset') {
-          if (period === 'day' && isDifferentDate && isResetTime) shouldTrigger = true;
-          if (period === 'week' && isDifferentDate && currentDay === hw.resetDay && isResetTime) shouldTrigger = true;
-        } 
-        // 2. 회복 로직 (오드에너지 등)
-        else if (hw.resetType === 'recovery') {
-          if (times.includes(currentHour) && hw.lastResetHour !== currentHour) {
-            shouldTrigger = true;
+          const isResetTime = currentHour >= times[0];
+          const isDifferentDate = hw.lastResetDate !== todayDate;
+          
+          let shouldReset = false;
+          if (hw.resetPeriod === 'day') {
+            shouldReset = isDifferentDate && isResetTime;
+          } else if (hw.resetPeriod === 'week') {
+            shouldReset = isDifferentDate && currentDay === hw.resetDay && isResetTime;
+          }
+
+          if (shouldReset) {
+            return { ...hw, counts: {}, lastResetDate: todayDate };
           }
         }
 
-        if (shouldTrigger) {
-          const newCounts = { ...hw.counts };
-          
-          if (hw.resetType === 'recovery') {
-            // 회복형: 기존 값에 추가
-            Object.keys(newCounts).forEach(key => {
-              newCounts[key] = Math.min((newCounts[key] || 0) + (hw.recoveryAmount || 0), hw.max);
+        // 2. 회복형 (오드에너지, 악몽)
+        if (hw.resetType === 'recovery') {
+          // 현재 시간이 리셋 타임 배열에 포함되어 있고, 그 시간에 리셋한 기록이 없으면 실행
+          if (times.includes(currentHour) && hw.lastResetHour !== currentHour) {
+            const newCounts = { ...hw.counts };
+            const targets = hw.scope === "account" ? accounts : characters;
+            
+            targets.forEach(name => {
+              const currentVal = newCounts[name] !== undefined ? newCounts[name] : hw.max;
+              newCounts[name] = Math.min(currentVal + (hw.recoveryAmount || 0), hw.max);
             });
-          } else {
-            // 리셋형: max로 초기화
-            Object.keys(newCounts).forEach(key => {
-              newCounts[key] = hw.max;
-            });
+            
+            return { ...hw, counts: newCounts, lastResetHour: currentHour, lastResetDate: todayDate };
           }
-
-          // 날짜와 시간을 업데이트해서 무한 리셋 방지
-          return { ...hw, counts: newCounts, lastResetDate: todayDate, lastResetHour: currentHour };
         }
 
         return hw;
@@ -450,7 +446,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:00</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:19</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
