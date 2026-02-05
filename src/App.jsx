@@ -157,23 +157,32 @@ function App() {
       const currentDay = now.getDay();
       const currentHour = now.getHours();
       setHomeworks(prev => prev.map(hw => {
-        if (hw.resetPeriod === 'once') return hw;
-        let shouldTrigger = false;
-        const period = hw.resetPeriod || 'day';
-        const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
-        if (hw.resetType === 'reset') {
-          if (hw.lastResetDate !== todayDate) {
-            if (period === 'day' && currentHour >= times[0]) shouldTrigger = true;
-            if (period === 'week' && currentDay === (hw.resetDay || 0) && currentHour >= times[0]) shouldTrigger = true;
-          }
-        } else { if (times.includes(currentHour) && hw.lastResetHour !== currentHour) shouldTrigger = true; }
-        if (shouldTrigger) {
-          const newCounts = { ...hw.counts };
-          Object.keys(newCounts).forEach(key => { newCounts[key] = hw.resetType === 'recovery' ? Math.min((newCounts[key] || 0) + (hw.recoveryAmount || 0), hw.max) : hw.max; });
-          return { ...hw, counts: newCounts, lastResetDate: todayDate, lastResetHour: currentHour };
-        }
-        return hw;
-      }));
+        if (hw.resetPeriod === 'once') return hw;
+
+        const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
+        const isResetTime = currentHour >= times[0]; // 리셋 시간이 지났는가?
+        const isDifferentDate = hw.lastResetDate !== todayDate; // 마지막 리셋이 오늘이 아닌가?
+
+        let shouldTrigger = false;
+        
+        if (hw.resetType === 'reset') {
+            if (period === 'day' && isDifferentDate && isResetTime) shouldTrigger = true;
+            if (period === 'week' && isDifferentDate && currentDay === hw.resetDay && isResetTime) shouldTrigger = true;
+        }
+
+        if (shouldTrigger) {
+            const newCounts = { ...hw.counts };
+            // 진행도 갱신
+            Object.keys(newCounts).forEach(key => {
+            newCounts[key] = hw.max; 
+            });
+            
+            // 핵심: 리셋을 실행함과 동시에 날짜를 오늘로 박아서 봉인한다.
+            return { ...hw, counts: newCounts, lastResetDate: todayDate };
+        }
+        
+        return hw;
+        }));
     };
     const timer = setInterval(checkReset, 60000); checkReset(); return () => clearInterval(timer);
   }, []);
@@ -420,7 +429,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 15:47</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:00</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
