@@ -10,6 +10,10 @@ const initialHomeworks = [
   // 로아 - 반복 - 계정
   { id: "loa-login", game: "Lost Ark", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "account", lastResetDate: "" },
   { id: "loa-manage-domain", game: "Lost Ark", name: "영지관리", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "account", lastResetDate: "" },
+  { id: "loa-weekly-gem-buy-pa", game: "Lost Ark", name: "보석교환(파푸니카)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, scope: "account", lastResetDate: "" },
+  { id: "loa-weekly-gem-buy-bol", game: "Lost Ark", name: "보석교환(볼다이크)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, scope: "account", lastResetDate: "" },
+  { id: "loa-weekly-gem-buy-ku", game: "Lost Ark", name: "보석교환(쿠르잔)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, scope: "account", lastResetDate: "" },
+  { id: "loa-weekly-gem-buy-rim", game: "Lost Ark", name: "보석교환(림레이크)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, scope: "account", lastResetDate: "" },
   // 로아 - 반복 - 캐릭터
   { id: "loa-daily-guild-login", game: "Lost Ark", name: "길드 기부", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
   { id: "loa-chaos-dungeon", game: "Lost Ark", name: "카오스 던전", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
@@ -417,7 +421,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 15:17</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 15:47</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
