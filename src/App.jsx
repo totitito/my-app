@@ -19,9 +19,8 @@ const initialHomeworks = [
   { id: "loa-chaos-dungeon", game: "Lost Ark", name: "카오스 던전", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
   { id: "loa-guardian-raid", game: "Lost Ark", name: "가디언 토벌", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
   { id: "loa-aufakd", game: "Lost Ark", name: "멸망", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
-  //{ id: "loa-raid1", game: "Lost Ark", name: "레이드1", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
-  //{ id: "loa-raid2", game: "Lost Ark", name: "레이드2", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
-  //{ id: "loa-raid3", game: "Lost Ark", name: "레이드3", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
+  { id: "loa-clear-medal-exchange", game: "Lost Ark", name: "메달교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
+  { id: "loa-guild-pint-exchange", game: "Lost Ark", name: "혈석교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
 
   // 아이온2 - 반복 - Daily
   { id: "aion2-login", game: "AION 2", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "" },
