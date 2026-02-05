@@ -21,6 +21,8 @@ const initialHomeworks = [
   { id: "loa-aufakd", game: "Lost Ark", name: "멸망", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
   { id: "loa-clear-medal-exchange", game: "Lost Ark", name: "메달교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
   { id: "loa-guild-pint-exchange", game: "Lost Ark", name: "혈석교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
+  // 로아 - 업적 - 스토리
+  { id: "loa-archievement-story-RL_S", game: "Lost Ark", name: "림레이크 남섬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "스토리", scope: "character" },
 
   // 아이온2 - 반복 - Daily
   { id: "aion2-login", game: "AION 2", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "" },
@@ -343,11 +345,13 @@ function App() {
   };
 
   const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
+
   const renderTable = (title, scope, dataList, setData) => {
     const filteredHws = homeworks.filter(hw => hw.game === game && hw.scope === scope && (viewMode === "once" ? hw.resetPeriod === "once" : hw.resetPeriod !== "once"));
     
     // Once 모드용 카테고리 분류
     const onceBasic = filteredHws.filter(hw => hw.category === "기본");
+    const onceStory = filteredHws.filter(hw => hw.category === "스토리");
     const onceBoss = filteredHws.filter(hw => hw.category === "필드보스");
     const onceWing = filteredHws.filter(hw => hw.category === "날개");
     const onceArt = filteredHws.filter(hw => hw.category === "명화");
@@ -359,7 +363,7 @@ function App() {
     const weeklyHws = filteredHws.filter(hw => hw.resetPeriod === "week");
 
     const allFiltered = viewMode === "once" 
-      ? [...onceBasic, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc]
+      ? [...onceBasic, ...onceStory, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc]
       : [...dailyHws, ...etcHws, ...weeklyHws];
 
     return (
@@ -372,6 +376,7 @@ function App() {
               {viewMode === "once" ? (
                 <>
                   {onceBoss.length > 0 && <th colSpan={onceBasic.length} style={{ padding: "8px" }}>기본</th>}
+                  {onceStory.length > 0 && <th colSpan={onceStory.length} style={{ padding: "8px" }}>스토리</th>}
                   {onceBoss.length > 0 && <th colSpan={onceBoss.length} style={{ padding: "8px" }}>필드보스</th>}
                   {onceWing.length > 0 && <th colSpan={onceWing.length} style={{ padding: "8px" }}>날개</th>}
                   {onceArt.length > 0 && <th colSpan={onceArt.length} style={{ padding: "8px" }}>명화</th>}
@@ -452,7 +457,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:26</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:37</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
