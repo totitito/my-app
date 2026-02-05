@@ -155,62 +155,55 @@ function App() {
   useEffect(() => {
     const checkReset = () => {
       const now = new Date();
-      const todayDate = now.toISOString().split('T')[0];
-      const currentHour = now.getHours();
-      const currentDay = now.getDay();
+      const currentTime = now.getTime();
+      let changed = false;
 
-      setHomeworks(prev => prev.map(hw => {
-        if (hw.resetPeriod === 'once') return hw;
+      setHomeworks(prev => {
+        const next = prev.map(hw => {
+          if (hw.resetPeriod === 'once') return hw;
 
-        const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
-        
-        // 1. 리셋형 (로아, 아이온2 일일/주간)
-        if (hw.resetType === 'reset') {
-          const isResetTime = currentHour >= times[0];
-          const isDifferentDate = hw.lastResetDate !== todayDate;
-          
-          let shouldReset = false;
-          if (hw.resetPeriod === 'day') {
-            shouldReset = isDifferentDate && isResetTime;
-          } else if (hw.resetPeriod === 'week') {
-            shouldReset = isDifferentDate && currentDay === hw.resetDay && isResetTime;
-          }
+          const resetHour = Array.isArray(hw.resetTime) ? hw.resetTime[0] : (hw.resetTime || 0);
+          const targets = hw.scope === "account" ? accounts : characters;
+          const newCounts = { ...hw.counts };
+          const newLastUpdated = { ...hw.lastUpdated };
+          let hwChanged = false;
 
-          if (shouldReset) {
-            return { ...hw, counts: {}, lastResetDate: todayDate };
-          }
+          targets.forEach(name => {
+            const lastCellUpdate = hw.lastUpdated?.[name] || 0;
+            const resetPoint = new Date();
+            resetPoint.setHours(resetHour, 0, 0, 0);
 
-          // ★ 이 부분이 핵심: 리셋 조건은 아니지만 날짜가 다른 경우(예: 리셋 시간 전)
-          // 오늘 날짜를 박아줌으로써 리셋 포인트가 되기 전까지는 계속 리셋을 시도하지 않게 함
-          if (isDifferentDate) {
-            return { ...hw, lastResetDate: todayDate };
-          }
+            if (hw.resetPeriod === 'week') {
+              const diff = (now.getDay() - hw.resetDay + 7) % 7;
+              resetPoint.setDate(now.getDate() - diff);
+            }
+
+            // 마지막 수정이 리셋 기준 시각보다 옛날이면 리셋 실행
+            if (lastCellUpdate < resetPoint.getTime()) {
+              if (hw.resetType === 'reset' && (newCounts[name] === undefined || newCounts[name] !== hw.max)) {
+                newCounts[name] = hw.max;
+                newLastUpdated[name] = currentTime; // 리셋된 시점 기록
+                hwChanged = true;
+              }
+            }
+          });
+
+          return hwChanged ? { ...hw, counts: newCounts, lastUpdated: newLastUpdated } : hw;
+        });
+
+        // 변경사항이 있을 때만 리턴하여 무한 루프 방지 및 즉시 저장
+        if (JSON.stringify(prev) !== JSON.stringify(next)) {
+          changed = true;
+          return next;
         }
-
-        // 2. 회복형 (오드에너지, 악몽)
-        if (hw.resetType === 'recovery') {
-          // 현재 시간이 리셋 타임 배열에 포함되어 있고, 그 시간에 리셋한 기록이 없으면 실행
-          if (times.includes(currentHour) && hw.lastResetHour !== currentHour) {
-            const newCounts = { ...hw.counts };
-            const targets = hw.scope === "account" ? accounts : characters;
-            
-            targets.forEach(name => {
-              const currentVal = newCounts[name] !== undefined ? newCounts[name] : hw.max;
-              newCounts[name] = Math.min(currentVal + (hw.recoveryAmount || 0), hw.max);
-            });
-            
-            return { ...hw, counts: newCounts, lastResetHour: currentHour, lastResetDate: todayDate };
-          }
-        }
-
-        return hw;
-      }));
+        return prev;
+      });
     };
 
     const timer = setInterval(checkReset, 60000);
     checkReset();
     return () => clearInterval(timer);
-  }, []);
+  }, [accounts, characters]); // 의존성 확인 필수
 
   const btnStyle = { backgroundColor: "#444", color: "#fff", border: "1px solid #666", padding: "4px 8px", cursor: "pointer" };
 
@@ -322,16 +315,22 @@ function App() {
   };
 
   const updateCount = (id, targetName, delta) => {
-    setHomeworks(prev => prev.map(hw => {
-      if (hw.id === id) {
-        const current = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
-        let next = typeof delta === 'number' ? current + delta : parseInt(delta) || 0;
-        next = Math.max(0, Math.min(hw.max, next));
-        return { ...hw, counts: { ...(hw.counts || {}), [targetName]: next } };
-      }
-      return hw;
-    }));
-  };
+    setHomeworks(prev => prev.map(hw => {
+      if (hw.id === id) {
+        const current = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
+        let next = typeof delta === 'number' ? current + delta : parseInt(delta) || 0;
+        next = Math.max(0, Math.min(hw.max, next));
+
+        return { 
+          ...hw, 
+          counts: { ...(hw.counts || {}), [targetName]: next },
+          // 셀별(숙제+대상) 마지막 수정 시간 기록 (직접 입력 포함)
+          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: new Date().getTime() } 
+        };
+      }
+      return hw;
+    }));
+  };
 
   const toggleExclude = (id, targetName) => {
     setHomeworks(prev => prev.map(hw => {
@@ -457,7 +456,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:37</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:59</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
