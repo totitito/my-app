@@ -177,6 +177,12 @@ function App() {
           if (shouldReset) {
             return { ...hw, counts: {}, lastResetDate: todayDate };
           }
+
+          // ★ 이 부분이 핵심: 리셋 조건은 아니지만 날짜가 다른 경우(예: 리셋 시간 전)
+          // 오늘 날짜를 박아줌으로써 리셋 포인트가 되기 전까지는 계속 리셋을 시도하지 않게 함
+          if (isDifferentDate) {
+            return { ...hw, lastResetDate: todayDate };
+          }
         }
 
         // 2. 회복형 (오드에너지, 악몽)
@@ -446,7 +452,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:19</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 16:26</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
