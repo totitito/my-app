@@ -151,41 +151,62 @@ function App() {
 };
 
   useEffect(() => {
-    const checkReset = () => {
-      const now = new Date();
-      const todayDate = now.toISOString().split('T')[0];
-      const currentDay = now.getDay();
-      const currentHour = now.getHours();
-      setHomeworks(prev => prev.map(hw => {
+    const checkReset = () => {
+      const now = new Date();
+      const todayDate = now.toISOString().split('T')[0];
+      const currentDay = now.getDay();
+      const currentHour = now.getHours();
+
+      setHomeworks(prev => prev.map(hw => {
         if (hw.resetPeriod === 'once') return hw;
 
+        // 변수 정의 (이게 빠져서 에러 났던 거다)
+        const period = hw.resetPeriod || 'day';
         const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
-        const isResetTime = currentHour >= times[0]; // 리셋 시간이 지났는가?
-        const isDifferentDate = hw.lastResetDate !== todayDate; // 마지막 리셋이 오늘이 아닌가?
+        const isResetTime = currentHour >= times[0]; 
+        const isDifferentDate = hw.lastResetDate !== todayDate;
 
         let shouldTrigger = false;
-        
+
+        // 1. 일반 리셋 로직 (일간/주간)
         if (hw.resetType === 'reset') {
-            if (period === 'day' && isDifferentDate && isResetTime) shouldTrigger = true;
-            if (period === 'week' && isDifferentDate && currentDay === hw.resetDay && isResetTime) shouldTrigger = true;
+          if (period === 'day' && isDifferentDate && isResetTime) shouldTrigger = true;
+          if (period === 'week' && isDifferentDate && currentDay === hw.resetDay && isResetTime) shouldTrigger = true;
+        } 
+        // 2. 회복 로직 (오드에너지 등)
+        else if (hw.resetType === 'recovery') {
+          if (times.includes(currentHour) && hw.lastResetHour !== currentHour) {
+            shouldTrigger = true;
+          }
         }
 
         if (shouldTrigger) {
-            const newCounts = { ...hw.counts };
-            // 진행도 갱신
+          const newCounts = { ...hw.counts };
+          
+          if (hw.resetType === 'recovery') {
+            // 회복형: 기존 값에 추가
             Object.keys(newCounts).forEach(key => {
-            newCounts[key] = hw.max; 
+              newCounts[key] = Math.min((newCounts[key] || 0) + (hw.recoveryAmount || 0), hw.max);
             });
-            
-            // 핵심: 리셋을 실행함과 동시에 날짜를 오늘로 박아서 봉인한다.
-            return { ...hw, counts: newCounts, lastResetDate: todayDate };
+          } else {
+            // 리셋형: max로 초기화
+            Object.keys(newCounts).forEach(key => {
+              newCounts[key] = hw.max;
+            });
+          }
+
+          // 날짜와 시간을 업데이트해서 무한 리셋 방지
+          return { ...hw, counts: newCounts, lastResetDate: todayDate, lastResetHour: currentHour };
         }
-        
+
         return hw;
-        }));
-    };
-    const timer = setInterval(checkReset, 60000); checkReset(); return () => clearInterval(timer);
-  }, []);
+      }));
+    };
+
+    const timer = setInterval(checkReset, 60000);
+    checkReset();
+    return () => clearInterval(timer);
+  }, []);
 
   const btnStyle = { backgroundColor: "#444", color: "#fff", border: "1px solid #666", padding: "4px 8px", cursor: "pointer" };
 
