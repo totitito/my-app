@@ -123,34 +123,34 @@ function App() {
   };
 
   const updateSettings = () => {
-  if (window.confirm("코드의 최신 설정을 반영하시겠습니까? (삭제된 숙제는 제거되며, 진행도는 유지됩니다)")) {
-    setHomeworks(prev => {
-      // 1. 현재 게임에 해당하는 코드상의 최신 숙제들만 가져옴
-      const latestInitial = initialHomeworks.filter(h => h.game === game);
-      
-      // 2. 다른 게임의 숙제들은 그대로 유지
-      const otherGameHomeworks = prev.filter(h => h.game !== game);
-      
-      // 3. 현재 게임의 숙제들을 업데이트
-      const updatedCurrentGame = latestInitial.map(latest => {
-        // 기존에 이미 있던 숙제인지 확인
-        const existing = prev.find(h => h.id === latest.id);
-        if (existing) {
-          // 이름, MAX, 주기 등 설정은 '코드' 기준 / 진행도(counts)는 '기존' 기준
-          return { ...latest, counts: existing.counts, excluded: existing.excluded };
-        }
-        // 아예 새로운 숙제면 코드 설정 그대로 추가
-        return latest;
-      });
+    if (window.confirm("코드의 최신 설정을 반영하시겠습니까? (삭제된 숙제는 제거되며, 진행도는 유지됩니다)")) {
+      setHomeworks(prev => {
+        // 1. 현재 게임에 해당하는 코드상의 최신 숙제들만 가져옴
+        const latestInitial = initialHomeworks.filter(h => h.game === game);
+        
+        // 2. 다른 게임의 숙제들은 그대로 유지
+        const otherGameHomeworks = prev.filter(h => h.game !== game);
+        
+        // 3. 현재 게임의 숙제들을 업데이트
+        const updatedCurrentGame = latestInitial.map(latest => {
+          // 기존에 이미 있던 숙제인지 확인
+          const existing = prev.find(h => h.id === latest.id);
+          if (existing) {
+            // 이름, MAX, 주기 등 설정은 '코드' 기준 / 진행도(counts)는 '기존' 기준
+            return { ...latest, counts: existing.counts, excluded: existing.excluded };
+          }
+          // 아예 새로운 숙제면 코드 설정 그대로 추가
+          return latest;
+        });
 
-      // 4. 사용자가 직접 버튼으로 추가한 '커스텀 숙제'들도 유지하고 싶다면 포함
-      const customHomeworks = prev.filter(h => h.game === game && h.id.startsWith("custom-"));
+        // 4. 사용자가 직접 버튼으로 추가한 '커스텀 숙제'들도 유지하고 싶다면 포함
+        const customHomeworks = prev.filter(h => h.game === game && h.id.startsWith("custom-"));
 
-      return [...otherGameHomeworks, ...updatedCurrentGame, ...customHomeworks];
-    });
-    alert("동기화가 완료되었습니다.");
-  }
-};
+        return [...otherGameHomeworks, ...updatedCurrentGame, ...customHomeworks];
+      });
+      alert("동기화가 완료되었습니다.");
+    }
+  };
 
   useEffect(() => {
     const checkReset = () => {
@@ -162,43 +162,49 @@ function App() {
         const next = prev.map(hw => {
           if (hw.resetPeriod === 'once') return hw;
 
-          const resetHour = Array.isArray(hw.resetTime) ? hw.resetTime[0] : (hw.resetTime || 0);
           const targets = hw.scope === "account" ? accounts : characters;
           const newCounts = { ...hw.counts };
-          const newLastUpdated = { ...hw.lastUpdated };
+          const newLastUpdated = { ...(hw.lastUpdated || {}) };
           let hwChanged = false;
 
+          // 1. 기준 시각(resetPoint) 계산
+          const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
+          // 내림차순 정렬하여 현재 시간보다 작거나 같은 가장 최근 시간 추출
+          const lastTargetHour = [...times].sort((a, b) => b - a).find(t => now.getHours() >= t) ?? times[0];
+          
+          const resetPoint = new Date(now);
+          resetPoint.setHours(lastTargetHour, 0, 0, 0);
+
+          if (hw.resetPeriod === 'week') {
+            const diff = (now.getDay() - hw.resetDay + 7) % 7;
+            resetPoint.setDate(now.getDate() - diff);
+          } 
+          // 일일 리셋인데 현재 시간이 첫 리셋 시간보다 전이면 기준점을 어제로 변경
+          else if (now.getHours() < Math.min(...times)) {
+            resetPoint.setDate(now.getDate() - 1);
+          }
+
           targets.forEach(name => {
-            const lastCellUpdate = hw.lastUpdated?.[name] || 0;
+            const lastCellUpdate = newLastUpdated[name] || 0;
             
-            // 기준 시각 설정 (배열일 경우 현재 시간보다 작거나 같은 마지막 시간 찾기)
-            const times = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
-            const lastTargetHour = [...times].reverse().find(t => now.getHours() >= t) ?? times[0];
-            
-            const resetPoint = new Date();
-            resetPoint.setHours(lastTargetHour, 0, 0, 0);
-
-            if (hw.resetPeriod === 'week') {
-              const diff = (now.getDay() - hw.resetDay + 7) % 7;
-              resetPoint.setDate(now.getDate() - diff);
-            }
-
-            // 마지막 수정이 리셋/회복 기준 시각보다 옛날이라면 실행
+            // 2. 마지막 수정이 리셋 기준점보다 옛날인지 체크
             if (lastCellUpdate < resetPoint.getTime()) {
-              // 1. 리셋형 (로아 등)
-              if (hw.resetType === 'reset' && (newCounts[name] === undefined || newCounts[name] !== hw.max)) {
-                newCounts[name] = hw.max;
-                newLastUpdated[name] = currentTime;
+              // 리셋형 (로아 등)
+              if (hw.resetType === 'reset') {
+                if (newCounts[name] !== hw.max) {
+                  newCounts[name] = hw.max;
+                }
+                newLastUpdated[name] = currentTime; // 무조건 도장 찍기
                 hwChanged = true;
               }
-              // 2. 회복형 (오드에너지 등) ★ 이 부분이 추가됨
+              // 회복형 (오드에너지 등)
               else if (hw.resetType === 'recovery') {
                 const currentVal = newCounts[name] !== undefined ? newCounts[name] : hw.max;
                 if (currentVal < hw.max) {
                   newCounts[name] = Math.min(currentVal + (hw.recoveryAmount || 0), hw.max);
-                  newLastUpdated[name] = currentTime;
-                  hwChanged = true;
                 }
+                newLastUpdated[name] = currentTime; // 무조건 도장 찍기
+                hwChanged = true;
               }
             }
           });
@@ -206,7 +212,6 @@ function App() {
           return hwChanged ? { ...hw, counts: newCounts, lastUpdated: newLastUpdated } : hw;
         });
 
-        // 변경사항이 있을 때만 리턴하여 무한 루프 방지 및 즉시 저장
         if (JSON.stringify(prev) !== JSON.stringify(next)) {
           changed = true;
           return next;
@@ -218,7 +223,7 @@ function App() {
     const timer = setInterval(checkReset, 60000);
     checkReset();
     return () => clearInterval(timer);
-  }, [accounts, characters]); // 의존성 확인 필수
+  }, [accounts, characters]);
 
   const btnStyle = { backgroundColor: "#444", color: "#fff", border: "1px solid #666", padding: "4px 8px", cursor: "pointer" };
 
@@ -339,7 +344,7 @@ function App() {
         return { 
           ...hw, 
           counts: { ...(hw.counts || {}), [targetName]: next },
-          // 셀별(숙제+대상) 마지막 수정 시간 기록 (직접 입력 포함)
+          // ★ 수동 수정 시 현재 시간을 밀리초 단위로 정확히 기록
           lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: new Date().getTime() } 
         };
       }
@@ -471,7 +476,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 19:37</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 23:49</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
