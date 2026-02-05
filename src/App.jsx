@@ -7,9 +7,10 @@ const initialHomeworks = [
   { id: "wow-raid", game: "World of Warcraft", name: "레이드", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "" },
   { id: "wow-mythic+", game: "World of Warcraft", name: "쐐기주차", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "" },
 
-  // 로아 - 반복
+  // 로아 - 반복 - 계정
   { id: "loa-login", game: "Lost Ark", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "account", lastResetDate: "" },
   { id: "loa-manage-domain", game: "Lost Ark", name: "영지관리", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "account", lastResetDate: "" },
+  // 로아 - 반복 - 캐릭터
   { id: "loa-chaos-dungeon", game: "Lost Ark", name: "카오스 던전", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
   { id: "loa-guardian-raid", game: "Lost Ark", name: "가디언 토벌", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "" },
   { id: "loa-aufakd", game: "Lost Ark", name: "멸망", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "" },
@@ -178,30 +179,71 @@ function App() {
   const btnStyle = { backgroundColor: "#444", color: "#fff", border: "1px solid #666", padding: "4px 8px", cursor: "pointer" };
 
   const exportData = () => {
-    const now = new Date();
-    const pad = (n) => String(n).padStart(2, '0');
-    const ts = `${String(now.getFullYear()).slice(2)}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-    const data = { homeworks, characters, accounts };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url; link.download = `GHW_${ts}.json`; link.click();
-  };
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const ts = `${String(now.getFullYear()).slice(2)}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+    // 모든 게임의 데이터를 수집
+    const exportObj = {
+      homeworks, // 전체 숙제 진행도
+      version: "2.0"
+    };
+
+    // 각 게임별 캐릭터와 계정 정보를 객체에 담음
+    games.forEach(g => {
+      const savedChar = localStorage.getItem(`characters-${g}`);
+      const savedAcc = localStorage.getItem(`accounts-${g}`);
+      exportObj[`characters-${g}`] = savedChar ? JSON.parse(savedChar) : [];
+      exportObj[`accounts-${g}`] = savedAcc ? JSON.parse(savedAcc) : [];
+    });
+
+    const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `GHW_FULL_${ts}.json`;
+    link.click();
+  };
 
   const importData = (e) => {
-    const file = e.target.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const imported = JSON.parse(event.target.result);
-        if (window.confirm("복구하시겠습니까?")) {
-          setHomeworks(imported.homeworks); setCharacters(imported.characters || []); setAccounts(imported.accounts || []);
-          alert("완료");
-        }
-      } catch (err) { alert("오류"); }
-    };
-    reader.readAsText(file);
-  };
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const imported = JSON.parse(event.target.result);
+      if (window.confirm("데이터를 복구하시겠습니까? 현재 브라우저의 데이터가 덮어씌워집니다.")) {
+        
+        // 1. 전체 숙제 데이터 복구
+        setHomeworks(imported.homeworks);
+        
+        // 2. 게임별 캐릭터/계정 데이터를 localStorage에 직접 강제 주입
+        // 이 과정을 거쳐야 탭을 옮길 때 꼬이지 않는다.
+        games.forEach(g => {
+          if (imported[`characters-${g}`]) {
+            localStorage.setItem(`characters-${g}`, JSON.stringify(imported[`characters-${g}`]));
+          }
+          if (imported[`accounts-${g}`]) {
+            localStorage.setItem(`accounts-${g}`, JSON.stringify(imported[`accounts-${g}`]));
+          }
+        });
+
+        // 3. 현재 보고 있는 게임의 데이터만 상태에 반영
+        const currentChars = imported[`characters-${game}`] || imported.characters || [];
+        const currentAccs = imported[`accounts-${game}`] || imported.accounts || [];
+        
+        setCharacters(currentChars.length > 0 ? currentChars : ["캐릭터1"]);
+        setAccounts(currentAccs);
+
+        alert("복구가 완료되었습니다. 페이지를 새로고침하세요.");
+        window.location.reload(); // 안전하게 새로고침 한 번 해주는 게 제일 깔끔하다.
+      }
+    } catch (err) {
+      alert("파일 읽기 오류");
+    }
+  };
+  reader.readAsText(file);
+};
 
   const addTargetAuto = (scope, dataList, setData) => {
     const base = scope === "character" ? "캐릭터" : "계정";
