@@ -412,20 +412,26 @@ function App() {
             {dataList.map((targetName, idx) => (
               <tr key={idx}>
                 <td style={{ textAlign: "center", padding: "10px", fontWeight: "bold", borderRight: "2px solid #444" }}>
-                  <div style={{ fontSize: "16px", marginBottom: "5px" }}>{targetName}</div>
+                  {/* 1. 위/아래 화살표 (캐릭명 위) */}
+                  <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "5px" }}>
+                    <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
+                    <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
+                  </div>
+
+                  {/* 2. 캐릭터명 */}
+                  <div style={{ fontSize: "16px", marginBottom: "8px", marginTop: "5px" }}>{targetName}</div>
+
+                  {/* 3. 수정/삭제 버튼 (캐릭명 아래) */}
                   <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
-                    <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 5px"}}>▲</button>
-                    <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 5px"}}>▼</button>
-                    <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px"}}>수정</button>
+                    <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>수정</button>
                     <button onClick={() => {
-                      if(window.confirm("삭제하시겠습니까?")) {
+                      if(window.confirm(`[${targetName}] 항목을 삭제하시겠습니까?`)) {
                         setData(prev => prev.filter((_, i) => i !== idx));
                       }
-                    }} style={{...btnStyle, padding: "2px 5px", backgroundColor: "#600"}}>X</button>
+                    }} style={{...btnStyle, padding: "2px 5px", fontSize: "12px", backgroundColor: "#600"}}>삭제</button>
                   </div>
                 </td>
                 
-                {/* ★ 여기가 핵심: allFiltered.map 안에 수정 일시 로직이 합쳐져야 함 */}
                 {allFiltered.map(hw => {
                   const val = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
                   const isExcluded = !!(hw.excluded && hw.excluded[targetName]);
@@ -469,7 +475,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:32</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:36</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
