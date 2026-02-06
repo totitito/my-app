@@ -3,6 +3,10 @@
     {
       "source": "/api-atool/:path*",
       "destination": "https://atool.aion2.plaync.com/:path*"
+    },
+    {
+      "source": "/api-lostark/:path*",
+      "destination": "https://developer-lostark.game.onstove.com/:path*"
     }
   ]
 }
