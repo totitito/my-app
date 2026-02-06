@@ -386,19 +386,29 @@ function App() {
   const renderTable = (title, scope, dataList, setData) => {
     const filteredHws = homeworks.filter(hw => hw.game === game && hw.scope === scope && (viewMode === "once" ? hw.resetPeriod === "once" : hw.resetPeriod !== "once"));
 
-    // ... (분류 로직 동일) ...
+    // 1. 반복 모드 분류
     const dailyHws = filteredHws.filter(hw => hw.resetPeriod === "day" && hw.id !== "aion2-odd-energy");
     const etcHws = filteredHws.filter(hw => hw.id === "aion2-odd-energy");
     const weeklyHws = filteredHws.filter(hw => hw.resetPeriod === "week");
 
+    // 2. 업적(once) 모드 분류 (이게 누락되어서 에러가 났던 것)
+    const onceBasic = filteredHws.filter(hw => hw.category === "기본");
+    const onceStory = filteredHws.filter(hw => hw.category === "스토리");
+    const onceBoss = filteredHws.filter(hw => hw.category === "필드보스");
+    const onceWing = filteredHws.filter(hw => hw.category === "날개");
+    const onceArt = filteredHws.filter(hw => hw.category === "명화");
+    const onceEtc = filteredHws.filter(hw => !["기본", "스토리", "필드보스", "날개", "명화"].includes(hw.category));
+
+    // 3. 전체 리스트 (정렬 순서 고정)
     const allFiltered = viewMode === "once" 
-      ? [...filteredHws] // 카테고리 순서대로 정렬된 배열 사용
+      ? [...onceBasic, ...onceStory, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc] 
       : [...dailyHws, ...etcHws, ...weeklyHws];
 
+    // 4. 날짜 양식 (연도 제외 오더 반영)
     const formatDate = (ts) => {
       if (!ts) return "기록 없음";
       const d = new Date(ts);
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+      return `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
     };
 
     return (
@@ -406,7 +416,6 @@ function App() {
         <h3 style={{ marginBottom: "10px" }}>{title}</h3>
         <table border="1" style={{ borderCollapse: "collapse", borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
           <thead>
-            {/* 1행: 구분 및 셀 병합 */}
             <tr style={{ backgroundColor: "#333" }}>
               <th style={{ width: "140px", padding: "8px" }}>구분</th>
               {viewMode === "once" ? (
@@ -420,12 +429,14 @@ function App() {
                 </>
               ) : (
                 <>
-                  {dailyHws.length > 0 && <th colSpan={dailyHws.length} style={{ padding: "8px" }}>Daily</th>}
-                  {etcHws.length > 0 && <th colSpan={etcHws.length} style={{ padding: "8px" }}>etc</th>}
-                  {weeklyHws.length > 0 && <th colSpan={weeklyHws.length} style={{ padding: "8px" }}>Weekly</th>}
+                  {/* 요청한 텍스트로 고정 */}
+                  {dailyHws.length > 0 && <th colSpan={dailyHws.length} style={{ padding: "8px" }}>매일 00시</th>}
+                  {etcHws.length > 0 && <th colSpan={etcHws.length} style={{ padding: "8px" }}>05시 기준 3시간마다 +15</th>}
+                  {weeklyHws.length > 0 && <th colSpan={weeklyHws.length} style={{ padding: "8px" }}>수 00시</th>}
                 </>
               )}
             </tr>
+            {/* 이후 2행(항목)과 tbody는 네가 올린 코드 그대로 유지하면 됨 */}
 
             {/* 2행: 숙제 항목명 (1행과 동일한 배경색 적용) */}
             <tr style={{ backgroundColor: "#333" }}>
@@ -511,7 +522,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 11:02</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 11:07</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
