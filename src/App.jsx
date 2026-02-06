@@ -147,22 +147,11 @@ function App() {
 
   const fetchLoaScore = async (charName) => {
     try {
-      const apiToken = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9...";
-      //const apiToken = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9.eyJpc3MiOiJodHRwczovL2x1ZHkuZ2FtZS5vbnN0b3ZlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbHVkeS5nYW1lLm9uc3RvdmUuY29tL3Jlc291cmNlcyIsImNsaWVudF9pZCI6IjEwMDAwMDAwMDAwMDI4MzgifQ.lTRdZdC2-QmiaZJaJ4LC9G6SraQhto2dU4T5HrOeQ4B6KNjXGNtAAJNimz_7yojURfGfUuItlwrMGk0JDBr30fEALKpHglIT4kU0LpZ-VXO6eKSnjngyIoOjM6cKZaYMbfcXKh3lS2gmwwjJs4yV8nFZPQrommpecN5b1hlB23JOFVLDhuHozOKGoahlh6owkP04jNdcTnZ1LIL5lCFZaFpCDmdMsGUXybDZZlAAdHPDVimSbmzv6ySvCK1YaYsNz5vCt7Oh9eXj8Aj3ZzNaPJNMdxUAfXUaxyubRetXoRGMM06iCH3wt8xXkTp-EL71HDhNvWSMqabCyloSuGWJIQ";
       const targetUrl = `/api-lostark/armories/characters/${encodeURIComponent(charName)}/profiles`;
 
-      // 팩트: axios 대신 브라우저 표준 fetch 사용
-      const response = await fetch(targetUrl, {
-        method: 'GET',
-        headers: {
-          'accept': 'application/json',
-          'authorization': apiToken
-        }
-      });
+      const response = await fetch(targetUrl, { method: "GET" }); // ✅ 헤더 제거
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const data = await response.json();
 
@@ -746,7 +735,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-07 00:09
+              최종 업데이트: 2026-02-07 00:55
             </div>
           </div>
 
