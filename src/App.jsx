@@ -637,6 +637,32 @@ function App() {
                     </div>
                   )}
 
+                  {/* 💡 팩트: 현재 게임이 LOSTARK일 때만 로아 전용 정보와 버튼 표시 */}
+                  {game === "LOSTARK" && scope === "character" && (
+                    <div style={{ marginBottom: "10px" }}>
+                      {scores[targetName] ? (
+                        <div style={{ fontSize: "11px", color: "#ff9f43", marginBottom: "4px" }}>
+                          아이템 레벨: {scores[targetName].itemLevel} | 갱신일: {new Date(scores[targetName].updatedAt).toLocaleDateString()}
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>데이터 없음</div>
+                      )}
+                      
+                      <button 
+                        onClick={() => fetchLoaScore(targetName)} 
+                        style={{ 
+                          ...btnStyle, 
+                          padding: "2px 5px", 
+                          fontSize: "10px", 
+                          backgroundColor: "#a55eea", // 로아 느낌 나는 보라색
+                          cursor: "pointer"
+                        }}
+                      >
+                        로아 정보 갱신
+                      </button>
+                    </div>
+                  )}
+
                   {/* 3. 수정/삭제 버튼 (캐릭명 아래) */}
                   <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
                     <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>이름변경</button>
