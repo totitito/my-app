@@ -522,14 +522,14 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 11:07</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 11:09</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
       <div style={{ marginBottom: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
         <button onClick={() => setViewMode(viewMode === "repeat" ? "once" : "repeat")} 
           style={{ ...btnStyle, backgroundColor: "#333", fontWeight: "bold", border: "1px solid #777" }}>
-          모드: {viewMode === "repeat" ? "반복" : "1회성"}
+          모드: {viewMode === "repeat" ? "반복퀘" : "업적"}
         </button>
         <button onClick={exportData} style={{ ...btnStyle, backgroundColor: "#004080" }}>내보내기</button>
         <label style={{ ...btnStyle, backgroundColor: "#1a5e20" }}>가져오기<input type="file" accept=".json" onChange={importData} style={{ display: "none" }} /></label>
