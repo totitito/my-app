@@ -601,7 +601,7 @@ function App() {
                     {targetName}
                   </div>
 
-                  {game === "AION 2" && scope === "character" && (
+                  {/* {game === "AION 2" && scope === "character" && (
                     <div style={{ marginBottom: "10px" }}>
                       {scores[targetName] ? (
                         <>
@@ -631,6 +631,42 @@ function App() {
                         전투력 갱신
                       </button>
                     </div>
+                  )} */}
+
+                  {game === "AION 2" && scope === "character" && (
+                    <div style={{ marginBottom: "10px" }}>
+                      {scores[targetName] ? (
+                        <>
+                          <div style={{ fontSize: "11px", marginBottom: "2px" }}>
+                            <span style={{ color: "#ffffff" }}>
+                              {/* 💡 팩트: 값이 없을 수도 있으므로 ?.toLocaleString() 사용 */}
+                              {/* P: {scores[targetName].combatPower?.toLocaleString() || "0"} */}
+                              전투력: {scores[targetName].combatPower?.toLocaleString() ?? "?"}
+                            </span>
+                            <span style={{ color: "#4daafc", marginLeft: "6px" }}>
+                              {/* 💡 팩트: 아이온 데이터가 아닌 경우 combatScore가 없으므로 방어 코드 추가 */}
+                              {/* AT: {scores[targetName].combatScore?.toLocaleString() || "0"} */}
+                              아툴: {scores[targetName].combatScore?.toLocaleString() ?? "?"}
+                            </span>
+                          </div>
+
+                          {scores[targetName].updatedAt && (
+                            <div style={{ fontSize: "10px", color: "#777", marginBottom: "4px" }}>
+                              갱신: {formatScoreUpdatedAt(scores[targetName].updatedAt)}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
+                      )}
+
+                      <button 
+                        onClick={() => fetchScore(targetName)} 
+                        style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
+                      >
+                        전투력 갱신
+                      </button>
+                    </div>
                   )}
 
                   {game === "Lost Ark" && scope === "character" && (
@@ -639,10 +675,10 @@ function App() {
                         <>
                           <div style={{ fontSize: "11px", marginBottom: "2px" }}>
                             <span style={{ color: "#ffffff" }}>
-                              iLvl: {scores[targetName].itemLevel}
+                              템렙: {scores[targetName].itemLevel}
                             </span>
                             <span style={{ color: "#4daafc", marginLeft: "6px" }}>
-                              P: {scores[targetName].combatPower?.toLocaleString()}
+                              전투력: {scores[targetName].combatPower?.toLocaleString()}
                             </span>
                           </div>
 
@@ -654,7 +690,7 @@ function App() {
                         </>
                       ) : (
                         <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>
-                          정보 미갱신
+                          전투력 미갱신
                         </div>
                       )}
 
@@ -662,7 +698,7 @@ function App() {
                         onClick={() => fetchLoaScore(targetName)}
                         style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
                       >
-                        정보 갱신
+                        전투력 갱신
                       </button>
                     </div>
                   )}
@@ -737,7 +773,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-07 07:37
+              최종 업데이트: 2026-02-07 07:48
             </div>
           </div>
 
