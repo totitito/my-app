@@ -112,19 +112,17 @@ function App() {
         serverId = serverMap[serverAbbr] || 1006;
       }
 
-      // 팩트: AllOrigins가 400 에러를 내므로, 다른 무료 프록시(Cloudflare Worker 기반)를 시도함
-      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${charName}&server_id=${serverId}&race=1&page=1&limit=20`;
-      
-      // 이번엔 다른 공개 프록시 주소다
-      const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
+      // 로컬 Vite 설정(proxy)을 사용하는 원래 주소
+      const response = await axios.post('/api-atool/api/character/search', {
+        keyword: charName,
+        server_id: serverId,
+        race: 1,
+        page: 1,
+        limit: 20
+      });
 
-      const response = await axios.get(proxyUrl);
-      
-      // 이 서비스는 바로 데이터를 주므로 JSON.parse가 필요 없을 수도 있음
-      const data = response.data;
-
-      if (data.success && data.data) {
-        const charData = data.data;
+      if (response.data.success && response.data.data) {
+        const charData = response.data.data;
         setScores(prev => ({ 
           ...prev, 
           [fullName]: {
@@ -134,7 +132,7 @@ function App() {
         }));
       }
     } catch (error) {
-      console.error("조회 실패:", error);
+      console.error("로컬 조회 실패:", error);
     }
   };
 
