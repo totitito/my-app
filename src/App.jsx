@@ -112,14 +112,13 @@ function App() {
         serverId = serverMap[serverAbbr] || 1006;
       }
 
-      // 1. NC 서버 실제 API 주소
-      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${encodeURIComponent(charName)}&server_id=${serverId}&race=1&page=1&limit=20`;
+      // 팩트: 주소 끝에 공백 생기지 않게 확실히 trim() 처리
+      const cleanName = encodeURIComponent(charName.trim());
+      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${cleanName}&server_id=${serverId}&race=1&page=1&limit=20`;
       
-      // 2. 방금 활성화된 네 전용 주소 (뒤에 ?url= 붙이는 거 잊지 마)
       const myWorkerUrl = "https://bitter-shadow-c9a0.shjoks.workers.dev/"; 
       const finalUrl = `${myWorkerUrl}?url=${encodeURIComponent(targetUrl)}`;
 
-      // 3. 호출
       const response = await axios.get(finalUrl);
       
       if (response.data.success && response.data.data) {
@@ -133,7 +132,7 @@ function App() {
         }));
       }
     } catch (error) {
-      console.error("전용 우회로 최종 호출 실패:", error);
+      console.error("최종 우회로 호출 실패:", error);
     }
   };
 
@@ -651,7 +650,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 21:03
+              최종 업데이트: 2026-02-06 21:07
             </div>
           </div>
 
