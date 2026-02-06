@@ -411,8 +411,18 @@ function App() {
           <tbody>
             {dataList.map((targetName, idx) => (
               <tr key={idx}>
-                <td style={{ textAlign: "center", padding: "10px" }}>
-                  {/* ... (이름/버튼 영역 동일) ... */}
+                <td style={{ textAlign: "center", padding: "10px", fontWeight: "bold", borderRight: "2px solid #444" }}>
+                  <div style={{ fontSize: "16px", marginBottom: "5px" }}>{targetName}</div>
+                  <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
+                    <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 5px"}}>▲</button>
+                    <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 5px"}}>▼</button>
+                    <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px"}}>수정</button>
+                    <button onClick={() => {
+                      if(window.confirm("삭제하시겠습니까?")) {
+                        setData(prev => prev.filter((_, i) => i !== idx));
+                      }
+                    }} style={{...btnStyle, padding: "2px 5px", backgroundColor: "#600"}}>X</button>
+                  </div>
                 </td>
                 
                 {/* ★ 여기가 핵심: allFiltered.map 안에 수정 일시 로직이 합쳐져야 함 */}
@@ -459,7 +469,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:26</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:32</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
