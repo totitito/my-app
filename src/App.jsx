@@ -125,25 +125,23 @@ function App() {
   const updateSettings = () => {
     if (window.confirm("코드의 최신 설정을 반영하시겠습니까? (삭제된 숙제는 제거되며, 진행도는 유지됩니다)")) {
       setHomeworks(prev => {
-        // 1. 현재 게임에 해당하는 코드상의 최신 숙제들만 가져옴
         const latestInitial = initialHomeworks.filter(h => h.game === game);
-        
-        // 2. 다른 게임의 숙제들은 그대로 유지
         const otherGameHomeworks = prev.filter(h => h.game !== game);
         
-        // 3. 현재 게임의 숙제들을 업데이트
         const updatedCurrentGame = latestInitial.map(latest => {
-          // 기존에 이미 있던 숙제인지 확인
           const existing = prev.find(h => h.id === latest.id);
           if (existing) {
-            // 이름, MAX, 주기 등 설정은 '코드' 기준 / 진행도(counts)는 '기존' 기준
-            return { ...latest, counts: existing.counts, excluded: existing.excluded };
+            // [수정 포인트] lastUpdated를 명시적으로 추가해서 기존 기록을 보존함
+            return { 
+              ...latest, 
+              counts: existing.counts, 
+              excluded: existing.excluded,
+              lastUpdated: existing.lastUpdated // 이 부분이 핵심
+            };
           }
-          // 아예 새로운 숙제면 코드 설정 그대로 추가
           return latest;
         });
 
-        // 4. 사용자가 직접 버튼으로 추가한 '커스텀 숙제'들도 유지하고 싶다면 포함
         const customHomeworks = prev.filter(h => h.game === game && h.id.startsWith("custom-"));
 
         return [...otherGameHomeworks, ...updatedCurrentGame, ...customHomeworks];
@@ -242,13 +240,18 @@ function App() {
     const pad = (n) => String(n).padStart(2, '0');
     const ts = `${String(now.getFullYear()).slice(2)}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
 
-    // 모든 게임의 데이터를 수집
+    // 1. 모든 게임의 데이터를 수집 (기존 homeworks를 맵핑하며 lastUpdated 누락 방지)
     const exportObj = {
-      homeworks, // 전체 숙제 진행도
+      homeworks: homeworks.map(hw => ({
+        ...hw, // 기존의 모든 속성(id, name, resetTime 등) 유지
+        counts: hw.counts || {},
+        lastUpdated: hw.lastUpdated || {}, // ★ 이 데이터가 JSON에 포함되도록 확정
+        excluded: hw.excluded || {}
+      })),
       version: "2.0"
     };
 
-    // 각 게임별 캐릭터와 계정 정보를 객체에 담음
+    // 2. 각 게임별 캐릭터와 계정 정보를 객체에 담음 (기존 로직 100% 동일)
     games.forEach(g => {
       const savedChar = localStorage.getItem(`characters-${g}`);
       const savedAcc = localStorage.getItem(`accounts-${g}`);
@@ -262,47 +265,54 @@ function App() {
     link.href = url;
     link.download = `GHW_${ts}.json`;
     link.click();
+    URL.revokeObjectURL(url); 
   };
 
   const importData = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    try {
-      const imported = JSON.parse(event.target.result);
-      if (window.confirm("데이터를 복구하시겠습니까? 현재 브라우저의 데이터가 덮어씌워집니다.")) {
-        
-        // 1. 전체 숙제 데이터 복구
-        setHomeworks(imported.homeworks);
-        
-        // 2. 게임별 캐릭터/계정 데이터를 localStorage에 직접 강제 주입
-        // 이 과정을 거쳐야 탭을 옮길 때 꼬이지 않는다.
-        games.forEach(g => {
-          if (imported[`characters-${g}`]) {
-            localStorage.setItem(`characters-${g}`, JSON.stringify(imported[`characters-${g}`]));
-          }
-          if (imported[`accounts-${g}`]) {
-            localStorage.setItem(`accounts-${g}`, JSON.stringify(imported[`accounts-${g}`]));
-          }
-        });
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        if (window.confirm("데이터를 복구하시겠습니까? 현재 브라우저의 데이터가 덮어씌워집니다.")) {
+          
+          // 1. 전체 숙제 데이터 복구 (기능 유실 없음)
+          // 불러온 데이터에 lastUpdated가 있으면 그대로 들어가고, 없으면 빈 객체로 초기화해서 에러 방지
+          const mergedHws = imported.homeworks.map(hw => ({
+            ...hw,
+            counts: hw.counts || {},
+            lastUpdated: hw.lastUpdated || {}, // ★ 저장된 시간을 불러오고, 없으면 빈 객체 부여
+            excluded: hw.excluded || {}
+          }));
+          setHomeworks(mergedHws);
+          
+          // 2. 게임별 캐릭터/계정 데이터를 localStorage에 직접 강제 주입 (기존 로직 유지)
+          games.forEach(g => {
+            if (imported[`characters-${g}`]) {
+              localStorage.setItem(`characters-${g}`, JSON.stringify(imported[`characters-${g}`]));
+            }
+            if (imported[`accounts-${g}`]) {
+              localStorage.setItem(`accounts-${g}`, JSON.stringify(imported[`accounts-${g}`]));
+            }
+          });
 
-        // 3. 현재 보고 있는 게임의 데이터만 상태에 반영
-        const currentChars = imported[`characters-${game}`] || imported.characters || [];
-        const currentAccs = imported[`accounts-${game}`] || imported.accounts || [];
-        
-        setCharacters(currentChars.length > 0 ? currentChars : ["캐릭터1"]);
-        setAccounts(currentAccs);
+          // 3. 현재 보고 있는 게임의 데이터만 상태에 반영 (기존 로직 유지)
+          const currentChars = imported[`characters-${game}`] || imported.characters || [];
+          const currentAccs = imported[`accounts-${game}`] || imported.accounts || [];
+          
+          setCharacters(currentChars.length > 0 ? currentChars : ["캐릭터1"]);
+          setAccounts(currentAccs);
 
-        alert("복구가 완료되었습니다. 페이지를 새로고침하세요.");
-        window.location.reload(); // 안전하게 새로고침 한 번 해주는 게 제일 깔끔하다.
+          alert("복구가 완료되었습니다.");
+          window.location.reload(); 
+        }
+      } catch (err) {
+        alert("파일 읽기 오류: " + err.message);
       }
-    } catch (err) {
-      alert("파일 읽기 오류");
-    }
+    };
+    reader.readAsText(file);
   };
-  reader.readAsText(file);
-};
 
   const addTargetAuto = (scope, dataList, setData) => {
     const base = scope === "character" ? "캐릭터" : "계정";
@@ -408,16 +418,32 @@ function App() {
     const formatDate = (ts) => {
       if (!ts) return "기록 없음";
       const d = new Date(ts);
-      return `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+      const month = d.getMonth() + 1; // 0 붙이지 않음
+      const date = d.getDate();       // 0 붙이지 않음
+      const hours = String(d.getHours()).padStart(2, '0');   // 항상 두 자리
+      const minutes = String(d.getMinutes()).padStart(2, '0'); // 항상 두 자리
+      
+      return `${month}/${date} ${hours}:${minutes}`;
     };
 
     return (
-      <div style={{ overflowX: "auto", width: "100%", marginTop: "30px" }}>
+      <div style={{ 
+        overflowX: "auto", 
+        width: "100%", 
+        maxWidth: "100vw", // 화면 너비를 넘지 못하게 강제
+        position: "relative", // sticky 기준점 명시
+        marginTop: "30px" 
+      }}>
         <h3 style={{ marginBottom: "10px" }}>{title}</h3>
-        <table border="1" style={{ borderCollapse: "collapse", borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
+        <table border="1" style={{ borderCollapse: "separate", borderSpacing: 0, borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
           <thead>
             <tr style={{ backgroundColor: "#333" }}>
-              <th style={{ width: "140px", padding: "8px" }}>구분</th>
+              {/* <th style={{ width: "140px", padding: "8px" }}>구분</th> 260206 1613 */}
+              <th style={{ 
+                width: "140px", padding: "8px", 
+                position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
+                borderRight: "2px solid #444" 
+              }}>구분</th>
               {viewMode === "once" ? (
                 <>
                   {onceBasic.length > 0 && <th colSpan={onceBasic.length} style={{ padding: "8px" }}>기본</th>}
@@ -440,7 +466,12 @@ function App() {
 
             {/* 2행: 숙제 항목명 (1행과 동일한 배경색 적용) */}
             <tr style={{ backgroundColor: "#333" }}>
-              <th style={{ padding: "10px" }}>항목</th>
+              {/* <th style={{ padding: "10px" }}>항목</th> 260206 1613 */}
+              <th style={{ 
+                padding: "10px", 
+                position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
+                borderRight: "2px solid #444" 
+              }}>항목</th>
               {allFiltered.map(hw => (
                 <th key={hw.id} style={{ padding: "10px" }}>
                   <div style={{ fontWeight: "bold", marginBottom: viewMode === "once" ? "0" : "4px" }}>{hw.name}</div>
@@ -458,7 +489,12 @@ function App() {
           <tbody>
             {dataList.map((targetName, idx) => (
               <tr key={idx}>
-                <td style={{ textAlign: "center", padding: "10px", fontWeight: "bold", borderRight: "2px solid #444" }}>
+                {/* <td style={{ textAlign: "center", padding: "10px", fontWeight: "bold", borderRight: "2px solid #444" }}> 260206 1613 */}
+                <td style={{ 
+                  textAlign: "center", padding: "10px", fontWeight: "bold", 
+                  position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
+                  borderRight: "2px solid #444" 
+                }}>
                   {/* 1. 위/아래 화살표 (캐릭명 위) */}
                   <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "5px" }}>
                     <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
@@ -521,26 +557,80 @@ function App() {
 
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
-      <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 11:15</div>
-      <div style={{ marginBottom: "20px" }}>
-        {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
+      
+      {/* 헤더 섹션: 상단 고정 및 배경색 유지 */}
+      <div style={{ 
+        position: "sticky", 
+        top: 0, 
+        zIndex: 1000, 
+        backgroundColor: "#1e1e1e", 
+        paddingBottom: "15px",
+        marginBottom: "20px",
+        borderBottom: "1px solid #333"
+      }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "30px" }}>
+          
+          {/* 1. 좌측 로고 영역 (56px) */}
+          <div style={{ flexShrink: 0 }}>
+            <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
+            <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
+              최종 업데이트: 2026-02-06 16:37
+            </div>
+          </div>
+
+          {/* 2. 우측 버튼 영역 (2행) */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {/* 1행: 게임 버튼 */}
+            <div style={{ display: "flex", gap: "5px" }}>
+              {games.map(g => (
+                <button 
+                  key={g} 
+                  onClick={() => setGame(g)} 
+                  style={{ 
+                    ...btnStyle, 
+                    padding: "8px 12px", 
+                    backgroundColor: game === g ? "#666" : "#444",
+                    // 추가: 선택된 게임은 1(100%), 아니면 0.5(50%) 투명도 적용
+                    opacity: game === g ? 1 : 0.5,
+                    transition: "opacity 0.2s" // 부드럽게 변하게 하고 싶다면 추가
+                  }}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+            
+            {/* 2행: 설정 및 기능 버튼 (색상 복구) */}
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <button onClick={() => setViewMode(viewMode === "repeat" ? "once" : "repeat")} 
+                //style={{ ...btnStyle, backgroundColor: "#333", fontWeight: "bold", border: "1px solid #777" }}>
+                style={{ ...btnStyle, backgroundColor: "#333", border: "1px solid #777" }}>
+                모드: {viewMode === "repeat" ? "반복퀘" : "업적"}
+              </button>
+              <button onClick={exportData} style={{ ...btnStyle, backgroundColor: "#004080" }}>Save</button>
+              <label style={{ ...btnStyle, backgroundColor: "#1a5e20", cursor: "pointer", textAlign: "center", display: "inline-block" }}>
+                Load<input type="file" accept=".json" onChange={importData} style={{ display: "none" }} />
+              </label>
+              <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>설정 업데이트</button>
+              <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button>
+              <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div style={{ marginBottom: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        <button onClick={() => setViewMode(viewMode === "repeat" ? "once" : "repeat")} 
-          style={{ ...btnStyle, backgroundColor: "#333", fontWeight: "bold", border: "1px solid #777" }}>
-          모드: {viewMode === "repeat" ? "반복퀘" : "업적"}
-        </button>
-        <button onClick={exportData} style={{ ...btnStyle, backgroundColor: "#004080" }}>내보내기</button>
-        <label style={{ ...btnStyle, backgroundColor: "#1a5e20" }}>가져오기<input type="file" accept=".json" onChange={importData} style={{ display: "none" }} /></label>
-        <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>설정 업데이트</button>
-        <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button>
-        <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
-      </div>
+
+      {/* 테이블 및 추가 버튼 (원본 로직 유지) */}
       {renderTable("계정별", "account", accounts, setAccounts)}
-      <button onClick={() => addTargetAuto("account", accounts, setAccounts)} style={{ ...btnStyle, marginTop: "10px", padding: "10px" }}>+ 계정 추가</button>
+      <button onClick={() => addTargetAuto("account", accounts, setAccounts)} 
+        style={{ ...btnStyle, marginTop: "10px", marginBottom: "30px", padding: "10px" }}>
+        + 계정 추가
+      </button>
+
       {renderTable("캐릭터별", "character", characters, setCharacters)}
-      <button onClick={() => addTargetAuto("character", characters, setCharacters)} style={{ ...btnStyle, marginTop: "10px", padding: "10px" }}>+ 캐릭터 추가</button>
+      <button onClick={() => addTargetAuto("character", characters, setCharacters)} 
+        style={{ ...btnStyle, marginTop: "10px", padding: "10px" }}>
+        + 캐릭터 추가
+      </button>
     </div>
   );
 }
