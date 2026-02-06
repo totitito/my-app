@@ -147,25 +147,31 @@ function App() {
 
   const fetchLoaScore = async (charName) => {
     try {
-      const apiToken = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9.eyJpc3MiOiJodHRwczovL2x1ZHkuZ2FtZS5vbnN0b3ZlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbHVkeS5nYW1lLm9uc3RvdmUuY29tL3Jlc291cmNlcyIsImNsaWVudF9pZCI6IjEwMDAwMDAwMDAwMDI4MzgifQ.lTRdZdC2-QmiaZJaJ4LC9G6SraQhto2dU4T5HrOeQ4B6KNjXGNtAAJNimz_7yojURfGfUuItlwrMGk0JDBr30fEALKpHglIT4kU0LpZ-VXO6eKSnjngyIoOjM6cKZaYMbfcXKh3lS2gmwwjJs4yV8nFZPQrommpecN5b1hlB23JOFVLDhuHozOKGoahlh6owkP04jNdcTnZ1LIL5lCFZaFpCDmdMsGUXybDZZlAAdHPDVimSbmzv6ySvCK1YaYsNz5vCt7Oh9eXj8Aj3ZzNaPJNMdxUAfXUaxyubRetXoRGMM06iCH3wt8xXkTp-EL71HDhNvWSMqabCyloSuGWJIQ"; 
-      // const targetUrl = `https://developer-lostark.game.onstove.com/armories/characters/${encodeURIComponent(charName)}/profiles`;
+      const apiToken = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9...";
+      //const apiToken = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9.eyJpc3MiOiJodHRwczovL2x1ZHkuZ2FtZS5vbnN0b3ZlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbHVkeS5nYW1lLm9uc3RvdmUuY29tL3Jlc291cmNlcyIsImNsaWVudF9pZCI6IjEwMDAwMDAwMDAwMDI4MzgifQ.lTRdZdC2-QmiaZJaJ4LC9G6SraQhto2dU4T5HrOeQ4B6KNjXGNtAAJNimz_7yojURfGfUuItlwrMGk0JDBr30fEALKpHglIT4kU0LpZ-VXO6eKSnjngyIoOjM6cKZaYMbfcXKh3lS2gmwwjJs4yV8nFZPQrommpecN5b1hlB23JOFVLDhuHozOKGoahlh6owkP04jNdcTnZ1LIL5lCFZaFpCDmdMsGUXybDZZlAAdHPDVimSbmzv6ySvCK1YaYsNz5vCt7Oh9eXj8Aj3ZzNaPJNMdxUAfXUaxyubRetXoRGMM06iCH3wt8xXkTp-EL71HDhNvWSMqabCyloSuGWJIQ";
       const targetUrl = `/api-lostark/armories/characters/${encodeURIComponent(charName)}/profiles`;
 
-      const response = await axios.get(targetUrl, {
+      // 팩트: axios 대신 브라우저 표준 fetch 사용
+      const response = await fetch(targetUrl, {
+        method: 'GET',
         headers: {
           'accept': 'application/json',
           'authorization': apiToken
         }
       });
 
-      // 데이터가 정상적으로 왔을 때
-      if (response.data) {
-        const data = response.data;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data) {
         setScores(prev => ({
           ...prev,
           [charName]: {
-            itemLevel: data.ItemMaxLevel,      // 아이템 레벨
-            combatPower: data.Stats?.find(s => s.Type === "전투력")?.Value || 0, // 전투력 정보가 있을 경우
+            itemLevel: data.ItemMaxLevel,
+            combatPower: data.Stats?.find(s => s.Type === "전투력")?.Value || 0,
             updatedAt: new Date().toISOString()
           }
         }));
@@ -173,9 +179,8 @@ function App() {
         alert("존재하지 않는 캐릭터이거나 검색 결과가 없습니다.");
       }
     } catch (error) {
-      // 팩트: 여기서 CORS 에러가 나면 Vercel의 'rewrites' 설정을 써야 함
-      console.error("로아 API 직접 호출 실패:", error);
-      alert("로아 API 호출 중 오류가 발생했습니다.");
+      console.error("로아 API 호출 실패:", error);
+      alert("데이터를 가져오는데 실패했습니다.");
     }
   };
 
@@ -733,7 +738,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-07 00:02
+              최종 업데이트: 2026-02-07 00:09
             </div>
           </div>
 
