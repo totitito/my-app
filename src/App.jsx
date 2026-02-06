@@ -493,10 +493,9 @@ function App() {
       }}>
         <h3 style={{ marginBottom: "10px", display: "flex", alignItems: "center", gap: "10px" }}>
           {title}
-          {/* 팩트: 현재 게임이 AION 2이고, 캐릭터별 테이블일 때만 가이드 문구 표시 */}
           {game === "AION 2" && scope === "character" && (
             <span style={{ fontSize: "12px", color: "#aaa", fontWeight: "normal" }}>
-              ※ 캐릭명[서버명2글자] 형식으로 입력하면 전투력 조회 가능 ex) 카니쵸니[바카]
+              ※ 캐릭명[서버명2글자] 형식으로 입력하면 전투력 조회 가능 ex) 카니쵸니[바카] (바카르마 서버는 캐릭명만 써도됨)
             </span>
           )}
         </h3>
@@ -715,24 +714,6 @@ function App() {
               <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button>
               <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
               
-              {/* 260206 2137 TEST */}
-              <button
-                onClick={async () => {
-                  const r = await fetch("/api/aion2-search", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      keyword: "카니쵸니",
-                      server_id: 1016,
-                    }),
-                  });
-                  const j = await r.json();
-                  console.log(j);
-                }}
-              >
-                아툴 테스트
-              </button>
-
             </div>
           </div>
         </div>
