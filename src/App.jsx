@@ -406,28 +406,45 @@ function App() {
         <h3 style={{ marginBottom: "10px" }}>{title}</h3>
         <table border="1" style={{ borderCollapse: "collapse", borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
           <thead>
-            {/* 1행: 숙제 종류 (Daily, 기타, Weekly) */}
+            {/* 1행: 구분 및 병합 (Daily, 기타, Weekly) */}
             <tr style={{ backgroundColor: "#333", fontSize: "12px", color: "#bbb" }}>
-              <th style={{ padding: "5px" }}>구분</th>
-              {allFiltered.map(hw => (
-                <th key={`${hw.id}-type`} style={{ padding: "5px", fontWeight: "normal" }}>
-                  {hw.resetPeriod === "once" ? (hw.category || "업적") : 
-                  hw.id === "aion2-odd-energy" ? "기타" :
-                  hw.resetPeriod === "day" ? "Daily" : "Weekly"}
+              <th style={{ padding: "5px", borderBottom: "1px solid #444" }}>구분</th>
+              {dailyHws.length > 0 && (
+                <th colSpan={dailyHws.length} style={{ padding: "5px", fontWeight: "bold", borderBottom: "1px solid #444" }}>
+                  매일 00시
                 </th>
-              ))}
+              )}
+              {etcHws.length > 0 && (
+                <th colSpan={etcHws.length} style={{ padding: "5px", fontWeight: "bold", borderBottom: "1px solid #444" }}>
+                  05시 기준 3시간마다 +15
+                </th>
+              )}
+              {weeklyHws.length > 0 && (
+                <th colSpan={weeklyHws.length} style={{ padding: "5px", fontWeight: "bold", borderBottom: "1px solid #444" }}>
+                  수 00시
+                </th>
+              )}
             </tr>
-            {/* 2행: 실제 숙제 이름 (출석, 사명퀘 등) */}
-            <tr style={{ backgroundColor: "#222" }}>
+            
+            {/* 2행: 숙제 항목명 (1행과 동일한 배경색 적용) */}
+            <tr style={{ backgroundColor: "#333" }}>
               <th style={{ padding: "10px" }}>항목</th>
-              {allFiltered.map(hw => (
-                <th key={hw.id} style={{ padding: "10px", fontSize: "14px" }}>
-                  {hw.name}
-                  <div style={{ fontSize: "10px", color: "#888", fontWeight: "normal", marginTop: "4px" }}>
-                    ({String(hw.resetTime)}시)
-                  </div>
-                </th>
-              ))}
+              {allFiltered.map(hw => {
+                // 시간 24시간 형식 (05시 등) 가공
+                const formatTime = (time) => {
+                  if (Array.isArray(time)) return time.map(t => String(t).padStart(2, '0')).join(', ');
+                  return String(time).padStart(2, '0');
+                };
+
+                return (
+                  <th key={hw.id} style={{ padding: "10px", fontSize: "14px" }}>
+                    {hw.name}
+                    <div style={{ fontSize: "10px", color: "#888", fontWeight: "normal", marginTop: "4px" }}>
+                      ({formatTime(hw.resetTime)}시)
+                    </div>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
@@ -445,7 +462,7 @@ function App() {
 
                   {/* 3. 수정/삭제 버튼 (캐릭명 아래) */}
                   <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
-                    <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>수정</button>
+                    <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>변경</button>
                     <button onClick={() => {
                       if(window.confirm(`[${targetName}] 항목을 삭제하시겠습니까?`)) {
                         setData(prev => prev.filter((_, i) => i !== idx));
@@ -497,7 +514,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:47</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:56</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
