@@ -406,7 +406,27 @@ function App() {
         <h3 style={{ marginBottom: "10px" }}>{title}</h3>
         <table border="1" style={{ borderCollapse: "collapse", borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
           <thead>
-            {/* ... (헤더 렌더링 로직 동일) ... */}
+            {/* 1행: 숙제 이름 */}
+            <tr style={{ backgroundColor: "#333" }}>
+              <th style={{ padding: "10px" }}>항목</th>
+              {allFiltered.map(hw => (
+                <th key={hw.id} style={{ padding: "10px", fontSize: "14px" }}>
+                  {hw.name}
+                </th>
+              ))}
+            </tr>
+            {/* 2행: 숙제 종류 (리셋/회복, 주기 등) */}
+            <tr style={{ backgroundColor: "#222", fontSize: "11px", color: "#aaa" }}>
+              <th style={{ padding: "5px" }}>정보</th>
+              {allFiltered.map(hw => (
+                <th key={`${hw.id}-info`} style={{ padding: "5px", fontWeight: "normal" }}>
+                  {hw.resetPeriod === 'day' ? '일일' : `${dayMap[hw.resetDay]}요일`}
+                  <br />
+                  {hw.resetType === 'reset' ? '리셋' : '회복'}
+                  ({Array.isArray(hw.resetTime) ? hw.resetTime.join(',') : hw.resetTime}시)
+                </th>
+              ))}
+            </tr>
           </thead>
           <tbody>
             {dataList.map((targetName, idx) => (
@@ -475,7 +495,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:36</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:38</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
