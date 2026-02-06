@@ -95,7 +95,7 @@ function App() {
   });
 
   const [scores, setScores] = useState(() => {
-    const saved = localStorage.getItem(`scores`);
+    const saved = localStorage.getItem(`scores-${games[0]}`); // 처음엔 wow 기준
     return saved ? JSON.parse(saved) : {};
   });
 
@@ -123,12 +123,13 @@ function App() {
       
       if (response.data.success && response.data.data) {
         const charData = response.data.data;
-        setScores(prev => ({ 
-          ...prev, 
+        setScores(prev => ({
+          ...prev,
           [fullName]: {
             combatPower: charData.combat_power || 0,
-            combatScore: charData.combat_score || 0
-          } 
+            combatScore: charData.combat_score || 0,
+            updatedAt: Date.now(),
+          }
         }));
       }
     } catch (error) {
@@ -139,15 +140,18 @@ function App() {
   useEffect(() => {
     const savedChar = localStorage.getItem(`characters-${game}`);
     const savedAcc = localStorage.getItem(`accounts-${game}`);
+    const savedScores = localStorage.getItem(`scores-${game}`);
+
     setCharacters(savedChar && JSON.parse(savedChar).length > 0 ? JSON.parse(savedChar) : ["캐릭터1"]);
     setAccounts(savedAcc ? JSON.parse(savedAcc) : []);
+    setScores(savedScores ? JSON.parse(savedScores) : {});
   }, [game]);
 
   useEffect(() => {
     localStorage.setItem(`all-homeworks`, JSON.stringify(homeworks));
     localStorage.setItem(`characters-${game}`, JSON.stringify(characters));
     localStorage.setItem(`accounts-${game}`, JSON.stringify(accounts));
-    localStorage.setItem(`scores`, JSON.stringify(scores)); 
+    localStorage.setItem(`scores-${game}`, JSON.stringify(scores));
   }, [homeworks, characters, accounts, game, scores]);
 
   const resetProgress = () => {
@@ -542,7 +546,6 @@ function App() {
           <tbody>
             {dataList.map((targetName, idx) => (
               <tr key={idx}>
-                {/* <td style={{ textAlign: "center", padding: "10px", fontWeight: "bold", borderRight: "2px solid #444" }}> 260206 1613 */}
                 <td style={{ 
                   textAlign: "center", padding: "10px", fontWeight: "bold", 
                   position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
@@ -566,8 +569,13 @@ function App() {
                     <div style={{ marginBottom: "10px" }}>
                       {scores[targetName] ? (
                         <div style={{ fontSize: "11px", color: "#4daafc", marginBottom: "4px" }}>
-                          P: {scores[targetName].combatPower.toLocaleString()} / AT: {scores[targetName].combatScore.toLocaleString()}
+                          P: {scores[targetName].combatPower.toLocaleString()} | AT: {scores[targetName].combatScore.toLocaleString()}
                         </div>
+                        {scores[targetName]?.updatedAt && (
+                          <div style={{ fontSize: "10px", color: "#777", marginBottom: "4px" }}>
+                            갱신: {new Date(scores[targetName].updatedAt).toLocaleString()}
+                          </div>
+                        )}
                       ) : (
                         <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
                       )}
@@ -650,7 +658,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 21:07
+              최종 업데이트: 2026-02-06 22:06
             </div>
           </div>
 
@@ -708,6 +716,7 @@ function App() {
               >
                 아툴 테스트
               </button>
+
             </div>
           </div>
         </div>
