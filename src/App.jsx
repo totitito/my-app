@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from 'axios';
 
 const games = ["World of Warcraft", "Lost Ark", "AION 2"];
 const initialHomeworks = [
@@ -101,39 +100,37 @@ function App() {
 
   const fetchScore = async (fullName) => {
     try {
+      // "카니쵸니[바카]" 같은 형식 지원
       const match = fullName.match(/^(.+?)\[(.+?)\]$/);
       let charName = fullName;
-      let serverId = 1006; 
+      let server_id = 1016; // 기본값(원하면 바꿔)
 
       if (match) {
-        charName = match[1].trim(); 
+        charName = match[1].trim();
         const serverAbbr = match[2].trim();
         const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
-        serverId = serverMap[serverAbbr] || 1006;
+        server_id = serverMap[serverAbbr] || 1016;
       }
 
-      // 팩트: 주소 끝에 공백 생기지 않게 확실히 trim() 처리
-      const cleanName = encodeURIComponent(charName.trim());
-      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${cleanName}&server_id=${serverId}&race=1&page=1&limit=20`;
-      
-      const myWorkerUrl = "https://bitter-shadow-c9a0.shjoks.workers.dev/"; 
-      const finalUrl = `${myWorkerUrl}?url=${encodeURIComponent(targetUrl)}`;
+      // ✅ 이제 Worker/atool 직접호출 말고, 우리 서버 함수로 호출
+      const r = await fetch("/api/aion2-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyword: charName, server_id }),
+      });
 
-      const response = await axios.get(finalUrl);
-      
-      if (response.data.success && response.data.data) {
-        const charData = response.data.data;
-        setScores(prev => ({
-          ...prev,
-          [fullName]: {
-            combatPower: charData.combat_power || 0,
-            combatScore: charData.combat_score || 0,
-            updatedAt: Date.now(),
-          }
-        }));
-      }
-    } catch (error) {
-      console.error("최종 우회로 호출 실패:", error);
+      const j = await r.json();
+
+      setScores((prev) => ({
+        ...prev,
+        [fullName]: {
+          combatPower: j.combat_power ?? 0,
+          combatScore: j.combat_score ?? 0,
+          updatedAt: Date.now(),
+        },
+      }));
+    } catch (e) {
+      console.error("전투력 갱신 실패:", e);
     }
   };
 
@@ -660,7 +657,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 22:06
+              최종 업데이트: 2026-02-06 22:18
             </div>
           </div>
 
