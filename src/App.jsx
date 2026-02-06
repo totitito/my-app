@@ -565,28 +565,30 @@ function App() {
                   </div>
 
                   {/* 💡 팩트: 현재 게임이 AION 2일 때만 점수와 갱신 버튼을 표시 */}
-                  {game === "AION 2" && scope === "character" && (
-                    <div style={{ marginBottom: "10px" }}>
-                      {scores[targetName] ? (
-                        <div style={{ fontSize: "11px", color: "#4daafc", marginBottom: "4px" }}>
-                          P: {scores[targetName].combatPower.toLocaleString()} | AT: {scores[targetName].combatScore.toLocaleString()}
-                        </div>
-                        {scores[targetName]?.updatedAt && (
-                          <div style={{ fontSize: "10px", color: "#777", marginBottom: "4px" }}>
-                            갱신: {new Date(scores[targetName].updatedAt).toLocaleString()}
-                          </div>
+                    {game === "AION 2" && scope === "character" && (
+                      <div style={{ marginBottom: "10px" }}>
+                        {scores[targetName] ? (
+                          <> {/* <-- 이 Fragment가 빠져서 오류난 것임 */}
+                            <div style={{ fontSize: "11px", color: "#4daafc", marginBottom: "4px" }}>
+                              P: {scores[targetName].combatPower.toLocaleString()} | AT: {scores[targetName].combatScore.toLocaleString()}
+                            </div>
+                            {scores[targetName]?.updatedAt && (
+                              <div style={{ fontSize: "10px", color: "#777", marginBottom: "4px" }}>
+                                갱신: {new Date(scores[targetName].updatedAt).toLocaleString()}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
                         )}
-                      ) : (
-                        <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
-                      )}
-                      <button 
-                        onClick={() => fetchScore(targetName)} 
-                        style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
-                      >
-                        전투력 갱신
-                      </button>
-                    </div>
-                  )}
+                        <button 
+                          onClick={() => fetchScore(targetName)} 
+                          style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
+                        >
+                          전투력 갱신
+                        </button>
+                      </div>
+                    )}
 
                   {/* 3. 수정/삭제 버튼 (캐릭명 아래) */}
                   <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
