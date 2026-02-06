@@ -690,6 +690,24 @@ function App() {
               <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>설정 업데이트</button>
               <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button>
               <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
+              
+              {/* 260206 2137 TEST */}
+              <button
+                onClick={async () => {
+                  const r = await fetch("/api/aion2-search", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      keyword: "카니쵸니",
+                      server_id: 1016,
+                    }),
+                  });
+                  const j = await r.json();
+                  console.log(j);
+                }}
+              >
+                아툴 테스트
+              </button>
             </div>
           </div>
         </div>
