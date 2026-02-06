@@ -112,32 +112,29 @@ function App() {
         serverId = serverMap[serverAbbr] || 1006;
       }
 
-      // 팩트: 주소를 그대로 보내면 프록시가 꼬이므로, Base64로 숨겨서 보냄
-      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${encodeURIComponent(charName)}&server_id=${serverId}&race=1&page=1&limit=20`;
+      // 팩트: AllOrigins가 400 에러를 내므로, 다른 무료 프록시(Cloudflare Worker 기반)를 시도함
+      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${charName}&server_id=${serverId}&race=1&page=1&limit=20`;
       
-      // AllOrigins의 다른 방식: 암호화된 요청
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+      // 이번엔 다른 공개 프록시 주소다
+      const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
 
       const response = await axios.get(proxyUrl);
       
-      if (response.data && response.data.contents) {
-        // 응답이 왔을 때만 파싱
-        const contents = JSON.parse(response.data.contents);
+      // 이 서비스는 바로 데이터를 주므로 JSON.parse가 필요 없을 수도 있음
+      const data = response.data;
 
-        if (contents.success && contents.data) {
-          const charData = contents.data;
-          setScores(prev => ({ 
-            ...prev, 
-            [fullName]: {
-              combatPower: charData.combat_power || 0,
-              combatScore: charData.combat_score || 0
-            } 
-          }));
-        }
+      if (data.success && data.data) {
+        const charData = data.data;
+        setScores(prev => ({ 
+          ...prev, 
+          [fullName]: {
+            combatPower: charData.combat_power || 0,
+            combatScore: charData.combat_score || 0
+          } 
+        }));
       }
     } catch (error) {
-      console.error("최종 에러 분석:", error);
-      // 만약 여기서도 400이 뜨면 이건 프록시 서버가 NC 서버를 현재 막아둔 상태임
+      console.error("조회 실패:", error);
     }
   };
 
@@ -655,7 +652,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 20:03
+              최종 업데이트: 2026-02-06 20:05
             </div>
           </div>
 
