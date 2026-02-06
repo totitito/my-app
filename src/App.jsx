@@ -420,9 +420,9 @@ function App() {
                 </>
               ) : (
                 <>
-                  {dailyHws.length > 0 && <th colSpan={dailyHws.length} style={{ padding: "8px" }}>매일 00시</th>}
-                  {etcHws.length > 0 && <th colSpan={etcHws.length} style={{ padding: "8px" }}>05시 기준 3시간마다 +15</th>}
-                  {weeklyHws.length > 0 && <th colSpan={weeklyHws.length} style={{ padding: "8px" }}>수 00시</th>}
+                  {dailyHws.length > 0 && <th colSpan={dailyHws.length} style={{ padding: "8px" }}>Daily</th>}
+                  {etcHws.length > 0 && <th colSpan={etcHws.length} style={{ padding: "8px" }}>etc</th>}
+                  {weeklyHws.length > 0 && <th colSpan={weeklyHws.length} style={{ padding: "8px" }}>Weekly</th>}
                 </>
               )}
             </tr>
@@ -511,7 +511,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 11:01</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 11:02</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
