@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import axios from 'axios';
 
 const games = ["World of Warcraft", "Lost Ark", "AION 2"];
-
 const initialHomeworks = [
   // 와우 - 반복
   { id: "wow-raid", game: "World of Warcraft", name: "레이드", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "", lastUpdated: {} },
@@ -76,6 +76,8 @@ const initialHomeworks = [
 function App() {
   const [game, setGame] = useState(games[0]);
   const [viewMode, setViewMode] = useState("repeat");
+  const [charInfo, setCharInfo] = useState(null);
+  
   const [homeworks, setHomeworks] = useState(() => {
     const saved = localStorage.getItem(`all-homeworks`);
     return saved ? JSON.parse(saved) : initialHomeworks;
@@ -92,6 +94,47 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [scores, setScores] = useState(() => {
+    const saved = localStorage.getItem(`scores`);
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const fetchScore = async (fullName) => {
+    try {
+      const match = fullName.match(/^(.+?)\[(.+?)\]$/);
+      let charName = fullName;
+      let serverId = 1006; 
+
+      if (match) {
+        charName = match[1].trim(); 
+        const serverAbbr = match[2].trim();
+        const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
+        serverId = serverMap[serverAbbr] || 1006;
+      }
+
+      const response = await axios.post('/api-atool/api/character/search', {
+        keyword: charName,
+        server_id: serverId,
+        race: 1,
+        page: 1,
+        limit: 20
+      });
+
+      if (response.data.success && response.data.data) {
+        const charData = response.data.data;
+        setScores(prev => ({ 
+          ...prev, 
+          [fullName]: {
+            combatPower: charData.combat_power,
+            combatScore: charData.combat_score
+          } 
+        }));
+      }
+    } catch (error) {
+      console.error("API 호출 에러:", error);
+    }
+  };
+
   useEffect(() => {
     const savedChar = localStorage.getItem(`characters-${game}`);
     const savedAcc = localStorage.getItem(`accounts-${game}`);
@@ -103,7 +146,8 @@ function App() {
     localStorage.setItem(`all-homeworks`, JSON.stringify(homeworks));
     localStorage.setItem(`characters-${game}`, JSON.stringify(characters));
     localStorage.setItem(`accounts-${game}`, JSON.stringify(accounts));
-  }, [homeworks, characters, accounts, game]);
+    localStorage.setItem(`scores`, JSON.stringify(scores)); 
+  }, [homeworks, characters, accounts, game, scores]);
 
   const resetProgress = () => {
     if (window.confirm(`[${game}] 모든 숙제 진행도를 남은 상태(max)로 변경하시겠습니까?`)) {
@@ -434,7 +478,15 @@ function App() {
         position: "relative", // sticky 기준점 명시
         marginTop: "30px" 
       }}>
-        <h3 style={{ marginBottom: "10px" }}>{title}</h3>
+        <h3 style={{ marginBottom: "10px", display: "flex", alignItems: "center", gap: "10px" }}>
+          {title}
+          {/* 팩트: 현재 게임이 AION 2이고, 캐릭터별 테이블일 때만 가이드 문구 표시 */}
+          {game === "AION 2" && scope === "character" && (
+            <span style={{ fontSize: "12px", color: "#aaa", fontWeight: "normal" }}>
+              ※ 캐릭명[서버명2글자] 형식으로 입력하면 전투력 조회 가능 ex) 카니쵸니[바카]
+            </span>
+          )}
+        </h3>
         <table border="1" style={{ borderCollapse: "separate", borderSpacing: 0, borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
           <thead>
             <tr style={{ backgroundColor: "#333" }}>
@@ -502,11 +554,34 @@ function App() {
                   </div>
 
                   {/* 2. 캐릭터명 */}
-                  <div style={{ fontSize: "16px", marginBottom: "8px", marginTop: "5px" }}>{targetName}</div>
+                  {/* <div style={{ fontSize: "16px", marginBottom: "8px", marginTop: "5px" }}>{targetName}</div> */}
+                  {/* 2. 캐릭터명 및 아툴 점수(아이온2 전용) */}
+                  <div style={{ fontSize: "16px", marginBottom: "8px", marginTop: "5px" }}>
+                    {targetName}
+                  </div>
+
+                  {/* 💡 팩트: 현재 게임이 AION 2일 때만 점수와 갱신 버튼을 표시 */}
+                  {game === "AION 2" && scope === "character" && (
+                    <div style={{ marginBottom: "10px" }}>
+                      {scores[targetName] ? (
+                        <div style={{ fontSize: "11px", color: "#4daafc", marginBottom: "4px" }}>
+                          P: {scores[targetName].combatPower.toLocaleString()} / AT: {scores[targetName].combatScore.toLocaleString()}
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
+                      )}
+                      <button 
+                        onClick={() => fetchScore(targetName)} 
+                        style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
+                      >
+                        전투력 갱신
+                      </button>
+                    </div>
+                  )}
 
                   {/* 3. 수정/삭제 버튼 (캐릭명 아래) */}
                   <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
-                    <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>변경</button>
+                    <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>이름변경</button>
                     <button onClick={() => {
                       if(window.confirm(`[${targetName}] 항목을 삭제하시겠습니까?`)) {
                         setData(prev => prev.filter((_, i) => i !== idx));
@@ -574,7 +649,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 16:37
+              최종 업데이트: 2026-02-06 19:35
             </div>
           </div>
 
@@ -632,7 +707,7 @@ function App() {
         + 캐릭터 추가
       </button>
     </div>
-  );
+  );  
 }
 
 export default App;
