@@ -638,7 +638,7 @@ function App() {
                   )}
 
                   {/* 💡 팩트: 현재 게임이 LOSTARK일 때만 로아 전용 정보와 버튼 표시 */}
-                  {game === "LOSTARK" && scope === "character" && (
+                  {game === "Lost Ark" && scope === "character" && (
                     <div style={{ marginBottom: "10px" }}>
                       {scores[targetName] ? (
                         <div style={{ fontSize: "11px", color: "#ff9f43", marginBottom: "4px" }}>
@@ -658,7 +658,7 @@ function App() {
                           cursor: "pointer"
                         }}
                       >
-                        로아 정보 갱신
+                        전투력 갱신
                       </button>
                     </div>
                   )}
@@ -733,7 +733,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 22:34
+              최종 업데이트: 2026-02-07 00:02
             </div>
           </div>
 
