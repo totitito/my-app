@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api-atool/:path*",
+      "destination": "https://atool.aion2.plaync.com/:path*"
+    }
+  ]
+}

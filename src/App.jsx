@@ -99,42 +99,42 @@ function App() {
     return saved ? JSON.parse(saved) : {};
   });
 
-  const fetchScore = async (fullName) => {
-    try {
-      const match = fullName.match(/^(.+?)\[(.+?)\]$/);
-      let charName = fullName;
-      let serverId = 1006; 
+  // fetchScore 함수 내부 수정
+const fetchScore = async (fullName) => {
+  // ... (이름/서버 분리 로직 동일)
 
-      if (match) {
-        charName = match[1].trim(); 
-        const serverAbbr = match[2].trim();
-        const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
-        serverId = serverMap[serverAbbr] || 1006;
-      }
+  try {
+    const targetUrl = 'https://atool.aion2.plaync.com/api/character/search';
+    // 팩트: 브라우저 차단을 피하기 위해 공개 프록시 서버를 경유함
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
 
-      // const response = await axios.post('/api-atool/api/character/search', {
-      const response = await axios.post('https://atool.aion2.plaync.com/api/character/search', {
+    const response = await axios.get(proxyUrl, { // post 대신 get으로 감쌈
+      params: {
         keyword: charName,
         server_id: serverId,
         race: 1,
         page: 1,
         limit: 20
-      });
-
-      if (response.data.success && response.data.data) {
-        const charData = response.data.data;
-        setScores(prev => ({ 
-          ...prev, 
-          [fullName]: {
-            combatPower: charData.combat_power,
-            combatScore: charData.combat_score
-          } 
-        }));
       }
-    } catch (error) {
-      console.error("API 호출 에러:", error);
+    });
+
+    // AllOrigins는 응답을 문자열로 주므로 JSON.parse가 필요할 수 있음
+    const data = JSON.parse(response.data.contents);
+
+    if (data.success && data.data) {
+      const charData = data.data;
+      setScores(prev => ({ 
+        ...prev, 
+        [fullName]: {
+          combatPower: charData.combat_power,
+          combatScore: charData.combat_score
+        } 
+      }));
     }
-  };
+  } catch (error) {
+    console.error("웹 환경 조회 실패:", error);
+  }
+};
 
   useEffect(() => {
     const savedChar = localStorage.getItem(`characters-${game}`);
@@ -650,7 +650,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 19:35
+              최종 업데이트: 2026-02-06 19:41
             </div>
           </div>
 
