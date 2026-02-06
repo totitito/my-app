@@ -642,28 +642,36 @@ function App() {
                     </div>
                   )}
 
-                  {/* 💡 팩트: 현재 게임이 LOSTARK일 때만 로아 전용 정보와 버튼 표시 */}
                   {game === "Lost Ark" && scope === "character" && (
                     <div style={{ marginBottom: "10px" }}>
                       {scores[targetName] ? (
-                        <div style={{ fontSize: "11px", color: "#ff9f43", marginBottom: "4px" }}>
-                          아이템 레벨: {scores[targetName].itemLevel} | 갱신일: {new Date(scores[targetName].updatedAt).toLocaleDateString()}
-                        </div>
+                        <>
+                          <div style={{ fontSize: "11px", marginBottom: "2px" }}>
+                            <span style={{ color: "#ffffff" }}>
+                              iLvl: {scores[targetName].itemLevel}
+                            </span>
+                            <span style={{ color: "#4daafc", marginLeft: "6px" }}>
+                              P: {scores[targetName].combatPower?.toLocaleString()}
+                            </span>
+                          </div>
+
+                          {scores[targetName].updatedAt && (
+                            <div style={{ fontSize: "10px", color: "#777", marginBottom: "4px" }}>
+                              갱신: {formatScoreUpdatedAt(scores[targetName].updatedAt)}
+                            </div>
+                          )}
+                        </>
                       ) : (
-                        <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>데이터 없음</div>
+                        <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>
+                          정보 미갱신
+                        </div>
                       )}
-                      
-                      <button 
-                        onClick={() => fetchLoaScore(targetName)} 
-                        style={{ 
-                          ...btnStyle, 
-                          padding: "2px 5px", 
-                          fontSize: "10px", 
-                          backgroundColor: "#a55eea", // 로아 느낌 나는 보라색
-                          cursor: "pointer"
-                        }}
+
+                      <button
+                        onClick={() => fetchLoaScore(targetName)}
+                        style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
                       >
-                        전투력 갱신
+                        정보 갱신
                       </button>
                     </div>
                   )}
