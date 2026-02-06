@@ -495,7 +495,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:38</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:43</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
