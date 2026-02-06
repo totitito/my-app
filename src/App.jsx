@@ -112,15 +112,16 @@ function App() {
         serverId = serverMap[serverAbbr] || 1006;
       }
 
-      // 로컬 Vite 설정(proxy)을 사용하는 원래 주소
-      const response = await axios.post('/api-atool/api/character/search', {
-        keyword: charName,
-        server_id: serverId,
-        race: 1,
-        page: 1,
-        limit: 20
-      });
+      // 1. NC 서버의 실제 API 주소
+      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${encodeURIComponent(charName)}&server_id=${serverId}&race=1&page=1&limit=20`;
+      
+      // 2. 네 전용 Worker 주소 (스샷에 있는 주소)
+      const myWorkerUrl = "https://bitter-shadow-c9a0.shjoks.workers.dev/"; 
+      const finalUrl = `${myWorkerUrl}?url=${encodeURIComponent(targetUrl)}`;
 
+      // 3. 호출
+      const response = await axios.get(finalUrl);
+      
       if (response.data.success && response.data.data) {
         const charData = response.data.data;
         setScores(prev => ({ 
@@ -132,7 +133,7 @@ function App() {
         }));
       }
     } catch (error) {
-      console.error("로컬 조회 실패:", error);
+      console.error("전용 우회로 조회 실패:", error);
     }
   };
 
@@ -650,7 +651,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 20:05
+              최종 업데이트: 2026-02-06 20:57
             </div>
           </div>
 
