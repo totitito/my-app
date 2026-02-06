@@ -101,9 +101,9 @@ function App() {
 
   const fetchScore = async (fullName) => {
     try {
-      // 1. 변수 선언 (정의되지 않았다는 에러 방지)
+      // 1. 변수 정의 (ReferenceError 방지)
       const match = fullName.match(/^(.+?)\[(.+?)\]$/);
-      let charName = fullName; // 기본값 설정
+      let charName = fullName;
       let serverId = 1006; 
 
       if (match) {
@@ -113,15 +113,18 @@ function App() {
         serverId = serverMap[serverAbbr] || 1006;
       }
 
-      // 2. 외부 프록시 사용하여 CORS 회피
-      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${encodeURIComponent(charName)}&server_id=${serverId}&race=1&page=1&limit=20`;
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+      // 2. Vercel 프록시 경로 사용 (POST 방식)
+      // vercel.json 설정 덕분에 /api-atool 이 NC 서버로 연결됨
+      const response = await axios.post('/api-atool/api/character/search', {
+        keyword: charName,
+        server_id: serverId,
+        race: 1,
+        page: 1,
+        limit: 20
+      });
 
-      const response = await axios.get(proxyUrl);
-      const data = JSON.parse(response.data.contents);
-
-      if (data.success && data.data) {
-        const charData = data.data;
+      if (response.data.success && response.data.data) {
+        const charData = response.data.data;
         setScores(prev => ({ 
           ...prev, 
           [fullName]: {
@@ -132,6 +135,7 @@ function App() {
       }
     } catch (error) {
       console.error("조회 실패:", error);
+      // 에러 메시지가 404라면 vercel.json이 루트에 없는 것임
     }
   };
 
