@@ -101,7 +101,6 @@ function App() {
 
   const fetchScore = async (fullName) => {
     try {
-      // 1. 변수 정의 (ReferenceError 방지)
       const match = fullName.match(/^(.+?)\[(.+?)\]$/);
       let charName = fullName;
       let serverId = 1006; 
@@ -110,17 +109,23 @@ function App() {
         charName = match[1].trim(); 
         const serverAbbr = match[2].trim();
         const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
-        serverId = serverMap[serverAbbr] || 1006;
+        serverId = serverAbbr.includes("아리") ? 1006 : serverAbbr.includes("바카") ? 1016 : serverAbbr.includes("코치") ? 1018 : 1006;
       }
 
-      // 2. Vercel 프록시 경로 사용 (POST 방식)
-      // vercel.json 설정 덕분에 /api-atool 이 NC 서버로 연결됨
-      const response = await axios.post('/api-atool/api/character/search', {
+      // 팩트: NC 서버의 차단을 피하기 위해 데모 프록시 서버 사용
+      const targetUrl = 'https://atool.aion2.plaync.com/api/character/search';
+      const proxyUrl = 'https://cors-anywhere.herokuapp.com/' + targetUrl;
+
+      const response = await axios.post(proxyUrl, {
         keyword: charName,
         server_id: serverId,
         race: 1,
         page: 1,
         limit: 20
+      }, {
+        headers: {
+          'x-requested-with': 'XMLHttpRequest'
+        }
       });
 
       if (response.data.success && response.data.data) {
@@ -135,7 +140,7 @@ function App() {
       }
     } catch (error) {
       console.error("조회 실패:", error);
-      // 에러 메시지가 404라면 vercel.json이 루트에 없는 것임
+      // 만약 여기서 403 에러가 나면 아래 '중요' 단계 확인
     }
   };
 
@@ -653,7 +658,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 19:48
+              최종 업데이트: 2026-02-06 19:53
             </div>
           </div>
 
