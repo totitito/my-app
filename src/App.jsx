@@ -308,31 +308,39 @@ function App() {
     setData(newList);
   };
 
-  const renameTarget = (oldName, idx, dataList, setData) => {
-    const newName = prompt("새 이름을 입력하세요", oldName);
-    if (!newName || oldName === newName) return;
-    if (dataList.includes(newName)) { alert("중복된 이름입니다."); return; }
+  const renameTarget = (oldName, idx, dataList, setData) => {
+    const newName = prompt("새 이름을 입력하세요", oldName);
+    if (!newName || oldName === newName) return;
+    if (dataList.includes(newName)) { alert("중복된 이름입니다."); return; }
 
-    const newList = [...dataList];
-    newList[idx] = newName;
-    setData(newList);
+    const newList = [...dataList];
+    newList[idx] = newName;
+    setData(newList);
 
-    setHomeworks(prev => prev.map(hw => {
-      const newCounts = { ...(hw.counts || {}) };
-      const newExcluded = { ...(hw.excluded || {}) };
+    setHomeworks(prev => prev.map(hw => {
+      const newCounts = { ...(hw.counts || {}) };
+      const newExcluded = { ...(hw.excluded || {}) };
+      const newLastUpdated = { ...(hw.lastUpdated || {}) }; // 수정 시간 객체 복사
 
-      if (Object.prototype.hasOwnProperty.call(newCounts, oldName)) {
-        newCounts[newName] = newCounts[oldName];
-        delete newCounts[oldName];
-      }
-      if (Object.prototype.hasOwnProperty.call(newExcluded, oldName)) {
-        newExcluded[newName] = newExcluded[oldName];
-        delete newExcluded[oldName];
-      }
+      // 진행도 복사
+      if (Object.prototype.hasOwnProperty.call(newCounts, oldName)) {
+        newCounts[newName] = newCounts[oldName];
+        delete newCounts[oldName];
+      }
+      // 제외 상태 복사
+      if (Object.prototype.hasOwnProperty.call(newExcluded, oldName)) {
+        newExcluded[newName] = newExcluded[oldName];
+        delete newExcluded[oldName];
+      }
+      // ★ 핵심: 마지막 수정 시각도 새 이름으로 복사해줘야 리셋이 안 됨
+      if (Object.prototype.hasOwnProperty.call(newLastUpdated, oldName)) {
+        newLastUpdated[newName] = newLastUpdated[oldName];
+        delete newLastUpdated[oldName];
+      }
 
-      return { ...hw, counts: newCounts, excluded: newExcluded };
-    }));
-  };
+      return { ...hw, counts: newCounts, excluded: newExcluded, lastUpdated: newLastUpdated };
+    }));
+  };
 
   const updateCount = (id, targetName, delta) => {
     setHomeworks(prev => prev.map(hw => {
@@ -476,7 +484,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-05 23:49</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 09:44</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
