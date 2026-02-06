@@ -406,24 +406,26 @@ function App() {
         <h3 style={{ marginBottom: "10px" }}>{title}</h3>
         <table border="1" style={{ borderCollapse: "collapse", borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
           <thead>
-            {/* 1행: 숙제 이름 */}
-            <tr style={{ backgroundColor: "#333" }}>
+            {/* 1행: 숙제 종류 (Daily, 기타, Weekly) */}
+            <tr style={{ backgroundColor: "#333", fontSize: "12px", color: "#bbb" }}>
+              <th style={{ padding: "5px" }}>구분</th>
+              {allFiltered.map(hw => (
+                <th key={`${hw.id}-type`} style={{ padding: "5px", fontWeight: "normal" }}>
+                  {hw.resetPeriod === "once" ? (hw.category || "업적") : 
+                  hw.id === "aion2-odd-energy" ? "기타" :
+                  hw.resetPeriod === "day" ? "Daily" : "Weekly"}
+                </th>
+              ))}
+            </tr>
+            {/* 2행: 실제 숙제 이름 (출석, 사명퀘 등) */}
+            <tr style={{ backgroundColor: "#222" }}>
               <th style={{ padding: "10px" }}>항목</th>
               {allFiltered.map(hw => (
                 <th key={hw.id} style={{ padding: "10px", fontSize: "14px" }}>
                   {hw.name}
-                </th>
-              ))}
-            </tr>
-            {/* 2행: 숙제 종류 (리셋/회복, 주기 등) */}
-            <tr style={{ backgroundColor: "#222", fontSize: "11px", color: "#aaa" }}>
-              <th style={{ padding: "5px" }}>정보</th>
-              {allFiltered.map(hw => (
-                <th key={`${hw.id}-info`} style={{ padding: "5px", fontWeight: "normal" }}>
-                  {hw.resetPeriod === 'day' ? '일일' : `${dayMap[hw.resetDay]}요일`}
-                  <br />
-                  {hw.resetType === 'reset' ? '리셋' : '회복'}
-                  ({Array.isArray(hw.resetTime) ? hw.resetTime.join(',') : hw.resetTime}시)
+                  <div style={{ fontSize: "10px", color: "#888", fontWeight: "normal", marginTop: "4px" }}>
+                    ({String(hw.resetTime)}시)
+                  </div>
                 </th>
               ))}
             </tr>
@@ -495,7 +497,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:43</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:47</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
