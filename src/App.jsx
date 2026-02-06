@@ -112,7 +112,8 @@ function App() {
         serverId = serverMap[serverAbbr] || 1006;
       }
 
-      const response = await axios.post('/api-atool/api/character/search', {
+      // const response = await axios.post('/api-atool/api/character/search', {
+      const response = await axios.post('https://atool.aion2.plaync.com/api/character/search', {
         keyword: charName,
         server_id: serverId,
         race: 1,
