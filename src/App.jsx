@@ -147,7 +147,8 @@ function App() {
 
   const fetchLoaScore = async (charName) => {
     try {
-      const targetUrl = `/api-lostark/armories/characters/${encodeURIComponent(charName)}/profiles`;
+      // const targetUrl = `/api-lostark/armories/characters/${encodeURIComponent(charName)}/profiles`;
+      const targetUrl = `/api/loa-profile?name=${encodeURIComponent(charName)}`;
 
       const response = await fetch(targetUrl, { method: "GET" }); // ✅ 헤더 제거
 
@@ -160,7 +161,8 @@ function App() {
           ...prev,
           [charName]: {
             itemLevel: data.ItemMaxLevel,
-            combatPower: data.Stats?.find(s => s.Type === "전투력")?.Value || 0,
+            // combatPower: data.Stats?.find(s => s.Type === "전투력")?.Value || 0,
+            combatPower: data.CombatPower || 0,
             updatedAt: new Date().toISOString()
           }
         }));
@@ -735,7 +737,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-07 00:55
+              최종 업데이트: 2026-02-07 07:37
             </div>
           </div>
 

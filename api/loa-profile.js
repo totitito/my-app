@@ -10,8 +10,8 @@ export default async function handler(req, res) {
 
     const r = await fetch(url, {
       headers: {
-        accept: "application/json",
-        authorization: `bearer ${jwt}`,
+        Accept: "application/json",
+        Authorization: `Bearer ${jwt}`, // ✅ 핵심
       },
     });
 
@@ -20,12 +20,14 @@ export default async function handler(req, res) {
 
     const data = JSON.parse(text);
 
-    // 필요한 값만 얇게 내려주기
     res.status(200).json({
       CharacterName: data.CharacterName,
       ServerName: data.ServerName,
-      ItemAvgLevel: data.ItemAvgLevel,
-      CombatPower: data.CombatPower,
+      ItemMaxLevel: data.ItemMaxLevel ?? data.ItemAvgLevel ?? null,
+      CombatPower:
+        data.CombatPower ??
+        (Array.isArray(data.Stats) ? data.Stats.find(s => s.Type === "전투력")?.Value : null) ??
+        null,
       raw: data,
     });
   } catch (e) {
