@@ -109,27 +109,20 @@ function App() {
         charName = match[1].trim(); 
         const serverAbbr = match[2].trim();
         const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
-        serverId = serverAbbr.includes("아리") ? 1006 : serverAbbr.includes("바카") ? 1016 : serverAbbr.includes("코치") ? 1018 : 1006;
+        serverId = serverMap[serverAbbr] || 1006;
       }
 
-      // 팩트: NC 서버의 차단을 피하기 위해 데모 프록시 서버 사용
-      const targetUrl = 'https://atool.aion2.plaync.com/api/character/search';
-      const proxyUrl = 'https://cors-anywhere.herokuapp.com/' + targetUrl;
+      // 팩트: AllOrigins는 별도의 승인 절차(버튼 클릭)가 필요 없음
+      const targetUrl = `https://atool.aion2.plaync.com/api/character/search?keyword=${encodeURIComponent(charName)}&server_id=${serverId}&race=1&page=1&limit=20`;
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
 
-      const response = await axios.post(proxyUrl, {
-        keyword: charName,
-        server_id: serverId,
-        race: 1,
-        page: 1,
-        limit: 20
-      }, {
-        headers: {
-          'x-requested-with': 'XMLHttpRequest'
-        }
-      });
+      const response = await axios.get(proxyUrl);
+      
+      // 데이터가 텍스트로 오기 때문에 JSON.parse 필수
+      const contents = JSON.parse(response.data.contents);
 
-      if (response.data.success && response.data.data) {
-        const charData = response.data.data;
+      if (contents.success && contents.data) {
+        const charData = contents.data;
         setScores(prev => ({ 
           ...prev, 
           [fullName]: {
@@ -140,7 +133,6 @@ function App() {
       }
     } catch (error) {
       console.error("조회 실패:", error);
-      // 만약 여기서 403 에러가 나면 아래 '중요' 단계 확인
     }
   };
 
@@ -658,7 +650,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 19:53
+              최종 업데이트: 2026-02-06 19:56
             </div>
           </div>
 
