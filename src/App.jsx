@@ -406,45 +406,42 @@ function App() {
         <h3 style={{ marginBottom: "10px" }}>{title}</h3>
         <table border="1" style={{ borderCollapse: "collapse", borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
           <thead>
-            {/* 1행: 구분 및 병합 (Daily, 기타, Weekly) */}
-            <tr style={{ backgroundColor: "#333", fontSize: "12px", color: "#bbb" }}>
-              <th style={{ padding: "5px", borderBottom: "1px solid #444" }}>구분</th>
-              {dailyHws.length > 0 && (
-                <th colSpan={dailyHws.length} style={{ padding: "5px", fontWeight: "bold", borderBottom: "1px solid #444" }}>
-                  매일 00시
-                </th>
-              )}
-              {etcHws.length > 0 && (
-                <th colSpan={etcHws.length} style={{ padding: "5px", fontWeight: "bold", borderBottom: "1px solid #444" }}>
-                  05시 기준 3시간마다 +15
-                </th>
-              )}
-              {weeklyHws.length > 0 && (
-                <th colSpan={weeklyHws.length} style={{ padding: "5px", fontWeight: "bold", borderBottom: "1px solid #444" }}>
-                  수 00시
-                </th>
+            {/* 1행: 구분 및 셀 병합 */}
+            <tr style={{ backgroundColor: "#333" }}>
+              <th style={{ width: "140px", padding: "8px" }}>구분</th>
+              {viewMode === "once" ? (
+                <>
+                  {onceBasic.length > 0 && <th colSpan={onceBasic.length} style={{ padding: "8px" }}>기본</th>}
+                  {onceStory.length > 0 && <th colSpan={onceStory.length} style={{ padding: "8px" }}>스토리</th>}
+                  {onceBoss.length > 0 && <th colSpan={onceBoss.length} style={{ padding: "8px" }}>필드보스</th>}
+                  {onceWing.length > 0 && <th colSpan={onceWing.length} style={{ padding: "8px" }}>날개</th>}
+                  {onceArt.length > 0 && <th colSpan={onceArt.length} style={{ padding: "8px" }}>명화</th>}
+                  {onceEtc.length > 0 && <th colSpan={onceEtc.length} style={{ padding: "8px" }}>기타</th>}
+                </>
+              ) : (
+                <>
+                  {dailyHws.length > 0 && <th colSpan={dailyHws.length} style={{ padding: "8px" }}>매일 00시</th>}
+                  {etcHws.length > 0 && <th colSpan={etcHws.length} style={{ padding: "8px" }}>05시 기준 3시간마다 +15</th>}
+                  {weeklyHws.length > 0 && <th colSpan={weeklyHws.length} style={{ padding: "8px" }}>수 00시</th>}
+                </>
               )}
             </tr>
-            
+
             {/* 2행: 숙제 항목명 (1행과 동일한 배경색 적용) */}
             <tr style={{ backgroundColor: "#333" }}>
               <th style={{ padding: "10px" }}>항목</th>
-              {allFiltered.map(hw => {
-                // 시간 24시간 형식 (05시 등) 가공
-                const formatTime = (time) => {
-                  if (Array.isArray(time)) return time.map(t => String(t).padStart(2, '0')).join(', ');
-                  return String(time).padStart(2, '0');
-                };
-
-                return (
-                  <th key={hw.id} style={{ padding: "10px", fontSize: "14px" }}>
-                    {hw.name}
-                    <div style={{ fontSize: "10px", color: "#888", fontWeight: "normal", marginTop: "4px" }}>
-                      ({formatTime(hw.resetTime)}시)
+              {allFiltered.map(hw => (
+                <th key={hw.id} style={{ padding: "10px" }}>
+                  <div style={{ fontWeight: "bold", marginBottom: viewMode === "once" ? "0" : "4px" }}>{hw.name}</div>
+                  {viewMode !== "once" && (
+                    <div style={{ fontSize: "10px", color: "#bbb" }}>
+                      {hw.id === "aion2-odd-energy" ? "매 3시간 +15" :
+                      (hw.resetType === 'recovery' ? `매일 05시 +${hw.recoveryAmount}` :
+                      `${hw.resetPeriod === 'week' ? dayMap[hw.resetDay] : '매일'} ${String(Array.isArray(hw.resetTime)?hw.resetTime[0]:hw.resetTime).padStart(2,'0')}시`)}
                     </div>
-                  </th>
-                );
-              })}
+                  )}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -514,7 +511,7 @@ function App() {
   return (
     <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       <h1>GHW</h1>
-      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 10:56</div>
+      <div style={{ fontSize: "12px", color: "#888", marginBottom: "20px" }}>최종 업데이트: 2026-02-06 11:01</div>
       <div style={{ marginBottom: "20px" }}>
         {games.map(g => <button key={g} onClick={() => setGame(g)} style={{ ...btnStyle, marginRight: "5px", padding: "10px", backgroundColor: game === g ? "#666" : "#444" }}>{g}</button>)}
       </div>
