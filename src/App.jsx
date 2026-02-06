@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
 
 const games = ["World of Warcraft", "Lost Ark", "AION 2"];
+
+const formatScoreUpdatedAt = (ts) => {
+  if (!ts) return "";
+  const d = new Date(ts);
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return `${m}/${day} ${hh}:${mm}`;
+};
+
 const initialHomeworks = [
   // 와우 - 반복
   { id: "wow-raid", game: "World of Warcraft", name: "레이드", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "", lastUpdated: {} },
@@ -561,31 +572,37 @@ function App() {
                     {targetName}
                   </div>
 
-                  {/* 💡 팩트: 현재 게임이 AION 2일 때만 점수와 갱신 버튼을 표시 */}
-                    {game === "AION 2" && scope === "character" && (
-                      <div style={{ marginBottom: "10px" }}>
-                        {scores[targetName] ? (
-                          <> {/* <-- 이 Fragment가 빠져서 오류난 것임 */}
-                            <div style={{ fontSize: "11px", color: "#4daafc", marginBottom: "4px" }}>
-                              P: {scores[targetName].combatPower.toLocaleString()} | AT: {scores[targetName].combatScore.toLocaleString()}
+                  {game === "AION 2" && scope === "character" && (
+                    <div style={{ marginBottom: "10px" }}>
+                      {scores[targetName] ? (
+                        <>
+                          <div style={{ fontSize: "11px", marginBottom: "2px" }}>
+                            <span style={{ color: "#ffffff" }}>
+                              P: {scores[targetName].combatPower.toLocaleString()}
+                            </span>
+                            <span style={{ color: "#4daafc", marginLeft: "6px" }}>
+                              AT: {scores[targetName].combatScore.toLocaleString()}
+                            </span>
+                          </div>
+
+                          {scores[targetName].updatedAt && (
+                            <div style={{ fontSize: "10px", color: "#777", marginBottom: "4px" }}>
+                              갱신: {formatScoreUpdatedAt(scores[targetName].updatedAt)}
                             </div>
-                            {scores[targetName]?.updatedAt && (
-                              <div style={{ fontSize: "10px", color: "#777", marginBottom: "4px" }}>
-                                갱신: {new Date(scores[targetName].updatedAt).toLocaleString()}
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
-                        )}
-                        <button 
-                          onClick={() => fetchScore(targetName)} 
-                          style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
-                        >
-                          전투력 갱신
-                        </button>
-                      </div>
-                    )}
+                          )}
+                        </>
+                      ) : (
+                        <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
+                      )}
+
+                      <button 
+                        onClick={() => fetchScore(targetName)} 
+                        style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
+                      >
+                        전투력 갱신
+                      </button>
+                    </div>
+                  )}
 
                   {/* 3. 수정/삭제 버튼 (캐릭명 아래) */}
                   <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
@@ -657,7 +674,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-06 22:18
+              최종 업데이트: 2026-02-06 22:34
             </div>
           </div>
 
