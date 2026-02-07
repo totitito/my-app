@@ -647,7 +647,6 @@ function App() {
               ))}
             </tr>
           </thead>
-          
           <tbody>
             {dataList.map((targetName, idx) => {
               const isCollapsed = collapsedChars[targetName]; // 접힘 상태 확인
@@ -730,17 +729,19 @@ function App() {
 
                     return (
                       <td key={`${idx}-${hw.id}`} style={{ 
-                        textAlign: "center", padding: "10px", 
+                        textAlign: "center", 
+                        padding: "10px", 
                         backgroundColor: isPending ? "#4b4b20" : "transparent",
                         position: "relative",
-                        verticalAlign: "top"
+                        // 💡 상단 정렬에서 중앙 정렬로 변경
+                        verticalAlign: "middle" 
                       }}>
                         <div style={{ position: "absolute", top: "2px", right: "2px" }}>
                           <input type="checkbox" checked={isExcluded} onChange={() => toggleExclude(hw.id, targetName)} />
                         </div>
                         {!isExcluded ? (
                           <>
-                            <div style={{ marginBottom: "5px" }}>
+                            <div style={{ marginBottom: isCollapsed ? "0" : "5px" }}>
                               <button style={btnStyle} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
                               <input 
                                 type="number" 
@@ -751,8 +752,9 @@ function App() {
                               <span style={{ color: isPending ? "#ccc" : "#888" }}>/ {hw.max}</span>
                               <button style={btnStyle} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
                             </div>
-                            {/* 💡 숙제 갱신 일자 (항상 유지) */}
-                            <div style={{ fontSize: "10px", color: "#777", marginTop: "4px" }}>
+                            
+                            {/* 숙제 갱신 일자: 접었을 때 너무 빽빽하면 보이지 않게 하거나, 그대로 두려면 아래 조건 유지 */}
+                            <div style={{ fontSize: "10px", color: "#777", marginTop: isCollapsed ? "2px" : "4px" }}>
                               {formatDate(hw.lastUpdated?.[targetName])}
                             </div>
                           </>
@@ -788,7 +790,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 00:41
+              최종 업데이트: 2026-02-08 00:44
             </div>
           </div>
 
