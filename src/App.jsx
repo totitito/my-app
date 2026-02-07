@@ -650,16 +650,16 @@ function App() {
           
           <tbody>
             {dataList.map((targetName, idx) => {
-              const isCollapsed = collapsedChars[targetName]; // 💡 접힘 상태 확인
+              const isCollapsed = collapsedChars[targetName]; // 접힘 상태 확인
               
               return (
-                <tr key={idx} style={{ height: isCollapsed ? "40px" : "auto" }}>
+                <tr key={idx}>
                   <td style={{ 
                     textAlign: "center", padding: "10px", fontWeight: "bold", 
                     position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
-                    borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top"
+                    borderRight: "2px solid #444", verticalAlign: "top"
                   }}>
-                    {/* 접기/펴기 버튼 (우측 상단) */}
+                    {/* 1. 접기/펴기 버튼 (항상 유지) */}
                     <button 
                       onClick={() => toggleCollapse(targetName)}
                       style={{
@@ -671,20 +671,18 @@ function App() {
                       {isCollapsed ? "펴기" : "접기"}
                     </button>
 
-                    {/* 1. 위/아래 화살표 (안 접혔을 때만 표시) */}
-                    {!isCollapsed && (
-                      <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "5px" }}>
-                        <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
-                        <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
-                      </div>
-                    )}
+                    {/* 2. 위/아래 화살표 (항상 유지) */}
+                    <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "5px" }}>
+                      <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
+                      <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
+                    </div>
 
-                    {/* 2. 캐릭터명 */}
-                    <div style={{ fontSize: "16px", marginBottom: isCollapsed ? "0" : "8px", marginTop: isCollapsed ? "0" : "5px" }}>
+                    {/* 3. 캐릭터명 (항상 유지) */}
+                    <div style={{ fontSize: "16px", marginBottom: isCollapsed ? "0" : "8px" }}>
                       {targetName}
                     </div>
 
-                    {/* 3. 상세 정보 및 수정/삭제 버튼 (안 접혔을 때만 표시) */}
+                    {/* 💡 4. 상세 정보 및 관리 버튼 (접히지 않았을 때만 표시) */}
                     {!isCollapsed && (
                       <>
                         {(game === "AION 2" || game === "Lost Ark") && scope === "character" && (
@@ -729,10 +727,8 @@ function App() {
                     )}
                   </td>
                   
-                  {/* 4. 숙제 카운트 칸들 (접혔을 때는 빈 칸으로 표시하거나 숨김) */}
+                  {/* 💡 5. 숙제 카운트 칸들 (항상 유지) */}
                   {allFiltered.map(hw => {
-                    if (isCollapsed) return <td key={`${idx}-${hw.id}`} style={{ backgroundColor: "#1a1a1a", borderBottom: "1px solid #333" }}></td>;
-                    
                     const val = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
                     const isExcluded = !!(hw.excluded && hw.excluded[targetName]);
                     const isPending = val > 0 && !isExcluded;
@@ -741,14 +737,15 @@ function App() {
                       <td key={`${idx}-${hw.id}`} style={{ 
                         textAlign: "center", padding: "10px", 
                         backgroundColor: isPending ? "#4b4b20" : "transparent",
-                        position: "relative"
+                        position: "relative",
+                        verticalAlign: "middle" // 접었을 때 숫자 위치가 가운데 오도록
                       }}>
                         <div style={{ position: "absolute", top: "2px", right: "2px" }}>
                           <input type="checkbox" checked={isExcluded} onChange={() => toggleExclude(hw.id, targetName)} />
                         </div>
                         {!isExcluded ? (
                           <>
-                            <div style={{ marginBottom: "5px" }}>
+                            <div style={{ marginBottom: isCollapsed ? "0" : "5px" }}>
                               <button style={btnStyle} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
                               <input 
                                 type="number" 
@@ -759,9 +756,12 @@ function App() {
                               <span style={{ color: isPending ? "#ccc" : "#888" }}>/ {hw.max}</span>
                               <button style={btnStyle} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
                             </div>
-                            <div style={{ fontSize: "10px", color: "#777", marginTop: "4px" }}>
-                              {formatDate(hw.lastUpdated?.[targetName])}
-                            </div>
+                            {/* 접혔을 때는 마지막 수정 시간도 숨김 (세로 폭을 줄이기 위해) */}
+                            {!isCollapsed && (
+                              <div style={{ fontSize: "10px", color: "#777", marginTop: "4px" }}>
+                                {formatDate(hw.lastUpdated?.[targetName])}
+                              </div>
+                            )}
                           </>
                         ) : <div style={{ color: "#555", fontSize: "12px" }}>제외됨</div>}
                       </td>
@@ -795,7 +795,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 00:28
+              최종 업데이트: 2026-02-08 00:32
             </div>
           </div>
 
