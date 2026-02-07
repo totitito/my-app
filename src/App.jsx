@@ -481,18 +481,49 @@ function App() {
     }));
   };
 
-  const updateCount = (id, targetName, delta) => {
+  // const updateCount = (id, targetName, delta) => {
+  //   setHomeworks(prev => prev.map(hw => {
+  //     if (hw.id === id) {
+  //       const current = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
+  //       let next = typeof delta === 'number' ? current + delta : parseInt(delta) || 0;
+  //       next = Math.max(0, Math.min(hw.max, next));
+
+  //       return { 
+  //         ...hw, 
+  //         counts: { ...(hw.counts || {}), [targetName]: next },
+  //         // ★ 수동 수정 시 현재 시간을 밀리초 단위로 정확히 기록
+  //         lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: new Date().getTime() } 
+  //       };
+  //     }
+  //     return hw;
+  //   }));
+  // };
+
+  const updateCount = (id, targetName, delta, e = null) => {
     setHomeworks(prev => prev.map(hw => {
       if (hw.id === id) {
-        const current = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
-        let next = typeof delta === 'number' ? current + delta : parseInt(delta) || 0;
+        const current = (hw.counts && hw.counts[targetName] !== undefined) 
+          ? hw.counts[targetName] 
+          : hw.max;
+
+        let multiplier = 1;
+        
+        // e가 존재하고 이벤트 객체일 때만 체크
+        if (e && typeof e === 'object') {
+          if (e.shiftKey) multiplier = 10;
+          else if (e.ctrlKey) multiplier = 100;
+        }
+
+        const calculatedDelta = typeof delta === 'number' ? delta * multiplier : parseInt(delta) || 0;
+        let next = current + calculatedDelta;
+        
+        // 0 ~ max 범위 제한
         next = Math.max(0, Math.min(hw.max, next));
 
         return { 
           ...hw, 
           counts: { ...(hw.counts || {}), [targetName]: next },
-          // ★ 수동 수정 시 현재 시간을 밀리초 단위로 정확히 기록
-          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: new Date().getTime() } 
+          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: new Date().getTime() }
         };
       }
       return hw;
@@ -805,7 +836,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-07 22:00
+              최종 업데이트: 2026-02-08 00:06
             </div>
           </div>
 
