@@ -659,7 +659,7 @@ function App() {
                     position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
                     borderRight: "2px solid #444", verticalAlign: "top"
                   }}>
-                    {/* 1. 접기/펴기 버튼 (항상 유지) */}
+                    {/* 접기/펴기 버튼 */}
                     <button 
                       onClick={() => toggleCollapse(targetName)}
                       style={{
@@ -671,51 +671,46 @@ function App() {
                       {isCollapsed ? "펴기" : "접기"}
                     </button>
 
-                    {/* 2. 위/아래 화살표 (항상 유지) */}
+                    {/* 위/아래 화살표 (유지) */}
                     <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "5px" }}>
                       <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
                       <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
                     </div>
 
-                    {/* 3. 캐릭터명 (항상 유지) */}
+                    {/* 캐릭터명 (유지) */}
                     <div style={{ fontSize: "16px", marginBottom: isCollapsed ? "0" : "8px" }}>
                       {targetName}
                     </div>
 
-                    {/* 💡 4. 상세 정보 및 관리 버튼 (접히지 않았을 때만 표시) */}
+                    {/* 💡 캐릭터 정보 영역 (접었을 때 사라짐) */}
                     {!isCollapsed && (
                       <>
                         {(game === "AION 2" || game === "Lost Ark") && scope === "character" && (
                           <div style={{ marginBottom: "10px" }}>
                             {scores[targetName] ? (
-                              <>
-                                <div style={{ fontSize: "11px", marginBottom: "2px" }}>
-                                  <span style={{ color: "#ffffff" }}>
-                                    {game === "AION 2" ? `전투력: ${scores[targetName].combatPower?.toLocaleString() ?? "?"}` : `템렙: ${scores[targetName].itemLevel}`}
-                                  </span>
-                                  <span style={{ color: "#4daafc", marginLeft: "6px" }}>
-                                    {game === "AION 2" ? `아툴: ${scores[targetName].combatScore?.toLocaleString() ?? "?"}` : `전투력: ${scores[targetName].combatPower?.toLocaleString()}`}
-                                  </span>
-                                </div>
-                                {scores[targetName].updatedAt && (
-                                  <div style={{ fontSize: "10px", color: "#777", marginBottom: "4px" }}>
-                                    갱신: {formatScoreUpdatedAt(scores[targetName].updatedAt)}
-                                  </div>
-                                )}
-                              </>
+                              <div style={{ fontSize: "11px", marginBottom: "2px" }}>
+                                <span style={{ color: "#ffffff" }}>
+                                  {game === "AION 2" ? `전투력: ${scores[targetName].combatPower?.toLocaleString() ?? "?"}` : `템렙: ${scores[targetName].itemLevel}`}
+                                </span>
+                                <span style={{ color: "#4daafc", marginLeft: "6px" }}>
+                                  {game === "AION 2" ? `아툴: ${scores[targetName].combatScore?.toLocaleString() ?? "?"}` : `전투력: ${scores[targetName].combatPower?.toLocaleString()}`}
+                                </span>
+                              </div>
                             ) : (
                               <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
                             )}
+                            {/* 캐릭터 정보 갱신 버튼 (사라짐) */}
                             <button 
                               onClick={() => game === "AION 2" ? fetchScore(targetName) : fetchLoaScore(targetName)} 
-                              style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80" }}
+                              style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80", marginTop: "4px" }}
                             >
                               전투력 갱신
                             </button>
                           </div>
                         )}
 
-                        <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
+                        {/* 이름변경/삭제 버튼 (사라짐) */}
+                        <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "5px" }}>
                           <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>이름변경</button>
                           <button onClick={() => {
                             if(window.confirm(`[${targetName}] 항목을 삭제하시겠습니까?`)) {
@@ -727,7 +722,7 @@ function App() {
                     )}
                   </td>
                   
-                  {/* 💡 5. 숙제 카운트 칸들 (항상 유지) */}
+                  {/* 숙제 카운트 칸들 (항상 유지) */}
                   {allFiltered.map(hw => {
                     const val = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
                     const isExcluded = !!(hw.excluded && hw.excluded[targetName]);
@@ -738,14 +733,14 @@ function App() {
                         textAlign: "center", padding: "10px", 
                         backgroundColor: isPending ? "#4b4b20" : "transparent",
                         position: "relative",
-                        verticalAlign: "middle" // 접었을 때 숫자 위치가 가운데 오도록
+                        verticalAlign: "top"
                       }}>
                         <div style={{ position: "absolute", top: "2px", right: "2px" }}>
                           <input type="checkbox" checked={isExcluded} onChange={() => toggleExclude(hw.id, targetName)} />
                         </div>
                         {!isExcluded ? (
                           <>
-                            <div style={{ marginBottom: isCollapsed ? "0" : "5px" }}>
+                            <div style={{ marginBottom: "5px" }}>
                               <button style={btnStyle} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
                               <input 
                                 type="number" 
@@ -756,12 +751,10 @@ function App() {
                               <span style={{ color: isPending ? "#ccc" : "#888" }}>/ {hw.max}</span>
                               <button style={btnStyle} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
                             </div>
-                            {/* 접혔을 때는 마지막 수정 시간도 숨김 (세로 폭을 줄이기 위해) */}
-                            {!isCollapsed && (
-                              <div style={{ fontSize: "10px", color: "#777", marginTop: "4px" }}>
-                                {formatDate(hw.lastUpdated?.[targetName])}
-                              </div>
-                            )}
+                            {/* 💡 숙제 갱신 일자 (항상 유지) */}
+                            <div style={{ fontSize: "10px", color: "#777", marginTop: "4px" }}>
+                              {formatDate(hw.lastUpdated?.[targetName])}
+                            </div>
                           </>
                         ) : <div style={{ color: "#555", fontSize: "12px" }}>제외됨</div>}
                       </td>
@@ -795,7 +788,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 00:35
+              최종 업데이트: 2026-02-08 00:41
             </div>
           </div>
 
