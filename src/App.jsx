@@ -793,12 +793,27 @@ function App() {
                       </div>
                       {!isExcluded ? (
                         <>
-                          <div style={{ marginBottom: "5px" }}>
+                          {/* <div style={{ marginBottom: "5px" }}>
                             <button style={btnStyle} onClick={() => updateCount(hw.id, targetName, -1)}>-</button>
                             <input type="number" value={val} onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
                               style={{ width: "45px", textAlign: "center", margin: "0 5px", backgroundColor: "#222", color: "#fff", border: "1px solid #444" }} />
                             <span style={{ color: isPending ? "#ccc" : "#888" }}>/ {hw.max}</span>
                             <button style={btnStyle} onClick={() => updateCount(hw.id, targetName, 1)}>+</button>
+                          </div> */}
+                          <div style={{ marginBottom: "5px" }}>
+                            <button style={btnStyle} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
+                            
+                            <input 
+                              type="number" 
+                              value={val} 
+                              onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
+                              style={{ width: "45px", textAlign: "center", margin: "0 5px", backgroundColor: "#222", color: "#fff", border: "1px solid #444" }} 
+                            />
+                            
+                            <span style={{ color: isPending ? "#ccc" : "#888" }}>/ {hw.max}</span>
+                            
+                            {/* + 버튼 수정 */}
+                            <button style={btnStyle} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
                           </div>
                           {/* ★ 연한 회색으로 마지막 수정 시간 표시 */}
                           <div style={{ fontSize: "10px", color: "#777", marginTop: "4px" }}>
@@ -836,7 +851,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 00:06
+              최종 업데이트: 2026-02-08 00:09
             </div>
           </div>
 
