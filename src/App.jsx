@@ -87,7 +87,7 @@ const initialHomeworks = [
   { id: "aion2-Altgarde-Shuzakan", game: "AION 2", name: "[알트가르드] 백전노장 슈자칸", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
   { id: "aion2-Altgarde-Linkes", game: "AION 2", name: "[알트가르드] 별동대장 링크스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
   { id: "aion2-Altgarde-Karuka", game: "AION 2", name: "[알트가르드] 비전의 카루카", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Shirak", game: "AION 2", name: "[알트가르드] 예리한 쉬라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} }
+  { id: "aion2-Altgarde-Shirak", game: "AION 2", name: "[알트가르드] 예리한 쉬라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
   { id: "aion2-Altgarde-Hadirun", game: "AION 2", name: "[알트가르드] 중독된 하디룬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
   { id: "aion2-Altgarde-Advisor-Lesana", game: "AION 2", name: "[알트가르드] 참모관 르사나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
   { id: "aion2-Altgarde-Barsien", game: "AION 2", name: "[알트가르드] 처형자 바르시엔", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
@@ -804,7 +804,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-07 10:46
+              최종 업데이트: 2026-02-07 10:50
             </div>
           </div>
 
