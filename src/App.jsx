@@ -242,7 +242,8 @@ function App() {
             itemLevel: data.ItemMaxLevel,
             combatPower: data.CombatPower || 0,
             job: data.CharacterClassName || null,
-            portrait: data.CharacterImage || null,
+            // portrait: data.CharacterImage || null,
+            avatarUrl: data.raw?.CharacterImage ?? null,
             updatedAt: new Date().toISOString()
           }
         }));
