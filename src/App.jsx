@@ -855,7 +855,7 @@ function App() {
                             backgroundImage: `url("${scores[targetName].avatarUrl}")`,
                             backgroundSize: "cover",
                             backgroundPosition: "center top",
-                            opacity: 0.45,           // ✅ 0.18 → 0.45
+                            opacity: 0.75,           // ✅ 0.18 → 0.45 → 0.75
                             filter: "none",          // ✅ blur 제거(가독성은 오버레이로 해결)
                             transform: "scale(1.05)",
                             pointerEvents: "none",
