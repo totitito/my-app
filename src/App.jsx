@@ -847,7 +847,8 @@ function App() {
 
                       {/* ✅ 1) 로스트아크(portrait) 또는 아이온2(avatarUrl) 배경 표시 */}
                       {!isCollapsed && (
-                        (game === "Lost Ark" && scores[targetName]?.portrait) || 
+                        // (game === "Lost Ark" && scores[targetName]?.portrait) || 
+                        (game === "Lost Ark" && scores[targetName]?.avatarUrl) || 
                         (game === "AION 2" && scores[targetName]?.avatarUrl)
                       ) && (
                         <div
@@ -858,7 +859,8 @@ function App() {
                             // 게임에 따라 맞는 이미지 경로 선택
                             backgroundImage: game === "Lost Ark" 
                               // ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${scores[targetName].portrait}")`
-                              ? `url("${scores[targetName].portrait}")`
+                              // ? `url("${scores[targetName].portrait}")`
+                              ? `url("${scores[targetName].avatarUrl}")`
                               : `url("${scores[targetName].avatarUrl}")`,
                             backgroundSize: "cover",
                             backgroundPosition: "center top",
@@ -1070,7 +1072,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 16:25
+              최종 업데이트: 2026-02-08 16:57
             </div>
           </div>
 
