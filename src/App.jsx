@@ -900,7 +900,7 @@ function App() {
                         </div>
 
                         {/* 캐릭터명 + 직업명 텍스트 */}
-                          <div style={{ marginBottom: isCollapsed ? "4" : "8px" }}>
+                          <div style={{ marginBottom: isCollapsed ? "0" : "8px" }}>
                             <div
                               style={{
                                 fontSize: "16px",
@@ -996,7 +996,7 @@ function App() {
                             </div>
 
                             {/* 2. Input 창 영역: 버튼을 떼어내고 세로 배치 유도 */}
-                            <div style={{ marginBottom: isCollapsed ? "0" : "5px" }}>
+                            <div style={{ marginBottom: isCollapsed ? "3px" : "5px" }}>
                               <input 
                                 type="number" 
                                 value={val} 
@@ -1065,7 +1065,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 15:50
+              최종 업데이트: 2026-02-08 16:04
             </div>
           </div>
 
