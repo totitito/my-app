@@ -855,7 +855,7 @@ function App() {
                             backgroundImage: `url(${scores[targetName].avatarUrl})`,
                             backgroundSize: "cover",
                             backgroundPosition: "center top",
-                            opacity: 0.18,
+                            opacity: 0.5//0.18,
                             filter: "blur(0.5px)",
                             transform: "scale(1.05)",
                             pointerEvents: "none",
