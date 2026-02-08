@@ -778,9 +778,9 @@ function App() {
                             if (newMemo !== null) updateHomeworkMemo(hw.id, newMemo);
                           }}
                           style={{ 
-                            fontSize: "11px", color: "#62dafb", cursor: "pointer",
+                            fontSize: "11px", color: "#315c68", cursor: "pointer",
                             whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                            maxWidth: "110px", margin: "0 auto", borderBottom: "1px dashed #62dafb"
+                            maxWidth: "110px", margin: "0 auto"//, borderBottom: "1px dashed #62dafb"
                           }}
                           title={hw.memo}
                         >
@@ -900,7 +900,7 @@ function App() {
                         </div>
 
                         {/* 캐릭터명 + 직업명 텍스트 */}
-                          <div style={{ marginBottom: isCollapsed ? "0" : "8px" }}>
+                          <div style={{ marginBottom: isCollapsed ? "4" : "8px" }}>
                             <div
                               style={{
                                 fontSize: "16px",
