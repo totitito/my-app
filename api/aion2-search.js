@@ -47,8 +47,14 @@ export default async function handler(req, res) {
       combat_score: data?.combat_score ?? null,
       combat_score_max: data?.combat_score_max ?? null,
       character_id: data?.character_id ?? null,
+      level: data?.level ?? null,
+      job: data?.job ?? null,
+      avatar_url: data?.avatar_url ?? null,
+
+      // 디버그용 (지워도됨)
       raw: data ?? null,
     });
+
   } catch (e) {
     return res.status(500).json({ error: String(e?.message ?? e) });
   }

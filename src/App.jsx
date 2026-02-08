@@ -186,6 +186,7 @@ function App() {
     });
   };
 
+  // AION 2 fetchScore
   const fetchScore = async (fullName) => {
     try {
       // "카니쵸니[바카]" 같은 형식 지원
@@ -212,15 +213,13 @@ function App() {
       setScores((prev) => ({
         ...prev,
         [fullName]: {
-          // ✅ 기존 유지
           combatPower: j.combat_power ?? 0,
           combatScore: j.combat_score ?? 0,
           updatedAt: Date.now(),
 
-          // ✅ 추가(요구한 3개만)
-          avatarUrl: j?.raw?.avatar_url ?? null,       // 초상화
-          job: j?.raw?.job ?? null,                    // 직업정보
-          jobIconUrl: j?.raw?.job_image_url ?? null,   // 직업사진(아이콘)
+          avatarUrl: j?.raw?.avatar_url ?? null,
+          job: j?.raw?.job ?? null,
+          level: j?.raw?.level ?? null,   // ✅ 추가
         },
       }));
     } catch (e) {
@@ -242,6 +241,7 @@ function App() {
         setScores(prev => ({
           ...prev,
           [charName]: {
+            level: data.CharacterLevel ?? null,
             itemLevel: data.ItemMaxLevel,
             combatPower: data.CombatPower || 0,
             job: data.CharacterClassName || null, // ✅ null 방어
@@ -916,12 +916,13 @@ function App() {
                               <div
                                 style={{
                                   fontSize: "12px",
-                                  // color: "#bbb",      // 직업명은 살짝 흐리게 해서 이름과 구분
-                                  // marginTop: "2px",
+                                  color: "#bbb",
+                                  marginTop: "2px",
                                   textAlign: "center",
                                 }}
                               >
-                                - {scores[targetName].job} -
+                                {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
+                                {scores[targetName].job}
                               </div>
                             )}
                           </div>
@@ -1070,7 +1071,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 15:18
+              최종 업데이트: 2026-02-08 15:36
             </div>
           </div>
 

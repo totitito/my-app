@@ -24,6 +24,7 @@ export default async function handler(req, res) {
       CharacterName: data.CharacterName,
       CharacterClassName: data.CharacterClassName,
       ServerName: data.ServerName,
+      CharacterLevel: data.CharacterLevel ?? null,
       ItemMaxLevel: data.ItemMaxLevel ?? data.ItemAvgLevel ?? null,
       CombatPower:
         data.CombatPower ??
