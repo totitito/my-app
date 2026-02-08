@@ -898,31 +898,32 @@ function App() {
                           <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
                         </div>
 
-                        {/* ✅ 캐릭터명 + 직업 아이콘 */}
-                        <div
-                          style={{
-                            fontSize: "16px",
-                            marginBottom: isCollapsed ? "0" : "8px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "6px",
-                          }}
-                        >
-                          <span>{targetName}</span>
+                        {/* 캐릭터명 + 직업명 텍스트 */}
+                          <div style={{ marginBottom: isCollapsed ? "0" : "8px" }}>
+                            <div
+                              style={{
+                                fontSize: "16px",
+                                textAlign: "center",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {targetName}
+                            </div>
 
-                          {/* ✅ 직업 아이콘 (AION2만) */}
-                          {game === "AION 2" && scores[targetName]?.jobIconUrl && (
-                            <img
-                              src={scores[targetName].jobIconUrl}
-                              alt={scores[targetName]?.job ? `${scores[targetName].job} 아이콘` : "직업 아이콘"}
-                              title={scores[targetName]?.job ?? ""}
-                              style={{ width: 18, height: 18, objectFit: "contain", opacity: 0.95 }}
-                              loading="lazy"
-                              referrerPolicy="no-referrer"
-                            />
-                          )}
-                        </div>
+                            {/* AION2만: 캐릭명 아래 직업명 표시 */}
+                            {game === "AION 2" && scores[targetName]?.job && (
+                              <div
+                                style={{
+                                  fontSize: "12px",
+                                  color: "#bbb",
+                                  marginTop: "2px",
+                                  textAlign: "center",
+                                }}
+                              >
+                                ({scores[targetName].job})
+                              </div>
+                            )}
+                          </div>
 
                         {/* 💡 캐릭터 정보 영역 (기존 그대로) */}
                         {!isCollapsed && (
@@ -1068,7 +1069,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 14:27
+              최종 업데이트: 2026-02-08 14:45
             </div>
           </div>
 
