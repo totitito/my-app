@@ -1026,18 +1026,12 @@ function App() {
                             </div>
                             
                             {/* 3. 하단 버튼군: -, 0, + 가로 배치 */}
-                            {!isCollapsed && (
-                              <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
-                                <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
-                                <button 
-                                  style={{ ...btnStyle, padding: "2px 6px", backgroundColor: "#444" }} 
-                                  onClick={(e) => updateCount(hw.id, targetName, 0, e)}
-                                >
-                                  0
-                                </button>
-                                <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
-                              </div>
-                            )}
+                            <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
+                              <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
+                              {/* <button style={{ ...btnStyle, padding: "2px 6px", backgroundColor: "#444" }} onClick={(e) => updateCount(hw.id, targetName, 0, e)}>0</button> */}
+                              <button style={{ ...btnStyle, padding: "2px 6px"}} onClick={(e) => updateCount(hw.id, targetName, 0, e)}>0</button>
+                              <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
+                            </div>
                           </>
                         ) : <div style={{ color: "#555", fontSize: "12px" }}>제외됨</div>}
                       </td>
@@ -1071,7 +1065,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 15:36
+              최종 업데이트: 2026-02-08 15:50
             </div>
           </div>
 
