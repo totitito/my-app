@@ -856,7 +856,8 @@ function App() {
                             inset: 0,
                             // 게임에 따라 맞는 이미지 경로 선택
                             backgroundImage: game === "Lost Ark" 
-                              ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${scores[targetName].portrait}")`
+                              // ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${scores[targetName].portrait}")`
+                              ? `url("${scores[targetName].portrait}")`
                               : `url("${scores[targetName].avatarUrl}")`,
                             backgroundSize: "cover",
                             backgroundPosition: "center top",
@@ -1068,7 +1069,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 16:21
+              최종 업데이트: 2026-02-08 16:25
             </div>
           </div>
 
