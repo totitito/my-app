@@ -23,6 +23,7 @@ export default async function handler(req, res) {
     res.status(200).json({
       CharacterName: data.CharacterName,
       CharacterClassName: data.CharacterClassName,
+      CharacterImage: data.CharacterImage,
       ServerName: data.ServerName,
       CharacterLevel: data.CharacterLevel ?? null,
       ItemMaxLevel: data.ItemMaxLevel ?? data.ItemAvgLevel ?? null,
