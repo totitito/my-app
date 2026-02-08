@@ -891,7 +891,7 @@ function App() {
                         <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "5px" }}>
                           <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>이름변경</button>
                           <button onClick={() => {
-                            if(window.confirm(`[${targetName}] 항목을 삭제하시겠습니까?`)) {
+                            if(window.confirm(`[${targetName}] 를 캐릭 목록에서 삭제하게?`)) {
                               setData(prev => prev.filter((_, i) => i !== idx));
                             }
                           }} style={{...btnStyle, padding: "2px 5px", fontSize: "12px", backgroundColor: "#600"}}>삭제</button>
