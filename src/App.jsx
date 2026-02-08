@@ -852,11 +852,11 @@ function App() {
                           style={{
                             position: "absolute",
                             inset: 0,
-                            backgroundImage: `url(${scores[targetName].avatarUrl})`,
+                            backgroundImage: `url("${scores[targetName].avatarUrl}")`,
                             backgroundSize: "cover",
                             backgroundPosition: "center top",
-                            opacity: 0.5//0.18,
-                            filter: "blur(0.5px)",
+                            opacity: 0.45,           // ✅ 0.18 → 0.45
+                            filter: "none",          // ✅ blur 제거(가독성은 오버레이로 해결)
                             transform: "scale(1.05)",
                             pointerEvents: "none",
                             zIndex: 0,
@@ -871,7 +871,7 @@ function App() {
                           position: "absolute",
                           inset: 0,
                           background:
-                            "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%)",
+                            "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%)", // ✅ 덜 진하게
                           pointerEvents: "none",
                           zIndex: 1,
                         }}
