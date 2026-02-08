@@ -40,3 +40,15 @@
 .read-the-docs {
   color: #888;
 }
+
+/* 태그명과 클래스명을 붙여서 우선순위를 높임 */
+input.count-input:focus {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  outline: 2px solid #62dafb !important;
+}
+
+input.count-input::selection {
+  background-color: rgba(0, 120, 215, 0.5) !important;
+  color: #ffffff !important;
+}
