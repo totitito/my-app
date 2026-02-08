@@ -200,7 +200,7 @@ function App() {
         server_id = serverMap[serverAbbr] || 1016;
       }
 
-      // ✅ 이제 Worker/atool 직접호출 말고, 우리 서버 함수로 호출
+      // ✅ 기존과 동일: 우리 서버 함수로 호출
       const r = await fetch("/api/aion2-search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -212,9 +212,15 @@ function App() {
       setScores((prev) => ({
         ...prev,
         [fullName]: {
+          // ✅ 기존 유지
           combatPower: j.combat_power ?? 0,
           combatScore: j.combat_score ?? 0,
           updatedAt: Date.now(),
+
+          // ✅ 추가(요구한 3개만)
+          avatarUrl: j?.raw?.avatar_url ?? null,       // 초상화
+          job: j?.raw?.job ?? null,                    // 직업정보
+          jobIconUrl: j?.raw?.job_image_url ?? null,   // 직업사진(아이콘)
         },
       }));
     } catch (e) {
@@ -224,7 +230,6 @@ function App() {
 
   const fetchLoaScore = async (charName) => {
     try {
-      // const targetUrl = `/api-lostark/armories/characters/${encodeURIComponent(charName)}/profiles`;
       const targetUrl = `/api/loa-profile?name=${encodeURIComponent(charName)}`;
 
       const response = await fetch(targetUrl, { method: "GET" }); // ✅ 헤더 제거
@@ -238,7 +243,6 @@ function App() {
           ...prev,
           [charName]: {
             itemLevel: data.ItemMaxLevel,
-            // combatPower: data.Stats?.find(s => s.Type === "전투력")?.Value || 0,
             combatPower: data.CombatPower || 0,
             updatedAt: new Date().toISOString()
           }
@@ -835,69 +839,130 @@ function App() {
                   <td style={{ 
                     textAlign: "center", padding: "10px", fontWeight: "bold", 
                     position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
-                    borderRight: "2px solid #444", verticalAlign: "top"
+                    borderRight: "2px solid #444", verticalAlign: "top",
+                    overflow: "hidden" // ✅ 추가(배경이 셀 밖으로 안 튀게)
                   }}>
-                    {/* 접기/펴기 버튼 */}
-                    <button 
-                      onClick={() => toggleCollapse(targetName)}
-                      style={{
-                        position: "absolute", top: "2px", right: "2px",
-                        fontSize: "10px", padding: "1px 4px", cursor: "pointer",
-                        backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px"
-                      }}
-                    >
-                      {isCollapsed ? "➕" : "➖"}
-                    </button>
+                    {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
+                    <div style={{ position: "relative" }}>
 
-                    {/* 위/아래 화살표 (유지) */}
-                    <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "5px" }}>
-                      <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
-                      <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
-                    </div>
+                      {/* ✅ 1) 배경 아바타 (AION2만) */}
+                      {game === "AION 2" && !isCollapsed && scores[targetName]?.avatarUrl && (
+                        <div
+                          aria-hidden="true"
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            backgroundImage: `url(${scores[targetName].avatarUrl})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center top",
+                            opacity: 0.18,
+                            filter: "blur(0.5px)",
+                            transform: "scale(1.05)",
+                            pointerEvents: "none",
+                            zIndex: 0,
+                          }}
+                        />
+                      )}
 
-                    {/* 캐릭터명 (유지) */}
-                    <div style={{ fontSize: "16px", marginBottom: isCollapsed ? "0" : "8px" }}>
-                      {targetName}
-                    </div>
+                      {/* ✅ 2) 글자 가독성용 오버레이 */}
+                      <div
+                        aria-hidden="true"
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background:
+                            "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%)",
+                          pointerEvents: "none",
+                          zIndex: 1,
+                        }}
+                      />
 
-                    {/* 💡 캐릭터 정보 영역 (접었을 때 사라짐) */}
-                    {!isCollapsed && (
-                      <>
-                        {(game === "AION 2" || game === "Lost Ark") && scope === "character" && (
-                          <div style={{ marginBottom: "10px" }}>
-                            {scores[targetName] ? (
-                              <div style={{ fontSize: "11px", marginBottom: "2px" }}>
-                                <span style={{ color: "#ffffff" }}>
-                                  {game === "AION 2" ? `전투력: ${scores[targetName].combatPower?.toLocaleString() ?? "?"}` : `템렙: ${scores[targetName].itemLevel}`}
-                                </span>
-                                <span style={{ color: "#4daafc", marginLeft: "6px" }}>
-                                  {game === "AION 2" ? `아툴: ${scores[targetName].combatScore?.toLocaleString() ?? "?"}` : `전투력: ${scores[targetName].combatPower?.toLocaleString()}`}
-                                </span>
+                      {/* ✅ 3) 기존 내용은 위로 */}
+                      <div style={{ position: "relative", zIndex: 2 }}>
+
+                        {/* 접기/펴기 버튼 (기존 그대로) */}
+                        <button 
+                          onClick={() => toggleCollapse(targetName)}
+                          style={{
+                            position: "absolute", top: "2px", right: "2px",
+                            fontSize: "10px", padding: "1px 4px", cursor: "pointer",
+                            backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px"
+                          }}
+                        >
+                          {isCollapsed ? "➕" : "➖"}
+                        </button>
+
+                        {/* 위/아래 화살표 (기존 그대로) */}
+                        <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "5px" }}>
+                          <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
+                          <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
+                        </div>
+
+                        {/* ✅ 캐릭터명 + 직업 아이콘 */}
+                        <div
+                          style={{
+                            fontSize: "16px",
+                            marginBottom: isCollapsed ? "0" : "8px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "6px",
+                          }}
+                        >
+                          <span>{targetName}</span>
+
+                          {/* ✅ 직업 아이콘 (AION2만) */}
+                          {game === "AION 2" && scores[targetName]?.jobIconUrl && (
+                            <img
+                              src={scores[targetName].jobIconUrl}
+                              alt={scores[targetName]?.job ? `${scores[targetName].job} 아이콘` : "직업 아이콘"}
+                              title={scores[targetName]?.job ?? ""}
+                              style={{ width: 18, height: 18, objectFit: "contain", opacity: 0.95 }}
+                              loading="lazy"
+                              referrerPolicy="no-referrer"
+                            />
+                          )}
+                        </div>
+
+                        {/* 💡 캐릭터 정보 영역 (기존 그대로) */}
+                        {!isCollapsed && (
+                          <>
+                            {(game === "AION 2" || game === "Lost Ark") && scope === "character" && (
+                              <div style={{ marginBottom: "10px" }}>
+                                {scores[targetName] ? (
+                                  <div style={{ fontSize: "11px", marginBottom: "2px" }}>
+                                    <span style={{ color: "#ffffff" }}>
+                                      {game === "AION 2" ? `전투력: ${scores[targetName].combatPower?.toLocaleString() ?? "?"}` : `템렙: ${scores[targetName].itemLevel}`}
+                                    </span>
+                                    <span style={{ color: "#4daafc", marginLeft: "6px" }}>
+                                      {game === "AION 2" ? `아툴: ${scores[targetName].combatScore?.toLocaleString() ?? "?"}` : `전투력: ${scores[targetName].combatPower?.toLocaleString()}`}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
+                                )}
+                                <button 
+                                  onClick={() => game === "AION 2" ? fetchScore(targetName) : fetchLoaScore(targetName)} 
+                                  style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80", marginTop: "4px" }}
+                                >
+                                  전투력 갱신
+                                </button>
                               </div>
-                            ) : (
-                              <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
                             )}
-                            {/* 캐릭터 정보 갱신 버튼 (사라짐) */}
-                            <button 
-                              onClick={() => game === "AION 2" ? fetchScore(targetName) : fetchLoaScore(targetName)} 
-                              style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80", marginTop: "4px" }}
-                            >
-                              전투력 갱신
-                            </button>
-                          </div>
+
+                            <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "5px" }}>
+                              <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>이름변경</button>
+                              <button onClick={() => {
+                                if(window.confirm(`[${targetName}] 캐릭 목록에서 지운다?`)) {
+                                  setData(prev => prev.filter((_, i) => i !== idx));
+                                }
+                              }} style={{...btnStyle, padding: "2px 5px", fontSize: "12px", backgroundColor: "#600"}}>삭제</button>
+                            </div>
+                          </>
                         )}
 
-                        {/* 이름변경/삭제 버튼 (사라짐) */}
-                        <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "5px" }}>
-                          <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>이름변경</button>
-                          <button onClick={() => {
-                            if(window.confirm(`[${targetName}] 캐릭 목록에서 지운다?`)) {
-                              setData(prev => prev.filter((_, i) => i !== idx));
-                            }
-                          }} style={{...btnStyle, padding: "2px 5px", fontSize: "12px", backgroundColor: "#600"}}>삭제</button>
-                        </div>
-                      </>
-                    )}
+                      </div>
+                    </div>
                   </td>
                   
                   {/* 숙제 카운트 칸들 (항상 유지) */}
@@ -1003,7 +1068,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 09:38
+              최종 업데이트: 2026-02-08 14:27
             </div>
           </div>
 
