@@ -921,7 +921,7 @@ function App() {
                                   textAlign: "center",
                                 }}
                               >
-                                ({scores[targetName].job})
+                                - {scores[targetName].job} -
                               </div>
                             )}
                           </div>
