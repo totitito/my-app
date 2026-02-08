@@ -915,8 +915,8 @@ function App() {
                               <div
                                 style={{
                                   fontSize: "12px",
-                                  color: "#bbb",
-                                  marginTop: "2px",
+                                  // color: "#bbb",
+                                  // marginTop: "2px",
                                   textAlign: "center",
                                 }}
                               >
@@ -929,7 +929,7 @@ function App() {
                         {!isCollapsed && (
                           <>
                             {(game === "AION 2" || game === "Lost Ark") && scope === "character" && (
-                              <div style={{ marginBottom: "10px" }}>
+                              <div style={{ marginBottom: "2px" }}>
                                 {scores[targetName] ? (
                                   <div style={{ fontSize: "11px", marginBottom: "2px" }}>
                                     <span style={{ color: "#ffffff" }}>
