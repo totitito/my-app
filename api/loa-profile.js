@@ -22,6 +22,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       CharacterName: data.CharacterName,
+      CharacterClassName: data.CharacterClassName,
       ServerName: data.ServerName,
       ItemMaxLevel: data.ItemMaxLevel ?? data.ItemAvgLevel ?? null,
       CombatPower:
