@@ -846,7 +846,7 @@ function App() {
 
                       {/* ✅ 1) 로스트아크(portrait) 또는 아이온2(avatarUrl) 배경 표시 */}
                       {!isCollapsed && (
-                        (game === "LOST ARK" && scores[targetName]?.portrait) || 
+                        (game === "Lost Ark" && scores[targetName]?.portrait) || 
                         (game === "AION 2" && scores[targetName]?.avatarUrl)
                       ) && (
                         <div
@@ -855,7 +855,7 @@ function App() {
                             position: "absolute",
                             inset: 0,
                             // 게임에 따라 맞는 이미지 경로 선택
-                            backgroundImage: game === "LOST ARK" 
+                            backgroundImage: game === "Lost Ark" 
                               ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${scores[targetName].portrait}")`
                               : `url("${scores[targetName].avatarUrl}")`,
                             backgroundSize: "cover",
@@ -914,7 +914,7 @@ function App() {
                               {targetName}
                             </div>
 
-                            {/* 로스트아크 또는 아이온2: 캐릭명 아래 직업명 표시 */}
+                            {/* 캐릭명 아래 직업명 표시 */}
                             {(game === "Lost Ark" || game === "AION 2") && scores[targetName]?.job && (
                               <div
                                 style={{
@@ -1068,7 +1068,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 16:14
+              최종 업데이트: 2026-02-08 16:21
             </div>
           </div>
 
