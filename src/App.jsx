@@ -244,7 +244,7 @@ function App() {
           [charName]: {
             itemLevel: data.ItemMaxLevel,
             combatPower: data.CombatPower || 0,
-            job: data.CharacterClassName,
+            job: data.CharacterClassName || null, // ✅ null 방어
             updatedAt: new Date().toISOString()
           }
         }));
@@ -912,12 +912,12 @@ function App() {
                             </div>
 
                             {/* 로스트아크 또는 아이온2: 캐릭명 아래 직업명 표시 */}
-                            {(game === "LOST ARK" || game === "AION 2") && scores[targetName]?.job && (
+                            {(game === "Lost Ark" || game === "AION 2") && scores[targetName]?.job && (
                               <div
                                 style={{
                                   fontSize: "12px",
-                                  color: "#bbb",      // 직업명은 살짝 흐리게 해서 이름과 구분
-                                  marginTop: "2px",
+                                  // color: "#bbb",      // 직업명은 살짝 흐리게 해서 이름과 구분
+                                  // marginTop: "2px",
                                   textAlign: "center",
                                 }}
                               >
@@ -1070,7 +1070,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 14:45
+              최종 업데이트: 2026-02-08 15:18
             </div>
           </div>
 
