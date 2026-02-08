@@ -846,22 +846,13 @@ function App() {
                     <div style={{ position: "relative" }}>
 
                       {/* ✅ 1) 로스트아크(portrait) 또는 아이온2(avatarUrl) 배경 표시 */}
-                      {!isCollapsed && (
-                        // (game === "Lost Ark" && scores[targetName]?.portrait) || 
-                        (game === "Lost Ark" && scores[targetName]?.avatarUrl) || 
-                        (game === "AION 2" && scores[targetName]?.avatarUrl)
-                      ) && (
+                      {!isCollapsed && game === "AION 2" && scores[targetName]?.avatarUrl && (
                         <div
                           aria-hidden="true"
                           style={{
                             position: "absolute",
                             inset: 0,
-                            // 게임에 따라 맞는 이미지 경로 선택
-                            backgroundImage: game === "Lost Ark" 
-                              // ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${scores[targetName].portrait}")`
-                              // ? `url("${scores[targetName].portrait}")`
-                              ? `url("${scores[targetName].avatarUrl}")`
-                              : `url("${scores[targetName].avatarUrl}")`,
+                            backgroundImage: `url(${scores[targetName].avatarUrl})`,
                             backgroundSize: "cover",
                             backgroundPosition: "center top",
                             opacity: 1,
@@ -906,7 +897,7 @@ function App() {
                           <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
                         </div>
 
-                        {/* 캐릭터명 + 직업명 텍스트 */}
+                        {/* 캐릭터명 텍스트 */}
                           <div style={{ marginBottom: isCollapsed ? "0" : "8px" }}>
                             <div
                               style={{
