@@ -217,7 +217,7 @@ function App() {
           combatScore: j.combat_score ?? 0,
           updatedAt: Date.now(),
 
-          avatarUrl: j?.raw?.avatar_url ?? null,
+          portrait: j?.raw?.avatar_url ?? null,
           job: j?.raw?.job ?? null,
           level: j?.raw?.level ?? null,   // ✅ 추가
         },
@@ -243,7 +243,7 @@ function App() {
             combatPower: data.CombatPower || 0,
             job: data.CharacterClassName || null,
             // portrait: data.CharacterImage || null,
-            avatarUrl: data.raw?.CharacterImage ?? null,
+            portrait: data.raw?.CharacterImage ?? null,
             updatedAt: new Date().toISOString()
           }
         }));
@@ -845,14 +845,21 @@ function App() {
                     {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
                     <div style={{ position: "relative" }}>
 
-                      {/* ✅ 1) 로스트아크(portrait) 또는 아이온2(avatarUrl) 배경 표시 */}
-                      {!isCollapsed && game === "AION 2" && scores[targetName]?.avatarUrl && (
+                      {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
+                      {!isCollapsed && (
+                        (game === "Lost Ark" && scores[targetName]?.portrait) || 
+                        (game === "AION 2" && scores[targetName]?.portrait)
+                      ) && (
                         <div
                           aria-hidden="true"
                           style={{
                             position: "absolute",
                             inset: 0,
-                            backgroundImage: `url(${scores[targetName].avatarUrl})`,
+                            // 게임에 따라 맞는 이미지 경로 선택
+                            backgroundImage: game === "Lost Ark" 
+                              // ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${scores[targetName].portrait}")`
+                              ? `url("${scores[targetName].portrait}")`
+                              : `url("${scores[targetName].portrait}")`,
                             backgroundSize: "cover",
                             backgroundPosition: "center top",
                             opacity: 1,
@@ -897,7 +904,7 @@ function App() {
                           <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
                         </div>
 
-                        {/* 캐릭터명 텍스트 */}
+                        {/* 캐릭터명 + 직업명 텍스트 */}
                           <div style={{ marginBottom: isCollapsed ? "0" : "8px" }}>
                             <div
                               style={{
@@ -1063,7 +1070,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 16:57
+              최종 업데이트: 2026-02-08 17:19
             </div>
           </div>
 
