@@ -963,7 +963,7 @@ function App() {
                                 <div style={{ marginBottom: "2px" }}>
                                   {scoreData ? (
                                     // <div style={{ ...commonTextStyle, marginBottom: "2px" }}>
-                                    <div style={{ ...commonTextStyle, marginBottom: "0" }}>
+                                    <div style={{ marginBottom: "0" }}>
                                       {/* <span> */}
                                       <span style={{ color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
                                         {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
@@ -974,7 +974,7 @@ function App() {
                                     </div>
                                   ) : (
                                     // <div style={{ ...commonTextStyle, color: "#888", marginBottom: "4px" }}>
-                                    <div style={{ ...commonTextStyle, color: "#888", marginBottom: "0" }}>
+                                    <div style={{ color: "#888", marginBottom: "0" }}>
                                       점수 미갱신
                                     </div>
                                   )}
