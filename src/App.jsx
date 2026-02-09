@@ -547,7 +547,13 @@ function App() {
     if (dataList.includes(newName)) { alert("중복된 이름입니다."); return; }
 
     const newList = [...dataList];
-    newList[idx] = newName;
+    const oldItem = newList[idx];
+    const isObj = typeof oldItem === "object" && oldItem !== null;
+
+    newList[idx] = isObj
+      ? { ...oldItem, name: newName }   // showPortrait 유지
+      : newName;
+
     setData(newList);
 
     setHomeworks(prev => prev.map(hw => {
@@ -575,20 +581,21 @@ function App() {
     }));
   };
 
-  const togglePortrait = (idx) => {
+  const togglePortrait = (idx, setData) => {
     setData(prev => {
       const newData = [...prev];
       const item = newData[idx];
 
-      const isObj = typeof item === 'object' && item !== null;
+      const isObj = typeof item === "object" && item !== null;
       const currentName = isObj ? item.name : item;
-      
-      // ✅ 가장 단순하고 확실한 논리: 현재 켜져있으면(true/undefined) false로, 꺼져있으면 true로.
+
+      // 지금 상태: true(기본) / false(숨김)
       const currentStatus = isObj ? (item.showPortrait !== false) : true;
 
-      newData[idx] = { 
-        name: currentName, 
-        showPortrait: !currentStatus 
+      newData[idx] = {
+        ...(isObj ? item : {}),          // ⭐ 혹시 나중에 다른 속성 붙여도 보존
+        name: currentName,
+        showPortrait: !currentStatus,
       };
 
       return newData;
@@ -1002,9 +1009,12 @@ function App() {
                             })()}
 
                             <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
-                              <button 
-                                onClick={() => togglePortrait(idx)} 
-                                style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", 
+                              <button
+                                onClick={() => togglePortrait(idx, setData)}
+                                style={{
+                                  ...btnStyle,
+                                  padding: "2px 5px",
+                                  fontSize: "10px",
                                   backgroundColor: isShowPortrait ? "#444" : "#2a4d69"
                                 }}
                               >
@@ -1121,7 +1131,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 17:15
+              최종 업데이트: 2026-02-09 17:26
             </div>
           </div>
 
