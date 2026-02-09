@@ -965,7 +965,7 @@ function App() {
                                     // <div style={{ ...commonTextStyle, marginBottom: "2px" }}>
                                     <div style={{ ...commonTextStyle, marginBottom: "0" }}>
                                       {/* <span> */}
-                                      <span style={ color: "#4daafc" }>
+                                      <span style={{ color: "#4daafc" }}>
                                         {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
                                       </span>
                                       <span style={{ color: "#e190d5", marginLeft: "6px" }}>
