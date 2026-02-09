@@ -893,10 +893,10 @@ function App() {
                           {isCollapsed ? "➕" : "➖"}
                         </button>
 
-                        {/* 위/아래 화살표 (기존 그대로) */}
-                        <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "3px" }}>
-                          <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
-                          <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
+                        {/* 캐릭터 나열 순서 변경하는 위/아래 화살표 */}
+                        <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "0px" }}>
+                          <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▲</button>
+                          <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▼</button>
                         </div>
 
                         {/* 캐릭명, Lv, 직업 */}
@@ -963,26 +963,20 @@ function App() {
                                       </span>
                                     </div>
                                   ) : (
-                                    <div style={{ color: "#888" }}>
+                                    <div style={{ fontSize: "11px", color: "#888", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>
                                       점수 미갱신
                                     </div>
                                   )}
                                   
                                   <button 
                                     onClick={config.fetchFn} 
-                                    style={{ 
-                                      ...btnStyle, 
-                                      padding: "2px 5px", 
-                                      fontSize: "10px", 
-                                      backgroundColor: "#335a80", 
-                                      textShadow: "1px 1px 2px rgba(0,0,0,0.8)"
-                                    }}
+                                    style={{ ...btnStyle, padding: "2px 5px", marginBottom: "2px", fontSize: "10px", backgroundColor: "#335a80", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}
                                   >
                                     전투력 갱신
                                   </button>
                                 </div>
                               );
-                            })}
+                            })()}
 
                             <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
                               <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
@@ -1096,7 +1090,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 14:11
+              최종 업데이트: 2026-02-09 14:54
             </div>
           </div>
 
