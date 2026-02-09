@@ -576,14 +576,20 @@ function App() {
   };
 
   const togglePortrait = (idx) => {
-    setData(prev => prev.map((item, i) => {
-      if (i !== idx) return item;
-      if (typeof item === 'object') {
-        return { ...item, showPortrait: !item.showPortrait };
-      } else {
-        return { name: item, showPortrait: false }; // 처음 누르면 끄기(false)
-      }
-    }));
+    setData(prev => {
+      const newData = [...prev];
+      const item = newData[idx];
+      
+      // 현재 상태 파악
+      const isObj = typeof item === 'object' && item !== null;
+      const currentName = isObj ? item.name : item;
+      // 현재 보여지고 있는지 확인 (객체가 아니거나 속성이 없으면 true)
+      const currentlyShowing = isObj ? (item.showPortrait !== false) : true;
+
+      // 상태 반전해서 저장
+      newData[idx] = { name: currentName, showPortrait: !currentlyShowing };
+      return newData;
+    });
   };
 
   const updateCount = (id, targetName, delta, e = null) => {
@@ -872,7 +878,7 @@ function App() {
 
                       {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
                       {!isCollapsed && isShowPortrait &&
-                        (typeof dataList[idx] === 'object' ? dataList[idx].showPortrait : true) !== false && 
+                        // (typeof dataList[idx] === 'object' ? dataList[idx].showPortrait : true) !== false && 
                         ["Lost Ark", "AION 2"].includes(game) &&
                         scores[targetName]?.portrait && (
                           <div
