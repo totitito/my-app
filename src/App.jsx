@@ -894,7 +894,7 @@ function App() {
                         </button>
 
                         {/* 위/아래 화살표 (기존 그대로) */}
-                        <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "5px" }}>
+                        <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "3px" }}>
                           <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▲</button>
                           <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
                         </div>
@@ -960,21 +960,22 @@ function App() {
                               // };
 
                               return (
-                                <div style={{ marginBottom: "2px" }}>
+                                <div>
                                   {scoreData ? (
                                     // <div style={{ ...commonTextStyle, marginBottom: "2px" }}>
-                                    <div style={{ marginBottom: "0" }}>
+                                    // <div style={{ marginBottom: "0" }}>
+                                    <div>
                                       {/* <span> */}
-                                      <span style={{ color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
+                                      <span style={{ fontSize: "11px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
                                         {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
                                       </span>
-                                      <span style={{ color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
+                                      <span style={{ fontSize: "11px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
                                         {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString() ?? "?"}
                                       </span>
                                     </div>
                                   ) : (
                                     // <div style={{ ...commonTextStyle, color: "#888", marginBottom: "4px" }}>
-                                    <div style={{ color: "#888", marginBottom: "0" }}>
+                                    <div style={{ color: "#888" }}>
                                       점수 미갱신
                                     </div>
                                   )}
@@ -996,7 +997,7 @@ function App() {
                               );
                             })()}
 
-                            <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "3px" }}>
+                            <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
                               <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
                               <button onClick={() => {
                                 if(window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
