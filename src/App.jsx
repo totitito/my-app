@@ -576,9 +576,14 @@ function App() {
   };
 
   const togglePortrait = (idx) => {
-    setData(prev => prev.map((item, i) => 
-      i === idx ? { ...item, showPortrait: item.showPortrait === false ? true : false } : item
-    ));
+    setData(prev => prev.map((item, i) => {
+      if (i !== idx) return item;
+      if (typeof item === 'object') {
+        return { ...item, showPortrait: !item.showPortrait };
+      } else {
+        return { name: item, showPortrait: false }; // 처음 누르면 끄기(false)
+      }
+    }));
   };
 
   const updateCount = (id, targetName, delta, e = null) => {
