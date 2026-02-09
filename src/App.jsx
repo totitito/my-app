@@ -837,9 +837,22 @@ function App() {
                   <td style={{ 
                     textAlign: "center", padding: "10px", fontWeight: "bold", 
                     position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
-                    borderRight: "2px solid #444", //verticalAlign: isCollapsed ? "middle" : "top",
+                    borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top",
                     overflow: "hidden" // ✅ 추가(배경이 셀 밖으로 안 튀게)
                   }}>
+
+                    {/* 접기/펴기 버튼 */}
+                    <button
+                      onClick={() => toggleCollapse(targetName)}
+                      style={{
+                        position: "absolute", top: "2px", right: "2px",
+                        fontSize: "10px", padding: "1px 4px", cursor: "pointer",
+                        backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", zIndex: 20
+                      }}
+                    >
+                      {isCollapsed ? "➕" : "➖"}
+                    </button>
+
                     {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
                     <div style={{ position: "relative" }}>
 
@@ -882,7 +895,7 @@ function App() {
                       <div style={{ position: "relative", zIndex: 2 }}>
 
                         {/* 접기/펴기 버튼 (기존 그대로) */}
-                        <button 
+                        {/* <button 
                           onClick={() => toggleCollapse(targetName)}
                           style={{
                             position: "absolute", top: "2px", right: "2px",
@@ -891,7 +904,7 @@ function App() {
                           }}
                         >
                           {isCollapsed ? "➕" : "➖"}
-                        </button>
+                        </button> */}
 
                         {/* 캐릭터 나열 순서 변경하는 위/아래 화살표 */}
                         <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "0px" }}>
@@ -901,17 +914,22 @@ function App() {
 
                         {/* 캐릭명, Lv, 직업 */}
                           <div>
-
                             {/* 캐릭명 */}
-                            <div
-                              style={{
-                                fontSize: "16px",
-                                textAlign: "center",
-                                fontWeight: "bold",
-                                textShadow: "1px 1px 3px rgba(0,0,0,1)",
-                              }}
-                            >
-                              {targetName}
+                            <div style={{ textAlign: "center", marginBottom: "2px" }}>
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  fontSize: "16px",
+                                  fontWeight: "bold",
+                                  color: "#fff",
+                                  textShadow: "1px 1px 2px rgba(0,0,0,1)",
+                                  backgroundColor: "rgba(0, 0, 0, 0.2)",
+                                  padding: "1px 8px",
+                                  borderRadius: "4px",
+                                }}
+                              >
+                                {targetName}
+                              </span>
                             </div>
 
                             {/* Lv, 직업 */}
@@ -941,15 +959,10 @@ function App() {
                               };
 
                               const config = gameConfig[game];
-                              // 팩트: config가 없을 경우를 대비한 안전장치
+                              // config가 없을 경우를 대비한 안전장치
                               if (!config) return null; 
 
                               const scoreData = scores[targetName];
-                              // const commonTextStyle = { 
-                              //   fontSize: "11px", 
-                              //   textShadow: "1px 1px 3px rgba(0,0,0,1)", 
-                              //   color: "#ffffff" 
-                              // };
 
                               return (
                                 <div>
