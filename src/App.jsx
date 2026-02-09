@@ -577,23 +577,21 @@ function App() {
 
   const togglePortrait = (idx) => {
     setData(prev => {
-      // 1. 기존 배열을 복사해서 완전히 새로운 배열 생성 (중요!)
-      const newData = [...prev]; 
+      const newData = [...prev];
       const item = newData[idx];
 
-      // 2. 현재 아이템이 객체인지 문자열인지 판별
       const isObj = typeof item === 'object' && item !== null;
       const currentName = isObj ? item.name : item;
-      // 현재 상태 반전 (속성이 없으면 true였던 것이니 false로)
-      const nextShowStatus = isObj ? (item.showPortrait === false) : false;
+      
+      // ✅ 가장 단순하고 확실한 논리: 현재 켜져있으면(true/undefined) false로, 꺼져있으면 true로.
+      const currentStatus = isObj ? (item.showPortrait !== false) : true;
 
-      // 3. 해당 위치에 '새로운 객체'를 할당
       newData[idx] = { 
         name: currentName, 
-        showPortrait: !isObj ? false : !item.showPortrait 
+        showPortrait: !currentStatus 
       };
 
-      return newData; // 새 배열 주소를 반환
+      return newData;
     });
   };
 
@@ -854,7 +852,7 @@ function App() {
             {dataList.map((item, idx) => { // 1. 우선 item으로 받고
               // 2. 객체면 name을, 아니면 그대로를 targetName에 할당
               const targetName = typeof item === 'object' ? item.name : item;
-              const isShowPortrait = typeof item === 'object' ? item.showPortrait !== false : true;
+              const isShowPortrait = item?.showPortrait !== false;
               const isCollapsed = collapsedChars[targetName]; // 접힘 상태 확인
               
               return (
@@ -1123,7 +1121,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 16:45
+              최종 업데이트: 2026-02-09 17:15
             </div>
           </div>
 
