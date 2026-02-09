@@ -577,18 +577,23 @@ function App() {
 
   const togglePortrait = (idx) => {
     setData(prev => {
-      const newData = [...prev];
+      // 1. 기존 배열을 복사해서 완전히 새로운 배열 생성 (중요!)
+      const newData = [...prev]; 
       const item = newData[idx];
-      
-      // 현재 상태 파악
+
+      // 2. 현재 아이템이 객체인지 문자열인지 판별
       const isObj = typeof item === 'object' && item !== null;
       const currentName = isObj ? item.name : item;
-      // 현재 보여지고 있는지 확인 (객체가 아니거나 속성이 없으면 true)
-      const currentlyShowing = isObj ? (item.showPortrait !== false) : true;
+      // 현재 상태 반전 (속성이 없으면 true였던 것이니 false로)
+      const nextShowStatus = isObj ? (item.showPortrait === false) : false;
 
-      // 상태 반전해서 저장
-      newData[idx] = { name: currentName, showPortrait: !currentlyShowing };
-      return newData;
+      // 3. 해당 위치에 '새로운 객체'를 할당
+      newData[idx] = { 
+        name: currentName, 
+        showPortrait: !isObj ? false : !item.showPortrait 
+      };
+
+      return newData; // 새 배열 주소를 반환
     });
   };
 
