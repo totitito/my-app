@@ -575,6 +575,12 @@ function App() {
     }));
   };
 
+  const togglePortrait = (idx) => {
+    setData(prev => prev.map((item, i) => 
+      i === idx ? { ...item, showPortrait: item.showPortrait === false ? true : false } : item
+    ));
+  };
+
   const updateCount = (id, targetName, delta, e = null) => {
     setHomeworks(prev => prev.map(hw => {
       if (hw.id === id) {
@@ -857,26 +863,19 @@ function App() {
                     <div style={{ position: "relative" }}>
 
                       {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
-                      {!isCollapsed && (
-                        (game === "Lost Ark" && scores[targetName]?.portrait) || 
-                        (game === "AION 2" && scores[targetName]?.portrait)
-                      ) && (
-                        <div
-                          aria-hidden="true"
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            // 게임에 따라 맞는 이미지 경로 선택
-                            backgroundImage: scores[targetName]?.portrait ? `url("${scores[targetName].portrait}")` : "none",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center top",
-                            opacity: 1,
-                            transform: "scale(1.0)",//"scale(1.05)",
-                            pointerEvents: "none",
-                            zIndex: 0,
-                          }}
-                        />
-                      )}
+                      {!isCollapsed && dataList[idx]?.showPortrait !== false &&
+                        ["Lost Ark", "AION 2"].includes(game) &&
+                        scores[targetName]?.portrait && (
+                          <div
+                            aria-hidden="true"
+                            style={{ position: "absolute", inset: 0,
+                              backgroundImage: scores[targetName]?.portrait ? `url("${scores[targetName].portrait}")` : "none",
+                              backgroundSize: "cover", backgroundPosition: "center top", opacity: 1,
+                              transform: "scale(1.0)", pointerEvents: "none", zIndex: 0,
+                            }}
+                          />
+                        )
+                      }
 
                       {/* ✅ 2) 글자 가독성용 오버레이 */}
                       {/* <div
@@ -980,6 +979,14 @@ function App() {
                             })()}
 
                             <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
+                              <button 
+                                onClick={() => togglePortrait(idx)} 
+                                style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", 
+                                  backgroundColor: dataList[idx]?.showPortrait === false ? "#2a4d69" : "#444"
+                                }}
+                              >
+                                초상화
+                              </button>
                               <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
                               <button onClick={() => {
                                 if(window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
@@ -1091,7 +1098,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 16:07
+              최종 업데이트: 2026-02-09 16:35
             </div>
           </div>
 
