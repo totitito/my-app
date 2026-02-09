@@ -900,7 +900,7 @@ function App() {
                         </div>
 
                         {/* 캐릭명, Lv, 직업 */}
-                          <div style={{ marginBottom: isCollapsed ? "0" : "2px" }}>
+                          <div>
 
                             {/* 캐릭명 */}
                             <div
@@ -916,15 +916,7 @@ function App() {
 
                             {/* Lv, 직업 */}
                             {(game === "Lost Ark" || game === "AION 2") && scores[targetName]?.job && (
-                              <div
-                                style={{
-                                  fontSize: "12px",
-                                  // color: "#e4dcbb",
-                                  // marginTop: "2px",
-                                  textAlign: "center",
-                                  textShadow: "1px 1px 3px rgba(0,0,0,1)",
-                                }}
-                              >
+                              <div style={{ fontSize: "12px", textAlign: "center", textShadow: "1px 1px 3px rgba(0,0,0,1)", }}>
                                 {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
                                 {scores[targetName].job}
                               </div>
@@ -962,10 +954,7 @@ function App() {
                               return (
                                 <div>
                                   {scoreData ? (
-                                    // <div style={{ ...commonTextStyle, marginBottom: "2px" }}>
-                                    // <div style={{ marginBottom: "0" }}>
                                     <div>
-                                      {/* <span> */}
                                       <span style={{ fontSize: "11px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
                                         {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
                                       </span>
@@ -974,7 +963,6 @@ function App() {
                                       </span>
                                     </div>
                                   ) : (
-                                    // <div style={{ ...commonTextStyle, color: "#888", marginBottom: "4px" }}>
                                     <div style={{ color: "#888" }}>
                                       점수 미갱신
                                     </div>
@@ -987,7 +975,6 @@ function App() {
                                       padding: "2px 5px", 
                                       fontSize: "10px", 
                                       backgroundColor: "#335a80", 
-                                      marginTop: "0",// 4px → 0
                                       textShadow: "1px 1px 2px rgba(0,0,0,0.8)"
                                     }}
                                   >
@@ -995,7 +982,7 @@ function App() {
                                   </button>
                                 </div>
                               );
-                            })()}
+                            })}
 
                             <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
                               <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
