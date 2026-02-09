@@ -894,18 +894,6 @@ function App() {
                       {/* ✅ 3) 기존 내용은 위로 */}
                       <div style={{ position: "relative", zIndex: 2 }}>
 
-                        {/* 접기/펴기 버튼 (기존 그대로) */}
-                        {/* <button 
-                          onClick={() => toggleCollapse(targetName)}
-                          style={{
-                            position: "absolute", top: "2px", right: "2px",
-                            fontSize: "10px", padding: "1px 4px", cursor: "pointer",
-                            backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px"
-                          }}
-                        >
-                          {isCollapsed ? "➕" : "➖"}
-                        </button> */}
-
                         {/* 캐릭터 나열 순서 변경하는 위/아래 화살표 */}
                         <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "0px" }}>
                           <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▲</button>
@@ -923,8 +911,8 @@ function App() {
                                   fontWeight: "bold",
                                   color: "#fff",
                                   textShadow: "1px 1px 2px rgba(0,0,0,1)",
-                                  backgroundColor: "rgba(0, 0, 0, 0.2)",
-                                  padding: "1px 8px",
+                                  backgroundColor: isCollapsed ? "transparent" : "rgba(0, 0, 0, 0.2)",
+                                  padding: isCollapsed ? "0px" : "1px 8px",
                                   borderRadius: "4px",
                                 }}
                               >
@@ -1103,7 +1091,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 15:59
+              최종 업데이트: 2026-02-09 16:07
             </div>
           </div>
 
