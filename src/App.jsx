@@ -843,7 +843,7 @@ function App() {
             {dataList.map((item, idx) => { // 1. 우선 item으로 받고
               // 2. 객체면 name을, 아니면 그대로를 targetName에 할당
               const targetName = typeof item === 'object' ? item.name : item;
-              
+              const isShowPortrait = typeof item === 'object' ? item.showPortrait !== false : true;
               const isCollapsed = collapsedChars[targetName]; // 접힘 상태 확인
               
               return (
@@ -871,7 +871,7 @@ function App() {
                     <div style={{ position: "relative" }}>
 
                       {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
-                      {!isCollapsed && 
+                      {!isCollapsed && isShowPortrait &&
                         (typeof dataList[idx] === 'object' ? dataList[idx].showPortrait : true) !== false && 
                         ["Lost Ark", "AION 2"].includes(game) &&
                         scores[targetName]?.portrait && (
@@ -996,7 +996,7 @@ function App() {
                               <button 
                                 onClick={() => togglePortrait(idx)} 
                                 style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", 
-                                  backgroundColor: dataList[idx]?.showPortrait === false ? "#2a4d69" : "#444"
+                                  backgroundColor: isShowPortrait ? "#444" : "#2a4d69"
                                 }}
                               >
                                 초상화
