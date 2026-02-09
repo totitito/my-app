@@ -940,8 +940,14 @@ function App() {
                                   fontWeight: "bold",
                                   color: "#fff",
                                   textShadow: "1px 1px 2px rgba(0,0,0,1)",
-                                  backgroundColor: isCollapsed ? "transparent" : "rgba(0, 0, 0, 0.2)",
-                                  padding: isCollapsed ? "0px" : "1px 8px",
+                                  backgroundColor:
+                                    !isCollapsed && isShowPortrait
+                                      ? "rgba(0, 0, 0, 0.2)"
+                                      : "transparent",
+                                  padding:
+                                    !isCollapsed && isShowPortrait
+                                      ? "1px 8px"
+                                      : "0px",
                                   borderRadius: "4px",
                                 }}
                               >
