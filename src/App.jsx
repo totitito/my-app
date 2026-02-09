@@ -837,7 +837,7 @@ function App() {
                   <td style={{ 
                     textAlign: "center", padding: "10px", fontWeight: "bold", 
                     position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
-                    borderRight: "2px solid #444", verticalAlign: "top",
+                    borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top",
                     overflow: "hidden" // ✅ 추가(배경이 셀 밖으로 안 튀게)
                   }}>
                     {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
