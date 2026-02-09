@@ -840,7 +840,10 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {dataList.map((targetName, idx) => {
+            {dataList.map((item, idx) => { // 1. 우선 item으로 받고
+              // 2. 객체면 name을, 아니면 그대로를 targetName에 할당
+              const targetName = typeof item === 'object' ? item.name : item;
+              
               const isCollapsed = collapsedChars[targetName]; // 접힘 상태 확인
               
               return (
@@ -868,19 +871,25 @@ function App() {
                     <div style={{ position: "relative" }}>
 
                       {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
-                      {!isCollapsed && dataList[idx]?.showPortrait !== false &&
+                      {!isCollapsed && 
+                        (typeof dataList[idx] === 'object' ? dataList[idx].showPortrait : true) !== false && 
                         ["Lost Ark", "AION 2"].includes(game) &&
                         scores[targetName]?.portrait && (
                           <div
                             aria-hidden="true"
-                            style={{ position: "absolute", inset: 0,
-                              backgroundImage: scores[targetName]?.portrait ? `url("${scores[targetName].portrait}")` : "none",
-                              backgroundSize: "cover", backgroundPosition: "center top", opacity: 1,
-                              transform: "scale(1.0)", pointerEvents: "none", zIndex: 0,
+                            style={{ 
+                              position: "absolute", 
+                              inset: 0,
+                              backgroundImage: `url("${scores[targetName].portrait}")`, // 이미 위에서 targetName을 처리함
+                              backgroundSize: "cover", 
+                              backgroundPosition: "center top", 
+                              opacity: 1,
+                              transform: "scale(1.0)", 
+                              pointerEvents: "none", 
+                              zIndex: 0,
                             }}
                           />
-                        )
-                      }
+                      )}
 
                       {/* ✅ 2) 글자 가독성용 오버레이 */}
                       {/* <div
@@ -1103,7 +1112,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 16:35
+              최종 업데이트: 2026-02-09 16:45
             </div>
           </div>
 
