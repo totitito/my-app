@@ -908,7 +908,7 @@ function App() {
                                 fontSize: "16px",
                                 textAlign: "center",
                                 fontWeight: "bold",
-                                textShadow: "1px 1px 3px rgba(0,0,0,0.8)",
+                                textShadow: "1px 1px 3px rgba(0,0,0,1)",
                               }}
                             >
                               {targetName}
@@ -919,10 +919,10 @@ function App() {
                               <div
                                 style={{
                                   fontSize: "12px",
-                                  color: "#bbb",
-                                  marginTop: "2px",
+                                  // color: "#bbb",
+                                  // marginTop: "2px",
                                   textAlign: "center",
-                                  textShadow: "1px 1px 3px rgba(0,0,0,0.8)",
+                                  textShadow: "1px 1px 3px rgba(0,0,0,1)",
                                 }}
                               >
                                 {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
@@ -955,23 +955,26 @@ function App() {
                               const scoreData = scores[targetName];
                               const commonTextStyle = { 
                                 fontSize: "11px", 
-                                textShadow: "1px 1px 3px rgba(0,0,0,0.8)", 
+                                textShadow: "1px 1px 3px rgba(0,0,0,1)", 
                                 color: "#ffffff" 
                               };
 
                               return (
                                 <div style={{ marginBottom: "2px" }}>
                                   {scoreData ? (
-                                    <div style={{ ...commonTextStyle, marginBottom: "2px" }}>
-                                      <span>
+                                    // <div style={{ ...commonTextStyle, marginBottom: "2px" }}>
+                                    <div style={{ ...commonTextStyle, marginBottom: "0" }}>
+                                      {/* <span> */}
+                                      <span style={ color: "#4daafc" }>
                                         {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
                                       </span>
-                                      <span style={{ color: "#4daafc", marginLeft: "6px" }}>
+                                      <span style={{ color: "#e190d5", marginLeft: "6px" }}>
                                         {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString() ?? "?"}
                                       </span>
                                     </div>
                                   ) : (
-                                    <div style={{ ...commonTextStyle, color: "#888", marginBottom: "4px" }}>
+                                    // <div style={{ ...commonTextStyle, color: "#888", marginBottom: "4px" }}>
+                                    <div style={{ ...commonTextStyle, color: "#888", marginBottom: "0" }}>
                                       점수 미갱신
                                     </div>
                                   )}
@@ -983,7 +986,7 @@ function App() {
                                       padding: "2px 5px", 
                                       fontSize: "10px", 
                                       backgroundColor: "#335a80", 
-                                      marginTop: "4px",
+                                      marginTop: "2px",// 4 → 2
                                       textShadow: "1px 1px 2px rgba(0,0,0,0.8)"
                                     }}
                                   >
@@ -994,12 +997,12 @@ function App() {
                             })()}
 
                             <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "5px" }}>
-                              <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>이름변경</button>
+                              <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
                               <button onClick={() => {
                                 if(window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
                                   setData(prev => prev.filter((_, i) => i !== idx));
                                 }
-                              }} style={{...btnStyle, padding: "2px 5px", fontSize: "12px", backgroundColor: "#600"}}>삭제</button>
+                              }} style={{...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#600"}}>삭제</button>
                             </div>
                           </>
                         )}
@@ -1105,7 +1108,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 14:00
+              최종 업데이트: 2026-02-09 14:11
             </div>
           </div>
 
