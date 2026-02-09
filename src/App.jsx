@@ -899,19 +899,22 @@ function App() {
                           <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "2px 8px"}}>▼</button>
                         </div>
 
-                        {/* 캐릭터명 + 직업명 텍스트 */}
+                        {/* 캐릭명, Lv, 직업 */}
                           <div style={{ marginBottom: isCollapsed ? "0" : "8px" }}>
+
+                            {/* 캐릭명 */}
                             <div
                               style={{
                                 fontSize: "16px",
                                 textAlign: "center",
                                 fontWeight: "bold",
+                                textShadow: "1px 1px 3px rgba(0,0,0,0.8)",
                               }}
                             >
                               {targetName}
                             </div>
 
-                            {/* 캐릭명 아래 직업명 표시 */}
+                            {/* Lv, 직업 */}
                             {(game === "Lost Ark" || game === "AION 2") && scores[targetName]?.job && (
                               <div
                                 style={{
@@ -919,6 +922,7 @@ function App() {
                                   color: "#bbb",
                                   marginTop: "2px",
                                   textAlign: "center",
+                                  textShadow: "1px 1px 3px rgba(0,0,0,0.8)",
                                 }}
                               >
                                 {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
@@ -927,36 +931,72 @@ function App() {
                             )}
                           </div>
 
-                        {/* 💡 캐릭터 정보 영역 (기존 그대로) */}
+                        {/* 전투력 등 캐릭터 추가 정보 */}
                         {!isCollapsed && (
                           <>
-                            {(game === "AION 2" || game === "Lost Ark") && scope === "character" && (
-                              <div style={{ marginBottom: "2px" }}>
-                                {scores[targetName] ? (
-                                  <div style={{ fontSize: "11px", marginBottom: "2px" }}>
-                                    <span style={{ color: "#ffffff" }}>
-                                      {game === "AION 2" ? `전투력: ${scores[targetName].combatPower?.toLocaleString() ?? "?"}` : `템렙: ${scores[targetName].itemLevel}`}
-                                    </span>
-                                    <span style={{ color: "#4daafc", marginLeft: "6px" }}>
-                                      {game === "AION 2" ? `아툴: ${scores[targetName].combatScore?.toLocaleString() ?? "?"}` : `전투력: ${scores[targetName].combatPower?.toLocaleString()}`}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>점수 미갱신</div>
-                                )}
-                                <button 
-                                  onClick={() => game === "AION 2" ? fetchScore(targetName) : fetchLoaScore(targetName)} 
-                                  style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80", marginTop: "4px" }}
-                                >
-                                  전투력 갱신
-                                </button>
-                              </div>
-                            )}
+                            {["AION 2", "Lost Ark"].includes(game) && scope === "character" && (() => {
+                              const gameConfig = {
+                                "Lost Ark": {
+                                  labels: ["템렙", "전투력"],
+                                  keys: ["itemLevel", "combatPower"],
+                                  fetchFn: () => fetchLoaScore(targetName)
+                                },
+                                "AION 2": {
+                                  labels: ["전투력", "아툴"],
+                                  keys: ["combatPower", "combatScore"],
+                                  fetchFn: () => fetchScore(targetName)
+                                }
+                              };
+
+                              const config = gameConfig[game];
+                              // 팩트: config가 없을 경우를 대비한 안전장치
+                              if (!config) return null; 
+
+                              const scoreData = scores[targetName];
+                              const commonTextStyle = { 
+                                fontSize: "11px", 
+                                textShadow: "1px 1px 3px rgba(0,0,0,0.8)", 
+                                color: "#ffffff" 
+                              };
+
+                              return (
+                                <div style={{ marginBottom: "2px" }}>
+                                  {scoreData ? (
+                                    <div style={{ ...commonTextStyle, marginBottom: "2px" }}>
+                                      <span>
+                                        {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
+                                      </span>
+                                      <span style={{ color: "#4daafc", marginLeft: "6px" }}>
+                                        {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString() ?? "?"}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    <div style={{ ...commonTextStyle, color: "#888", marginBottom: "4px" }}>
+                                      점수 미갱신
+                                    </div>
+                                  )}
+                                  
+                                  <button 
+                                    onClick={config.fetchFn} 
+                                    style={{ 
+                                      ...btnStyle, 
+                                      padding: "2px 5px", 
+                                      fontSize: "10px", 
+                                      backgroundColor: "#335a80", 
+                                      marginTop: "4px",
+                                      textShadow: "1px 1px 2px rgba(0,0,0,0.8)"
+                                    }}
+                                  >
+                                    전투력 갱신
+                                  </button>
+                                </div>
+                              );
+                            })()}
 
                             <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "5px" }}>
                               <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "12px"}}>이름변경</button>
                               <button onClick={() => {
-                                if(window.confirm(`[${targetName}] 캐릭 목록에서 지운다?`)) {
+                                if(window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
                                   setData(prev => prev.filter((_, i) => i !== idx));
                                 }
                               }} style={{...btnStyle, padding: "2px 5px", fontSize: "12px", backgroundColor: "#600"}}>삭제</button>
@@ -1065,7 +1105,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 13:39
+              최종 업데이트: 2026-02-09 14:00
             </div>
           </div>
 
