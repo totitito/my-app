@@ -699,8 +699,6 @@ function App() {
           )}
         </h3>
 
-        {/* 기존의 아래쪽 <div style={{ textAlign: 'left'... }}> 영역은 통째로 삭제해줘 */}
-
         <table border="1" style={{ borderCollapse: "separate", borderSpacing: 0, borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
           <thead>
             <tr style={{ backgroundColor: "#333" }}>
@@ -712,7 +710,7 @@ function App() {
               
               {viewMode === "once" ? (
                 <>
-                  {/* .length 대신 filter를 써서 숨겨진 숙제를 뺀 개수만큼 colSpan을 잡는다 */}
+                  {/* .length 대신 filter 써서 숨겨진 숙제를 뺀 개수만큼 colSpan 잡기 */}
                   {onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>기본</th>}
                   
@@ -746,13 +744,13 @@ function App() {
               )}
             </tr>
 
-            {/* 2행: 숙제 항목명 */}
+            {/* 2행: 숙제명 */}
             <tr style={{ backgroundColor: "#333" }}>
               <th style={{ 
                 padding: "10px", 
                 position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
                 borderRight: "2px solid #444" 
-              }}>항목</th>
+              }}>숙제명</th>
               
               {allFiltered.map(hw => {
                 if (hiddenHomeworks.includes(hw.name)) return null;
@@ -768,7 +766,7 @@ function App() {
                     <div style={{ fontWeight: "bold" }}>{hw.name}</div>
                     
                     {/* 2. 메모 영역 (주기보다 윗줄) */}
-                    <div style={{ marginTop: "4px" }}>
+                    <div style={{ marginTop: "2px" }}>
                       {hw.memo ? (
                         // 메모가 있을 때: 클릭하면 수정 가능
                         <div 
@@ -777,7 +775,7 @@ function App() {
                             if (newMemo !== null) updateHomeworkMemo(hw.id, newMemo);
                           }}
                           style={{ 
-                            fontSize: "11px", color: "#315c68", cursor: "pointer",
+                            fontSize: "11px", cursor: "pointer", color: "#80a3c7",
                             whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
                             maxWidth: "110px", margin: "0 auto"//, borderBottom: "1px dashed #62dafb"
                           }}
@@ -802,9 +800,9 @@ function App() {
                       )}
                     </div>
 
-                    {/* 3. 복구된 초기화 주기 로직 (메모 아래로 이동) */}
+                    {/* 3. 초기화 주기 표기 */}
                     {viewMode !== "once" && (
-                      <div style={{ fontSize: "10px", color: "#bbb", marginTop: "6px" }}>
+                      <div style={{ fontSize: "10px", color: "#bbb", marginTop: "2px" }}>
                         {hw.id === "aion2-odd-energy" ? "05시 기준 3시간마다 +15" :
                         (hw.resetType === 'recovery' ? `매일 05시 +${hw.recoveryAmount}` :
                         `${hw.resetPeriod === 'week' ? dayMap[hw.resetDay] : '매일'} ${String(Array.isArray(hw.resetTime)?hw.resetTime[0]:hw.resetTime).padStart(2,'0')}시`)}
@@ -856,14 +854,11 @@ function App() {
                             position: "absolute",
                             inset: 0,
                             // 게임에 따라 맞는 이미지 경로 선택
-                            backgroundImage: game === "Lost Ark" 
-                              // ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("${scores[targetName].portrait}")`
-                              ? `url("${scores[targetName].portrait}")`
-                              : `url("${scores[targetName].portrait}")`,
+                            backgroundImage: scores[targetName]?.portrait ? `url("${scores[targetName].portrait}")` : "none",
                             backgroundSize: "cover",
                             backgroundPosition: "center top",
                             opacity: 1,
-                            transform: "scale(1.05)",
+                            transform: "scale(1.0)",//"scale(1.05)",
                             pointerEvents: "none",
                             zIndex: 0,
                           }}
@@ -871,7 +866,7 @@ function App() {
                       )}
 
                       {/* ✅ 2) 글자 가독성용 오버레이 */}
-                      <div
+                      {/* <div
                         aria-hidden="true"
                         style={{
                           position: "absolute",
@@ -881,7 +876,7 @@ function App() {
                           pointerEvents: "none",
                           zIndex: 1,
                         }}
-                      />
+                      /> */}
 
                       {/* ✅ 3) 기존 내용은 위로 */}
                       <div style={{ position: "relative", zIndex: 2 }}>
@@ -1070,7 +1065,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-08 17:19
+              최종 업데이트: 2026-02-09 13:39
             </div>
           </div>
 
