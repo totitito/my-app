@@ -934,7 +934,7 @@ function App() {
 
                             {/* Lv, 직업 */}
                             {(game === "Lost Ark" || game === "AION 2") && scores[targetName]?.job && (
-                              <div style={{ fontSize: "12px", textAlign: "center", textShadow: "1px 1px 3px rgba(0,0,0,1)", }}>
+                              <div style={{ fontSize: "12px", textAlign: "center", }}>
                                 {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
                                 {scores[targetName].job}
                               </div>
@@ -968,22 +968,22 @@ function App() {
                                 <div>
                                   {scoreData ? (
                                     <div>
-                                      <span style={{ fontSize: "11px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
+                                      <span style={{ fontSize: "11px", color: "#ffffff" }}>
                                         {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
                                       </span>
-                                      <span style={{ fontSize: "11px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
+                                      <span style={{ fontSize: "11px", color: "#69b7ee", marginLeft: "6px" }}>
                                         {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString() ?? "?"}
                                       </span>
                                     </div>
                                   ) : (
-                                    <div style={{ fontSize: "11px", color: "#888", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>
+                                    <div style={{ fontSize: "11px", color: "#888" }}>
                                       점수 미갱신
                                     </div>
                                   )}
                                   
                                   <button 
                                     onClick={config.fetchFn} 
-                                    style={{ ...btnStyle, padding: "2px 5px", marginBottom: "2px", fontSize: "10px", backgroundColor: "#335a80", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}
+                                    style={{ ...btnStyle, padding: "2px 5px", marginBottom: "2px", fontSize: "10px", backgroundColor: "#335a80" }}
                                   >
                                     전투력 갱신
                                   </button>
@@ -1001,7 +1001,6 @@ function App() {
                             </div>
                           </>
                         )}
-
                       </div>
                     </div>
                   </td>
