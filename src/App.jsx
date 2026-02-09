@@ -900,7 +900,7 @@ function App() {
                         </div>
 
                         {/* 캐릭명, Lv, 직업 */}
-                          <div style={{ marginBottom: isCollapsed ? "0" : "8px" }}>
+                          <div style={{ marginBottom: isCollapsed ? "0" : "2px" }}>
 
                             {/* 캐릭명 */}
                             <div
@@ -919,7 +919,7 @@ function App() {
                               <div
                                 style={{
                                   fontSize: "12px",
-                                  // color: "#bbb",
+                                  // color: "#e4dcbb",
                                   // marginTop: "2px",
                                   textAlign: "center",
                                   textShadow: "1px 1px 3px rgba(0,0,0,1)",
@@ -953,11 +953,11 @@ function App() {
                               if (!config) return null; 
 
                               const scoreData = scores[targetName];
-                              const commonTextStyle = { 
-                                fontSize: "11px", 
-                                textShadow: "1px 1px 3px rgba(0,0,0,1)", 
-                                color: "#ffffff" 
-                              };
+                              // const commonTextStyle = { 
+                              //   fontSize: "11px", 
+                              //   textShadow: "1px 1px 3px rgba(0,0,0,1)", 
+                              //   color: "#ffffff" 
+                              // };
 
                               return (
                                 <div style={{ marginBottom: "2px" }}>
@@ -965,10 +965,10 @@ function App() {
                                     // <div style={{ ...commonTextStyle, marginBottom: "2px" }}>
                                     <div style={{ ...commonTextStyle, marginBottom: "0" }}>
                                       {/* <span> */}
-                                      <span style={{ color: "#4daafc" }}>
+                                      <span style={{ color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
                                         {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
                                       </span>
-                                      <span style={{ color: "#e190d5", marginLeft: "6px" }}>
+                                      <span style={{ color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
                                         {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString() ?? "?"}
                                       </span>
                                     </div>
@@ -986,7 +986,7 @@ function App() {
                                       padding: "2px 5px", 
                                       fontSize: "10px", 
                                       backgroundColor: "#335a80", 
-                                      marginTop: "2px",// 4 → 2
+                                      marginTop: "0",// 4px → 0
                                       textShadow: "1px 1px 2px rgba(0,0,0,0.8)"
                                     }}
                                   >
@@ -996,7 +996,7 @@ function App() {
                               );
                             })()}
 
-                            <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "5px" }}>
+                            <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginTop: "3px" }}>
                               <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
                               <button onClick={() => {
                                 if(window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
