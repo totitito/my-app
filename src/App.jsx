@@ -708,36 +708,48 @@ function App() {
 
   const updateCount = (id, targetName, delta, e = null) => {
     setHomeworks(prev => prev.map(hw => {
-      if (hw.id === id) {
-        const current = (hw.counts && hw.counts[targetName] !== undefined) 
-          ? hw.counts[targetName] 
-          : hw.max;
+      if (hw.id !== id) return hw;
 
-        let next;
-
-        // ★ delta가 정확히 0으로 들어오면 0으로 초기화, 아니면 기존 증감 로직 수행
-        if (delta === 0) {
-          next = 0;
-        } else {
-          let multiplier = 1;
-          if (e && typeof e === 'object') {
-            if (e.shiftKey) multiplier = 10;
-            else if (e.ctrlKey) multiplier = 100;
-          }
-          const calculatedDelta = typeof delta === 'number' ? delta * multiplier : (parseInt(delta) - current) || 0;
-          next = current + calculatedDelta;
-        }
-        
-        // 0 ~ max 범위 제한
-        next = Math.max(0, Math.min(hw.max, next));
-
-        return { 
-          ...hw, 
-          counts: { ...(hw.counts || {}), [targetName]: next },
-          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: new Date().getTime() }
+      // ✅ STEP 1 핵심: 입력 중 빈칸 허용
+      if (delta === "") {
+        return {
+          ...hw,
+          counts: { ...(hw.counts || {}), [targetName]: "" }
         };
       }
-      return hw;
+
+      const current =
+        hw.counts && hw.counts[targetName] !== undefined && hw.counts[targetName] !== ""
+          ? hw.counts[targetName]
+          : hw.max;
+
+      let next;
+
+      if (delta === 0) {
+        next = 0;
+      } else {
+        let multiplier = 1;
+        if (e && typeof e === "object") {
+          if (e.shiftKey) multiplier = 10;
+          else if (e.ctrlKey) multiplier = 100;
+        }
+
+        const num = Number(delta);
+        if (Number.isNaN(num)) return hw;
+
+        next = num;
+      }
+
+      next = Math.max(0, Math.min(hw.max, next));
+
+      return {
+        ...hw,
+        counts: { ...(hw.counts || {}), [targetName]: next },
+        lastUpdated: {
+          ...(hw.lastUpdated || {}),
+          [targetName]: new Date().getTime()
+        }
+      };
     }));
   };
 
@@ -1169,6 +1181,7 @@ function App() {
                         position: "relative",
                         verticalAlign: "middle" 
                       }}>
+                        {/* 제외 체크 박스 */}
                         <div style={{ position: "absolute", top: "2px", right: "2px" }}>
                           <input type="checkbox" checked={isExcluded} onChange={() => toggleExclude(hw.id, targetName)} />
                         </div>
@@ -1183,8 +1196,9 @@ function App() {
                             {/* 2. Input 창 영역: 버튼을 떼어내고 세로 배치 유도 */}
                             <div style={{ marginBottom: isCollapsed ? "3px" : "5px" }}>
                               <input 
-                                type="number" 
-                                value={val} 
+                                type="number"
+                                className="count-input"
+                                value={val}
                                 onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
                                 onFocus={(e) => e.target.select()}
                                 onKeyDown={(e) => {
@@ -1192,20 +1206,14 @@ function App() {
                                     e.target.blur();
                                   }
                                 }}
-                                // ★ className 추가
-                                className="count-input"
-                                style={{ 
-                                  width: "45px", 
-                                  textAlign: "center", 
-                                  backgroundColor: "#222", 
-                                  color: "#fff", 
+                                style={{
+                                  width: "45px",
+                                  textAlign: "center",
+                                  backgroundColor: "#222",
+                                  color: "#fff",
                                   border: "1px solid #444",
-                                  appearance: "textfield",
-                                  WebkitAppearance: "none",
-                                  MozAppearance: "textfield",
-                                  // ★ 부드러운 전환을 위한 애니메이션만 추가
                                   transition: "background-color 0.2s, color 0.2s"
-                                }} 
+                                }}
                               />
                               <span style={{ color: isPending ? "#ccc" : "#888", fontSize: "13px" }}> / {hw.max}</span>
                             </div>
@@ -1250,7 +1258,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-11 00:25
+              업데이트 : 2026-02-11 00:54
             </div>
           </div>
 
