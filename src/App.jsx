@@ -287,10 +287,11 @@ function App() {
   // AION 2 fetchScore
   const fetchScore = async (fullName) => {
     try {
-      // "카니쵸니[바카]" 같은 형식 지원
-      const match = fullName.match(/^(.+?)\[(.+?)\]$/);
-      let charName = fullName;
-      let server_id = 1016; // 기본값(바카르마)
+      const rawFull = (fullName || "").trim();  // ✅ 원본 입력값(표시/조회와 동일)
+      const match = rawFull.match(/^(.+?)\[(.+?)\]$/);
+
+      let charName = rawFull;
+      let server_id = 1016; // 바카르마 기본값
 
       if (match) {
         charName = match[1].trim();
@@ -299,18 +300,23 @@ function App() {
         server_id = serverMap[serverAbbr] || 1016;
       }
 
-      // ✅ 기존과 동일: 우리 서버 함수로 호출
       const r = await fetch("/api/aion2-search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ keyword: charName, server_id }),
       });
 
+      // ✅ 실패면 왜 실패인지 확인 가능하게
+      if (!r.ok) {
+        const text = await r.text().catch(() => "");
+        throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
+      }
+
       const j = await r.json();
 
       setScores(prev => ({
         ...prev,
-        [charName]: {   // ← 핵심
+        [rawFull]: { // ✅ 저장 키를 rawFull로 통일 (UI의 scores[targetName]과 동일)
           combatPower: j.combat_power ?? 0,
           combatScore: j.combat_score ?? 0,
           updatedAt: Date.now(),
@@ -321,6 +327,7 @@ function App() {
       }));
     } catch (e) {
       console.error("전투력 갱신 실패:", e);
+      alert("전투력 갱신 실패: " + e.message); // ✅ 탱아저씨 케이스 원인 바로 뜸
     }
   };
 
@@ -1243,7 +1250,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-11 00:02
+              업데이트 : 2026-02-11 00:25
             </div>
           </div>
 
