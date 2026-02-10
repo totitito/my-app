@@ -248,8 +248,14 @@ function App() {
   const [hiddenHomeworks, setHiddenHomeworks] = useState([]);
   
   const [homeworks, setHomeworks] = useState(() => {
-    const saved = localStorage.getItem(`all-homeworks`);
-    return saved ? JSON.parse(saved) : initialHomeworks;
+    const perGame = localStorage.getItem(`homeworks-${game}`);
+    if (perGame) return JSON.parse(perGame);
+
+    // 예전에 쓰던 all-homeworks가 있으면 1회 가져오기
+    const legacy = localStorage.getItem(`all-homeworks`);
+    if (legacy) return JSON.parse(legacy);
+
+    return initialHomeworks;
   });
 
   const [characters, setCharacters] = useState(() => {
@@ -401,18 +407,18 @@ function App() {
   }, [game]);
 
   useEffect(() => {
-    // 1. 아직 불러오기(Load)가 완료되지 않았으면 저장하지 말고 그냥 리턴해라.
-    if (!isLoaded) return; 
+    if (!isLoaded) return;
 
-    // 2. 이제 로드가 완료된 상태이므로 안전하게 저장한다.
-    localStorage.setItem(`all-homeworks`, JSON.stringify(homeworks));
+    // ✅ 숙제 화면에서만 저장 (영혼각인/아르카나에서는 덮어쓰기 방지)
+    const isHomeworkView = viewMode === "repeat" || viewMode === "once";
+    if (!isHomeworkView) return;
+
+    localStorage.setItem(`homeworks-${game}`, JSON.stringify(homeworks));
     localStorage.setItem(`characters-${game}`, JSON.stringify(characters));
     localStorage.setItem(`accounts-${game}`, JSON.stringify(accounts));
     localStorage.setItem(`scores-${game}`, JSON.stringify(scores));
     localStorage.setItem(`hidden-homeworks-${game}`, JSON.stringify(hiddenHomeworks));
-    
-    // 3. 의존성 배열에 isLoaded를 추가해서 상태 변화를 감시하게 한다.
-  }, [homeworks, characters, accounts, game, scores, isLoaded, hiddenHomeworks]);
+  }, [homeworks, characters, accounts, game, scores, isLoaded, hiddenHomeworks, viewMode]);
 
   const toggleHomework = (name) => {
     setHiddenHomeworks(prev =>
@@ -1240,7 +1246,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-10 19:11
+              업데이트 : 2026-02-10 20:55
             </div>
           </div>
 
