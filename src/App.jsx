@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 
+import aion2Icon from "./assets/gameicons/aion2.png";
+import lostarkIcon from "./assets/gameicons/lostark.png";
+import wowIcon from "./assets/gameicons/wow.png";
+
 // 브라우저에서 숙제 카운트 인풋창 click/mouseover 시 우측에 위아래 화살표 생기는 것 방지
 const style = document.createElement('style');
 style.textContent = `
@@ -28,7 +32,27 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-const games = ["World of Warcraft", "Lost Ark", "AION 2"];
+const GAMES = [
+  {
+    id: "wow",
+    label: "World of Warcraft",
+    icon: wowIcon,
+  },
+  {
+    id: "lostark",
+    label: "Lost Ark",
+    icon: lostarkIcon,
+  },
+  {
+    id: "aion2",
+    label: "AION 2",
+    icon: aion2Icon,
+  },
+];
+
+const GAME_IDS = GAMES.map(g => g.id);
+
+// const games = GAMES.map(g => g.id);
 
 const formatScoreUpdatedAt = (ts) => {
   if (!ts) return "";
@@ -42,113 +66,181 @@ const formatScoreUpdatedAt = (ts) => {
 
 const initialHomeworks = [
   // 와우 - 반복
-  { id: "wow-raid", game: "World of Warcraft", name: "레이드", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "wow-mythic+", game: "World of Warcraft", name: "쐐기주차", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "wow-raid", game: "wow", name: "레이드", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "wow-mythic+", game: "wow", name: "쐐기주차", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "", lastUpdated: {} },
 
   // 로아 - 반복 - 계정
-  { id: "loa-login", game: "Lost Ark", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-manage-domain", game: "Lost Ark", name: "영지관리", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-weekly-gem-buy-pa", game: "Lost Ark", name: "보석교환(파푸니카)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-weekly-gem-buy-bol", game: "Lost Ark", name: "보석교환(볼다이크)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-weekly-gem-buy-ku", game: "Lost Ark", name: "보석교환(쿠르잔)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-weekly-gem-buy-rim", game: "Lost Ark", name: "보석교환(림레이크)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-login", game: "lostark", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-manage-domain", game: "lostark", name: "영지관리", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-weekly-gem-buy-pa", game: "lostark", name: "보석교환(파푸니카)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-weekly-gem-buy-bol", game: "lostark", name: "보석교환(볼다이크)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-weekly-gem-buy-ku", game: "lostark", name: "보석교환(쿠르잔)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-weekly-gem-buy-rim", game: "lostark", name: "보석교환(림레이크)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "account", lastResetDate: "", lastUpdated: {} },
   // 로아 - 반복 - 캐릭터
-  { id: "loa-daily-guild-login", game: "Lost Ark", name: "길드 기부", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-chaos-dungeon", game: "Lost Ark", name: "카오스 던전", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-guardian-raid", game: "Lost Ark", name: "가디언 토벌", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-aufakd", game: "Lost Ark", name: "낙원", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-clear-medal-exchange", game: "Lost Ark", name: "메달교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "loa-guild-pint-exchange", game: "Lost Ark", name: "혈석교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-daily-guild-login", game: "lostark", name: "길드 기부", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-chaos-dungeon", game: "lostark", name: "카오스 던전", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-guardian-raid", game: "lostark", name: "가디언 토벌", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-aufakd", game: "lostark", name: "낙원", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-clear-medal-exchange", game: "lostark", name: "메달교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "loa-guild-pint-exchange", game: "lostark", name: "혈석교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 6, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 로아 - 업적 - 스토리
-  { id: "loa-archievement-story-RL_S", game: "Lost Ark", name: "림레이크 남섬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "스토리", scope: "character", lastUpdated: {} },
+  { id: "loa-archievement-story-RL_S", game: "lostark", name: "림레이크 남섬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "스토리", scope: "character", lastUpdated: {} },
 
   // 아이온2 - 반복 - Daily
-  { id: "aion2-login", game: "AION 2", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 0, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-daily-donation", game: "AION 2", name: "보급의뢰", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-quest", game: "AION 2", name: "사명퀘", max: 5, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-nightmare", game: "AION 2", name: "악몽", max: 14, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 2, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-odd-energy", game: "AION 2", name: "오드에너지", max: 840, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
+  { id: "aion2-login", game: "aion2", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 0, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-daily-donation", game: "aion2", name: "보급의뢰", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-quest", game: "aion2", name: "사명퀘", max: 5, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-nightmare", game: "aion2", name: "악몽", max: 14, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 2, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-odd-energy", game: "aion2", name: "오드에너지", max: 840, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
   // 아이온2 - 반복 - Weekly
-  { id: "aion2-abyss-order", game: "AION 2", name: "지령서", max: 12, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-weeklydungeon", game: "AION 2", name: "일일던전", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-awaken", game: "AION 2", name: "각성전", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-weeklyraid", game: "AION 2", name: "토벌전", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-rudra-named", game: "AION 2", name: "루드라 1,2넴", max: 4, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-rudra-boss", game: "AION 2", name: "루드라", max: 2, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-odd-change", game: "AION 2", name: "오드 변환", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-odd-buy", game: "AION 2", name: "오드 구입", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-abyss-order", game: "aion2", name: "지령서", max: 12, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-weeklydungeon", game: "aion2", name: "일일던전", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-awaken", game: "aion2", name: "각성전", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-weeklyraid", game: "aion2", name: "토벌전", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-rudra-named", game: "aion2", name: "루드라 1,2넴", max: 4, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-rudra-boss", game: "aion2", name: "루드라", max: 2, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-odd-change", game: "aion2", name: "오드 변환", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-odd-buy", game: "aion2", name: "오드 구입", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 업적 - 기본
-  { id: "aion2-basic-foundation-quests", game: "AION 2", name: "지역퀘, 봉던, 주둔지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
-  { id: "aion2-achievement-add-friends", game: "AION 2", name: "친추업적", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
+  { id: "aion2-basic-foundation-quests", game: "aion2", name: "지역퀘, 봉던, 주둔지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
+  { id: "aion2-achievement-add-friends", game: "aion2", name: "친추업적", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
   // 아이온2 - 업적 - 필드보스
-  { id: "aion2-sentry-knash", game: "AION 2", name: "감시병기 크나쉬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-black-tentacle-lawa", game: "AION 2", name: "검은 촉수 라와", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-berserker-kusan", game: "AION 2", name: "광투사 쿠산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Commander-Ragta", game: "AION 2", name: "군단장 라그타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-ehdWHrdml-spdlzpf", game: "AION 2", name: "동쪽의 네이켈", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-aksrogks-zhfls", game: "AION 2", name: "만개한 코린", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Invincible-Solo-I", game: "AION 2", name: "무적의 솔로 I", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-apostate-rayla", game: "AION 2", name: "배교자 레일라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-centurion-Demiros", game: "AION 2", name: "백부장 데미로스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-raged-sarus", game: "AION 2", name: "분노한 사루스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-tjWHrdml-zpfmshs", game: "AION 2", name: "서쪽의 케르논", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-gather-manager-moshav", game: "AION 2", name: "수확관리자 모샤브", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-forest-warrior", game: "AION 2", name: "숲전사 우라무", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-holy-ansas", game: "AION 2", name: "신성한 안사스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Tjrdms-znxkfm", game: "AION 2", name: "썩은 쿠타르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Researcher-Setram", game: "AION 2", name: "연구관 세트람", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Soul-Ruler-Kashapa", game: "AION 2", name: "영혼 지배자 카샤파", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-priest-garsim", game: "AION 2", name: "제사장 가르심", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-chaser-taulo", game: "AION 2", name: "추격자 타울로", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-silent-tartan", game: "AION 2", name: "침묵의 타르탄", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-blood-fang", game: "AION 2", name: "피송곳니 프닌", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-scholar-raula", game: "AION 2", name: "학자 라울라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-guard-tigant", game: "AION 2", name: "호위병 티간트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-dream-kassia", game: "AION 2", name: "환몽의 카시아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Timeless-Isle-Timeless-Gartua", game: "AION 2", name: "[영원의 섬] 영원의 가르투아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Black-Warrior-Aed", game: "AION 2", name: "[알트가르드] 검은 전사 아에드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Berserker-Balg", game: "AION 2", name: "[알트가르드] 광전사 발그", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-deceiver-trid", game: "AION 2", name: "[알트가르드] 기만자 트리드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Melted-Danar", game: "AION 2", name: "[알트가르드] 녹아내린 다나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Guruta", game: "AION 2", name: "[알트가르드] 드라칸 부대병기 구루타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Axios", game: "AION 2", name: "[알트가르드] 망혼의 아칸 악시오스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Noblude", game: "AION 2", name: "[알트가르드] 모독자 노블루드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Shuzakan", game: "AION 2", name: "[알트가르드] 백전노장 슈자칸", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Linkes", game: "AION 2", name: "[알트가르드] 별동대장 링크스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Karuka", game: "AION 2", name: "[알트가르드] 비전의 카루카", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Shirak", game: "AION 2", name: "[알트가르드] 예리한 쉬라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Hadirun", game: "AION 2", name: "[알트가르드] 중독된 하디룬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Advisor-Lesana", game: "AION 2", name: "[알트가르드] 참모관 르사나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Barsien", game: "AION 2", name: "[알트가르드] 처형자 바르시엔", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Supervisor-Nuta", game: "AION 2", name: "[알트가르드] 총감독관 누타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Faithful-Lagit", game: "AION 2", name: "[알트가르드] 충실한 라지트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Predator-Garsan", game: "AION 2", name: "[알트가르드] 포식자 가르산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Bluewave-Kelpina", game: "AION 2", name: "[알트가르드] 푸른물결 켈피나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Blood-Warrior-Lannar", game: "AION 2", name: "[알트가르드] 혈전사 란나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Bishveda", game: "AION 2", name: "[알트가르드] 흑암의 비슈베다", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-sentry-knash", game: "aion2", name: "감시병기 크나쉬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-black-tentacle-lawa", game: "aion2", name: "검은 촉수 라와", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-berserker-kusan", game: "aion2", name: "광투사 쿠산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Commander-Ragta", game: "aion2", name: "군단장 라그타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-ehdWHrdml-spdlzpf", game: "aion2", name: "동쪽의 네이켈", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-aksrogks-zhfls", game: "aion2", name: "만개한 코린", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Invincible-Solo-I", game: "aion2", name: "무적의 솔로 I", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-apostate-rayla", game: "aion2", name: "배교자 레일라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-centurion-Demiros", game: "aion2", name: "백부장 데미로스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-raged-sarus", game: "aion2", name: "분노한 사루스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-tjWHrdml-zpfmshs", game: "aion2", name: "서쪽의 케르논", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-gather-manager-moshav", game: "aion2", name: "수확관리자 모샤브", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-forest-warrior", game: "aion2", name: "숲전사 우라무", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-holy-ansas", game: "aion2", name: "신성한 안사스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Tjrdms-znxkfm", game: "aion2", name: "썩은 쿠타르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Researcher-Setram", game: "aion2", name: "연구관 세트람", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Soul-Ruler-Kashapa", game: "aion2", name: "영혼 지배자 카샤파", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-priest-garsim", game: "aion2", name: "제사장 가르심", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-chaser-taulo", game: "aion2", name: "추격자 타울로", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-silent-tartan", game: "aion2", name: "침묵의 타르탄", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-blood-fang", game: "aion2", name: "피송곳니 프닌", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-scholar-raula", game: "aion2", name: "학자 라울라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-guard-tigant", game: "aion2", name: "호위병 티간트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-dream-kassia", game: "aion2", name: "환몽의 카시아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Timeless-Isle-Timeless-Gartua", game: "aion2", name: "[영원의 섬] 영원의 가르투아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Black-Warrior-Aed", game: "aion2", name: "[알트가르드] 검은 전사 아에드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Berserker-Balg", game: "aion2", name: "[알트가르드] 광전사 발그", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-deceiver-trid", game: "aion2", name: "[알트가르드] 기만자 트리드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Melted-Danar", game: "aion2", name: "[알트가르드] 녹아내린 다나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Guruta", game: "aion2", name: "[알트가르드] 드라칸 부대병기 구루타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Axios", game: "aion2", name: "[알트가르드] 망혼의 아칸 악시오스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Noblude", game: "aion2", name: "[알트가르드] 모독자 노블루드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Shuzakan", game: "aion2", name: "[알트가르드] 백전노장 슈자칸", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Linkes", game: "aion2", name: "[알트가르드] 별동대장 링크스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Karuka", game: "aion2", name: "[알트가르드] 비전의 카루카", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Shirak", game: "aion2", name: "[알트가르드] 예리한 쉬라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Hadirun", game: "aion2", name: "[알트가르드] 중독된 하디룬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Advisor-Lesana", game: "aion2", name: "[알트가르드] 참모관 르사나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Barsien", game: "aion2", name: "[알트가르드] 처형자 바르시엔", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Supervisor-Nuta", game: "aion2", name: "[알트가르드] 총감독관 누타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Faithful-Lagit", game: "aion2", name: "[알트가르드] 충실한 라지트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Predator-Garsan", game: "aion2", name: "[알트가르드] 포식자 가르산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Bluewave-Kelpina", game: "aion2", name: "[알트가르드] 푸른물결 켈피나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Blood-Warrior-Lannar", game: "aion2", name: "[알트가르드] 혈전사 란나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Bishveda", game: "aion2", name: "[알트가르드] 흑암의 비슈베다", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
   // 아이온2 - 업적 - 날개
-  { id: "aion2-fire-temple", game: "AION 2", name: "불의 신전", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-horn-cave", game: "AION 2", name: "사나운 뿔 암굴", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-dramata-nest", game: "AION 2", name: "죽은 드라마타의 둥지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-fire-temple", game: "aion2", name: "불의 신전", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-horn-cave", game: "aion2", name: "사나운 뿔 암굴", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-dramata-nest", game: "aion2", name: "죽은 드라마타의 둥지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   // 아이온2 - 업적 - 명화
-  { id: "aion2-duduka-worker", game: "AION 2", name: "두두카 일꾼", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-shugo-alchemist", game: "AION 2", name: "슈고 연금술사", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-kantas-valley", game: "AION 2", name: "칸타스 계곡", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-verteron-ruin", game: "AION 2", name: "베르테론 요새 폐허", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-elun-mid", game: "AION 2", name: "엘룬강 중류", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-pilgrim-pass", game: "AION 2", name: "순례자의 고갯길", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-elun-swamp", game: "AION 2", name: "엘룬강 늪지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-dawn-base", game: "AION 2", name: "새벽의 레기온 기지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-teina-portrait", game: "AION 2", name: "테이나 초상화", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
-  { id: "aion2-shurak", game: "AION 2", name: "슈라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-duduka-worker", game: "aion2", name: "두두카 일꾼", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-shugo-alchemist", game: "aion2", name: "슈고 연금술사", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-kantas-valley", game: "aion2", name: "칸타스 계곡", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-verteron-ruin", game: "aion2", name: "베르테론 요새 폐허", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "elun-mid", game: "aion2", name: "엘룬강 중류", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-pilgrim-pass", game: "aion2", name: "순례자의 고갯길", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-elun-swamp", game: "aion2", name: "엘룬강 늪지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-dawn-base", game: "aion2", name: "새벽의 레기온 기지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-teina-portrait", game: "aion2", name: "테이나 초상화", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-shurak", game: "aion2", name: "슈라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
 ];
 
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+const WEEK_MS = 7 * DAY_MS;
+const KST_OFFSET_MS = 9 * HOUR_MS;
+
+// 매일 resetHourKST 시각을 기준으로 하루 경계 index
+const dailyBoundaryIndex = (ms, resetHourKST) => {
+  const kstMs = ms + KST_OFFSET_MS;
+  return Math.floor((kstMs - resetHourKST * HOUR_MS) / DAY_MS);
+};
+
+const nextWeeklyResetAfterKST = (lastMs, resetDay, resetHour) => {
+  const lastKst = new Date(lastMs + KST_OFFSET_MS);
+
+  // KST 기준 "오늘 resetHour:00"
+  const candKst = new Date(lastKst);
+  candKst.setHours(resetHour ?? 0, 0, 0, 0);
+
+  // 오늘 요일(0=일~6=토) in KST
+  const curDow = candKst.getDay();
+  const targetDow = resetDay ?? 0;
+
+  // 이번 주의 resetDay로 이동
+  let diff = (targetDow - curDow + 7) % 7;
+  candKst.setDate(candKst.getDate() + diff);
+
+  // lastMs 이후여야 "다음 리셋"이므로, 같거나 이전이면 7일 뒤
+  const candMs = candKst.getTime() - KST_OFFSET_MS;
+  if (candMs <= lastMs) {
+    candKst.setDate(candKst.getDate() + 7);
+  }
+
+  return candKst.getTime() - KST_OFFSET_MS;
+};
+
+const passedCycles = (lastMs, nowMs, hw) => {
+  if (!lastMs) return 0;
+  if (hw.id === "aion2-odd-energy") return 0;
+
+  const resetHour = Array.isArray(hw.resetTime) ? hw.resetTime[0] : (hw.resetTime ?? 0);
+
+  if (hw.resetPeriod === "day") {
+    return dailyBoundaryIndex(nowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
+  }
+
+  if (hw.resetPeriod === "week") {
+    const next = nextWeeklyResetAfterKST(lastMs, hw.resetDay ?? 0, resetHour);
+    if (nowMs < next) return 0;
+    return 1 + Math.floor((nowMs - next) / WEEK_MS);
+  }
+
+  return 0;
+};
+
 function App() {
+  // App() 안에, useState(game) 위쪽에 추가
+  const LEGACY_GAME_KEY_MAP = {
+    "World of Warcraft": "wow",
+    "Lost Ark": "lostark",
+    "AION 2": "aion2",
+  };
+
+  const normalizeGameId = (g) => LEGACY_GAME_KEY_MAP[g] ?? g;
+
+  // ✅ game state 초기화 부분을 교체
   const [game, setGame] = useState(() => {
-    return localStorage.getItem("lastSelectedGame") || "World of Warcraft";
+    const saved = localStorage.getItem("lastSelectedGame");
+    const normalized = normalizeGameId(saved || "wow");
+    // 혹시 saved가 옛 값이면, 여기서 바로 저장값도 정리
+    if (saved && saved !== normalized) localStorage.setItem("lastSelectedGame", normalized);
+    return normalized;
   });
-  const [viewMode, setViewMode] = useState("repeat");
-  // const [charInfo, setCharInfo] = useState(null);
+
+  const [viewMode, setViewMode] = useState(() => localStorage.getItem(`viewMode-${game}`) || "repeat");
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [hiddenHomeworks, setHiddenHomeworks] = useState([]);
@@ -263,20 +355,47 @@ function App() {
   };
 
   useEffect(() => {
-    setIsLoaded(false); // 1. 불러오기 시작했으니 저장 기능을 잠금
+    setIsLoaded(false);
 
-    const savedChar = localStorage.getItem(`characters-${game}`);
-    const savedAcc = localStorage.getItem(`accounts-${game}`);
-    const savedScores = localStorage.getItem(`scores-${game}`);
-    const savedHidden = localStorage.getItem(`hidden-homeworks-${game}`);
+    const LEGACY_LABEL = {
+      wow: "World of Warcraft",
+      lostark: "Lost Ark",
+      aion2: "AION 2",
+    };
 
-    setCharacters(savedChar ? JSON.parse(savedChar) : []);
-    setAccounts(savedAcc ? JSON.parse(savedAcc) : []);
-    setScores(savedScores ? JSON.parse(savedScores) : {});
-    setHiddenHomeworks(savedHidden ? JSON.parse(savedHidden) : []);
+    const legacy = LEGACY_LABEL[game];
+    const bases = ["characters", "accounts", "scores", "hidden-homeworks"];
 
-    // 2. 데이터 세팅이 브라우저에 반영될 시간을 주고 잠금을 해제 (0.1초)
-    setTimeout(() => setIsLoaded(true), 100); 
+    const isEmpty = (v) => v == null || v === "[]" || v === "{}";
+
+    if (legacy) {
+      bases.forEach((base) => {
+        const newKey = `${base}-${game}`;
+        const oldKey = `${base}-${legacy}`;
+
+        if (isEmpty(localStorage.getItem(newKey))) {
+          const oldData = localStorage.getItem(oldKey);
+          if (oldData && !isEmpty(oldData)) localStorage.setItem(newKey, oldData);
+        }
+      });
+    }
+
+    // ✅ parse는 터질 수 있으니 안전하게
+    const safeParse = (v, fallback) => {
+      if (!v) return fallback;
+      try {
+        return JSON.parse(v);
+      } catch {
+        return fallback;
+      }
+    };
+
+    setCharacters(safeParse(localStorage.getItem(`characters-${game}`), []));
+    setAccounts(safeParse(localStorage.getItem(`accounts-${game}`), []));
+    setScores(safeParse(localStorage.getItem(`scores-${game}`), {}));
+    setHiddenHomeworks(safeParse(localStorage.getItem(`hidden-homeworks-${game}`), []));
+
+    setTimeout(() => setIsLoaded(true), 100);
   }, [game]);
 
   useEffect(() => {
@@ -362,57 +481,30 @@ function App() {
           // 리셋 시각 배열화
           const resetTimes = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
 
-          targets.forEach(name => {
-            const lastUpdate = newLastUpdated[name];
+          targets.forEach(t => {
+            const targetName = (typeof t === "object" && t !== null) ? t.name : t;
+
+            const lastUpdate = newLastUpdated[targetName];
             if (!lastUpdate) {
-              // 기록이 없으면 현재 시간으로 도장만 찍고 넘어감
-              newLastUpdated[name] = currentTime;
-              hwChanged = true;
+              // 기록이 없으면 리셋 계산 기준이 없음 → 도장 찍지 말고 패스
               return;
             }
 
-            // ★ 핵심: lastUpdate 시점부터 현재(now)까지 리셋 포인트가 몇 번 있었는지 계산
-            let passCount = 0;
-            let checkDate = new Date(lastUpdate);
-
-            // 1분 단위로 시각을 전진시키며 리셋 포인트(Hour/Day)를 지났는지 체크
-            // (성능을 위해 1시간 단위나 포인트 단위 점프도 가능하지만, 확실한 계산을 위해 시점 순회)
-            while (checkDate < now) {
-              const prevHour = checkDate.getHours();
-              const prevDay = checkDate.getDay();
-              const prevDate = checkDate.getDate();
-
-              checkDate.setMinutes(checkDate.getMinutes() + 1); // 1분 전진
-
-              const currHour = checkDate.getHours();
-              const currDay = checkDate.getDay();
-              
-              // 시간(Hour)이 바뀐 시점에 리셋 포인트가 포함되어 있는지 확인
-              if (prevHour !== currHour || prevDate !== checkDate.getDate()) {
-                if (resetTimes.includes(currHour)) {
-                  // 주간 숙제는 요일까지 체크
-                  if (hw.resetPeriod === 'week') {
-                    if (currDay === hw.resetDay) passCount++;
-                  } else {
-                    passCount++;
-                  }
-                }
-              }
-              if (passCount > 1000) break; // 무한루프 방지 (최대 100회)
-            }
+            const passCount = passedCycles(lastUpdate, currentTime, hw);
 
             if (passCount > 0) {
-              const currentVal = newCounts[name] !== undefined ? newCounts[name] : hw.max;
-              
-              if (hw.resetType === 'reset') {
-                // 리셋형: 포인트 한 번이라도 지났으면 max로 초기화
-                newCounts[name] = hw.max;
-              } else if (hw.resetType === 'recovery') {
-                // 회복형: 지난 포인트 횟수만큼 recoveryAmount를 더함
-                newCounts[name] = Math.min(hw.max, currentVal + (passCount * (hw.recoveryAmount || 0)));
+              const currentVal = newCounts[targetName] !== undefined ? newCounts[targetName] : hw.max;
+
+              if (hw.resetType === "reset") {
+                newCounts[targetName] = hw.max;
+              } else if (hw.resetType === "recovery") {
+                newCounts[targetName] = Math.min(
+                  hw.max,
+                  currentVal + (passCount * (hw.recoveryAmount || 0))
+                );
               }
-              
-              newLastUpdated[name] = currentTime;
+
+              newLastUpdated[targetName] = currentTime;
               hwChanged = true;
             }
           });
@@ -449,7 +541,7 @@ function App() {
     };
 
     // 2. 각 게임별 캐릭터, 계정, "숨김 목록" 정보를 담음
-    games.forEach(g => {
+    GAME_IDS.forEach(g => {
       const savedChar = localStorage.getItem(`characters-${g}`);
       const savedAcc = localStorage.getItem(`accounts-${g}`);
       const savedHidden = localStorage.getItem(`hidden-homeworks-${g}`); // ★ 추가
@@ -889,7 +981,7 @@ function App() {
                       {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
                       {!isCollapsed && isShowPortrait &&
                         // (typeof dataList[idx] === 'object' ? dataList[idx].showPortrait : true) !== false && 
-                        ["Lost Ark", "AION 2"].includes(game) &&
+                        ["lostark", "aion2"].includes(game) &&
                         scores[targetName]?.portrait && (
                           <div
                             aria-hidden="true"
@@ -956,7 +1048,7 @@ function App() {
                             </div>
 
                             {/* Lv, 직업 */}
-                            {(game === "Lost Ark" || game === "AION 2") && scores[targetName]?.job && (
+                            {(game === "lostark" || game === "aion2") && scores[targetName]?.job && (
                               <div style={{ fontSize: "12px", textAlign: "center", marginTop: "-4px", textShadow: "1px 1px 3px rgba(0,0,0,1)", }}>
                                 {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
                                 {scores[targetName].job}
@@ -967,14 +1059,14 @@ function App() {
                         {/* 전투력 등 캐릭터 추가 정보 */}
                         {!isCollapsed && (
                           <>
-                            {["AION 2", "Lost Ark"].includes(game) && scope === "character" && (() => {
+                            {["aion2", "lostark"].includes(game) && scope === "character" && (() => {
                               const gameConfig = {
-                                "Lost Ark": {
+                                "lostark": {
                                   labels: ["템렙", "전투력"],
                                   keys: ["itemLevel", "combatPower"],
                                   fetchFn: () => fetchLoaScore(targetName)
                                 },
-                                "AION 2": {
+                                "aion2": {
                                   labels: ["전투력", "아툴"],
                                   keys: ["combatPower", "combatScore"],
                                   fetchFn: () => fetchScore(targetName)
@@ -1119,7 +1211,7 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
+    <div style={{ padding: "2px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       
       {/* 헤더 섹션: 상단 고정 및 배경색 유지 */}
       <div style={{ 
@@ -1127,46 +1219,67 @@ function App() {
         top: 0, 
         zIndex: 1000, 
         backgroundColor: "#1e1e1e", 
-        paddingBottom: "15px",
-        marginBottom: "20px",
+        paddingBottom: "2px",
+        marginBottom: "-30px",
         borderBottom: "1px solid #333"
       }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: "30px" }}>
           
           {/* 1. 좌측 로고 영역 (56px) */}
           <div style={{ flexShrink: 0 }}>
-            <h1 style={{ margin: 0, fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
-            <div style={{ fontSize: "11px", color: "#888", marginTop: "8px", whiteSpace: "nowrap" }}>
-              최종 업데이트: 2026-02-09 17:26
+            <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
+            <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
+              업데이트 : 2026-02-10 13:14
             </div>
           </div>
 
           {/* 2. 우측 버튼 영역 (2행) */}
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {/* 1행: 게임 버튼 */}
-            <div style={{ display: "flex", gap: "5px" }}>
-              {games.map(g => (
-                <button 
-                  key={g} 
+            <div style={{ display: "flex", gap: "6px", marginBottom: "-4px" }}>
+              {GAMES.map(g => (
+                <button
+                  key={g.id}
                   onClick={() => {
-                    setGame(g);
-                    localStorage.setItem("lastSelectedGame", g);
-                  }} 
-                  style={{ 
-                    ...btnStyle, 
-                    padding: "8px 12px", 
-                    backgroundColor: game === g ? "#666" : "#444",
-                    opacity: game === g ? 1 : 0.5,
-                    transition: "opacity 0.2s"
+                    setGame(g.id);
+                    localStorage.setItem("lastSelectedGame", g.id);
+                  }}
+                  title={g.label} // 마우스 올리면 이름 나오게 툴팁 추가
+                  style={{
+                    ...btnStyle,
+                    width: "44px",   // 정사각형 버튼
+                    height: "44px",
+                    padding: "0",    // 패딩 제거
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: game === g.id ? "#867d6e" : "#333", // 선택 시 포인트 컬러
+                    border: game === g.id ? "3px solid #fff" : "1px solid #555",
+                    // borderRadius: "12px", // 약간 둥근 사각형
+                    opacity: game === g.id ? 1 : 0.6,
+                    filter: game === g.id ? "none" : "grayscale(100%)",
+                    transition: "all 0.2s ease",
+                    cursor: "pointer",
                   }}
                 >
-                  {g}
+                  <img
+                    src={g.icon}
+                    alt={g.label}
+                    style={{
+                      width: "40px",  // 아이콘 크기 확대
+                      height: "40px",
+                      objectFit: "contain",
+                      // backgroundColor: "#000000",
+                      // 아이콘 자체의 시인성이 낮으면 아래 dropShadow 추가
+                      filter: game === g.id ? "drop-shadow(0px 0px 4px rgba(0,0,0,0.5))" : "none"
+                    }}
+                  />
                 </button>
               ))}
             </div>
             
             {/* 2행: 설정 및 기능 버튼 (색상 복구) */}
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "2px", flexWrap: "wrap" }}>
               <button onClick={() => setViewMode(viewMode === "repeat" ? "once" : "repeat")} 
                 //style={{ ...btnStyle, backgroundColor: "#333", fontWeight: "bold", border: "1px solid #777" }}>
                 style={{ ...btnStyle, backgroundColor: "#333", border: "1px solid #777" }}>
@@ -1188,7 +1301,7 @@ function App() {
       {/* 테이블 및 추가 버튼 (원본 로직 유지) */}
       {renderTable("계정별 숙제", "account", accounts, setAccounts)}
       <button onClick={() => addTargetAuto("account", accounts, setAccounts)} 
-        style={{ ...btnStyle, marginTop: "10px", marginBottom: "30px", padding: "10px" }}>
+        style={{ ...btnStyle, marginTop: "10px", marginBottom: "-10px", padding: "10px" }}>
         + 계정 추가
       </button>
 
@@ -1203,7 +1316,7 @@ function App() {
         </button>
 
         {/* 안내 문구를 이쪽으로 이동 */}
-        {game === "AION 2" && (
+        {game === "aion2" && (
           <span style={{ fontSize: "12px", color: "#aaa", fontWeight: "normal" }}>
             ※ 캐릭명[서버명2글자] 형식으로 입력하면 전투력 조회 가능 ex) 카니쵸니[바카] (바카르마 서버는 캐릭명만 써도됨)
           </span>
