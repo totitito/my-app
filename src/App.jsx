@@ -309,16 +309,16 @@ function App() {
       const j = await r.json();
 
       setScores(prev => ({
-    +   ...prev,
-    +   [charName]: {   // ← 핵심
-    +     combatPower: j.combat_power ?? 0,
-    +     combatScore: j.combat_score ?? 0,
-    +     updatedAt: Date.now(),
-    +     portrait: j?.raw?.avatar_url ?? null,
-    +     job: j?.raw?.job ?? null,
-    +     level: j?.raw?.level ?? null,
-    +   }
-    + }));
+        ...prev,
+        [charName]: {   // ← 핵심
+          combatPower: j.combat_power ?? 0,
+          combatScore: j.combat_score ?? 0,
+          updatedAt: Date.now(),
+          portrait: j?.raw?.avatar_url ?? null,
+          job: j?.raw?.job ?? null,
+          level: j?.raw?.level ?? null,
+        }
+      }));
     } catch (e) {
       console.error("전투력 갱신 실패:", e);
     }
