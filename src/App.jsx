@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
+
 import aion2Icon from "./assets/gameicons/aion2.png";
 import lostarkIcon from "./assets/gameicons/lostark.png";
 import wowIcon from "./assets/gameicons/wow.png";
@@ -740,6 +742,8 @@ function App() {
     }));
   };
 
+  const isHomeworkView = viewMode === "repeat" || viewMode === "once";
+
   const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
 
   const renderTable = (title, scope, dataList, setData) => {
@@ -827,38 +831,45 @@ function App() {
                 borderRight: "2px solid #444" 
               }}>구분</th>
               
-              {viewMode === "once" ? (
+              {viewMode === "once" && (
                 <>
-                  {/* .length 대신 filter 써서 숨겨진 숙제를 뺀 개수만큼 colSpan 잡기 */}
+                  {/* 업적 헤더 */}
                   {onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>기본</th>}
-                  
                   {onceStory.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={onceStory.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>스토리</th>}
-                  
                   {onceBoss.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={onceBoss.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>필드보스</th>}
-                  
                   {onceWing.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={onceWing.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>날개</th>}
-                  
                   {onceArt.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={onceArt.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>명화</th>}
-                  
                   {onceEtc.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={onceEtc.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>기타</th>}
                 </>
-              ) : (
+              )}
+
+              {viewMode === "repeat" && (
                 <>
-                  {/* Daily, etc, Weekly도 동일한 원리 */}
+                  {/* 반복퀘 헤더 */}
                   {dailyHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={dailyHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>Daily</th>}
-                  
                   {etcHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={etcHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>etc</th>}
-                  
                   {weeklyHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                     <th colSpan={weeklyHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>Weekly</th>}
+                </>
+              )}
+
+              {game === "aion2" && viewMode === "aion2_soul" && (
+                <>
+                  <th style={{ padding: "8px" }}>영혼각인</th>
+                </>
+              )}
+
+              {game === "aion2" && viewMode === "aion2_arcana" && (
+                <>
+                  <th style={{ padding: "8px" }}>아르카나</th>
                 </>
               )}
             </tr>
@@ -1229,7 +1240,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-10 13:14
+              업데이트 : 2026-02-10 17:27
             </div>
           </div>
 
@@ -1280,16 +1291,66 @@ function App() {
             
             {/* 2행: 설정 및 기능 버튼 (색상 복구) */}
             <div style={{ display: "flex", gap: "2px", flexWrap: "wrap" }}>
-              <button onClick={() => setViewMode(viewMode === "repeat" ? "once" : "repeat")} 
-                //style={{ ...btnStyle, backgroundColor: "#333", fontWeight: "bold", border: "1px solid #777" }}>
-                style={{ ...btnStyle, backgroundColor: "#333", border: "1px solid #777" }}>
+              {/* <button onClick={() => setViewMode(viewMode === "repeat" ? "once" : "repeat")} 
+                style={{ ...btnStyle, backgroundColor: "#333", border: "1px solid #777", marginRight: "10px" }}>
                 모드: {viewMode === "repeat" ? "반복퀘" : "업적"}
+              </button> */}
+              <button
+                onClick={() => setViewMode("repeat")}
+                style={{
+                  ...btnStyle,
+                  backgroundColor: viewMode === "repeat" ? "#333" : "#1e1e1e",
+                  border: viewMode === "repeat" ? "1px solid #777" : "1px solid #444",
+                  fontWeight: viewMode === "repeat" ? "bold" : "normal",
+                }}
+              >
+                반복퀘
               </button>
-              <button onClick={exportData} style={{ ...btnStyle, backgroundColor: "#004080" }}>Save</button>
+              <button
+                onClick={() => setViewMode("once")}
+                style={{
+                  ...btnStyle,
+                  backgroundColor: viewMode === "once" ? "#333" : "#1e1e1e",
+                  border: viewMode === "once" ? "1px solid #777" : "1px solid #444",
+                  fontWeight: viewMode === "once" ? "bold" : "normal",// marginRight: "10px",
+                }}
+              >
+                업적
+              </button>
+              {/* ✅ AION 2 전용 버튼들 */}
+              {game === "aion2" && (
+                <>
+                  <button
+                    onClick={() => setViewMode("aion2_soul")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_soul" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_soul" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_soul" ? "bold" : "normal",
+                    }}
+                  >
+                    영혼각인
+                  </button>
+
+                  {/* <button
+                    onClick={() => setViewMode("aion2_arcana")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_arcana" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_arcana" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_arcana" ? "bold" : "normal",
+                    }}
+                  >
+                    아르카나
+                  </button> */}
+                </>
+              )}
+
+              <button onClick={exportData} style={{ ...btnStyle, backgroundColor: "#004080", marginLeft: "10px" }}>Save</button>
               <label style={{ ...btnStyle, backgroundColor: "#1a5e20", cursor: "pointer", textAlign: "center", display: "inline-block" }}>
                 Load<input type="file" accept=".json" onChange={importData} style={{ display: "none" }} />
               </label>
-              <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>설정 업데이트</button>
+              <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>업데이트 반영</button>
               <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button>
               <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
               
@@ -1298,30 +1359,51 @@ function App() {
         </div>
       </div>
 
-      {/* 테이블 및 추가 버튼 (원본 로직 유지) */}
-      {renderTable("계정별 숙제", "account", accounts, setAccounts)}
-      <button onClick={() => addTargetAuto("account", accounts, setAccounts)} 
-        style={{ ...btnStyle, marginTop: "10px", marginBottom: "-10px", padding: "10px" }}>
-        + 계정 추가
-      </button>
+      {isHomeworkView && (
+        <>
+          {/* 테이블 및 추가 버튼 (원본 로직 유지) */}
+          {renderTable("계정별 숙제", "account", accounts, setAccounts)}
+          <button
+            onClick={() => addTargetAuto("account", accounts, setAccounts)}
+            style={{ ...btnStyle, marginTop: "10px", marginBottom: "-10px", padding: "10px" }}
+          >
+            + 계정 추가
+          </button>
 
-      {/* 캐릭터별 숙제 테이블 */}
-      {renderTable("캐릭터별 숙제", "character", characters, setCharacters)}
-      
-      {/* 버튼과 안내 문구를 가로 배치 */}
-      <div style={{ display: "flex", alignItems: "center", gap: "15px", marginTop: "10px" }}>
-        <button onClick={() => addTargetAuto("character", characters, setCharacters)} 
-          style={{ ...btnStyle, padding: "10px" }}>
-          + 캐릭터 추가
-        </button>
+          {/* 캐릭터별 숙제 테이블 */}
+          {renderTable("캐릭터별 숙제", "character", characters, setCharacters)}
 
-        {/* 안내 문구를 이쪽으로 이동 */}
-        {game === "aion2" && (
-          <span style={{ fontSize: "12px", color: "#aaa", fontWeight: "normal" }}>
-            ※ 캐릭명[서버명2글자] 형식으로 입력하면 전투력 조회 가능 ex) 카니쵸니[바카] (바카르마 서버는 캐릭명만 써도됨)
-          </span>
-        )}
-      </div>
+          {/* 버튼과 안내 문구를 가로 배치 */}
+          <div style={{ display: "flex", alignItems: "center", gap: "15px", marginTop: "10px" }}>
+            <button
+              onClick={() => addTargetAuto("character", characters, setCharacters)}
+              style={{ ...btnStyle, padding: "10px" }}
+            >
+              + 캐릭터 추가
+            </button>
+
+            {/* 안내 문구 */}
+            {game === "aion2" && (
+              <span style={{ fontSize: "12px", color: "#aaa", fontWeight: "normal" }}>
+                ※ 캐릭명[서버명2글자] 형식으로 입력하면 전투력 조회 가능 ex) 카니쵸니[바카] (바카르마 서버는 캐릭명만 써도됨)
+              </span>
+            )}
+          </div>
+        </>
+      )}
+
+      {game === "aion2" && viewMode === "aion2_soul" && (
+        <div style={{ marginTop: 20, paddingTop: 12 }}>
+          <Aion2_SoulEngravingTable />
+        </div>
+      )}
+
+      {game === "aion2" && viewMode === "aion2_arcana" && (
+        <div style={{ marginTop: 12, padding: 12, border: "1px solid #444", borderRadius: 12, color: "#aaa" }}>
+          아르카나 화면(임시)
+        </div>
+      )}
+
     </div>
   );  
 }
