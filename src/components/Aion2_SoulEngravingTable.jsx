@@ -1,7 +1,7 @@
 // src/components/SoulEngravingTable.jsx
 export default function SoulEngravingTable() {
   const columns = [
-    { key: "src", label: "출처", headBg: "#222" },
+    { key: "src", label: "구분", headBg: "#222" },
     { key: "w", label: "무기/가더", headBg: "rgb(92, 55, 55)" },
     { key: "h", label: "투구", headBg: "#222" },
     { key: "s", label: "견갑", headBg: "#222" },
