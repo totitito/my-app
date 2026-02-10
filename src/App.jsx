@@ -54,8 +54,6 @@ const GAMES = [
 
 const GAME_IDS = GAMES.map(g => g.id);
 
-// const games = GAMES.map(g => g.id);
-
 const formatScoreUpdatedAt = (ts) => {
   if (!ts) return "";
   const d = new Date(ts);
@@ -310,18 +308,17 @@ function App() {
 
       const j = await r.json();
 
-      setScores((prev) => ({
-        ...prev,
-        [fullName]: {
-          combatPower: j.combat_power ?? 0,
-          combatScore: j.combat_score ?? 0,
-          updatedAt: Date.now(),
-
-          portrait: j?.raw?.avatar_url ?? null,
-          job: j?.raw?.job ?? null,
-          level: j?.raw?.level ?? null,   // ✅ 추가
-        },
-      }));
+      setScores(prev => ({
+    +   ...prev,
+    +   [charName]: {   // ← 핵심
+    +     combatPower: j.combat_power ?? 0,
+    +     combatScore: j.combat_score ?? 0,
+    +     updatedAt: Date.now(),
+    +     portrait: j?.raw?.avatar_url ?? null,
+    +     job: j?.raw?.job ?? null,
+    +     level: j?.raw?.level ?? null,
+    +   }
+    + }));
     } catch (e) {
       console.error("전투력 갱신 실패:", e);
     }
@@ -592,7 +589,7 @@ function App() {
         }
 
         // 2. 게임별 캐릭터/계정 정보 분리 저장
-        games.forEach(g => {
+        GAME_IDS.forEach(g => {
           const charKey = `characters-${g}`;
           const accKey = `accounts-${g}`;
 
@@ -1246,7 +1243,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-10 20:55
+              업데이트 : 2026-02-11 00:02
             </div>
           </div>
 
