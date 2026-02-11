@@ -223,6 +223,43 @@ const passedCycles = (lastMs, nowMs, hw) => {
   return 0;
 };
 
+const countOddEnergyTicks = (lastMs, nowMs, resetHoursKST) => {
+  if (!lastMs || !nowMs) return 0;
+
+  const hours = (Array.isArray(resetHoursKST) ? resetHoursKST : [resetHoursKST])
+    .filter(h => Number.isFinite(h))
+    .map(h => Number(h));
+
+  if (hours.length === 0) return 0;
+
+  // KST 기준 날짜 범위로 day 단위 순회 (하루 8틱이라 부담 거의 없음)
+  const lastKst = new Date(lastMs + KST_OFFSET_MS);
+  const nowKst  = new Date(nowMs + KST_OFFSET_MS);
+
+  // 00:00 KST로 정규화
+  const start = new Date(lastKst);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(nowKst);
+  end.setHours(0, 0, 0, 0);
+
+  let ticks = 0;
+
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const day = d.getDate();
+
+    for (const h of hours) {
+      // KST (y,m,day,h:00) -> UTC ms 로 변환
+      const eventMs = Date.UTC(y, m, day, h - 9, 0, 0, 0);
+      if (eventMs > lastMs && eventMs <= nowMs) ticks++;
+    }
+  }
+
+  return ticks;
+};
+
 function App() {
   const LEGACY_GAME_KEY_MAP = {
     "World of Warcraft": "wow",
@@ -544,22 +581,54 @@ function App() {
             const targetName = (typeof t === "object" && t !== null) ? t.name : t;
 
             const lastUpdate = newLastUpdated[targetName];
+
+            // ✅ 1) lastUpdated 없으면 기준 찍어줌 (그래야 다음부터 정상 동작)
             if (!lastUpdate) {
-              // 기록이 없으면 리셋 계산 기준이 없음 → 도장 찍지 말고 패스
+              if (newCounts[targetName] === undefined || newCounts[targetName] === "") {
+                newCounts[targetName] = hw.max;
+              }
+              newLastUpdated[targetName] = currentTime;
+              hwChanged = true;
               return;
             }
 
+            // ✅ 2) 오드에너지는 별도 계산
+            if (hw.id === "aion2-odd-energy") {
+              const ticks = countOddEnergyTicks(lastUpdate, currentTime, hw.resetTime);
+
+              if (ticks > 0) {
+                const currentVal =
+                  newCounts[targetName] !== undefined && newCounts[targetName] !== ""
+                    ? Number(newCounts[targetName])
+                    : hw.max;
+
+                newCounts[targetName] = Math.min(
+                  hw.max,
+                  currentVal + ticks * (hw.recoveryAmount || 0)
+                );
+
+                newLastUpdated[targetName] = currentTime;
+                hwChanged = true;
+              }
+
+              return;
+            }
+
+            // ✅ 3) 나머지 기존 로직
             const passCount = passedCycles(lastUpdate, currentTime, hw);
 
             if (passCount > 0) {
-              const currentVal = newCounts[targetName] !== undefined ? newCounts[targetName] : hw.max;
+              const currentVal =
+                newCounts[targetName] !== undefined
+                  ? newCounts[targetName]
+                  : hw.max;
 
               if (hw.resetType === "reset") {
                 newCounts[targetName] = hw.max;
               } else if (hw.resetType === "recovery") {
                 newCounts[targetName] = Math.min(
                   hw.max,
-                  currentVal + (passCount * (hw.recoveryAmount || 0))
+                  currentVal + passCount * (hw.recoveryAmount || 0)
                 );
               }
 
