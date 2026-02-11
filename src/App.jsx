@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
 
@@ -222,7 +223,6 @@ const passedCycles = (lastMs, nowMs, hw) => {
 };
 
 function App() {
-  // App() 안에, useState(game) 위쪽에 추가
   const LEGACY_GAME_KEY_MAP = {
     "World of Warcraft": "wow",
     "Lost Ark": "lostark",
@@ -365,6 +365,25 @@ function App() {
       hw.id === id ? { ...hw, memo: newMemo } : hw
     ));
   };
+
+  // 1️⃣ 초기값: 현재 game 기준으로 localStorage에서 읽기
+  const [isAccountCollapsed, setIsAccountCollapsed] = useState(() => {
+    return localStorage.getItem(`collapse-account-${game}`) === "1";
+  });
+
+  // 2️⃣ game이 바뀔 때: 해당 게임의 저장값을 다시 로드
+  useEffect(() => {
+    const saved = localStorage.getItem(`collapse-account-${game}`);
+    setIsAccountCollapsed(saved === "1");
+  }, [game]);
+
+  // 3️⃣ 접힘 상태가 바뀔 때: 현재 game 키로 저장
+  useEffect(() => {
+    localStorage.setItem(
+      `collapse-account-${game}`,
+      isAccountCollapsed ? "1" : "0"
+    );
+  }, [game, isAccountCollapsed]);
 
   useEffect(() => {
     setIsLoaded(false);
@@ -768,7 +787,8 @@ function App() {
 
   const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
 
-  const renderTable = (title, scope, dataList, setData) => {
+  const renderTable = (title, scope, dataList, setData, options = {}) => {
+    const { headerRight = null, hideBody = false, hideHiddenButtons = false } = options;
     const filteredHws = homeworks.filter(hw => hw.game === game && hw.scope === scope && (viewMode === "once" ? hw.resetPeriod === "once" : hw.resetPeriod !== "once"));
 
     // 1. 반복 모드 분류
@@ -807,33 +827,47 @@ function App() {
         width: "100%", 
         maxWidth: "100vw", // 화면 너비를 넘지 못하게 강제
         position: "relative", // sticky 기준점 명시
-        marginTop: "30px" 
+        marginTop: "0px" 
       }}>
-        <h3 style={{ marginBottom: "10px", display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-          {title}
+        <h3
+          style={{
+            fontSize: "18px",
+            marginBottom: "10px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            flexWrap: "wrap",
+          }}
+        >
+          {/* (1) 제목 */}
+          <span>{title}</span>
 
-          {/* ★ 위치 이동 및 범위(scope) 필터링 추가 */}
-          {hiddenHomeworks.length > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginLeft: '10px' }}>
-              {hiddenHomeworks.map(name => {
-                // 현재 게임과 현재 표의 범위(계정/캐릭)에 맞는 숙제 정보 찾기
-                const hw = homeworks.find(h => h.name === name && h.game === game);
-                
-                // 중요: 숙제의 scope가 현재 표의 scope와 다르면 버튼을 렌더링하지 않음
+          {/* (2) 제목 바로 오른쪽에 붙는 영역(접기 버튼 등) */}
+          {headerRight ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              {headerRight}
+            </span>
+          ) : null}
+
+          {/* (3) 숨김 복구 버튼들: 표 전체가 접힌 상태면 아예 안 보이게 */}
+          {!hideBody && !hideHiddenButtons && hiddenHomeworks.length > 0 && (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "5px", flexWrap: "wrap" }}>
+              {hiddenHomeworks.map((name) => {
+                const hw = homeworks.find((h) => h.name === name && h.game === game);
                 if (!hw || hw.scope !== scope) return null;
 
                 return (
-                  <button 
+                  <button
                     key={name}
                     onClick={() => toggleHomework(name)}
                     style={{
-                      padding: '2px 6px',
-                      fontSize: '11px',
-                      backgroundColor: '#333',
-                      color: '#fff',
-                      border: '1px solid #555',
-                      borderRadius: '3px',
-                      cursor: 'pointer'
+                      padding: "2px 6px",
+                      fontSize: "11px",
+                      backgroundColor: "#333",
+                      color: "#fff",
+                      border: "1px solid #555",
+                      borderRadius: "3px",
+                      cursor: "pointer",
                     }}
                   >
                     {name} ➕
@@ -844,397 +878,399 @@ function App() {
           )}
         </h3>
 
-        <table border="1" style={{ borderCollapse: "separate", borderSpacing: 0, borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
-          <thead>
-            <tr style={{ backgroundColor: "#333" }}>
-              <th style={{ 
-                width: "140px", padding: "8px", 
-                position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
-                borderRight: "2px solid #444" 
-              }}>구분</th>
-              
-              {viewMode === "once" && (
-                <>
-                  {/* 업적 헤더 */}
-                  {onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>기본</th>}
-                  {onceStory.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={onceStory.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>스토리</th>}
-                  {onceBoss.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={onceBoss.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>필드보스</th>}
-                  {onceWing.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={onceWing.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>날개</th>}
-                  {onceArt.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={onceArt.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>명화</th>}
-                  {onceEtc.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={onceEtc.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>기타</th>}
-                </>
-              )}
+        {!hideBody && (
+          <table border="1" style={{ borderCollapse: "separate", borderSpacing: 0, borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
+            <thead>
+              <tr style={{ backgroundColor: "#333" }}>
+                <th style={{ 
+                  width: "140px", padding: "8px", 
+                  position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
+                  borderRight: "2px solid #444"
+                }}>구분</th>
+                
+                {viewMode === "once" && (
+                  <>
+                    {/* 업적 헤더 */}
+                    {onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>기본</th>}
+                    {onceStory.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={onceStory.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>스토리</th>}
+                    {onceBoss.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={onceBoss.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>필드보스</th>}
+                    {onceWing.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={onceWing.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>날개</th>}
+                    {onceArt.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={onceArt.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>명화</th>}
+                    {onceEtc.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={onceEtc.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>기타</th>}
+                  </>
+                )}
 
-              {viewMode === "repeat" && (
-                <>
-                  {/* 반복퀘 헤더 */}
-                  {dailyHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={dailyHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>Daily</th>}
-                  {etcHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={etcHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>etc</th>}
-                  {weeklyHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                    <th colSpan={weeklyHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>Weekly</th>}
-                </>
-              )}
+                {viewMode === "repeat" && (
+                  <>
+                    {/* 반복퀘 헤더 */}
+                    {dailyHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={dailyHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>Daily</th>}
+                    {etcHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={etcHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>etc</th>}
+                    {weeklyHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={weeklyHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>Weekly</th>}
+                  </>
+                )}
 
-              {game === "aion2" && viewMode === "aion2_soul" && (
-                <>
-                  <th style={{ padding: "8px" }}>영혼각인</th>
-                </>
-              )}
+                {game === "aion2" && viewMode === "aion2_soul" && (
+                  <>
+                    <th style={{ padding: "8px" }}>영혼각인</th>
+                  </>
+                )}
 
-              {game === "aion2" && viewMode === "aion2_arcana" && (
-                <>
-                  <th style={{ padding: "8px" }}>아르카나</th>
-                </>
-              )}
-            </tr>
+                {game === "aion2" && viewMode === "aion2_arcana" && (
+                  <>
+                    <th style={{ padding: "8px" }}>아르카나</th>
+                  </>
+                )}
+              </tr>
 
-            {/* 2행: 숙제명 */}
-            <tr style={{ backgroundColor: "#333" }}>
-              <th style={{ 
-                padding: "10px", 
-                position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
-                borderRight: "2px solid #444" 
-              }}>숙제명</th>
-              
-              {allFiltered.map(hw => {
-                if (hiddenHomeworks.includes(hw.name)) return null;
+              {/* 2행: 숙제명 */}
+              <tr style={{ backgroundColor: "#333" }}>
+                <th style={{ 
+                  padding: "10px", 
+                  position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
+                  borderRight: "2px solid #444" 
+                }}>숙제명</th>
+                
+                {allFiltered.map(hw => {
+                  if (hiddenHomeworks.includes(hw.name)) return null;
 
-                return (
-                  <th key={hw.id} style={{ 
-                    padding: "10px", 
-                    verticalAlign: "middle", 
-                    position: "relative",
-                    minWidth: "120px"
-                  }}>
-                    {/* 1. 숙제명 */}
-                    <div style={{ fontWeight: "bold" }}>{hw.name}</div>
-                    
-                    {/* 2. 메모 영역 (주기보다 윗줄) */}
-                    <div style={{ marginTop: "2px" }}>
-                      {hw.memo ? (
-                        // 메모가 있을 때: 클릭하면 수정 가능
-                        <div 
-                          onClick={() => {
-                            const newMemo = prompt("메모 수정 (내용을 다 지우면 버튼으로 돌아갑니다):", hw.memo);
-                            if (newMemo !== null) updateHomeworkMemo(hw.id, newMemo);
-                          }}
-                          style={{ 
-                            fontSize: "11px", cursor: "pointer", color: "#80a3c7",
-                            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                            maxWidth: "110px", margin: "0 auto"//, borderBottom: "1px dashed #62dafb"
-                          }}
-                          title={hw.memo}
-                        >
-                          {hw.memo}
-                        </div>
-                      ) : (
-                        // 메모가 없을 때: 버튼 형식 표시
-                        <button 
-                          onClick={() => {
-                            const newMemo = prompt("메모를 입력하세요:");
-                            if (newMemo) updateHomeworkMemo(hw.id, newMemo);
-                          }}
-                          style={{
-                            fontSize: "10px", padding: "1px 5px", cursor: "pointer",
-                            backgroundColor: "#444", color: "#fff", border: "1px solid #666", borderRadius: "3px"
-                          }}
-                        >
-                          메모
-                        </button>
-                      )}
-                    </div>
-
-                    {/* 3. 초기화 주기 표기 */}
-                    {viewMode !== "once" && (
-                      <div style={{ fontSize: "10px", color: "#bbb", marginTop: "2px" }}>
-                        {hw.id === "aion2-odd-energy" ? "05시 기준 3시간마다 +15" :
-                        (hw.resetType === 'recovery' ? `매일 05시 +${hw.recoveryAmount}` :
-                        `${hw.resetPeriod === 'week' ? dayMap[hw.resetDay] : '매일'} ${String(Array.isArray(hw.resetTime)?hw.resetTime[0]:hw.resetTime).padStart(2,'0')}시`)}
-                      </div>
-                    )}
-
-                    {/* 우측 상단 숨기기 버튼 */}
-                    <button 
-                      onClick={() => toggleHomework(hw.name)}
-                      style={{ 
-                        position: "absolute", top: "2px", right: "2px",
-                        padding: "0px", fontSize: "12px", backgroundColor: "transparent", 
-                        color: "#888", border: "none", cursor: "pointer",
-                        width: "16px", height: "16px"
-                      }}
-                      onMouseOver={(e) => e.target.style.color = "#fff"}
-                      onMouseOut={(e) => e.target.style.color = "#888"}
-                    >
-                      ➖
-                    </button>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {dataList.map((item, idx) => { // 1. 우선 item으로 받고
-              // 2. 객체면 name을, 아니면 그대로를 targetName에 할당
-              const targetName = typeof item === 'object' ? item.name : item;
-              const isShowPortrait = item?.showPortrait !== false;
-              const isCollapsed = collapsedChars[targetName]; // 접힘 상태 확인
-              
-              return (
-                <tr key={idx}>
-                  <td style={{ 
-                    textAlign: "center", padding: "10px", fontWeight: "bold", 
-                    position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
-                    borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top",
-                    overflow: "hidden" // ✅ 추가(배경이 셀 밖으로 안 튀게)
-                  }}>
-
-                    {/* 접기/펴기 버튼 */}
-                    <button
-                      onClick={() => toggleCollapse(targetName)}
-                      style={{
-                        position: "absolute", top: "2px", right: "2px",
-                        fontSize: "10px", padding: "1px 4px", cursor: "pointer",
-                        backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", zIndex: 20
-                      }}
-                    >
-                      {isCollapsed ? "➕" : "➖"}
-                    </button>
-
-                    {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
-                    <div style={{ position: "relative" }}>
-
-                      {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
-                      {!isCollapsed && isShowPortrait &&
-                        // (typeof dataList[idx] === 'object' ? dataList[idx].showPortrait : true) !== false && 
-                        ["lostark", "aion2"].includes(game) &&
-                        scores[targetName]?.portrait && (
-                          <div
-                            aria-hidden="true"
-                            style={{ 
-                              position: "absolute", 
-                              inset: 0,
-                              backgroundImage: `url("${scores[targetName].portrait}")`, // 이미 위에서 targetName을 처리함
-                              backgroundSize: "cover", 
-                              backgroundPosition: "center top", 
-                              opacity: 1,
-                              transform: "scale(1.0)", 
-                              pointerEvents: "none", 
-                              zIndex: 0,
+                  return (
+                    <th key={hw.id} style={{ 
+                      padding: "10px", 
+                      verticalAlign: "middle", 
+                      position: "relative",
+                      minWidth: "120px"
+                    }}>
+                      {/* 1. 숙제명 */}
+                      <div style={{ fontWeight: "bold" }}>{hw.name}</div>
+                      
+                      {/* 2. 메모 영역 (주기보다 윗줄) */}
+                      <div style={{ marginTop: "2px" }}>
+                        {hw.memo ? (
+                          // 메모가 있을 때: 클릭하면 수정 가능
+                          <div 
+                            onClick={() => {
+                              const newMemo = prompt("메모 수정 (내용을 다 지우면 버튼으로 돌아갑니다):", hw.memo);
+                              if (newMemo !== null) updateHomeworkMemo(hw.id, newMemo);
                             }}
-                          />
+                            style={{ 
+                              fontSize: "11px", cursor: "pointer", color: "#80a3c7",
+                              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                              maxWidth: "110px", margin: "0 auto"//, borderBottom: "1px dashed #62dafb"
+                            }}
+                            title={hw.memo}
+                          >
+                            {hw.memo}
+                          </div>
+                        ) : (
+                          // 메모가 없을 때: 버튼 형식 표시
+                          <button 
+                            onClick={() => {
+                              const newMemo = prompt("메모를 입력하세요:");
+                              if (newMemo) updateHomeworkMemo(hw.id, newMemo);
+                            }}
+                            style={{
+                              fontSize: "10px", padding: "1px 5px", cursor: "pointer",
+                              backgroundColor: "#444", color: "#fff", border: "1px solid #666", borderRadius: "3px"
+                            }}
+                          >
+                            메모
+                          </button>
+                        )}
+                      </div>
+
+                      {/* 3. 초기화 주기 표기 */}
+                      {viewMode !== "once" && (
+                        <div style={{ fontSize: "10px", color: "#bbb", marginTop: "2px" }}>
+                          {hw.id === "aion2-odd-energy" ? "05시 기준 3시간마다 +15" :
+                          (hw.resetType === 'recovery' ? `매일 05시 +${hw.recoveryAmount}` :
+                          `${hw.resetPeriod === 'week' ? dayMap[hw.resetDay] : '매일'} ${String(Array.isArray(hw.resetTime)?hw.resetTime[0]:hw.resetTime).padStart(2,'0')}시`)}
+                        </div>
                       )}
 
-                      {/* ✅ 2) 글자 가독성용 오버레이 */}
-                      {/* <div
-                        aria-hidden="true"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          background:
-                            "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%)", // ✅ 덜 진하게
-                          pointerEvents: "none",
-                          zIndex: 1,
+                      {/* 우측 상단 숨기기 버튼 */}
+                      <button 
+                        onClick={() => toggleHomework(hw.name)}
+                        style={{ 
+                          position: "absolute", top: "2px", right: "2px",
+                          padding: "0px", fontSize: "12px", backgroundColor: "transparent", 
+                          color: "#888", border: "none", cursor: "pointer",
+                          width: "16px", height: "16px"
                         }}
-                      /> */}
+                        onMouseOver={(e) => e.target.style.color = "#fff"}
+                        onMouseOut={(e) => e.target.style.color = "#888"}
+                      >
+                        ➖
+                      </button>
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {dataList.map((item, idx) => { // 1. 우선 item으로 받고
+                // 2. 객체면 name을, 아니면 그대로를 targetName에 할당
+                const targetName = typeof item === 'object' ? item.name : item;
+                const isShowPortrait = item?.showPortrait !== false;
+                const isCollapsed = collapsedChars[targetName]; // 접힘 상태 확인
+                
+                return (
+                  <tr key={idx}>
+                    <td style={{ 
+                      textAlign: "center", padding: "10px", fontWeight: "bold", 
+                      position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
+                      borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top",
+                      overflow: "hidden" // ✅ 추가(배경이 셀 밖으로 안 튀게)
+                    }}>
 
-                      {/* ✅ 3) 기존 내용은 위로 */}
-                      <div style={{ position: "relative", zIndex: 2 }}>
+                      {/* 접기/펴기 버튼 */}
+                      <button
+                        onClick={() => toggleCollapse(targetName)}
+                        style={{
+                          position: "absolute", top: "2px", right: "2px",
+                          fontSize: "10px", padding: "1px 4px", cursor: "pointer",
+                          backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", zIndex: 20
+                        }}
+                      >
+                        {isCollapsed ? "➕" : "➖"}
+                      </button>
 
-                        {/* 캐릭터 나열 순서 변경하는 위/아래 화살표 */}
-                        <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "0px" }}>
-                          <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▲</button>
-                          <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▼</button>
-                        </div>
+                      {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
+                      <div style={{ position: "relative" }}>
 
-                        {/* 캐릭명, Lv, 직업 */}
-                          <div>
-                            {/* 캐릭명 */}
-                            <div style={{ textAlign: "center", marginBottom: "2px" }}>
-                              <span
-                                style={{
-                                  display: "inline-block",
-                                  fontSize: "16px",
-                                  fontWeight: "bold",
-                                  color: "#fff",
-                                  textShadow: "1px 1px 2px rgba(0,0,0,1)",
-                                  backgroundColor:
-                                    !isCollapsed && isShowPortrait
-                                      ? "rgba(0, 0, 0, 0.2)"
-                                      : "transparent",
-                                  padding:
-                                    !isCollapsed && isShowPortrait
-                                      ? "1px 8px"
-                                      : "0px",
-                                  borderRadius: "4px",
-                                }}
-                              >
-                                {targetName}
-                              </span>
-                            </div>
-
-                            {/* Lv, 직업 */}
-                            {(game === "lostark" || game === "aion2") && scores[targetName]?.job && (
-                              <div style={{ fontSize: "12px", textAlign: "center", marginTop: "-4px", textShadow: "1px 1px 3px rgba(0,0,0,1)", }}>
-                                {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
-                                {scores[targetName].job}
-                              </div>
-                            )}
-                          </div>
-
-                        {/* 전투력 등 캐릭터 추가 정보 */}
-                        {!isCollapsed && (
-                          <>
-                            {["aion2", "lostark"].includes(game) && scope === "character" && (() => {
-                              const gameConfig = {
-                                "lostark": {
-                                  labels: ["템렙", "전투력"],
-                                  keys: ["itemLevel", "combatPower"],
-                                  fetchFn: () => fetchLoaScore(targetName)
-                                },
-                                "aion2": {
-                                  labels: ["전투력", "아툴"],
-                                  keys: ["combatPower", "combatScore"],
-                                  fetchFn: () => fetchScore(targetName)
-                                }
-                              };
-
-                              const config = gameConfig[game];
-                              // config가 없을 경우를 대비한 안전장치
-                              if (!config) return null; 
-
-                              const scoreData = scores[targetName];
-
-                              return (
-                                <div>
-                                  {scoreData ? (
-                                    <div style={{ marginTop: "-8px" }}>
-                                      <span style={{ fontSize: "10px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
-                                        {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
-                                      </span>
-                                      <span style={{ fontSize: "10px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
-                                        {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString() ?? "?"}
-                                      </span>
-                                    </div>
-                                  ) : (
-                                    <div style={{ fontSize: "10px", color: "#888", marginTop: "-4px", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>
-                                      점수 미갱신
-                                    </div>
-                                  )}
-                                  
-                                  <button 
-                                    onClick={config.fetchFn} 
-                                    style={{ ...btnStyle, padding: "2px 5px", marginBottom: "2px", marginTop: "-2px", fontSize: "10px", backgroundColor: "#335a80", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}
-                                  >
-                                    전투력 갱신
-                                  </button>
-                                </div>
-                              );
-                            })()}
-
-                            <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
-                              <button
-                                onClick={() => togglePortrait(idx, setData)}
-                                style={{
-                                  ...btnStyle,
-                                  padding: "2px 5px",
-                                  fontSize: "10px",
-                                  backgroundColor: isShowPortrait ? "#444" : "#2a4d69"
-                                }}
-                              >
-                                초상화
-                              </button>
-                              <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
-                              <button onClick={() => {
-                                if(window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
-                                  setData(prev => prev.filter((_, i) => i !== idx));
-                                }
-                              }} style={{...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#600"}}>삭제</button>
-                            </div>
-                          </>
+                        {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
+                        {!isCollapsed && isShowPortrait &&
+                          // (typeof dataList[idx] === 'object' ? dataList[idx].showPortrait : true) !== false && 
+                          ["lostark", "aion2"].includes(game) &&
+                          scores[targetName]?.portrait && (
+                            <div
+                              aria-hidden="true"
+                              style={{ 
+                                position: "absolute", 
+                                inset: 0,
+                                backgroundImage: `url("${scores[targetName].portrait}")`, // 이미 위에서 targetName을 처리함
+                                backgroundSize: "cover", 
+                                backgroundPosition: "center top", 
+                                opacity: 1,
+                                transform: "scale(1.0)", 
+                                pointerEvents: "none", 
+                                zIndex: 0,
+                              }}
+                            />
                         )}
 
-                      </div>
-                    </div>
-                  </td>
-                  
-                  {/* 숙제 카운트 칸들 (항상 유지) */}
-                  {allFiltered.map(hw => {
-                    if (hiddenHomeworks.includes(hw.name)) return null;
+                        {/* ✅ 2) 글자 가독성용 오버레이 */}
+                        {/* <div
+                          aria-hidden="true"
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            background:
+                              "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%)", // ✅ 덜 진하게
+                            pointerEvents: "none",
+                            zIndex: 1,
+                          }}
+                        /> */}
 
-                    const val = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
-                    const isExcluded = !!(hw.excluded && hw.excluded[targetName]);
-                    const isPending = val > 0 && !isExcluded;
+                        {/* ✅ 3) 기존 내용은 위로 */}
+                        <div style={{ position: "relative", zIndex: 2 }}>
 
-                    return (
-                      <td key={`${idx}-${hw.id}`} style={{ 
-                        textAlign: "center", 
-                        padding: "10px", 
-                        backgroundColor: isPending ? "#4b4b20" : "transparent",
-                        position: "relative",
-                        verticalAlign: "middle" 
-                      }}>
-                        {/* 제외 체크 박스 */}
-                        <div style={{ position: "absolute", top: "2px", right: "2px" }}>
-                          <input type="checkbox" checked={isExcluded} onChange={() => toggleExclude(hw.id, targetName)} />
-                        </div>
+                          {/* 캐릭터 나열 순서 변경하는 위/아래 화살표 */}
+                          <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "0px" }}>
+                            <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▲</button>
+                            <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▼</button>
+                          </div>
 
-                        {!isExcluded ? (
-                          <>
-                            {/* 1. 숙제 갱신 일자: 상단으로 이동 */}
-                            <div style={{ fontSize: "10px", color: "#777", marginBottom: isCollapsed ? "2px" : "6px", minHeight: "12px" }}>
-                              {formatDate(hw.lastUpdated?.[targetName])}
+                          {/* 캐릭명, Lv, 직업 */}
+                            <div>
+                              {/* 캐릭명 */}
+                              <div style={{ textAlign: "center", marginBottom: "2px" }}>
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                    color: "#fff",
+                                    textShadow: "1px 1px 2px rgba(0,0,0,1)",
+                                    backgroundColor:
+                                      !isCollapsed && isShowPortrait
+                                        ? "rgba(0, 0, 0, 0.2)"
+                                        : "transparent",
+                                    padding:
+                                      !isCollapsed && isShowPortrait
+                                        ? "1px 8px"
+                                        : "0px",
+                                    borderRadius: "4px",
+                                  }}
+                                >
+                                  {targetName}
+                                </span>
+                              </div>
+
+                              {/* Lv, 직업 */}
+                              {(game === "lostark" || game === "aion2") && scores[targetName]?.job && (
+                                <div style={{ fontSize: "12px", textAlign: "center", marginTop: "-4px", textShadow: "1px 1px 3px rgba(0,0,0,1)", }}>
+                                  {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
+                                  {scores[targetName].job}
+                                </div>
+                              )}
                             </div>
 
-                            {/* 2. Input 창 영역: 버튼을 떼어내고 세로 배치 유도 */}
-                            <div style={{ marginBottom: isCollapsed ? "3px" : "5px" }}>
-                              <input 
-                                type="number"
-                                className="count-input"
-                                value={val}
-                                onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
-                                onFocus={(e) => e.target.select()}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    e.target.blur();
+                          {/* 전투력 등 캐릭터 추가 정보 */}
+                          {!isCollapsed && (
+                            <>
+                              {["aion2", "lostark"].includes(game) && scope === "character" && (() => {
+                                const gameConfig = {
+                                  "lostark": {
+                                    labels: ["템렙", "전투력"],
+                                    keys: ["itemLevel", "combatPower"],
+                                    fetchFn: () => fetchLoaScore(targetName)
+                                  },
+                                  "aion2": {
+                                    labels: ["전투력", "아툴"],
+                                    keys: ["combatPower", "combatScore"],
+                                    fetchFn: () => fetchScore(targetName)
                                   }
-                                }}
-                                style={{
-                                  width: "45px",
-                                  textAlign: "center",
-                                  backgroundColor: "#222",
-                                  color: "#fff",
-                                  border: "1px solid #444",
-                                  transition: "background-color 0.2s, color 0.2s"
-                                }}
-                              />
-                              <span style={{ color: isPending ? "#ccc" : "#888", fontSize: "13px" }}> / {hw.max}</span>
-                            </div>
-                            
-                            {/* 3. 하단 버튼군: -, 0, + 가로 배치 */}
-                            <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
-                              <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
-                              {/* <button style={{ ...btnStyle, padding: "2px 6px", backgroundColor: "#444" }} onClick={(e) => updateCount(hw.id, targetName, 0, e)}>0</button> */}
-                              <button style={{ ...btnStyle, padding: "2px 6px"}} onClick={(e) => updateCount(hw.id, targetName, 0, e)}>0</button>
-                              <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
-                            </div>
-                          </>
-                        ) : <div style={{ color: "#555", fontSize: "12px" }}>제외됨</div>}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                                };
+
+                                const config = gameConfig[game];
+                                // config가 없을 경우를 대비한 안전장치
+                                if (!config) return null; 
+
+                                const scoreData = scores[targetName];
+
+                                return (
+                                  <div>
+                                    {scoreData ? (
+                                      <div style={{ marginTop: "-8px" }}>
+                                        <span style={{ fontSize: "10px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
+                                          {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
+                                        </span>
+                                        <span style={{ fontSize: "10px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
+                                          {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString() ?? "?"}
+                                        </span>
+                                      </div>
+                                    ) : (
+                                      <div style={{ fontSize: "10px", color: "#888", marginTop: "-4px", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>
+                                        점수 미갱신
+                                      </div>
+                                    )}
+                                    
+                                    <button 
+                                      onClick={config.fetchFn} 
+                                      style={{ ...btnStyle, padding: "2px 5px", marginBottom: "2px", marginTop: "-2px", fontSize: "10px", backgroundColor: "#335a80", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}
+                                    >
+                                      전투력 갱신
+                                    </button>
+                                  </div>
+                                );
+                              })()}
+
+                              <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
+                                <button
+                                  onClick={() => togglePortrait(idx, setData)}
+                                  style={{
+                                    ...btnStyle,
+                                    padding: "2px 5px",
+                                    fontSize: "10px",
+                                    backgroundColor: isShowPortrait ? "#444" : "#2a4d69"
+                                  }}
+                                >
+                                  초상화
+                                </button>
+                                <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
+                                <button onClick={() => {
+                                  if(window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
+                                    setData(prev => prev.filter((_, i) => i !== idx));
+                                  }
+                                }} style={{...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#600"}}>삭제</button>
+                              </div>
+                            </>
+                          )}
+
+                        </div>
+                      </div>
+                    </td>
+                    
+                    {/* 숙제 카운트 칸들 (항상 유지) */}
+                    {allFiltered.map(hw => {
+                      if (hiddenHomeworks.includes(hw.name)) return null;
+
+                      const val = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
+                      const isExcluded = !!(hw.excluded && hw.excluded[targetName]);
+                      const isPending = val > 0 && !isExcluded;
+
+                      return (
+                        <td key={`${idx}-${hw.id}`} style={{ 
+                          textAlign: "center", 
+                          padding: "10px", 
+                          backgroundColor: isPending ? "#4b4b20" : "transparent",
+                          position: "relative",
+                          verticalAlign: "middle" 
+                        }}>
+                          {/* 제외 체크 박스 */}
+                          <div style={{ position: "absolute", top: "2px", right: "2px" }}>
+                            <input type="checkbox" checked={isExcluded} onChange={() => toggleExclude(hw.id, targetName)} />
+                          </div>
+
+                          {!isExcluded ? (
+                            <>
+                              {/* 1. 숙제 갱신 일자: 상단으로 이동 */}
+                              <div style={{ fontSize: "10px", color: "#777", marginBottom: isCollapsed ? "2px" : "6px", minHeight: "12px" }}>
+                                {formatDate(hw.lastUpdated?.[targetName])}
+                              </div>
+
+                              {/* 2. Input 창 영역: 버튼을 떼어내고 세로 배치 유도 */}
+                              <div style={{ marginBottom: isCollapsed ? "3px" : "5px" }}>
+                                <input 
+                                  type="number"
+                                  className="count-input"
+                                  value={val}
+                                  onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
+                                  onFocus={(e) => e.target.select()}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.target.blur();
+                                    }
+                                  }}
+                                  style={{
+                                    width: "45px",
+                                    textAlign: "center",
+                                    backgroundColor: "#222",
+                                    color: "#fff",
+                                    border: "1px solid #444",
+                                    transition: "background-color 0.2s, color 0.2s"
+                                  }}
+                                />
+                                <span style={{ color: isPending ? "#ccc" : "#888", fontSize: "13px" }}> / {hw.max}</span>
+                              </div>
+                              
+                              {/* 3. 하단 버튼군: -, 0, + 가로 배치 */}
+                              <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
+                                <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
+                                {/* <button style={{ ...btnStyle, padding: "2px 6px", backgroundColor: "#444" }} onClick={(e) => updateCount(hw.id, targetName, 0, e)}>0</button> */}
+                                <button style={{ ...btnStyle, padding: "2px 6px"}} onClick={(e) => updateCount(hw.id, targetName, 0, e)}>0</button>
+                                <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
+                              </div>
+                            </>
+                          ) : <div style={{ color: "#555", fontSize: "12px" }}>제외됨</div>}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     );
   };
@@ -1249,7 +1285,7 @@ function App() {
         zIndex: 1000, 
         backgroundColor: "#1e1e1e", 
         paddingBottom: "2px",
-        marginBottom: "-30px",
+        marginBottom: "0px",
         borderBottom: "1px solid #333"
       }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: "30px" }}>
@@ -1258,7 +1294,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-11 00:54
+              업데이트 : 2026-02-11 11:16
             </div>
           </div>
 
@@ -1276,15 +1312,14 @@ function App() {
                   title={g.label} // 마우스 올리면 이름 나오게 툴팁 추가
                   style={{
                     ...btnStyle,
-                    width: "44px",   // 정사각형 버튼
+                    width: "44px",
                     height: "44px",
-                    padding: "0",    // 패딩 제거
+                    padding: "0",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: game === g.id ? "#867d6e" : "#333", // 선택 시 포인트 컬러
+                    backgroundColor: game === g.id ? "#867d6e" : "#333",
                     border: game === g.id ? "3px solid #fff" : "1px solid #555",
-                    // borderRadius: "12px", // 약간 둥근 사각형
                     opacity: game === g.id ? 1 : 0.6,
                     filter: game === g.id ? "none" : "grayscale(100%)",
                     transition: "all 0.2s ease",
@@ -1298,8 +1333,6 @@ function App() {
                       width: "40px",  // 아이콘 크기 확대
                       height: "40px",
                       objectFit: "contain",
-                      // backgroundColor: "#000000",
-                      // 아이콘 자체의 시인성이 낮으면 아래 dropShadow 추가
                       filter: game === g.id ? "drop-shadow(0px 0px 4px rgba(0,0,0,0.5))" : "none"
                     }}
                   />
@@ -1309,10 +1342,6 @@ function App() {
             
             {/* 2행: 설정 및 기능 버튼 (색상 복구) */}
             <div style={{ display: "flex", gap: "2px", flexWrap: "wrap" }}>
-              {/* <button onClick={() => setViewMode(viewMode === "repeat" ? "once" : "repeat")} 
-                style={{ ...btnStyle, backgroundColor: "#333", border: "1px solid #777", marginRight: "10px" }}>
-                모드: {viewMode === "repeat" ? "반복퀘" : "업적"}
-              </button> */}
               <button
                 onClick={() => setViewMode("repeat")}
                 style={{
@@ -1379,14 +1408,29 @@ function App() {
 
       {isHomeworkView && (
         <>
-          {/* 테이블 및 추가 버튼 (원본 로직 유지) */}
-          {renderTable("계정별 숙제", "account", accounts, setAccounts)}
-          <button
-            onClick={() => addTargetAuto("account", accounts, setAccounts)}
-            style={{ ...btnStyle, marginTop: "10px", marginBottom: "-10px", padding: "10px" }}
-          >
-            + 계정 추가
-          </button>
+          {/* ✅ renderTable은 항상 렌더링 (헤더+버튼은 항상 보이게) */}
+          {renderTable("계정별 숙제", "account", accounts, setAccounts, {
+            headerRight: (
+              <button
+                onClick={() => setIsAccountCollapsed(v => !v)}
+                style={{ ...btnStyle, padding: "4px 8px", fontSize: "13px" }}
+              >
+                {isAccountCollapsed ? "▼ 펼치기" : "▲ 접기"}
+              </button>
+            ),
+            hideBody: isAccountCollapsed,
+            hideHiddenButtons: isAccountCollapsed, // ✅ (선택) 의미 명확
+          })}
+
+          {/* ✅ 표가 펼쳐져 있을 때만 + 계정 추가 버튼 */}
+          {!isAccountCollapsed && (
+            <button
+              onClick={() => addTargetAuto("account", accounts, setAccounts)}
+              style={{ ...btnStyle, marginTop: "10px", marginBottom: "-10px", padding: "10px" }}
+            >
+              + 계정 추가
+            </button>
+          )}
 
           {/* 캐릭터별 숙제 테이블 */}
           {renderTable("캐릭터별 숙제", "character", characters, setCharacters)}
