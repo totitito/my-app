@@ -15,7 +15,12 @@ export default function Aion2_SkillTable() {
     setLoading(true);
     setErr("");
     try {
-      const r = await fetch(`/api/aion2-skillpriority?job=${encodeURIComponent(targetJob)}`);
+      const url = `https://www.aion2tool.com/api/skill-priorities?job=${encodeURIComponent(targetJob)}`;
+
+      const r = await fetch(url, {
+        credentials: "include", // ✅ aion2tool 쿠키 포함(Cloudflare 통과용)
+      });
+
       const text = await r.text();
 
       if (!r.ok) {
