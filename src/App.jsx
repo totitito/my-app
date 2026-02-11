@@ -241,7 +241,20 @@ function App() {
     return normalized;
   });
 
-  const [viewMode, setViewMode] = useState(() => localStorage.getItem(`viewMode-${game}`) || "repeat");
+  const [viewMode, setViewMode] = useState(
+    () => localStorage.getItem(`viewMode-${game}`) || "repeat"
+  );
+
+  // game이 바뀌면, 그 게임의 마지막 viewMode로 복원
+  useEffect(() => {
+    const saved = localStorage.getItem(`viewMode-${game}`);
+    setViewMode(saved || "repeat");
+  }, [game]);
+
+  // viewMode가 바뀌면, 현재 game 키로 저장
+  useEffect(() => {
+    localStorage.setItem(`viewMode-${game}`, viewMode);
+  }, [game, viewMode]);
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [hiddenHomeworks, setHiddenHomeworks] = useState([]);
@@ -1328,7 +1341,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-11 18:24
+              업데이트 : 2026-02-11 18:52
             </div>
           </div>
 
