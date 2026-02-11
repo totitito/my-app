@@ -11,37 +11,30 @@ export default function Aion2_SkillTable() {
   const [err, setErr] = useState("");
   const [payload, setPayload] = useState(null);
 
-  const load = async (targetJob) => {
-    setLoading(true);
+  const load = (targetJob) => {
+    setLoading(false);
     setErr("");
+
+    const raw = localStorage.getItem(`aion2-skillpriority-${targetJob}`);
+
+    if (!raw) {
+      setPayload(null);
+      setErr("저장된 데이터가 없음. (아툴에서 먼저 가져오기 실행)");
+      return;
+    }
+
     try {
-      const url = `https://www.aion2tool.com/api/skill-priorities?job=${encodeURIComponent(targetJob)}`;
-
-      const r = await fetch(url, {
-        credentials: "include", // ✅ aion2tool 쿠키 포함(Cloudflare 통과용)
-      });
-
-      const text = await r.text();
-
-      if (!r.ok) {
-        throw new Error(`${r.status} ${text.slice(0, 200)}`);
-      }
-
-      const data = JSON.parse(text);
+      const data = JSON.parse(raw);
       setPayload(data);
     } catch (e) {
       setPayload(null);
-      setErr(String(e));
-    } finally {
-      setLoading(false);
+      setErr("저장 데이터 파싱 실패");
     }
   };
 
-  // 최초 1회 로드
   useEffect(() => {
     load(job);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [job]);
 
   const rowsByType = (type) => payload?.data?.[type] ?? [];
 
