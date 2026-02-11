@@ -88,6 +88,9 @@ const initialHomeworks = [
   // 로아 - 업적 - 스토리
   { id: "loa-archievement-story-RL_S", game: "lostark", name: "림레이크 남섬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "스토리", scope: "character", lastUpdated: {} },
 
+  // 아이온2 - 계정
+  { id: "aion2-account-transform-odd", game: "aion2", name: "오드 변환", max: 8, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-account-buy-odd", game: "aion2", name: "오드 구입", max: 8, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - Daily
   { id: "aion2-login", game: "aion2", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 0, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-daily-donation", game: "aion2", name: "보급의뢰", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
@@ -101,8 +104,8 @@ const initialHomeworks = [
   { id: "aion2-weeklyraid", game: "aion2", name: "토벌전", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-rudra-named", game: "aion2", name: "루드라 1,2넴", max: 4, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-rudra-boss", game: "aion2", name: "루드라", max: 2, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-odd-change", game: "aion2", name: "오드 변환", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-odd-buy", game: "aion2", name: "오드 구입", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-odd-change", game: "aion2", name: "오드 변환", max: 5, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-odd-buy", game: "aion2", name: "오드 구입", max: 5, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 업적 - 기본
   { id: "aion2-basic-foundation-quests", game: "aion2", name: "지역퀘, 봉던, 주둔지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
   { id: "aion2-achievement-add-friends", game: "aion2", name: "친추업적", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
@@ -1423,7 +1426,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-11 20:25
+              업데이트 : 2026-02-12 00:36
             </div>
           </div>
 
