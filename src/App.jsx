@@ -826,21 +826,41 @@ function App() {
     setHomeworks(prev => prev.map(hw => {
       if (hw.id !== id) return hw;
 
-      // ✅ STEP 1 핵심: 입력 중 빈칸 허용
+      const curRaw =
+        hw.counts && hw.counts[targetName] !== undefined ? hw.counts[targetName] : hw.max;
+
+      // ✅ 1) 인풋에서 지우는 중("") 허용
       if (delta === "") {
         return {
           ...hw,
-          counts: { ...(hw.counts || {}), [targetName]: "" }
+          counts: { ...(hw.counts || {}), [targetName]: "" },
+          // lastUpdated는 굳이 안 찍어도 됨(원하면 찍어도 OK)
         };
       }
 
-      const current =
-        hw.counts && hw.counts[targetName] !== undefined && hw.counts[targetName] !== ""
-          ? hw.counts[targetName]
-          : hw.max;
+      // ✅ 2) 인풋에서 직접 입력한 경우(문자열) -> "그 값으로" 세팅
+      //    (onChange에서 e.target.value가 string으로 들어옴)
+      if (typeof delta === "string") {
+        const n = Number(delta);
+        if (!Number.isFinite(n)) {
+          // 숫자 아닌 값이면 변경 없이 그대로
+          return hw;
+        }
+
+        const next = Math.max(0, Math.min(hw.max ?? Infinity, n));
+
+        return {
+          ...hw,
+          counts: { ...(hw.counts || {}), [targetName]: next },
+          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: Date.now() }
+        };
+      }
+
+      // ✅ 3) 버튼(-/0/+) 클릭한 경우(숫자) -> 현재값에서 증감/0세팅
+      const curNum = Number(curRaw);
+      const safeCur = Number.isFinite(curNum) ? curNum : (hw.max ?? 0);
 
       let next;
-
       if (delta === 0) {
         next = 0;
       } else {
@@ -849,15 +869,7 @@ function App() {
           if (e.ctrlKey) step = 100;
           else if (e.shiftKey) step = 10;
         }
-
-        const d = Number(delta);
-        if (!Number.isFinite(d)) return hw;
-
-        // ✅ 핵심: 현재값 + (delta * step)
-        const cur = Number(currentVal); // currentVal은 네 코드에서 가져오던 현재값
-        const safeCur = Number.isFinite(cur) ? cur : 0;
-
-        next = safeCur + (d * step);
+        next = safeCur + (delta * step);
       }
 
       next = Math.max(0, Math.min(hw.max ?? Infinity, next));
@@ -865,10 +877,7 @@ function App() {
       return {
         ...hw,
         counts: { ...(hw.counts || {}), [targetName]: next },
-        lastUpdated: {
-          ...(hw.lastUpdated || {}),
-          [targetName]: new Date().getTime()
-        }
+        lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: Date.now() }
       };
     }));
   };
