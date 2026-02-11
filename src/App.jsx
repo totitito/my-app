@@ -367,6 +367,20 @@ function App() {
     ));
   };
 
+  // ✅ Aion2Tool: 스킬 우선순위 불러오기(테스트)
+  const fetchSkillPriorities = async (jobKorean) => {
+    const url = `https://www.aion2tool.com/api/skill-priorities?job=${encodeURIComponent(jobKorean)}`;
+    const r = await fetch(url, { credentials: "include" });
+    if (!r.ok) throw new Error(`Aion2Tool API error: ${r.status}`);
+    return r.json();
+  };
+
+  useEffect(() => {
+    fetchSkillPriorities("궁성")
+      .then(data => console.log("궁성 스킬 데이터:", data))
+      .catch(err => console.error("API 실패:", err));
+  }, []);
+
   // 1️⃣ 초기값: 현재 game 기준으로 localStorage에서 읽기
   const [isAccountCollapsed, setIsAccountCollapsed] = useState(() => {
     return localStorage.getItem(`collapse-account-${game}`) === "1";
@@ -1295,7 +1309,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-11 11:16
+              업데이트 : 2026-02-11 17:19
             </div>
           </div>
 
@@ -1470,6 +1484,12 @@ function App() {
       {game === "aion2" && viewMode === "aion2_soul" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
           <Aion2_SoulEngravingTable />
+        </div>
+      )}
+
+      {game === "aion2" && viewMode === "aion2_skill" && (
+        <div style={{ marginTop: 20, paddingTop: 12 }}>
+          <Aion2_SkillPriorityTable />
         </div>
       )}
 
