@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import AION2_SKILL_DB from "../data/aion2-skillpriority.json";
 
 export default function Aion2_SkillTable() {
   const jobs = useMemo(
@@ -7,34 +8,9 @@ export default function Aion2_SkillTable() {
   );
 
   const [job, setJob] = useState(jobs[0]);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
-  const [payload, setPayload] = useState(null);
 
-  const load = (targetJob) => {
-    setLoading(false);
-    setErr("");
-
-    const raw = localStorage.getItem(`aion2-skillpriority-${targetJob}`);
-
-    if (!raw) {
-      setPayload(null);
-      setErr("저장된 데이터가 없음. (아툴에서 먼저 가져오기 실행)");
-      return;
-    }
-
-    try {
-      const data = JSON.parse(raw);
-      setPayload(data);
-    } catch (e) {
-      setPayload(null);
-      setErr("저장 데이터 파싱 실패");
-    }
-  };
-
-  useEffect(() => {
-    load(job);
-  }, [job]);
+  // ✅ 정적 JSON에서 선택 직업 데이터 읽기
+  const payload = AION2_SKILL_DB.jobs?.[job] ?? null;
 
   const rowsByType = (type) => payload?.data?.[type] ?? [];
 
@@ -107,43 +83,25 @@ export default function Aion2_SkillTable() {
           ))}
         </select>
 
-        <button
-          style={{
-            marginLeft: "auto",
-            padding: "6px 10px",
-            border: "1px solid #444",
-            borderRadius: 8,
-            background: "#333",
-            color: "#fff",
-            opacity: loading ? 0.7 : 1,
-            cursor: loading ? "not-allowed" : "pointer",
-          }}
-          onClick={() => !loading && load(job)}
-        >
-          {loading ? "불러오는 중..." : "갱신"}
-        </button>
+        <div style={{ marginLeft: "auto", color: "#aaa", fontSize: 12 }}>
+          업데이트: {AION2_SKILL_DB.updatedAt || "없음"}
+        </div>
       </div>
 
       <div style={{ color: "#aaa", fontSize: 13 }}>
         현재 선택: <b style={{ color: "#fff" }}>{job}</b>
       </div>
 
-      {err ? (
+      {!payload ? (
         <div style={{ marginTop: 10, color: "#ff8080", fontSize: 12, whiteSpace: "pre-wrap" }}>
-          불러오기 실패: {err}
+          데이터가 없습니다. (네가 aion2-skillpriority.json 갱신 후 배포해야 함)
         </div>
-      ) : null}
-
-      {payload ? (
+      ) : (
         <>
           <SimpleTable title="Active" rows={rowsByType("active")} />
           <SimpleTable title="Passive" rows={rowsByType("passive")} />
           <SimpleTable title="Stigma" rows={rowsByType("stigma")} />
         </>
-      ) : (
-        <div style={{ marginTop: 10, color: "#888", fontSize: 12 }}>
-          (갱신을 누르면 표가 채워짐)
-        </div>
       )}
     </div>
   );
