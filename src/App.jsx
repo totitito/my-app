@@ -844,19 +844,23 @@ function App() {
       if (delta === 0) {
         next = 0;
       } else {
-        let multiplier = 1;
+        let step = 1;
         if (e && typeof e === "object") {
-          if (e.shiftKey) multiplier = 10;
-          else if (e.ctrlKey) multiplier = 100;
+          if (e.ctrlKey) step = 100;
+          else if (e.shiftKey) step = 10;
         }
 
-        const num = Number(delta);
-        if (Number.isNaN(num)) return hw;
+        const d = Number(delta);
+        if (!Number.isFinite(d)) return hw;
 
-        next = num;
+        // ✅ 핵심: 현재값 + (delta * step)
+        const cur = Number(currentVal); // currentVal은 네 코드에서 가져오던 현재값
+        const safeCur = Number.isFinite(cur) ? cur : 0;
+
+        next = safeCur + (d * step);
       }
 
-      next = Math.max(0, Math.min(hw.max, next));
+      next = Math.max(0, Math.min(hw.max ?? Infinity, next));
 
       return {
         ...hw,
@@ -1410,7 +1414,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-11 18:52
+              업데이트 : 2026-02-11 20:25
             </div>
           </div>
 
