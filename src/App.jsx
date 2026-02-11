@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
+import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
 
 import aion2Icon from "./assets/gameicons/aion2.png";
 import lostarkIcon from "./assets/gameicons/lostark.png";
@@ -1377,6 +1378,18 @@ function App() {
                     }}
                   >
                     영혼각인
+                  </button>
+
+                  <button
+                    onClick={() => setViewMode("aion2_skill")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_skill" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_skill" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_skill" ? "bold" : "normal",
+                    }}
+                  >
+                    스킬
                   </button>
 
                   {/* <button
