@@ -1290,6 +1290,25 @@ function App() {
     );
   };
 
+  useEffect(() => {
+    function onMsg(e) {
+      // ✅ aion2tool에서 온 것만 허용
+      if (e.origin !== "https://www.aion2tool.com") return;
+
+      if (e.data?.type === "AION2_SKILLPRIORITY_IMPORT") {
+        const { job, payload } = e.data || {};
+        if (!job || !payload) return;
+
+        localStorage.setItem(`aion2-skillpriority-${job}`, JSON.stringify(payload));
+        console.log("[IMPORT OK]", job);
+        alert(`AION2 스킬 우선순위 가져오기 완료: ${job}`);
+      }
+    }
+
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
+
   return (
     <div style={{ padding: "2px", color: "#fff", backgroundColor: "#1e1e1e", minHeight: "100vh" }}>
       
@@ -1309,7 +1328,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-11 17:51
+              업데이트 : 2026-02-11 17:57
             </div>
           </div>
 
