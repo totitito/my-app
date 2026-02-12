@@ -149,8 +149,10 @@ const initialHomeworks = [
   { id: "aion2-nightmare", game: "aion2", name: "악몽", max: 14, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 2, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - 기타
   { id: "aion2-odd-energy", game: "aion2", name: "오드에너지", category: "etc", max: 840, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
-  // 아이온2 - 반복 - Weekly (이벤트)
+  // 아이온2 - 반복 - Daily (이벤트)
   { id: "aion2-event-260211-bokpocket-exchange-daily", game: "aion2", name: "[이벤트] 복주머니 일일 교환", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-event-260211-sweethoney", game: "aion2", name: "[이벤트] 벌꿀 상점", category: "event", max: 10, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-event-260211-threeroot", game: "aion2", name: "[이벤트] 삼뿌리 상점", category: "event", max: 10, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - Weekly (이벤트)
   { id: "aion2-event-260211-bokpocket-exchange-weekly", game: "aion2", name: "[이벤트] 복주머니 주간 교환", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-event-260211-bokpocket-key", game: "aion2", name: "[이벤트] 복주머니 열쇠", category: "event", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
