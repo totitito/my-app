@@ -66,6 +66,57 @@ const formatScoreUpdatedAt = (ts) => {
   return `${m}/${day} ${hh}:${mm}`;
 };
 
+const normalizeRepeatCategory = (hw) => {
+  // 반복퀘(repeat)에서만 쓰는 category 정리
+  // (once는 기존 category(기본/스토리/...) 그대로 둠)
+
+  if (hw.resetPeriod === "once") return hw;
+
+  // ✅ 오드에너지는 무조건 etc
+  if (hw.id === "aion2-odd-energy") {
+    if (hw.category === "etc") return hw;
+    return { ...hw, category: "etc" };
+  }
+
+  // ✅ 이벤트 표기면 event로 강제
+  if (typeof hw.name === "string" && hw.name.startsWith("[이벤트]")) {
+    if (hw.category === "event") return hw;
+    return { ...hw, category: "event" };
+  }
+
+  // ✅ 나머지는 기존 category가 있으면 존중, 없으면 resetPeriod로 기본값
+  if (hw.category) return hw;
+
+  if (hw.resetPeriod === "day") return { ...hw, category: "daily" };
+  if (hw.resetPeriod === "week") return { ...hw, category: "weekly" };
+
+  return { ...hw, category: "etc" };
+};
+
+const getCategory = (hw) => {
+  // repeat/once 섞여있어도 안전하게 처리
+
+  // ✅ 0) 오드에너지는 무조건 etc (예외 규칙)
+  if (hw.id === "aion2-odd-energy") return "etc";
+
+  // ✅ 1) 이벤트는 무조건 event (이름/ID 둘 다로 강제)
+  const name = String(hw.name || "");
+  const id = String(hw.id || "");
+  if (name.includes("[이벤트]") || id.includes("-event-") || id.startsWith("aion2-event-")) {
+    return "event";
+  }
+
+  // ✅ 2) 명시된 category가 있으면 그걸 최우선(소문자 정규화)
+  if (hw.category) return String(hw.category).toLowerCase();
+
+  // ✅ 3) 없으면 resetPeriod로 기본 추론
+  if (hw.resetPeriod === "day") return "daily";
+  if (hw.resetPeriod === "week") return "weekly";
+
+  // ✅ 4) once/기타는 etc
+  return "etc";
+};
+
 const initialHomeworks = [
   // 와우 - 반복
   { id: "wow-raid", game: "wow", name: "레이드", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 4, resetTime: 8, scope: "character", lastResetDate: "", lastUpdated: {} },
@@ -96,13 +147,13 @@ const initialHomeworks = [
   { id: "aion2-daily-donation", game: "aion2", name: "보급의뢰", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-quest", game: "aion2", name: "사명퀘", max: 5, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-nightmare", game: "aion2", name: "악몽", max: 14, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 2, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  // 아이온2 - 반복 - Weekly (이벤트)
-  { id: "aion2-event-260211-bokpocket-exchange-daily", game: "aion2", name: "[이벤트] 복주머니 일일 교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - 기타
-  { id: "aion2-odd-energy", game: "aion2", name: "오드에너지", max: 840, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
+  { id: "aion2-odd-energy", game: "aion2", name: "오드에너지", category: "etc", max: 840, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
   // 아이온2 - 반복 - Weekly (이벤트)
-  { id: "aion2-event-260211-bokpocket-key", game: "aion2", name: "[이벤트] 복주머니 열쇠", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-event-260211-bokpocket-exchange-weekly", game: "aion2", name: "[이벤트] 복주머니 주간 교환", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-event-260211-bokpocket-exchange-daily", game: "aion2", name: "[이벤트] 복주머니 일일 교환", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  // 아이온2 - 반복 - Weekly (이벤트)
+  { id: "aion2-event-260211-bokpocket-exchange-weekly", game: "aion2", name: "[이벤트] 복주머니 주간 교환", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-event-260211-bokpocket-key", game: "aion2", name: "[이벤트] 복주머니 열쇠", category: "event", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - Weekly
   { id: "aion2-abyss-order", game: "aion2", name: "지령서", max: 12, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-weeklydungeon", game: "aion2", name: "일일던전", max: 7, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
@@ -315,6 +366,43 @@ function App() {
 
     return initialHomeworks;
   });
+
+  useEffect(() => {
+    setHomeworks(prev => {
+      const next = prev.map(hw => {
+        // once는 건드리지 않음(기존 업적 category 유지)
+        if (hw.resetPeriod === "once") return hw;
+
+        const cat = getCategory(hw);
+        // category 없거나 틀렸으면 교정
+        if (String(hw.category || "").toLowerCase() !== cat) {
+          return { ...hw, category: cat };
+        }
+        return hw;
+      });
+
+      // 바뀐게 있을 때만 저장
+      if (JSON.stringify(prev) !== JSON.stringify(next)) {
+        localStorage.setItem("all-homeworks", JSON.stringify(next)); // ✅ 네가 쓰는 저장키로 맞춰
+      }
+      return next;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setHomeworks(prev => {
+      const next = prev.map(normalizeRepeatCategory);
+
+      // 🔧 바뀐 게 있을 때만 저장/반영
+      const changed = JSON.stringify(prev) !== JSON.stringify(next);
+      if (changed) {
+        localStorage.setItem("all-homeworks", JSON.stringify(next)); // 네가 쓰는 키에 맞춰
+      }
+      return next;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [characters, setCharacters] = useState(() => {
     const saved = localStorage.getItem(`characters-${game}`); // 수정
@@ -910,10 +998,13 @@ function App() {
     const { headerRight = null, hideBody = false, hideHiddenButtons = false } = options;
     const filteredHws = homeworks.filter(hw => hw.game === game && hw.scope === scope && (viewMode === "once" ? hw.resetPeriod === "once" : hw.resetPeriod !== "once"));
 
-    // 1. 반복 모드 분류
-    const dailyHws = filteredHws.filter(hw => hw.resetPeriod === "day" && hw.id !== "aion2-odd-energy");
-    const etcHws = filteredHws.filter(hw => hw.id === "aion2-odd-energy");
-    const weeklyHws = filteredHws.filter(hw => hw.resetPeriod === "week");
+    // 1. 반복 모드 분류 (category 기반으로 통일)
+    // const repeatHws = filteredHws.filter(hw => hw.resetPeriod !== "once");
+
+    // const dailyHws = repeatHws.filter(hw => getCategory(hw) === "daily");
+    // const etcHws   = repeatHws.filter(hw => getCategory(hw) === "etc");
+    // const eventHws = repeatHws.filter(hw => getCategory(hw) === "event");
+    // const weeklyHws= repeatHws.filter(hw => getCategory(hw) === "weekly");
 
     // 2. 업적(once) 모드 분류 (이게 누락되어서 에러가 났던 것)
     const onceBasic = filteredHws.filter(hw => hw.category === "기본");
@@ -923,10 +1014,59 @@ function App() {
     const onceArt = filteredHws.filter(hw => hw.category === "명화");
     const onceEtc = filteredHws.filter(hw => !["기본", "스토리", "필드보스", "날개", "명화"].includes(hw.category));
 
+    const categoryOrder = ["daily", "etc", "event", "weekly"];
+
+    const groupedByCategory = Object.fromEntries(
+      categoryOrder.map(cat => [cat, []])
+    );
+
+    if (viewMode === "repeat") {
+      const repeatHws = filteredHws.filter(hw => hw.resetPeriod !== "once");
+      repeatHws.forEach(hw => {
+        const cat = getCategory(hw);
+        if (!groupedByCategory[cat]) groupedByCategory[cat] = [];
+        groupedByCategory[cat].push(hw);
+      });
+    }
+
+    const allFiltered =
+      viewMode === "once"
+        ? [...onceBasic, ...onceStory, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc]
+        : categoryOrder.flatMap(cat => groupedByCategory[cat]);
+
+    const categoryLabel = {
+      daily: "Daily",
+      etc: "etc",
+      event: "Event",
+      weekly: "Weekly",
+    };
+
     // 3. 전체 리스트 (정렬 순서 고정)
-    const allFiltered = viewMode === "once" 
-      ? [...onceBasic, ...onceStory, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc] 
-      : [...dailyHws, ...etcHws, ...weeklyHws];
+    // const allFiltered = viewMode === "once"
+    //   ? [...onceBasic, ...onceStory, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc]
+    //   : [...dailyHws, ...etcHws, ...eventHws, ...weeklyHws];
+
+    // const groupedByCategory = {
+    //   daily: [],
+    //   etc: [],
+    //   event: [],
+    //   weekly: [],
+    // };
+
+    // allFiltered.forEach(hw => {
+    //   const cat = getCategory(hw); // ✅ 스텝1에서 추가한 함수
+    //   if (!groupedByCategory[cat]) groupedByCategory[cat] = [];
+    //   groupedByCategory[cat].push(hw);
+    // });
+
+    // const categoryOrder = ["daily", "etc", "event", "weekly"];
+
+    // const categoryLabel = {
+    //   daily: "Daily",
+    //   etc: "etc",
+    //   event: "Event",
+    //   weekly: "Weekly",
+    // };
 
     // 4. 날짜 양식 (연도 제외 오더 반영)
     const formatDate = (ts) => {
@@ -1027,13 +1167,20 @@ function App() {
 
                 {viewMode === "repeat" && (
                   <>
-                    {/* 반복퀘 헤더 */}
-                    {dailyHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                      <th colSpan={dailyHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>Daily</th>}
-                    {etcHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                      <th colSpan={etcHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>etc</th>}
-                    {weeklyHws.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                      <th colSpan={weeklyHws.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>Weekly</th>}
+                    {/* 반복퀘 헤더 (category 기반) */}
+                    {categoryOrder.map((cat) => {
+                      const visibleCount = (groupedByCategory[cat] || []).filter(
+                        (h) => !hiddenHomeworks.includes(h.name)
+                      ).length;
+
+                      if (visibleCount <= 0) return null;
+
+                      return (
+                        <th key={cat} colSpan={visibleCount} style={{ padding: "8px" }}>
+                          {categoryLabel[cat] ?? cat}
+                        </th>
+                      );
+                    })}
                   </>
                 )}
 
@@ -1061,15 +1208,37 @@ function App() {
                 {allFiltered.map(hw => {
                   if (hiddenHomeworks.includes(hw.name)) return null;
 
+                  // ⭐ 표 너비 고정값 (이 값보다 작아지지 않음)
+                  const FIXED_WIDTH = "70px";
+
                   return (
-                    <th key={hw.id} style={{ 
-                      padding: "10px", 
-                      verticalAlign: "middle", 
-                      position: "relative",
-                      minWidth: "120px"
-                    }}>
+                    <th
+                      key={hw.id}
+                      style={{
+                        padding: "8px 4px",
+                        backgroundColor: "#333",
+                        position: "relative",
+                        // ⭐ 아래 3줄 추가: 칸 너비를 강제로 고정해
+                        width: FIXED_WIDTH,
+                        maxWidth: FIXED_WIDTH,
+                        overflow: "hidden"
+                      }}
+                    >
                       {/* 1. 숙제명 */}
-                      <div style={{ fontWeight: "bold" }}>{hw.name}</div>
+                      <div
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: "12px",
+                          // ⭐ 아래 4줄 추가: 글자가 길면 ...으로 표시해
+                          width: "100%",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                        title={hw.name} // ⭐ 마우스 올리면 전체 이름이 툴팁으로 떠
+                      >
+                        {hw.name}
+                      </div>
                       
                       {/* 2. 메모 영역 (주기보다 윗줄) */}
                       <div style={{ marginTop: "2px" }}>
@@ -1109,7 +1278,7 @@ function App() {
                       {/* 3. 초기화 주기 표기 */}
                       {viewMode !== "once" && (
                         <div style={{ fontSize: "10px", color: "#bbb", marginTop: "2px" }}>
-                          {hw.id === "aion2-odd-energy" ? "05시 기준 3시간마다 +15" :
+                          {hw.id === "aion2-odd-energy" ? "3n-1시마다 +15" :
                           (hw.resetType === 'recovery' ? `매일 05시 +${hw.recoveryAmount}` :
                           `${hw.resetPeriod === 'week' ? dayMap[hw.resetDay] : '매일'} ${String(Array.isArray(hw.resetTime)?hw.resetTime[0]:hw.resetTime).padStart(2,'0')}시`)}
                         </div>
@@ -1374,10 +1543,24 @@ function App() {
                               
                               {/* 3. 하단 버튼군: -, 0, + 가로 배치 */}
                               <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
-                                <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, -1, e)}>-</button>
-                                {/* <button style={{ ...btnStyle, padding: "2px 6px", backgroundColor: "#444" }} onClick={(e) => updateCount(hw.id, targetName, 0, e)}>0</button> */}
-                                <button style={{ ...btnStyle, padding: "2px 6px"}} onClick={(e) => updateCount(hw.id, targetName, 0, e)}>0</button>
-                                <button style={{ ...btnStyle, padding: "2px 6px" }} onClick={(e) => updateCount(hw.id, targetName, 1, e)}>+</button>
+                                <button 
+                                  style={{ ...btnStyle, padding: "2px 0", width: "24px" }} 
+                                  onClick={(e) => updateCount(hw.id, targetName, -1, e)}
+                                >
+                                  -
+                                </button>
+                                <button 
+                                  style={{ ...btnStyle, padding: "2px 0", width: "24px" }} 
+                                  onClick={(e) => updateCount(hw.id, targetName, 0, e)}
+                                >
+                                  0
+                                </button>
+                                <button 
+                                  style={{ ...btnStyle, padding: "2px 0", width: "24px" }} 
+                                  onClick={(e) => updateCount(hw.id, targetName, 1, e)}
+                                >
+                                  +
+                                </button>
                               </div>
                             </>
                           ) : <div style={{ color: "#555", fontSize: "12px" }}>제외됨</div>}
@@ -1432,7 +1615,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-12 09:32
+              업데이트 : 2026-02-12 15:07
             </div>
           </div>
 
