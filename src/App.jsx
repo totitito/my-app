@@ -1725,6 +1725,14 @@ function App() {
                   >
                     아르카나
                   </button> */}
+
+                  {/* <button 
+                    onClick={() => setViewMode("raid")} 
+                    style={{ ...tabBtnStyle, backgroundColor: viewMode === "raid" ? "#62dafb" : "#444" }}
+                  >
+                    레이드
+                  </button> */}
+
                 </>
               )}
 
