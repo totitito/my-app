@@ -228,10 +228,20 @@ const initialHomeworks = [
   { id: "aion2-Altgarde-Blood-Warrior-Lannar", game: "aion2", name: "[알트가르드] 혈전사 란나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
   { id: "aion2-Altgarde-Bishveda", game: "aion2", name: "[알트가르드] 흑암의 비슈베다", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
   // 아이온2 - 업적 - 날개
-  { id: "aion2-fire-temple", game: "aion2", name: "불의 신전", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-horn-cave", game: "aion2", name: "사나운 뿔 암굴", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-dramata-nest", game: "aion2", name: "죽은 드라마타의 둥지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-ancient-aulaou-wings", game: "aion2", name: "[우루구구] 고대 아울라우의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
+  { id: "aion2-wing-wings-of-blue-waves", game: "aion2", name: "[드라웁니르] 푸른 파도의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
+  { id: "aion2-wing-black-fragmented-wings", game: "aion2", name: "[크라오] 검은 파편의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
+  { id: "aion2-wing-forest-spirit-wings", game: "aion2", name: "[바크론] 숲의 정령의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-fire-temple", game: "aion2", name: "[불신] 크로메데의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-horn-cave", game: "aion2", name: "[암굴] 어둠의 장막 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-dramata-nest", game: "aion2", name: "[드라마타] 드라마타 둥지의 날개", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-cradle-of-nothingness", game: "aion2", name: "[무의요람] 무아의 날개", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   // 아이온2 - 업적 - 명화
+  { id: "aion2-masterpiece-abyssal-reforging-rudra", game: "aion2", name: "심연의 루드라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-masterpiece-temple-of-fire", game: "aion2", name: "불의 신전", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-masterpiece-fierce-horn-cave", game: "aion2", name: "사나운 뿔 암굴", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-masterpiece-dramata-nest", game: "aion2", name: "죽은 드라마타의 둥지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
+  { id: "aion2-masterpiece-cradle-of-nothingness", game: "aion2", name: "무의 요람", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
   { id: "aion2-duduka-worker", game: "aion2", name: "두두카 일꾼", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
   { id: "aion2-shugo-alchemist", game: "aion2", name: "슈고 연금술사", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
   { id: "aion2-kantas-valley", game: "aion2", name: "칸타스 계곡", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화", scope: "character", lastUpdated: {} },
@@ -1667,7 +1677,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-17 22:49
+              업데이트 : 2026-02-18 06:16
             </div>
           </div>
 
