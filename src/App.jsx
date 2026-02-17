@@ -1049,9 +1049,7 @@ function App() {
         return {
           ...hw,
           counts: { ...(hw.counts || {}), [targetName]: next },
-          ...(isOddEnergy
-              ? {}
-              : { lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() } })
+          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() }
         };
       }
 
@@ -1076,9 +1074,7 @@ function App() {
       return {
         ...hw,
         counts: { ...(hw.counts || {}), [targetName]: next },
-        ...(isOddEnergy
-            ? {}
-            : { lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() } })
+        lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() }
       };
 
     }));
@@ -1727,7 +1723,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-18 07:15
+              업데이트 : 2026-02-18 07:22
             </div>
           </div>
 
