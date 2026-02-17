@@ -58,13 +58,25 @@ const GAME_IDS = GAMES.map(g => g.id);
 
 const formatScoreUpdatedAt = (ts) => {
   if (!ts) return "";
-  const d = new Date(ts);
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const hh = String(d.getHours()).padStart(2, "0");
-  const mm = String(d.getMinutes()).padStart(2, "0");
+  const d = new Date(ts + KST_OFFSET_MS); // ✅ KST로 이동(숫자연산)
+  const m = d.getUTCMonth() + 1;          // ✅ UTC getter로 읽기(환경 영향 제거)
+  const day = d.getUTCDate();
+  const hh = String(d.getUTCHours()).padStart(2, "0");
+  const mm = String(d.getUTCMinutes()).padStart(2, "0");
   return `${m}/${day} ${hh}:${mm}`;
 };
+
+const fmtKST = (ms) =>
+  new Date(ms).toLocaleString("ko-KR", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
 
 const normalizeRepeatCategory = (hw) => {
   // 반복퀘(repeat)에서만 쓰는 category 정리
@@ -237,6 +249,14 @@ const DAY_MS = 24 * HOUR_MS;
 const WEEK_MS = 7 * DAY_MS;
 const KST_OFFSET_MS = 9 * HOUR_MS;
 
+const getNowMs = () => {
+  // ✅ 테스트용: sessionStorage에 __NOW_MS 넣으면 그 시간을 "현재"로 사용
+  const v = (typeof window !== "undefined") ? sessionStorage.getItem("__NOW_MS") : null;
+  if (v && Number.isFinite(Number(v))) return Number(v);
+  return Date.now();
+  // return getNowMs();
+};
+
 // 매일 resetHourKST 시각을 기준으로 하루 경계 index
 const dailyBoundaryIndex = (ms, resetHourKST) => {
   const kstMs = ms + KST_OFFSET_MS;
@@ -265,19 +285,40 @@ const nextWeeklyResetAfterKST = (lastMs, resetDay, resetHour) => {
 };
 
 const passedCycles = (lastMs, nowMs, hw) => {
+
+  // ✅ 콘솔에서 window.__NOW_MS = 숫자; 로 테스트 가능
+  // const effectiveNowMs = (typeof window !== "undefined" && window.__NOW_MS) ? window.__NOW_MS : nowMs;
+  const effectiveNowMs = nowMs;
+
   if (!lastMs) return 0;
   if (hw.id === "aion2-odd-energy") return 0;
 
   const resetHour = Array.isArray(hw.resetTime) ? hw.resetTime[0] : (hw.resetTime ?? 0);
 
+  // if (hw.resetPeriod === "day") {
+  //   return dailyBoundaryIndex(nowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
+  // }
   if (hw.resetPeriod === "day") {
-    return dailyBoundaryIndex(nowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
+    return dailyBoundaryIndex(effectiveNowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
   }
 
   if (hw.resetPeriod === "week") {
     const next = nextWeeklyResetAfterKST(lastMs, hw.resetDay ?? 0, resetHour);
-    if (nowMs < next) return 0;
-    return 1 + Math.floor((nowMs - next) / WEEK_MS);
+
+    // console.log(
+    //   "[RESETCHK]",
+    //   hw.id,
+    //   "last=", new Date(lastMs).toISOString(),
+    //   "now=", new Date(effectiveNowMs).toISOString(),
+    //   "next=", new Date(next).toISOString(),
+    //   "resetDay=", hw.resetDay ?? 0,
+    //   "resetHour=", resetHour
+    // );
+
+    // if (nowMs < next) return 0;
+    // return 1 + Math.floor((nowMs - next) / WEEK_MS);
+    if (effectiveNowMs < next) return 0;
+    return 1 + Math.floor((effectiveNowMs - next) / WEEK_MS);
   }
 
   return 0;
@@ -467,7 +508,8 @@ function App() {
         [rawFull]: { // ✅ 저장 키를 rawFull로 통일 (UI의 scores[targetName]과 동일)
           combatPower: j.combat_power ?? 0,
           combatScore: j.combat_score ?? 0,
-          updatedAt: Date.now(),
+          // updatedAt: Date.now(),
+          updatedAt: getNowMs(),
           portrait: j?.raw?.avatar_url ?? null,
           job: j?.raw?.job ?? null,
           level: j?.raw?.level ?? null,
@@ -658,8 +700,9 @@ function App() {
 
   useEffect(() => {
     const checkReset = () => {
-      const now = new Date();
-      const currentTime = now.getTime();
+      // const now = new Date();
+      // const currentTime = now.getTime();
+      const currentTime = getNowMs();
       let totalChanged = false;
 
       setHomeworks(prev => {
@@ -679,11 +722,18 @@ function App() {
 
             const lastUpdate = newLastUpdated[targetName];
 
-            // ✅ 1) lastUpdated 없으면 기준 찍어줌 (그래야 다음부터 정상 동작)
+            // ✅ 1) lastUpdated가 없으면 "안전 복구" (리셋/회복 판정이 영원히 안 막히게)
             if (!lastUpdate) {
-              if (newCounts[targetName] === undefined || newCounts[targetName] === "") {
+              const hasCount = newCounts[targetName] !== undefined && newCounts[targetName] !== "";
+
+              // reset / recovery는 기준시각이 없으면 우선 max로 복구하는 게 안전
+              if (hw.resetType === "reset" || hw.resetType === "recovery") {
                 newCounts[targetName] = hw.max;
+              } else {
+                // 혹시 다른 타입이면 기존값 있으면 유지, 없으면 max
+                if (!hasCount) newCounts[targetName] = hw.max;
               }
+
               newLastUpdated[targetName] = currentTime;
               hwChanged = true;
               return;
@@ -949,7 +999,8 @@ function App() {
         return {
           ...hw,
           counts: { ...(hw.counts || {}), [targetName]: next },
-          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: Date.now() }
+          // lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: Date.now() }
+          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() }
         };
       }
 
@@ -974,7 +1025,8 @@ function App() {
       return {
         ...hw,
         counts: { ...(hw.counts || {}), [targetName]: next },
-        lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: Date.now() }
+        // lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: Date.now() }
+        lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() }
       };
     }));
   };
@@ -1615,7 +1667,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-17 20:42
+              업데이트 : 2026-02-17 22:49
             </div>
           </div>
 
