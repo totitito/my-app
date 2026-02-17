@@ -246,22 +246,19 @@ const dailyBoundaryIndex = (ms, resetHourKST) => {
 const nextWeeklyResetAfterKST = (lastMs, resetDay, resetHour) => {
   const lastKst = new Date(lastMs + KST_OFFSET_MS);
 
-  // KST 기준 "오늘 resetHour:00"
+  // ✅ "KST 시각"을 다룰 땐 UTC 메서드만 써서(환경 타임존 영향 제거)
   const candKst = new Date(lastKst);
-  candKst.setHours(resetHour ?? 0, 0, 0, 0);
+  candKst.setUTCHours(resetHour ?? 0, 0, 0, 0);
 
-  // 오늘 요일(0=일~6=토) in KST
-  const curDow = candKst.getDay();
+  const curDow = candKst.getUTCDay();      // 0=일~6=토
   const targetDow = resetDay ?? 0;
 
-  // 이번 주의 resetDay로 이동
   let diff = (targetDow - curDow + 7) % 7;
-  candKst.setDate(candKst.getDate() + diff);
+  candKst.setUTCDate(candKst.getUTCDate() + diff);
 
-  // lastMs 이후여야 "다음 리셋"이므로, 같거나 이전이면 7일 뒤
   const candMs = candKst.getTime() - KST_OFFSET_MS;
   if (candMs <= lastMs) {
-    candKst.setDate(candKst.getDate() + 7);
+    candKst.setUTCDate(candKst.getUTCDate() + 7);
   }
 
   return candKst.getTime() - KST_OFFSET_MS;
@@ -1618,7 +1615,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-13 13:12
+              업데이트 : 2026-02-17 20:42
             </div>
           </div>
 
