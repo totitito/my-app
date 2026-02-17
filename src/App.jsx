@@ -349,17 +349,23 @@ const countOddEnergyTicks = (lastMs, nowMs, resetHoursKST) => {
 
   // 00:00 KST로 정규화
   const start = new Date(lastKst);
-  start.setHours(0, 0, 0, 0);
+  // start.setHours(0, 0, 0, 0);
+  start.setUTCHours(0, 0, 0, 0);
 
   const end = new Date(nowKst);
-  end.setHours(0, 0, 0, 0);
+  // end.setHours(0, 0, 0, 0);
+  end.setUTCHours(0, 0, 0, 0);
 
   let ticks = 0;
 
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    const y = d.getFullYear();
-    const m = d.getMonth();
-    const day = d.getDate();
+  // for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+  //   const y = d.getFullYear();
+  //   const m = d.getMonth();
+  //   const day = d.getDate();
+  for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+    const y = d.getUTCFullYear();
+    const m = d.getUTCMonth();
+    const day = d.getUTCDate();
 
     for (const h of hours) {
       // KST (y,m,day,h:00) -> UTC ms 로 변환
@@ -369,6 +375,15 @@ const countOddEnergyTicks = (lastMs, nowMs, resetHoursKST) => {
   }
 
   return ticks;
+};
+
+const getOddEnergyDisplay = (storedVal, lastMs, nowMs, hw) => {
+  const base = Number.isFinite(Number(storedVal)) ? Number(storedVal) : hw.max;
+  const last = Number.isFinite(Number(lastMs)) ? Number(lastMs) : nowMs;
+
+  const ticks = countOddEnergyTicks(last, nowMs, hw.resetTime);
+  const gain = ticks * (hw.recoveryAmount || 0); // 보통 15
+  return Math.min(hw.max, base + gain);
 };
 
 function App() {
@@ -434,7 +449,7 @@ function App() {
 
       // 바뀐게 있을 때만 저장
       if (JSON.stringify(prev) !== JSON.stringify(next)) {
-        localStorage.setItem("all-homeworks", JSON.stringify(next)); // ✅ 네가 쓰는 저장키로 맞춰
+        localStorage.setItem(`homeworks-${game}`, JSON.stringify(next));
       }
       return next;
     });
@@ -448,7 +463,7 @@ function App() {
       // 🔧 바뀐 게 있을 때만 저장/반영
       const changed = JSON.stringify(prev) !== JSON.stringify(next);
       if (changed) {
-        localStorage.setItem("all-homeworks", JSON.stringify(next)); // 네가 쓰는 키에 맞춰
+        localStorage.setItem(`homeworks-${game}`, JSON.stringify(next));
       }
       return next;
     });
@@ -730,46 +745,69 @@ function App() {
           targets.forEach(t => {
             const targetName = (typeof t === "object" && t !== null) ? t.name : t;
 
-            const lastUpdate = newLastUpdated[targetName];
+            // const lastUpdate = newLastUpdated[targetName];
+            const lastUpdateRaw = newLastUpdated[targetName];
+            const lastUpdate = Number(lastUpdateRaw);
 
-            // ✅ 1) lastUpdated가 없으면 "안전 복구" (리셋/회복 판정이 영원히 안 막히게)
-            if (!lastUpdate) {
+            // if (!Number.isFinite(lastUpdate)) {
+            //   // ✅ 오드에너지는 lastUpdated가 깨졌을 때 덮어써서 틱을 날리면 항상 오차가 누적됨
+            //   if (hw.id === "aion2-odd-energy") {
+            //     // lastUpdated가 없으면 복구 불가능이라 "기준만 찍고" 카운트는 건드리지 않음
+            //     newLastUpdated[targetName] = currentTime;
+            //     hwChanged = true;
+            //     return;
+            //   }
+
+            //   // ✅ (오드에너지 외) 기존 로직은 그대로
+            //   const hasCount = newCounts[targetName] !== undefined && newCounts[targetName] !== "";
+            //   if (!hasCount) newCounts[targetName] = hw.max;
+            //   newLastUpdated[targetName] = currentTime;
+            //   hwChanged = true;
+            //   return;
+            // }
+
+            if (!Number.isFinite(lastUpdate)) {
+              if (hw.id === "aion2-odd-energy") return; // ✅ 그냥 건드리지 말고 넘어감
+
               const hasCount = newCounts[targetName] !== undefined && newCounts[targetName] !== "";
-
-              // reset / recovery는 기준시각이 없으면 우선 max로 복구하는 게 안전
-              if (hw.resetType === "reset" || hw.resetType === "recovery") {
-                newCounts[targetName] = hw.max;
-              } else {
-                // 혹시 다른 타입이면 기존값 있으면 유지, 없으면 max
-                if (!hasCount) newCounts[targetName] = hw.max;
-              }
-
+              if (!hasCount) newCounts[targetName] = hw.max;
               newLastUpdated[targetName] = currentTime;
               hwChanged = true;
               return;
             }
 
             // ✅ 2) 오드에너지는 별도 계산
-            if (hw.id === "aion2-odd-energy") {
-              const ticks = countOddEnergyTicks(lastUpdate, currentTime, hw.resetTime);
+            // if (hw.id === "aion2-odd-energy") {
+            //   console.log("[ODD-BEFORE]", targetName, "raw=", newLastUpdated[targetName], "num=", lastUpdate, "now=", currentTime);
+              
+            //   if (!Number.isFinite(lastUpdate)) {
+            //     console.log("[ODD-INVALID-LAST]", targetName);
+            //     return;
+            //   }
 
-              if (ticks > 0) {
-                const currentVal =
-                  newCounts[targetName] !== undefined && newCounts[targetName] !== ""
-                    ? Number(newCounts[targetName])
-                    : hw.max;
+            //   const ticks = countOddEnergyTicks(lastUpdate, currentTime, hw.resetTime);
 
-                newCounts[targetName] = Math.min(
-                  hw.max,
-                  currentVal + ticks * (hw.recoveryAmount || 0)
-                );
+            //   if (ticks > 0) {
+            //     const currentVal =
+            //       newCounts[targetName] !== undefined && newCounts[targetName] !== ""
+            //         ? Number(newCounts[targetName])
+            //         : hw.max;
 
-                newLastUpdated[targetName] = currentTime;
-                hwChanged = true;
-              }
+            //     newCounts[targetName] = Math.min(
+            //       hw.max,
+            //       currentVal + ticks * (hw.recoveryAmount || 0)
+            //     );
 
-              return;
-            }
+            //     newLastUpdated[targetName] = currentTime;
+            //     hwChanged = true;
+            //   }
+
+            //   console.log("[ODD-TICKS]", targetName, "ticks=", ticks);
+
+            //   return;
+            // }
+
+            if (hw.id === "aion2-odd-energy") return; // ✅ 오드에너지는 표시에서만 회복 계산
 
             // ✅ 3) 나머지 기존 로직
             const passCount = passedCycles(lastUpdate, currentTime, hw);
@@ -983,6 +1021,8 @@ function App() {
     setHomeworks(prev => prev.map(hw => {
       if (hw.id !== id) return hw;
 
+      const isOddEnergy = id === "aion2-odd-energy";
+
       const curRaw =
         hw.counts && hw.counts[targetName] !== undefined ? hw.counts[targetName] : hw.max;
 
@@ -1009,8 +1049,9 @@ function App() {
         return {
           ...hw,
           counts: { ...(hw.counts || {}), [targetName]: next },
-          // lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: Date.now() }
-          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() }
+          ...(isOddEnergy
+              ? {}
+              : { lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() } })
         };
       }
 
@@ -1035,9 +1076,11 @@ function App() {
       return {
         ...hw,
         counts: { ...(hw.counts || {}), [targetName]: next },
-        // lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: Date.now() }
-        lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() }
+        ...(isOddEnergy
+            ? {}
+            : { lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() } })
       };
+
     }));
   };
 
@@ -1554,7 +1597,14 @@ function App() {
                     {allFiltered.map(hw => {
                       if (hiddenHomeworks.includes(hw.name)) return null;
 
-                      const val = (hw.counts && hw.counts[targetName] !== undefined) ? hw.counts[targetName] : hw.max;
+                      const stored = hw.counts?.[targetName];
+                      const lastMs = hw.lastUpdated?.[targetName];
+
+                      const val =
+                        hw.id === "aion2-odd-energy"
+                          ? getOddEnergyDisplay(stored, lastMs, getNowMs(), hw)
+                          : (stored !== undefined && stored !== "" ? Number(stored) : hw.max);
+
                       const isExcluded = !!(hw.excluded && hw.excluded[targetName]);
                       const isPending = val > 0 && !isExcluded;
 
@@ -1677,7 +1727,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-18 06:16
+              업데이트 : 2026-02-18 07:15
             </div>
           </div>
 
