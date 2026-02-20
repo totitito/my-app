@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 
 const LS_KEY = "aion2-raid-party-builder-v1";
 
+const AION2_CLASSES = ["수호성", "검성", "살성", "궁성", "마도성", "정령성", "호법성", "치유성"];
+
 const defaultState = {
   candidates: [
     // 예시(원하면 지워도 됨)
@@ -122,6 +124,21 @@ export default function Aion2_RaidPartyBuilder() {
     setState((prev) => ({
       ...prev,
       slots: Array.from({ length: 8 }, () => null),
+    }));
+  };
+
+  const cycleCandidateCls = (candidateId, dir = 1) => {
+    setState((prev) => ({
+      ...prev,
+      candidates: prev.candidates.map((c) => {
+        if (c.id !== candidateId) return c;
+
+        const idx = AION2_CLASSES.indexOf(c.cls);
+        const safeIdx = idx === -1 ? 0 : idx;
+        const nextIdx = (safeIdx + dir + AION2_CLASSES.length) % AION2_CLASSES.length;
+
+        return { ...c, cls: AION2_CLASSES[nextIdx] };
+      }),
     }));
   };
 
@@ -257,23 +274,8 @@ export default function Aion2_RaidPartyBuilder() {
 
   // --- 후보 추가/편집
   const [newName, setNewName] = useState("");
-  const [newCls, setNewCls] = useState("딜");
-
-  // const addCandidate = () => {
-  //   const name = newName.trim();
-  //   if (!name) return;
-  //   setState((prev) => ({
-  //     ...prev,
-  //     candidates: [...prev.candidates, { 
-  //       id: crypto.randomUUID(), 
-  //       name, 
-  //       cls: newCls,
-  //       power: 3000, // 임시
-  //       atool: 50000, // 임시
-  //     }],
-  //   }));
-  //   setNewName("");
-  // };
+  const [newCls, setNewCls] = useState("궁성");
+  
   const addCandidate = async () => {
     const name = (newName || "").trim();
     if (!name) return;
@@ -775,12 +777,22 @@ const moveCandidateTo = (id, toIndex) => {
                       <span style={{ color: "#000000", fontWeight: "bold" }}>
                         {c.name}
                       </span>
-                      <span style={clsBadgeStyle(c.cls)}>{c.cls}</span>
-                      {/* {assignedLabel && (
-                        <span style={{ fontSize: 12, color: "#9ad" }}>
-                          ({assignedLabel} 배치됨)
-                        </span>
-                      )} */}
+                      {/* <span style={clsBadgeStyle(c.cls)}>{c.cls}</span> */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();      // 드래그/드롭에 영향 안 주게
+                          cycleCandidateCls(c.id, e.shiftKey ? -1 : 1);
+                        }}
+                        style={{
+                          ...clsBadgeStyle(c.cls),
+                          cursor: "pointer",
+                          border: "none",
+                        }}
+                        title="클릭해서 직업 변경"
+                      >
+                        {c.cls}
+                      </button>
                     </div>
 
                     <div style={{ marginTop: 6, fontSize: 12 }}>
