@@ -7,17 +7,17 @@ const AION2_CLASSES = ["수호성", "검성", "살성", "궁성", "마도성", "
 const defaultState = {
   candidates: [
     // 예시(원하면 지워도 됨)
-    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성", power: 0, atool: 0, updateAt: 0 },
-    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성", power: 0, atool: 0, updateAt: 0 },
-    // { id: crypto.randomUUID(), name: "탱아저씨", cls: "수호성", power: 0, atool: 0, updateAt: 0 },
-    // { id: crypto.randomUUID(), name: "엄마손", cls: "치유성", power: 0, atool: 0, updateAt: 0 },
-    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성", power: 0, atool: 0, updateAt: 0 },
-    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성", power: 0, atool: 0, updateAt: 0 },
-    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성", power: 0, atool: 0, updateAt: 0 },
-    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성", power: 0, atool: 0, updateAt: 0 },
-    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성", power: 0, atool: 0, updateAt: 0 },
-    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성", power: 0, atool: 0, updateAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성", power: 3195, atool: 50419, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성", power: 3107, atool: 31198, updateAt: 0 },
+    // { id: crypto.randomUUID(), name: "탱아저씨", cls: "수호성", power: 2623, atool: 8648, updateAt: 0 },
+    // { id: crypto.randomUUID(), name: "엄마손", cls: "치유성", power: 1717, atool: 2745, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성", power: 3450, atool: 92417, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성", power: 2624, atool: 9266, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성", power: 3281, atool: 65898, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성", power: 3137, atool: 35057, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성", power: 3113, atool: 39337, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성", power: 3292, atool: 70719, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성", power: 3168, atool: 50540, updateAt: 0 },
   ],
   slots: Array.from({ length: 8 }, () => null), // slot -> candidateId or null
 };
@@ -274,7 +274,7 @@ export default function Aion2_RaidPartyBuilder() {
 
   // --- 후보 추가/편집
   const [newName, setNewName] = useState("");
-  const [newCls, setNewCls] = useState("궁성");
+  const [newCls, setNewCls] = useState("수호성");
   
   const addCandidate = async () => {
     const name = (newName || "").trim();
