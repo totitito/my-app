@@ -85,7 +85,7 @@ const clsBadgeStyle = (cls) => {
   };
   if (cls === "수호성") return { ...base, background: "rgb(23, 19, 244)", color: "rgb(255, 255, 255)" };
   if (cls === "검성") return { ...base, background: "rgb(128, 0, 255)", color: "rgb(255, 255, 255)" };
-  if (cls === "살성") return { ...base, background: "rgb(255, 0, 0)" };
+  if (cls === "살성") return { ...base, background: "rgb(255, 0, 0)", color: "rgb(255, 255, 255)" };
   if (cls === "궁성") return { ...base, background: "rgb(255, 128, 0)" };
   if (cls === "마도성") return { ...base, background: "rgb(255, 0, 255)" };
   if (cls === "정령성") return { ...base, background: "rgb(0, 255, 255)" };
