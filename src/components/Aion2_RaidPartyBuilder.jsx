@@ -98,7 +98,7 @@ const fetchScoreAndApply = async (fullName, candidateId) => {
     const match = rawFull.match(/^(.+?)\[(.+?)\]$/);
 
     let charName = rawFull;
-    let server_id = 1016; // 바카르마 기본값
+    let server_id = 1016;
 
     if (match) {
       charName = match[1].trim();
@@ -113,16 +113,13 @@ const fetchScoreAndApply = async (fullName, candidateId) => {
       body: JSON.stringify({ keyword: charName, server_id }),
     });
 
-    if (!r.ok) {
-      const text = await r.text().catch(() => "");
-      throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
-    }
+    if (!r.ok) throw new Error("API 요청 실패");
 
     const j = await r.json();
 
-    setState((prev) => ({
-      ...prev,
-      candidates: prev.candidates.map((c) => {
+    // ✅ 여기만 다름
+    setCandidates((prev) =>
+      prev.map((c) => {
         if (c.id !== candidateId) return c;
         return {
           ...c,
@@ -130,8 +127,8 @@ const fetchScoreAndApply = async (fullName, candidateId) => {
           atool: j.combat_score ?? 0,
           updatedAt: Date.now(),
         };
-      }),
-    }));
+      })
+    );
   } catch (e) {
     console.error("전투력 갱신 실패:", e);
     alert("전투력 갱신 실패: " + e.message);
