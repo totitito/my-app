@@ -458,34 +458,48 @@ const moveCandidateTo = (id, toIndex) => {
         {/* 좌: 파티(8 슬롯) */}
         {/* 왼쪽 레이드 파티 구성 패널 크기 조정 */}
         <div style={{ ...panelStyle, width: 800, flex: "0 0 800px", minWidth: 800, boxSizing: "border-box" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-            <div style={{ fontWeight: "bold", color: "#ddd" }}>성역 파티 구성(임시) — 2파티/8인</div>
-            <button
-              onClick={clearSlotsOnly}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 10,
-                border: "1px solid #555",
-                background: "#222",
-                color: "#ddd",
-                cursor: "pointer",
-              }}
-            >
-              전체 비우기
-            </button>
-            <button
-              onClick={resetAll}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 10,
-                border: "1px solid #555",
-                background: "#222",
-                color: "#ddd",
-                cursor: "pointer",
-              }}
-            >
-              초기화
-            </button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 10,
+            }}
+          >
+            <div style={{ fontWeight: "bold", color: "#ddd" }}>
+              성역 파티 구성(임시) — 2파티/8인
+            </div>
+
+            {/* ✅ 버튼 묶음 */}
+            <div style={{ display: "flex", gap: 8 }}>
+              <button
+                onClick={clearSlotsOnly}
+                style={{
+                  padding: "6px 10px",
+                  borderRadius: 10,
+                  border: "1px solid #555",
+                  background: "#222",
+                  color: "#ddd",
+                  cursor: "pointer",
+                }}
+              >
+                전체 비우기
+              </button>
+
+              <button
+                onClick={resetAll}
+                style={{
+                  padding: "6px 10px",
+                  borderRadius: 10,
+                  border: "1px solid #555",
+                  background: "#222",
+                  color: "#ddd",
+                  cursor: "pointer",
+                }}
+              >
+                초기화
+              </button>
+            </div>
           </div>
 
           {warningText.length > 0 && (
