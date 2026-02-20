@@ -108,6 +108,23 @@ export default function Aion2_RaidPartyBuilder() {
 
   const { candidates, slots } = state;
 
+  // ✅ 슬롯 1칸 비우기 (슬롯->후보군으로 드롭할 때 사용)
+  const clearSlot = (slotIndex) => {
+    setState((prev) => {
+      const next = { ...prev, slots: [...prev.slots] };
+      next.slots[slotIndex] = null;
+      return next;
+    });
+  };
+
+  // ✅ 전체 비우기 (슬롯 8칸만 비움. candidates/전투력/아툴 유지)
+  const clearAllSlots = () => {
+    setState((prev) => ({
+      ...prev,
+      slots: Array.from({ length: 8 }, () => null),
+    }));
+  };
+
   const fetchScoreAndApply = async (fullName, candidateId) => {
     try {
       const rawFull = (fullName || "").trim();
@@ -133,13 +150,6 @@ export default function Aion2_RaidPartyBuilder() {
         const text = await r.text().catch(() => "");
         throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
       }
-
-      const clearSlotsOnly = () => {
-        setState((prev) => ({
-          ...prev,
-          slots: Array.from({ length: 8 }, () => null),
-        }));
-      };
 
       const j = await r.json();
 
@@ -205,14 +215,6 @@ export default function Aion2_RaidPartyBuilder() {
       if (alreadyAt !== -1) next.slots[alreadyAt] = null;
 
       next.slots[slotIndex] = candId;
-      return next;
-    });
-  };
-
-  const clearSlotsOnly = (slotIndex) => {
-    setState((prev) => {
-      const next = { ...prev, slots: [...prev.slots] };
-      next.slots[slotIndex] = null;
       return next;
     });
   };
@@ -473,7 +475,7 @@ const moveCandidateTo = (id, toIndex) => {
             {/* ✅ 버튼 묶음 */}
             <div style={{ display: "flex", gap: 8 }}>
               <button
-                onClick={clearSlotsOnly}
+                onClick={clearAllSlots}
                 style={{
                   padding: "6px 10px",
                   borderRadius: 10,
