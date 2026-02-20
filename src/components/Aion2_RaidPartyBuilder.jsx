@@ -5,17 +5,17 @@ const LS_KEY = "aion2-raid-party-builder-v1";
 const defaultState = {
   candidates: [
     // 예시(원하면 지워도 됨)
-    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성" },
-    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성" },
-    // { id: crypto.randomUUID(), name: "탱아저씨", cls: "수호성" },
-    // { id: crypto.randomUUID(), name: "엄마손", cls: "치유성" },
-    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성" },
-    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성" },
-    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성" },
-    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성" },
-    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성" },
-    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성" },
-    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성" },
+    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성", power: 0, atool: 0, updateAt: 0 },
+    // { id: crypto.randomUUID(), name: "탱아저씨", cls: "수호성", power: 0, atool: 0, updateAt: 0 },
+    // { id: crypto.randomUUID(), name: "엄마손", cls: "치유성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성", power: 0, atool: 0, updateAt: 0 },
+    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성", power: 0, atool: 0, updateAt: 0 },
   ],
   slots: Array.from({ length: 8 }, () => null), // slot -> candidateId or null
 };
@@ -92,49 +92,6 @@ const clsBadgeStyle = (cls) => {
   return base;
 };
 
-const fetchScoreAndApply = async (fullName, candidateId) => {
-  try {
-    const rawFull = (fullName || "").trim();
-    const match = rawFull.match(/^(.+?)\[(.+?)\]$/);
-
-    let charName = rawFull;
-    let server_id = 1016;
-
-    if (match) {
-      charName = match[1].trim();
-      const serverAbbr = match[2].trim();
-      const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
-      server_id = serverMap[serverAbbr] || 1016;
-    }
-
-    const r = await fetch("/api/aion2-search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ keyword: charName, server_id }),
-    });
-
-    if (!r.ok) throw new Error("API 요청 실패");
-
-    const j = await r.json();
-
-    // ✅ 여기만 다름
-    setCandidates((prev) =>
-      prev.map((c) => {
-        if (c.id !== candidateId) return c;
-        return {
-          ...c,
-          power: j.combat_power ?? 0,
-          atool: j.combat_score ?? 0,
-          updatedAt: Date.now(),
-        };
-      })
-    );
-  } catch (e) {
-    console.error("전투력 갱신 실패:", e);
-    alert("전투력 갱신 실패: " + e.message);
-  }
-};
-
 export default function Aion2_RaidPartyBuilder() {
   const [state, setState] = useState(() => {
     try {
@@ -150,6 +107,53 @@ export default function Aion2_RaidPartyBuilder() {
   });
 
   const { candidates, slots } = state;
+
+  const fetchScoreAndApply = async (fullName, candidateId) => {
+    try {
+      const rawFull = (fullName || "").trim();
+      const match = rawFull.match(/^(.+?)\[(.+?)\]$/);
+
+      let charName = rawFull;
+      let server_id = 1016; // 바카르마 기본값
+
+      if (match) {
+        charName = match[1].trim();
+        const serverAbbr = match[2].trim();
+        const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
+        server_id = serverMap[serverAbbr] || 1016;
+      }
+
+      const r = await fetch("/api/aion2-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyword: charName, server_id }),
+      });
+
+      if (!r.ok) {
+        const text = await r.text().catch(() => "");
+        throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
+      }
+
+      const j = await r.json();
+
+      // ✅ 너는 통합 state 구조라서 setState로 candidates만 갱신해야 함
+      setState((prev) => ({
+        ...prev,
+        candidates: prev.candidates.map((c) => {
+          if (c.id !== candidateId) return c;
+          return {
+            ...c,
+            power: j.combat_power ?? 0,
+            atool: j.combat_score ?? 0,
+            updatedAt: Date.now(),
+          };
+        }),
+      }));
+    } catch (e) {
+      console.error("전투력 갱신 실패:", e);
+      alert("전투력 갱신 실패: " + e.message);
+    }
+  };
 
   useEffect(() => {
     try {
