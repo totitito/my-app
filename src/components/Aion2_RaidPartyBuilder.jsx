@@ -134,6 +134,13 @@ export default function Aion2_RaidPartyBuilder() {
         throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
       }
 
+      const clearSlotsOnly = () => {
+        setState((prev) => ({
+          ...prev,
+          slots: Array.from({ length: 8 }, () => null),
+        }));
+      };
+
       const j = await r.json();
 
       // ✅ 너는 통합 state 구조라서 setState로 candidates만 갱신해야 함
@@ -453,6 +460,19 @@ const moveCandidateTo = (id, toIndex) => {
         <div style={{ ...panelStyle, width: 800, flex: "0 0 800px", minWidth: 800, boxSizing: "border-box" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <div style={{ fontWeight: "bold", color: "#ddd" }}>성역 파티 구성(임시) — 2파티/8인</div>
+            <button
+              onClick={clearSlotOnly}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 10,
+                border: "1px solid #555",
+                background: "#222",
+                color: "#ddd",
+                cursor: "pointer",
+              }}
+            >
+              전체 비우기
+            </button>
             <button
               onClick={resetAll}
               style={{
