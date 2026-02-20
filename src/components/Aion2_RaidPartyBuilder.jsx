@@ -209,7 +209,7 @@ export default function Aion2_RaidPartyBuilder() {
     });
   };
 
-  const clearSlot = (slotIndex) => {
+  const clearSlotsOnly = (slotIndex) => {
     setState((prev) => {
       const next = { ...prev, slots: [...prev.slots] };
       next.slots[slotIndex] = null;
@@ -461,7 +461,7 @@ const moveCandidateTo = (id, toIndex) => {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <div style={{ fontWeight: "bold", color: "#ddd" }}>성역 파티 구성(임시) — 2파티/8인</div>
             <button
-              onClick={clearSlotOnly}
+              onClick={clearSlotsOnly}
               style={{
                 padding: "6px 10px",
                 borderRadius: 10,
