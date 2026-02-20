@@ -207,6 +207,26 @@ export default function Aion2_RaidPartyBuilder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const commitCandidateName = (candidateId, nextName) => {
+    const trimmed = (nextName || "").trim();
+    if (!trimmed) return; // 빈값 저장 방지
+
+    setState((prev) => ({
+      ...prev,
+      candidates: prev.candidates.map((c) =>
+        c.id === candidateId ? { ...c, name: trimmed } : c
+      ),
+    }));
+
+    setEditingId(null);
+    setEditingName("");
+  };
+
+  const cancelEditName = () => {
+    setEditingId(null);
+    setEditingName("");
+  };
+
   // --- 드래그 데이터 포맷: "CAND:<id>" or "SLOT:<index>"
   const onDragStartCandidate = (e, candId) => {
     e.dataTransfer.setData("text/plain", `CAND:${candId}`);
@@ -275,6 +295,9 @@ export default function Aion2_RaidPartyBuilder() {
   // --- 후보 추가/편집
   const [newName, setNewName] = useState("");
   const [newCls, setNewCls] = useState("수호성");
+
+  const [editingId, setEditingId] = useState(null);   // 현재 편집중인 candidate id
+  const [editingName, setEditingName] = useState(""); // 편집중 입력값
   
   const addCandidate = async () => {
     const name = (newName || "").trim();
@@ -774,9 +797,47 @@ const moveCandidateTo = (id, toIndex) => {
                   {/* ✅ 2. 가운데 : 캐릭 정보 */}
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                      <span style={{ color: "#000000", fontWeight: "bold" }}>
-                        {c.name}
-                      </span>
+                      {editingId === c.id ? (
+                        <input
+                          autoFocus
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
+                          onClick={(e) => e.stopPropagation()}  // 드래그 방지
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") commitCandidateName(c.id, editingName);
+                            if (e.key === "Escape") cancelEditName();
+                          }}
+                          onBlur={() => commitCandidateName(c.id, editingName)}
+                          style={{
+                            width: 160,
+                            padding: "4px 8px",
+                            borderRadius: 8,
+                            border: "1px solid #333",
+                            background: "rgba(0,0,0,0.35)",
+                            color: "#fff",
+                            fontWeight: "bold",
+                            outline: "none",
+                          }}
+                          title="Enter: 저장 / Esc: 취소"
+                        />
+                      ) : (
+                        <span
+                          onClick={(e) => {
+                            e.stopPropagation(); // 드래그 시작 방지
+                            setEditingId(c.id);
+                            setEditingName(c.name || "");
+                          }}
+                          style={{
+                            color: "#111",            // 네 카드 배경이 밝아서 글씨 어둡게 쓰는 중이었지? 필요하면 "#eee"로
+                            fontWeight: "bold",
+                            cursor: "text",
+                            userSelect: "none",
+                          }}
+                          title="클릭해서 닉네임 수정"
+                        >
+                          {c.name}
+                        </span>
+                      )}
                       {/* <span style={clsBadgeStyle(c.cls)}>{c.cls}</span> */}
                       <button
                         type="button"
