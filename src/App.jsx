@@ -3,6 +3,7 @@ import "./App.css";
 
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
 import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
+import Aion2_RaidPartyBuilder from "./components/Aion2_RaidPartyBuilder";
 
 import aion2Icon from "./assets/gameicons/aion2.png";
 import lostarkIcon from "./assets/gameicons/lostark.png";
@@ -1723,7 +1724,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-18 07:22
+              업데이트 : 2026-02-20 12:04
             </div>
           </div>
 
@@ -1820,6 +1821,18 @@ function App() {
                     스킬
                   </button>
 
+                  <button
+                    onClick={() => setViewMode("aion2_party")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_party" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_party" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_party" ? "bold" : "normal",
+                    }}
+                  >
+                    파티/레이드
+                  </button>
+
                   {/* <button
                     onClick={() => setViewMode("aion2_arcana")}
                     style={{
@@ -1912,6 +1925,12 @@ function App() {
       {game === "aion2" && viewMode === "aion2_skill" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
           <Aion2_SkillPriorityTable />
+        </div>
+      )}
+
+      {game === "aion2" && viewMode === "aion2_party" && (
+        <div style={{ marginTop: 20, paddingTop: 12 }}>
+          <Aion2_RaidPartyBuilder />
         </div>
       )}
 
