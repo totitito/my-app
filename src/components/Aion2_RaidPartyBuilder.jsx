@@ -290,8 +290,8 @@ export default function Aion2_RaidPartyBuilder() {
           id: newId,
           name,
           cls: newCls,
-          power: 0,      // ✅ 여기
-          atool: 0,      // ✅ 여기
+          power: null,
+          atool: null,
           updatedAt: 0,
           portrait: null,
           job: null,
