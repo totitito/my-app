@@ -1333,9 +1333,12 @@ function App() {
                           fontSize: "12px",
                           // ⭐ 아래 4줄 추가: 글자가 길면 ...으로 표시해
                           width: "100%",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
+                          // whiteSpace: "nowrap",
+                          // overflow: "hidden",
+                          // textOverflow: "ellipsis"
+                          whiteSpace: "normal",
+                          overflow: "break-word",
+                          textOverflow: "anywhere"
                         }}
                         title={hw.name} // ⭐ 마우스 올리면 전체 이름이 툴팁으로 떠
                       >
@@ -1724,7 +1727,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-20 17:30
+              업데이트 : 2026-02-24 09:46
             </div>
           </div>
 
