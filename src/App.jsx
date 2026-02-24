@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+import Aion2_ArcanaTable from "./components/Aion2_ArcanaTable";
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
 import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
 import Aion2_RaidPartyBuilder from "./components/Aion2_RaidPartyBuilder";
@@ -1727,7 +1728,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-24 09:46
+              업데이트 : 2026-02-24 17:00
             </div>
           </div>
 
@@ -1801,6 +1802,18 @@ function App() {
               {game === "aion2" && (
                 <>
                   <button
+                    onClick={() => setViewMode("aion2_arcana")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_arcana" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_arcana" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_arcana" ? "bold" : "normal",
+                    }}
+                  >
+                    아르카나
+                  </button>
+                  
+                  <button
                     onClick={() => setViewMode("aion2_soul")}
                     style={{
                       ...btnStyle,
@@ -1835,26 +1848,7 @@ function App() {
                   >
                     파티/레이드
                   </button>
-
-                  {/* <button
-                    onClick={() => setViewMode("aion2_arcana")}
-                    style={{
-                      ...btnStyle,
-                      backgroundColor: viewMode === "aion2_arcana" ? "#333" : "#1e1e1e",
-                      border: viewMode === "aion2_arcana" ? "1px solid #777" : "1px solid #444",
-                      fontWeight: viewMode === "aion2_arcana" ? "bold" : "normal",
-                    }}
-                  >
-                    아르카나
-                  </button> */}
-
-                  {/* <button 
-                    onClick={() => setViewMode("raid")} 
-                    style={{ ...tabBtnStyle, backgroundColor: viewMode === "raid" ? "#62dafb" : "#444" }}
-                  >
-                    레이드
-                  </button> */}
-
+              
                 </>
               )}
 
@@ -1919,6 +1913,12 @@ function App() {
         </>
       )}
 
+      {game === "aion2" && viewMode === "aion2_arcana" && (
+        <div style={{ marginTop: 20, paddingTop: 12 }}>
+          <Aion2_ArcanaTable />
+        </div>
+      )}
+
       {game === "aion2" && viewMode === "aion2_soul" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
           <Aion2_SoulEngravingTable />
@@ -1935,13 +1935,7 @@ function App() {
         <div style={{ marginTop: 20, paddingTop: 12 }}>
           <Aion2_RaidPartyBuilder />
         </div>
-      )}
-
-      {game === "aion2" && viewMode === "aion2_arcana" && (
-        <div style={{ marginTop: 12, padding: 12, border: "1px solid #444", borderRadius: 12, color: "#aaa" }}>
-          아르카나 화면(임시)
-        </div>
-      )}
+      )}      
 
     </div>
   );  

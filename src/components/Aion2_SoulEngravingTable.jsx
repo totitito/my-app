@@ -18,7 +18,7 @@ export default function SoulEngravingTable() {
     {
       tier: "SS",
       cells: {
-        w: [{ t: "전투속도", c: "red" }],
+        w: [{ t: "전투 속도", c: "red" }],
         h: [{ t: "공격력 증가", c: "red" }],
         s: [{ t: "치피증", c: "red" }],
         c: [{ t: "피증", c: "red" }],
@@ -49,7 +49,7 @@ export default function SoulEngravingTable() {
       tier: "A",
       cells: {
         w: [{ t: "피증" }, { t: "다단히트" }],
-        h: [{ t: "명중" }, { t: "받는 치유량", c: "blue" }],
+        h: [{ t: "받는 치유량", c: "blue" }, { t: "명중" }],
         s: [{ t: "명중" }],
         c: [{ t: "명중" }],
         p: [{ t: "명중" }],
@@ -69,7 +69,7 @@ export default function SoulEngravingTable() {
         c: [{ t: "공격력" }, { t: "치명타" }],
         p: [{ t: "공격력" }, { t: "치명타" }],
         g: [{ t: "공격력" }, { t: "치명타" }],
-        m: [{ t: "공격력" }, { t: "치명타" }, { t: "주요 패시브" }],
+        m: [{ t: "주요 패시브" }, { t: "공격력" }, { t: "치명타" }],
         sh: [{ t: "공격력" }, { t: "치명타" }],
       },
     },
@@ -128,7 +128,7 @@ export default function SoulEngravingTable() {
 			borderBottom: "1px solid #555",
 			padding: "10px 12px",
 			textAlign: "center",
-			verticalAlign: "top",
+			verticalAlign: "middle",
 			minWidth: 92,
 			background: "#111",
 			color: "#ddd",
