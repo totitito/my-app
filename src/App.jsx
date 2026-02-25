@@ -294,39 +294,43 @@ const nextWeeklyResetAfterKST = (lastMs, resetDay, resetHour) => {
 };
 
 const passedCycles = (lastMs, nowMs, hw) => {
-  const effectiveNowMs = nowMs;
-
   if (!lastMs) return 0;
-  if (hw.id === "aion2-odd-energy") return 0;
-  const resetHour = Array.isArray(hw.resetTime) ? hw.resetTime[0] : (hw.resetTime ?? 0);
 
+  // ✅ 하루 리셋
   if (hw.resetPeriod === "day") {
-    return dailyBoundaryIndex(effectiveNowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
+    // resetTime이 배열이면 '틱' 기준으로 카운트
+    if (Array.isArray(hw.resetTime)) {
+      return countTicksBetween(lastMs, nowMs, hw.resetTime);
+    }
+
+    // resetTime이 단일 hour면 기존 boundary 기준
+    const resetHour = hw.resetTime ?? 0;
+    return dailyBoundaryIndex(nowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
   }
 
+  // ✅ 주간 리셋 (보통 단일 hour만 사용)
   if (hw.resetPeriod === "week") {
+    const resetHour = Array.isArray(hw.resetTime) ? hw.resetTime[0] : (hw.resetTime ?? 0);
     const next = nextWeeklyResetAfterKST(lastMs, hw.resetDay ?? 0, resetHour);
-    if (effectiveNowMs < next) return 0;
-    return 1 + Math.floor((effectiveNowMs - next) / WEEK_MS);
+    if (nowMs < next) return 0;
+    return 1 + Math.floor((nowMs - next) / WEEK_MS);
   }
 
   return 0;
 };
 
-const countOddEnergyTicks = (lastMs, nowMs, resetHoursKST) => {
+const countTicksBetween = (lastMs, nowMs, resetHoursKST) => {
   if (!lastMs || !nowMs) return 0;
 
   const hours = (Array.isArray(resetHoursKST) ? resetHoursKST : [resetHoursKST])
-    .filter(h => Number.isFinite(h))
-    .map(h => Number(h));
+    .filter(h => Number.isFinite(Number(h)))
+    .map(Number);
 
   if (hours.length === 0) return 0;
 
-  // KST 기준 날짜 범위로 day 단위 순회 (하루 8틱이라 부담 거의 없음)
   const lastKst = new Date(lastMs + KST_OFFSET_MS);
   const nowKst  = new Date(nowMs + KST_OFFSET_MS);
 
-  // 00:00 KST로 정규화
   const start = new Date(lastKst);
   start.setUTCHours(0, 0, 0, 0);
 
@@ -341,8 +345,7 @@ const countOddEnergyTicks = (lastMs, nowMs, resetHoursKST) => {
     const day = d.getUTCDate();
 
     for (const h of hours) {
-      // KST (y,m,day,h:00) -> UTC ms 로 변환
-      const eventMs = Date.UTC(y, m, day, h - 9, 0, 0, 0);
+      const eventMs = Date.UTC(y, m, day, h - 9, 0, 0, 0); // KST h시 -> UTC ms
       if (eventMs > lastMs && eventMs <= nowMs) ticks++;
     }
   }
@@ -350,13 +353,24 @@ const countOddEnergyTicks = (lastMs, nowMs, resetHoursKST) => {
   return ticks;
 };
 
-const getOddEnergyDisplay = (storedVal, lastMs, nowMs, hw) => {
-  const base = Number.isFinite(Number(storedVal)) ? Number(storedVal) : hw.max;
-  const last = Number.isFinite(Number(lastMs)) ? Number(lastMs) : nowMs;
+const getDisplayVal = (storedVal, lastEditedMs, nowMs, hw) => {
+  if (hw.resetPeriod === "once") {
+    const v = Number(storedVal);
+    return Number.isFinite(v) ? v : hw.max;
+  }
 
-  const ticks = countOddEnergyTicks(last, nowMs, hw.resetTime);
-  const gain = ticks * (hw.recoveryAmount || 0); // 보통 15
-  return Math.min(hw.max, base + gain);
+  const base = Number.isFinite(Number(storedVal)) ? Number(storedVal) : hw.max;
+  if (!lastEditedMs) return base;
+
+  const last = Number(lastEditedMs);
+  const passCount = passedCycles(last, nowMs, hw);
+  if (passCount <= 0) return base;
+
+  if (hw.resetType === "reset") return hw.max;
+  if (hw.resetType === "recovery") {
+    return Math.min(hw.max, base + passCount * (hw.recoveryAmount || 0));
+  }
+  return base;
 };
 
 function App() {
@@ -701,74 +715,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const checkReset = () => {
-      const currentTime = getNowMs();
-      let totalChanged = false;
-
-      setHomeworks(prev => {
-        return prev.map(hw => {
-          if (hw.resetPeriod === 'once') return hw;
-
-          const targets = hw.scope === "account" ? accounts : characters;
-          const newCounts = { ...hw.counts };
-          const newLastUpdated = { ...(hw.lastUpdated || {}) };
-          let hwChanged = false;
-
-          // 리셋 시각 배열화
-          const resetTimes = Array.isArray(hw.resetTime) ? hw.resetTime : [hw.resetTime || 0];
-
-          targets.forEach(t => {
-            const targetName = (typeof t === "object" && t !== null) ? t.name : t;
-
-            const lastUpdateRaw = newLastUpdated[targetName];
-            const lastUpdate = Number(lastUpdateRaw);
-
-            if (!Number.isFinite(lastUpdate)) {
-              if (hw.id === "aion2-odd-energy") return; // ✅ 그냥 건드리지 말고 넘어감
-
-              const hasCount = newCounts[targetName] !== undefined && newCounts[targetName] !== "";
-              if (!hasCount) newCounts[targetName] = hw.max;
-              newLastUpdated[targetName] = currentTime;
-              hwChanged = true;
-              return;
-            }
-
-            if (hw.id === "aion2-odd-energy") return; // ✅ 오드에너지는 표시에서만 회복 계산
-
-            // ✅ 3) 나머지 기존 로직
-            const passCount = passedCycles(lastUpdate, currentTime, hw);
-
-            if (passCount > 0) {
-              const currentVal =
-                newCounts[targetName] !== undefined
-                  ? newCounts[targetName]
-                  : hw.max;
-
-              if (hw.resetType === "reset") {
-                newCounts[targetName] = hw.max;
-              } else if (hw.resetType === "recovery") {
-                newCounts[targetName] = Math.min(
-                  hw.max,
-                  currentVal + passCount * (hw.recoveryAmount || 0)
-                );
-              }
-
-              newLastUpdated[targetName] = currentTime;
-              hwChanged = true;
-            }
-          });
-
-          return hwChanged ? { ...hw, counts: newCounts, lastUpdated: newLastUpdated } : hw;
-        });
-      });
-    };
-
-    const timer = setInterval(checkReset, 60000);
-    checkReset();
-    return () => clearInterval(timer);
-  }, [accounts, characters, game]);
-
   const btnStyle = { backgroundColor: "#444", color: "#fff", border: "1px solid #666", padding: "4px 8px", cursor: "pointer" };
 
   const exportData = () => {
@@ -1052,10 +998,13 @@ function App() {
 
       next = Math.max(0, Math.min(hw.max ?? Infinity, next));
 
+      const now = getNowMs();
+
       return {
         ...hw,
         counts: { ...(hw.counts || {}), [targetName]: next },
-        lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() }
+        lastEdited:  { ...(hw.lastEdited  || {}), [targetName]: now },
+        lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: now }, // ✅ 추가
       };
 
     }));
@@ -1111,17 +1060,12 @@ function App() {
       weekly: "Weekly",
     };
 
-    // 4. 날짜 양식 (연도 제외 오더 반영)
     const formatDate = (ts) => {
       if (!ts) return "기록 없음";
-      const d = new Date(ts);
-      const month = d.getMonth() + 1; // 0 붙이지 않음
-      const date = d.getDate();       // 0 붙이지 않음
-      const hours = String(d.getHours()).padStart(2, '0');   // 항상 두 자리
-      const minutes = String(d.getMinutes()).padStart(2, '0'); // 항상 두 자리
-      
-      return `${month}/${date} ${hours}:${minutes}`;
+      return fmtKST(Number(ts));
     };
+
+    const nowMs = getNowMs();
 
     return (
       <div style={{ 
@@ -1617,12 +1561,8 @@ function App() {
                       if (hiddenHomeworks.includes(hw.name)) return null;
 
                       const stored = hw.counts?.[targetName];
-                      const lastMs = hw.lastUpdated?.[targetName];
-
-                      const val =
-                        hw.id === "aion2-odd-energy"
-                          ? getOddEnergyDisplay(stored, lastMs, getNowMs(), hw)
-                          : (stored !== undefined && stored !== "" ? Number(stored) : hw.max);
+                      const editedMs = hw.lastEdited?.[targetName] ?? hw.lastUpdated?.[targetName];
+                      const val = getDisplayVal(stored, editedMs, nowMs, hw);
 
                       const isExcluded = !!(hw.excluded && hw.excluded[targetName]);
                       const isPending = val > 0 && !isExcluded;
@@ -1644,8 +1584,7 @@ function App() {
                             <>
                               {/* 1. 숙제 갱신 일자: 상단으로 이동 */}
                               <div style={{ fontSize: "10px", color: "#777", marginBottom: isCollapsed ? "2px" : "6px", minHeight: "12px" }}>
-                                {/* {formatDate(hw.lastUpdated?.[targetName])} */}
-                                {formatDate(hw.lastEdited?.[targetName])}
+                                {formatDate(hw.lastEdited?.[targetName] ?? hw.lastUpdated?.[targetName])}
                               </div>
 
                               {/* 2. Input 창 영역: 버튼을 떼어내고 세로 배치 유도 */}
@@ -1747,7 +1686,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-25 15:05
+              업데이트 : 2026-02-25 17:18
             </div>
           </div>
 
