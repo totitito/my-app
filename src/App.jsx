@@ -1445,30 +1445,33 @@ function App() {
                         {isCollapsed ? "➕" : "➖"}
                       </button>
 
-                      {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
+                      {/* 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
                       <div style={{ position: "relative", minHeight: isCollapsed ? 60 : 160 }}>
 
-                        {/* ✅ 1) 초상화 "배경" (맨 뒤, 클릭 막지 않음) */}
-                        {!isCollapsed && isShowPortrait &&
+                        {/* 초상화 "배경" */}
+                        {!isCollapsed &&
                           ["lostark", "aion2"].includes(game) &&
                           scores[targetName]?.portrait && (
                             <>
-                              <div
-                                aria-hidden="true"
-                                style={{
-                                  position: "absolute",
-                                  inset: 0,
-                                  backgroundImage: `url("${scores[targetName].portrait}")`,
-                                  backgroundSize: "cover",
-                                  backgroundPosition: "center top",
-                                  opacity: 1,
-                                  transform: "scale(1.0)",
-                                  pointerEvents: "none",  // auto -> none
-                                  zIndex: 0,              // 맨 뒤
-                                }}
-                              />
+                              {/* (A) 초상화 이미지: isShowPortrait일 때만 보임 */}
+                              {isShowPortrait && (
+                                <div
+                                  aria-hidden="true"
+                                  style={{
+                                    position: "absolute",
+                                    inset: 0,
+                                    backgroundImage: `url("${scores[targetName].portrait}")`,
+                                    backgroundSize: "cover",
+                                    backgroundPosition: "center top",
+                                    opacity: 1,
+                                    transform: "scale(1.0)",
+                                    pointerEvents: "none",
+                                    zIndex: 0,
+                                  }}
+                                />
+                              )}
 
-                              {/* ✅ 2) '빈 곳' 클릭하면 초상화 토글 (내용 위로는 안 올라오게) */}
+                              {/* ✅ (B) 클릭 오버레이: 초상화 ON/OFF와 무관하게 항상 존재 */}
                               <div
                                 onClick={() => togglePortrait(idx, setData)}
                                 title="클릭하면 초상화 토글"
@@ -1477,11 +1480,11 @@ function App() {
                                   inset: 0,
                                   background: "transparent",
                                   cursor: "pointer",
-                                  zIndex: 1,    // 내용(zIndex 2)보다 낮게
+                                  zIndex: 1, // 내용(zIndex 2)보다 낮게
                                 }}
                               />
                             </>
-                        )}
+                          )}
 
                         {/* ✅ 3) 기존 내용은 위로 */}
                         <div style={{ position: "relative", zIndex: 2 }}>
@@ -1803,7 +1806,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-25 13:45
+              업데이트 : 2026-02-25 14:09
             </div>
           </div>
 
