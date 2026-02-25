@@ -500,6 +500,10 @@ function App() {
     });
   };
 
+  // ✅ 인라인 이름 수정용
+  const [editingKey, setEditingKey] = useState(null); // `${scope}:${idx}` 같은 고유키
+  const [editingValue, setEditingValue] = useState("");
+
   // AION 2 fetchScore
   const fetchScore = async (fullName) => {
     try {
@@ -543,8 +547,8 @@ function App() {
         }
       }));
     } catch (e) {
-      console.error("전투력 갱신 실패:", e);
-      alert("전투력 갱신 실패: " + e.message); // ✅ 탱아저씨 케이스 원인 바로 뜸
+      console.error("캐릭터 정보 갱신 실패:", e);
+      alert("캐릭터 정보 갱신 실패: " + e.message); // ✅ 탱아저씨 케이스 원인 바로 뜸
     }
   };
 
@@ -727,8 +731,6 @@ function App() {
 
   useEffect(() => {
     const checkReset = () => {
-      // const now = new Date();
-      // const currentTime = now.getTime();
       const currentTime = getNowMs();
       let totalChanged = false;
 
@@ -747,26 +749,8 @@ function App() {
           targets.forEach(t => {
             const targetName = (typeof t === "object" && t !== null) ? t.name : t;
 
-            // const lastUpdate = newLastUpdated[targetName];
             const lastUpdateRaw = newLastUpdated[targetName];
             const lastUpdate = Number(lastUpdateRaw);
-
-            // if (!Number.isFinite(lastUpdate)) {
-            //   // ✅ 오드에너지는 lastUpdated가 깨졌을 때 덮어써서 틱을 날리면 항상 오차가 누적됨
-            //   if (hw.id === "aion2-odd-energy") {
-            //     // lastUpdated가 없으면 복구 불가능이라 "기준만 찍고" 카운트는 건드리지 않음
-            //     newLastUpdated[targetName] = currentTime;
-            //     hwChanged = true;
-            //     return;
-            //   }
-
-            //   // ✅ (오드에너지 외) 기존 로직은 그대로
-            //   const hasCount = newCounts[targetName] !== undefined && newCounts[targetName] !== "";
-            //   if (!hasCount) newCounts[targetName] = hw.max;
-            //   newLastUpdated[targetName] = currentTime;
-            //   hwChanged = true;
-            //   return;
-            // }
 
             if (!Number.isFinite(lastUpdate)) {
               if (hw.id === "aion2-odd-energy") return; // ✅ 그냥 건드리지 말고 넘어감
@@ -777,37 +761,6 @@ function App() {
               hwChanged = true;
               return;
             }
-
-            // ✅ 2) 오드에너지는 별도 계산
-            // if (hw.id === "aion2-odd-energy") {
-            //   console.log("[ODD-BEFORE]", targetName, "raw=", newLastUpdated[targetName], "num=", lastUpdate, "now=", currentTime);
-              
-            //   if (!Number.isFinite(lastUpdate)) {
-            //     console.log("[ODD-INVALID-LAST]", targetName);
-            //     return;
-            //   }
-
-            //   const ticks = countOddEnergyTicks(lastUpdate, currentTime, hw.resetTime);
-
-            //   if (ticks > 0) {
-            //     const currentVal =
-            //       newCounts[targetName] !== undefined && newCounts[targetName] !== ""
-            //         ? Number(newCounts[targetName])
-            //         : hw.max;
-
-            //     newCounts[targetName] = Math.min(
-            //       hw.max,
-            //       currentVal + ticks * (hw.recoveryAmount || 0)
-            //     );
-
-            //     newLastUpdated[targetName] = currentTime;
-            //     hwChanged = true;
-            //   }
-
-            //   console.log("[ODD-TICKS]", targetName, "ticks=", ticks);
-
-            //   return;
-            // }
 
             if (hw.id === "aion2-odd-energy") return; // ✅ 오드에너지는 표시에서만 회복 계산
 
@@ -996,6 +949,61 @@ function App() {
 
       return { ...hw, counts: newCounts, excluded: newExcluded, lastUpdated: newLastUpdated };
     }));
+  };
+
+  const commitRenameInline = (oldName, newName, idx, dataList, setData) => {
+    const trimmed = (newName || "").trim();
+    if (!trimmed || oldName === trimmed) {
+      setEditingKey(null);
+      setEditingValue("");
+      return;
+    }
+    if (dataList.some((x, i) => {
+      const nm = (typeof x === "object" && x) ? x.name : x;
+      return i !== idx && nm === trimmed;
+    })) {
+      alert("중복된 이름입니다.");
+      return;
+    }
+
+    // ✅ 1) 캐릭/계정 리스트 이름 변경(객체면 showPortrait 유지)
+    setData(prev => {
+      const next = [...prev];
+      const oldItem = next[idx];
+      const isObj = typeof oldItem === "object" && oldItem !== null;
+
+      next[idx] = isObj
+        ? { ...oldItem, name: trimmed }
+        : trimmed;
+
+      return next;
+    });
+
+    // ✅ 2) homeworks의 counts/excluded/lastUpdated 키도 같이 이동
+    setHomeworks(prev => prev.map(hw => {
+      const newCounts = { ...(hw.counts || {}) };
+      const newExcluded = { ...(hw.excluded || {}) };
+      const newLastUpdated = { ...(hw.lastUpdated || {}) };
+
+      if (Object.prototype.hasOwnProperty.call(newCounts, oldName)) {
+        newCounts[trimmed] = newCounts[oldName];
+        delete newCounts[oldName];
+      }
+      if (Object.prototype.hasOwnProperty.call(newExcluded, oldName)) {
+        newExcluded[trimmed] = newExcluded[oldName];
+        delete newExcluded[oldName];
+      }
+      if (Object.prototype.hasOwnProperty.call(newLastUpdated, oldName)) {
+        newLastUpdated[trimmed] = newLastUpdated[oldName];
+        delete newLastUpdated[oldName];
+      }
+
+      return { ...hw, counts: newCounts, excluded: newExcluded, lastUpdated: newLastUpdated };
+    }));
+
+    // ✅ 3) 편집 종료
+    setEditingKey(null);
+    setEditingValue("");
   };
 
   const togglePortrait = (idx, setData) => {
@@ -1410,7 +1418,7 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {dataList.map((item, idx) => { // 1. 우선 item으로 받고
+              {dataList.map((item, idx) => {
                 // 2. 객체면 name을, 아니면 그대로를 targetName에 할당
                 const targetName = typeof item === 'object' ? item.name : item;
                 const isShowPortrait = item?.showPortrait !== false;
@@ -1422,7 +1430,7 @@ function App() {
                       textAlign: "center", padding: "10px", fontWeight: "bold", 
                       position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
                       borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top",
-                      overflow: "hidden" // ✅ 추가(배경이 셀 밖으로 안 튀게)
+                      overflow: "hidden" // 배경이 셀 밖으로 안 튀게
                     }}>
 
                       {/* 접기/펴기 버튼 */}
@@ -1438,41 +1446,31 @@ function App() {
                       </button>
 
                       {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
-                      <div style={{ position: "relative" }}>
+                      {/* <div style={{ position: "relative" }}> */}
+                      <div style={{ position: "relative", zIndex: 2 }}>
 
                         {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
                         {!isCollapsed && isShowPortrait &&
-                          // (typeof dataList[idx] === 'object' ? dataList[idx].showPortrait : true) !== false && 
                           ["lostark", "aion2"].includes(game) &&
                           scores[targetName]?.portrait && (
                             <div
                               aria-hidden="true"
-                              style={{ 
-                                position: "absolute", 
+                              onClick={() => togglePortrait(idx, setData)}
+                              title="클릭하면 초상화 토글"
+                              style={{
+                                position: "absolute",
                                 inset: 0,
-                                backgroundImage: `url("${scores[targetName].portrait}")`, // 이미 위에서 targetName을 처리함
-                                backgroundSize: "cover", 
-                                backgroundPosition: "center top", 
+                                backgroundImage: `url("${scores[targetName].portrait}")`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center top",
                                 opacity: 1,
-                                transform: "scale(1.0)", 
-                                pointerEvents: "none", 
-                                zIndex: 0,
+                                transform: "scale(1.0)",
+                                pointerEvents: "auto", // none -> auto
+                                cursor: "pointer",
+                                zIndex: 1, // 0 -> 1
                               }}
                             />
                         )}
-
-                        {/* ✅ 2) 글자 가독성용 오버레이 */}
-                        {/* <div
-                          aria-hidden="true"
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            background:
-                              "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%)", // ✅ 덜 진하게
-                            pointerEvents: "none",
-                            zIndex: 1,
-                          }}
-                        /> */}
 
                         {/* ✅ 3) 기존 내용은 위로 */}
                         <div style={{ position: "relative", zIndex: 2 }}>
@@ -1487,26 +1485,64 @@ function App() {
                             <div>
                               {/* 캐릭명 */}
                               <div style={{ textAlign: "center", marginBottom: "2px" }}>
-                                <span
-                                  style={{
-                                    display: "inline-block",
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                    color: "#fff",
-                                    textShadow: "1px 1px 2px rgba(0,0,0,1)",
-                                    backgroundColor:
-                                      !isCollapsed && isShowPortrait
-                                        ? "rgba(0, 0, 0, 0.2)"
-                                        : "transparent",
-                                    padding:
-                                      !isCollapsed && isShowPortrait
-                                        ? "1px 8px"
-                                        : "0px",
-                                    borderRadius: "4px",
-                                  }}
-                                >
-                                  {targetName}
-                                </span>
+                                {editingKey === `${scope}:${idx}` ? (
+                                  <input
+                                    value={editingValue}
+                                    autoFocus
+                                    onChange={(e) => setEditingValue(e.target.value)}
+                                    onBlur={() =>
+                                      commitRenameInline(targetName, editingValue, idx, dataList, setData)
+                                    }
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        commitRenameInline(targetName, editingValue, idx, dataList, setData);
+                                      }
+                                      if (e.key === "Escape") {
+                                        setEditingKey(null);
+                                        setEditingValue("");
+                                      }
+                                    }}
+                                    style={{
+                                      width: "120px",
+                                      textAlign: "center",
+                                      backgroundColor: "#222",
+                                      color: "#fff",
+                                      border: "1px solid #555",
+                                      borderRadius: "4px",
+                                      padding: "2px 6px",
+                                      fontSize: "16px",
+                                      fontWeight: "bold",
+                                    }}
+                                  />
+                                ) : (
+                                  <span
+                                    onClick={() => {
+                                      setEditingKey(`${scope}:${idx}`);
+                                      setEditingValue(targetName);
+                                    }}
+                                    title="클릭해서 이름 변경"
+                                    style={{
+                                      display: "inline-block",
+                                      fontSize: "16px",
+                                      fontWeight: "bold",
+                                      color: "#fff",
+                                      textShadow: "1px 1px 2px rgba(0,0,0,1)",
+                                      backgroundColor:
+                                        !isCollapsed && isShowPortrait
+                                          ? "rgba(0, 0, 0, 0.2)"
+                                          : "transparent",
+                                      padding:
+                                        !isCollapsed && isShowPortrait
+                                          ? "1px 8px"
+                                          : "0px",
+                                      borderRadius: "4px",
+                                      cursor: "pointer",
+                                      userSelect: "none",
+                                    }}
+                                  >
+                                    {targetName}
+                                  </span>
+                                )}
                               </div>
 
                               {/* Lv, 직업 */}
@@ -1542,51 +1578,38 @@ function App() {
                                 const scoreData = scores[targetName];
 
                                 return (
-                                  <div>
-                                    {scoreData ? (
-                                      <div style={{ marginTop: "-8px" }}>
-                                        <span style={{ fontSize: "10px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
-                                          {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString() ?? "?"}
-                                        </span>
-                                        <span style={{ fontSize: "10px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
-                                          {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString() ?? "?"}
-                                        </span>
-                                      </div>
-                                    ) : (
-                                      <div style={{ fontSize: "10px", color: "#888", marginTop: "-4px", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>
-                                        점수 미갱신
-                                      </div>
-                                    )}
-                                    
-                                    <button 
-                                      onClick={config.fetchFn} 
-                                      style={{ ...btnStyle, padding: "2px 5px", marginBottom: "2px", marginTop: "-2px", fontSize: "10px", backgroundColor: "#335a80", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}
+                                  <div style={{ display: "flex", justifyContent: "center", gap: "6px", marginBottom: "0px", marginTop: "0px" }}>
+                                    <button
+                                      onClick={config.fetchFn}
+                                      style={{
+                                        ...btnStyle,
+                                        padding: "2px 5px",
+                                        fontSize: "10px",
+                                        backgroundColor: "#335a80",
+                                        textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                                      }}
                                     >
-                                      전투력 갱신
+                                      갱신
+                                    </button>
+
+                                    <button
+                                      onClick={() => {
+                                        if (window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
+                                          setData((prev) => prev.filter((_, i) => i !== idx));
+                                        }
+                                      }}
+                                      style={{
+                                        ...btnStyle,
+                                        padding: "2px 5px",
+                                        fontSize: "10px",
+                                        backgroundColor: "#600",
+                                      }}
+                                    >
+                                      삭제
                                     </button>
                                   </div>
                                 );
                               })()}
-
-                              <div style={{ display: "flex", gap: "2px", justifyContent: "center" }}>
-                                <button
-                                  onClick={() => togglePortrait(idx, setData)}
-                                  style={{
-                                    ...btnStyle,
-                                    padding: "2px 5px",
-                                    fontSize: "10px",
-                                    backgroundColor: isShowPortrait ? "#444" : "#2a4d69"
-                                  }}
-                                >
-                                  초상화
-                                </button>
-                                <button onClick={() => renameTarget(targetName, idx, dataList, setData)} style={{...btnStyle, padding: "2px 5px", fontSize: "10px"}}>이름변경</button>
-                                <button onClick={() => {
-                                  if(window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
-                                    setData(prev => prev.filter((_, i) => i !== idx));
-                                  }
-                                }} style={{...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#600"}}>삭제</button>
-                              </div>
                             </>
                           )}
 
@@ -1728,7 +1751,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-24 17:00
+              업데이트 : 2026-02-25 11:15
             </div>
           </div>
 
