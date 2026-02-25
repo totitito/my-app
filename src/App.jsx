@@ -152,8 +152,8 @@ const initialHomeworks = [
   { id: "loa-archievement-story-RL_S", game: "lostark", name: "림레이크 남섬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "스토리", scope: "character", lastUpdated: {} },
 
   // 아이온2 - 계정
-  { id: "aion2-account-transform-odd", game: "aion2", name: "오드 변환", max: 8, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-account-buy-odd", game: "aion2", name: "오드 구입", max: 8, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-account-transform-odd", game: "aion2", name: "오드 변환(계정)", max: 8, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-account-buy-odd", game: "aion2", name: "오드 구입(계정)", max: 8, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - Daily
   { id: "aion2-login", game: "aion2", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 0, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-daily-donation", game: "aion2", name: "보급의뢰", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
