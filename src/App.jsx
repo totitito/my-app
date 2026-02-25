@@ -1430,7 +1430,9 @@ function App() {
                       textAlign: "center", padding: "10px", fontWeight: "bold", 
                       position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
                       borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top",
-                      overflow: "hidden" // 배경이 셀 밖으로 안 튀게
+                      overflow: "hidden", // 배경이 셀 밖으로 안 튀게
+
+                      minHeight: isCollapsed ? 60 : 160,
                     }}>
 
                       {/* 접기/펴기 버튼 */}
@@ -1446,30 +1448,41 @@ function App() {
                       </button>
 
                       {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
-                      {/* <div style={{ position: "relative" }}> */}
                       <div style={{ position: "relative", zIndex: 2 }}>
 
-                        {/* ✅ 1) 로스트아크 또는 아이온2 배경 표시 */}
+                        {/* ✅ 1) 초상화 "배경" (맨 뒤, 클릭 막지 않음) */}
                         {!isCollapsed && isShowPortrait &&
                           ["lostark", "aion2"].includes(game) &&
                           scores[targetName]?.portrait && (
-                            <div
-                              aria-hidden="true"
-                              onClick={() => togglePortrait(idx, setData)}
-                              title="클릭하면 초상화 토글"
-                              style={{
-                                position: "absolute",
-                                inset: 0,
-                                backgroundImage: `url("${scores[targetName].portrait}")`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center top",
-                                opacity: 1,
-                                transform: "scale(1.0)",
-                                pointerEvents: "auto", // none -> auto
-                                cursor: "pointer",
-                                zIndex: 1, // 0 -> 1
-                              }}
-                            />
+                            <>
+                              <div
+                                aria-hidden="true"
+                                style={{
+                                  position: "absolute",
+                                  inset: 0,
+                                  backgroundImage: `url("${scores[targetName].portrait}")`,
+                                  backgroundSize: "cover",
+                                  backgroundPosition: "center top",
+                                  opacity: 1,
+                                  transform: "scale(1.0)",
+                                  pointerEvents: "none",  // auto -> none
+                                  zIndex: 0,              // 맨 뒤
+                                }}
+                              />
+
+                              {/* ✅ 2) '빈 곳' 클릭하면 초상화 토글 (내용 위로는 안 올라오게) */}
+                              <div
+                                onClick={() => togglePortrait(idx, setData)}
+                                title="클릭하면 초상화 토글"
+                                style={{
+                                  position: "absolute",
+                                  inset: 0,
+                                  background: "transparent",
+                                  cursor: "pointer",
+                                  zIndex: 1,    // 내용(zIndex 2)보다 낮게
+                                }}
+                              />
+                            </>
                         )}
 
                         {/* ✅ 3) 기존 내용은 위로 */}
@@ -1482,77 +1495,77 @@ function App() {
                           </div>
 
                           {/* 캐릭명, Lv, 직업 */}
-                            <div>
-                              {/* 캐릭명 */}
-                              <div style={{ textAlign: "center", marginBottom: "2px" }}>
-                                {editingKey === `${scope}:${idx}` ? (
-                                  <input
-                                    value={editingValue}
-                                    autoFocus
-                                    onChange={(e) => setEditingValue(e.target.value)}
-                                    onBlur={() =>
-                                      commitRenameInline(targetName, editingValue, idx, dataList, setData)
+                          <div>
+                            {/* 캐릭명 */}
+                            <div style={{ textAlign: "center", marginBottom: "2px" }}>
+                              {editingKey === `${scope}:${idx}` ? (
+                                <input
+                                  value={editingValue}
+                                  autoFocus
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  onBlur={() =>
+                                    commitRenameInline(targetName, editingValue, idx, dataList, setData)
+                                  }
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      commitRenameInline(targetName, editingValue, idx, dataList, setData);
                                     }
-                                    onKeyDown={(e) => {
-                                      if (e.key === "Enter") {
-                                        commitRenameInline(targetName, editingValue, idx, dataList, setData);
-                                      }
-                                      if (e.key === "Escape") {
-                                        setEditingKey(null);
-                                        setEditingValue("");
-                                      }
-                                    }}
-                                    style={{
-                                      width: "120px",
-                                      textAlign: "center",
-                                      backgroundColor: "#222",
-                                      color: "#fff",
-                                      border: "1px solid #555",
-                                      borderRadius: "4px",
-                                      padding: "2px 6px",
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                    }}
-                                  />
-                                ) : (
-                                  <span
-                                    onClick={() => {
-                                      setEditingKey(`${scope}:${idx}`);
-                                      setEditingValue(targetName);
-                                    }}
-                                    title="클릭해서 이름 변경"
-                                    style={{
-                                      display: "inline-block",
-                                      fontSize: "16px",
-                                      fontWeight: "bold",
-                                      color: "#fff",
-                                      textShadow: "1px 1px 2px rgba(0,0,0,1)",
-                                      backgroundColor:
-                                        !isCollapsed && isShowPortrait
-                                          ? "rgba(0, 0, 0, 0.2)"
-                                          : "transparent",
-                                      padding:
-                                        !isCollapsed && isShowPortrait
-                                          ? "1px 8px"
-                                          : "0px",
-                                      borderRadius: "4px",
-                                      cursor: "pointer",
-                                      userSelect: "none",
-                                    }}
-                                  >
-                                    {targetName}
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* Lv, 직업 */}
-                              {(game === "lostark" || game === "aion2") && scores[targetName]?.job && (
-                                <div style={{ fontSize: "12px", textAlign: "center", marginTop: "-4px", textShadow: "1px 1px 3px rgba(0,0,0,1)", }}>
-                                  {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
-                                  {scores[targetName].job}
-                                </div>
+                                    if (e.key === "Escape") {
+                                      setEditingKey(null);
+                                      setEditingValue("");
+                                    }
+                                  }}
+                                  style={{
+                                    width: "120px",
+                                    textAlign: "center",
+                                    backgroundColor: "#222",
+                                    color: "#fff",
+                                    border: "1px solid #555",
+                                    borderRadius: "4px",
+                                    padding: "2px 6px",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                  }}
+                                />
+                              ) : (
+                                <span
+                                  onClick={() => {
+                                    setEditingKey(`${scope}:${idx}`);
+                                    setEditingValue(targetName);
+                                  }}
+                                  title="클릭해서 이름 변경"
+                                  style={{
+                                    display: "inline-block",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                    color: "#fff",
+                                    textShadow: "1px 1px 2px rgba(0,0,0,1)",
+                                    backgroundColor:
+                                      !isCollapsed && isShowPortrait
+                                        ? "rgba(0, 0, 0, 0.2)"
+                                        : "transparent",
+                                    padding:
+                                      !isCollapsed && isShowPortrait
+                                        ? "1px 8px"
+                                        : "0px",
+                                    borderRadius: "4px",
+                                    cursor: "pointer",
+                                    userSelect: "none",
+                                  }}
+                                >
+                                  {targetName}
+                                </span>
                               )}
                             </div>
+
+                            {/* Lv, 직업 */}
+                            {(game === "lostark" || game === "aion2") && scores[targetName]?.job && (
+                              <div style={{ fontSize: "12px", textAlign: "center", marginTop: "-4px", textShadow: "1px 1px 3px rgba(0,0,0,1)", }}>
+                                {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
+                                {scores[targetName].job}
+                              </div>
+                            )}
+                          </div>
 
                           {/* 전투력 등 캐릭터 추가 정보 */}
                           {!isCollapsed && (
@@ -1751,7 +1764,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-25 11:15
+              업데이트 : 2026-02-25 13:29
             </div>
           </div>
 
