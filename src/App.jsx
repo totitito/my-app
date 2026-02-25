@@ -81,24 +81,22 @@ const fmtKST = (ms) =>
   });
 
 const normalizeRepeatCategory = (hw) => {
-  // 반복퀘(repeat)에서만 쓰는 category 정리
-  // (once는 기존 category(기본/스토리/...) 그대로 둠)
 
   if (hw.resetPeriod === "once") return hw;
 
-  // ✅ 오드에너지는 무조건 etc
+  // 오드에너지는 무조건 etc
   if (hw.id === "aion2-odd-energy") {
     if (hw.category === "etc") return hw;
     return { ...hw, category: "etc" };
   }
 
-  // ✅ 이벤트 표기면 event로 강제
+  // 이벤트 표기면 event로 강제
   if (typeof hw.name === "string" && hw.name.startsWith("[이벤트]")) {
     if (hw.category === "event") return hw;
     return { ...hw, category: "event" };
   }
 
-  // ✅ 나머지는 기존 category가 있으면 존중, 없으면 resetPeriod로 기본값
+  // 나머지는 기존 category가 있으면 존중, 없으면 resetPeriod로 기본값
   if (hw.category) return hw;
 
   if (hw.resetPeriod === "day") return { ...hw, category: "daily" };
@@ -1059,7 +1057,12 @@ function App() {
         return {
           ...hw,
           counts: { ...(hw.counts || {}), [targetName]: next },
-          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() }
+
+          // ✅ 리셋/회복 계산용 (기존 유지)
+          lastUpdated: { ...(hw.lastUpdated || {}), [targetName]: getNowMs() },
+
+          // ✅ "내가 직접 만진 시간" 전용 새 필드
+          lastEdited: { ...(hw.lastEdited || {}), [targetName]: getNowMs() },
         };
       }
 
@@ -1151,33 +1154,6 @@ function App() {
       event: "Event",
       weekly: "Weekly",
     };
-
-    // 3. 전체 리스트 (정렬 순서 고정)
-    // const allFiltered = viewMode === "once"
-    //   ? [...onceBasic, ...onceStory, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc]
-    //   : [...dailyHws, ...etcHws, ...eventHws, ...weeklyHws];
-
-    // const groupedByCategory = {
-    //   daily: [],
-    //   etc: [],
-    //   event: [],
-    //   weekly: [],
-    // };
-
-    // allFiltered.forEach(hw => {
-    //   const cat = getCategory(hw); // ✅ 스텝1에서 추가한 함수
-    //   if (!groupedByCategory[cat]) groupedByCategory[cat] = [];
-    //   groupedByCategory[cat].push(hw);
-    // });
-
-    // const categoryOrder = ["daily", "etc", "event", "weekly"];
-
-    // const categoryLabel = {
-    //   daily: "Daily",
-    //   etc: "etc",
-    //   event: "Event",
-    //   weekly: "Weekly",
-    // };
 
     // 4. 날짜 양식 (연도 제외 오더 반영)
     const formatDate = (ts) => {
@@ -1712,7 +1688,8 @@ function App() {
                             <>
                               {/* 1. 숙제 갱신 일자: 상단으로 이동 */}
                               <div style={{ fontSize: "10px", color: "#777", marginBottom: isCollapsed ? "2px" : "6px", minHeight: "12px" }}>
-                                {formatDate(hw.lastUpdated?.[targetName])}
+                                {/* {formatDate(hw.lastUpdated?.[targetName])} */}
+                                {formatDate(hw.lastEdited?.[targetName])}
                               </div>
 
                               {/* 2. Input 창 영역: 버튼을 떼어내고 세로 배치 유도 */}
@@ -1814,7 +1791,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-25 14:16
+              업데이트 : 2026-02-25 14:46
             </div>
           </div>
 
