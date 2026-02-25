@@ -264,7 +264,6 @@ const getNowMs = () => {
   const v = (typeof window !== "undefined") ? sessionStorage.getItem("__NOW_MS") : null;
   if (v && Number.isFinite(Number(v))) return Number(v);
   return Date.now();
-  // return getNowMs();
 };
 
 // 매일 resetHourKST 시각을 기준으로 하루 경계 index
@@ -295,38 +294,18 @@ const nextWeeklyResetAfterKST = (lastMs, resetDay, resetHour) => {
 };
 
 const passedCycles = (lastMs, nowMs, hw) => {
-
-  // ✅ 콘솔에서 window.__NOW_MS = 숫자; 로 테스트 가능
-  // const effectiveNowMs = (typeof window !== "undefined" && window.__NOW_MS) ? window.__NOW_MS : nowMs;
   const effectiveNowMs = nowMs;
 
   if (!lastMs) return 0;
   if (hw.id === "aion2-odd-energy") return 0;
-
   const resetHour = Array.isArray(hw.resetTime) ? hw.resetTime[0] : (hw.resetTime ?? 0);
 
-  // if (hw.resetPeriod === "day") {
-  //   return dailyBoundaryIndex(nowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
-  // }
   if (hw.resetPeriod === "day") {
     return dailyBoundaryIndex(effectiveNowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
   }
 
   if (hw.resetPeriod === "week") {
     const next = nextWeeklyResetAfterKST(lastMs, hw.resetDay ?? 0, resetHour);
-
-    // console.log(
-    //   "[RESETCHK]",
-    //   hw.id,
-    //   "last=", new Date(lastMs).toISOString(),
-    //   "now=", new Date(effectiveNowMs).toISOString(),
-    //   "next=", new Date(next).toISOString(),
-    //   "resetDay=", hw.resetDay ?? 0,
-    //   "resetHour=", resetHour
-    // );
-
-    // if (nowMs < next) return 0;
-    // return 1 + Math.floor((nowMs - next) / WEEK_MS);
     if (effectiveNowMs < next) return 0;
     return 1 + Math.floor((effectiveNowMs - next) / WEEK_MS);
   }
@@ -349,19 +328,13 @@ const countOddEnergyTicks = (lastMs, nowMs, resetHoursKST) => {
 
   // 00:00 KST로 정규화
   const start = new Date(lastKst);
-  // start.setHours(0, 0, 0, 0);
   start.setUTCHours(0, 0, 0, 0);
 
   const end = new Date(nowKst);
-  // end.setHours(0, 0, 0, 0);
   end.setUTCHours(0, 0, 0, 0);
 
   let ticks = 0;
 
-  // for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-  //   const y = d.getFullYear();
-  //   const m = d.getMonth();
-  //   const day = d.getDate();
   for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
     const y = d.getUTCFullYear();
     const m = d.getUTCMonth();
@@ -713,7 +686,8 @@ function App() {
               ...latest, 
               counts: existing.counts, 
               excluded: existing.excluded,
-              lastUpdated: existing.lastUpdated // 이 부분이 핵심
+              lastUpdated: existing.lastUpdated,
+              lastEdited: existing.lastEdited
             };
           }
           return latest;
@@ -808,6 +782,7 @@ function App() {
         ...hw,
         counts: hw.counts || {},
         lastUpdated: hw.lastUpdated || {},
+        lastEdited: hw.lastEdited || {},
         excluded: hw.excluded || {}
       })),
       collapsedChars: collapsedChars || {},
@@ -999,7 +974,6 @@ function App() {
       return { ...hw, counts: newCounts, excluded: newExcluded, lastUpdated: newLastUpdated };
     }));
 
-    // ✅ 3) 편집 종료
     setEditingKey(null);
     setEditingValue("");
   };
@@ -1008,15 +982,12 @@ function App() {
     setData(prev => {
       const newData = [...prev];
       const item = newData[idx];
-
       const isObj = typeof item === "object" && item !== null;
       const currentName = isObj ? item.name : item;
-
-      // 지금 상태: true(기본) / false(숨김)
       const currentStatus = isObj ? (item.showPortrait !== false) : true;
 
       newData[idx] = {
-        ...(isObj ? item : {}),          // ⭐ 혹시 나중에 다른 속성 붙여도 보존
+        ...(isObj ? item : {}),
         name: currentName,
         showPortrait: !currentStatus,
       };
@@ -1039,16 +1010,13 @@ function App() {
         return {
           ...hw,
           counts: { ...(hw.counts || {}), [targetName]: "" },
-          // lastUpdated는 굳이 안 찍어도 됨(원하면 찍어도 OK)
         };
       }
 
       // ✅ 2) 인풋에서 직접 입력한 경우(문자열) -> "그 값으로" 세팅
-      //    (onChange에서 e.target.value가 string으로 들어옴)
       if (typeof delta === "string") {
         const n = Number(delta);
         if (!Number.isFinite(n)) {
-          // 숫자 아닌 값이면 변경 없이 그대로
           return hw;
         }
 
@@ -1111,25 +1079,13 @@ function App() {
   const renderTable = (title, scope, dataList, setData, options = {}) => {
     const { headerRight = null, hideBody = false, hideHiddenButtons = false } = options;
     const filteredHws = homeworks.filter(hw => hw.game === game && hw.scope === scope && (viewMode === "once" ? hw.resetPeriod === "once" : hw.resetPeriod !== "once"));
-
-    // 1. 반복 모드 분류 (category 기반으로 통일)
-    // const repeatHws = filteredHws.filter(hw => hw.resetPeriod !== "once");
-
-    // const dailyHws = repeatHws.filter(hw => getCategory(hw) === "daily");
-    // const etcHws   = repeatHws.filter(hw => getCategory(hw) === "etc");
-    // const eventHws = repeatHws.filter(hw => getCategory(hw) === "event");
-    // const weeklyHws= repeatHws.filter(hw => getCategory(hw) === "weekly");
-
-    // 2. 업적(once) 모드 분류 (이게 누락되어서 에러가 났던 것)
     const onceBasic = filteredHws.filter(hw => hw.category === "기본");
     const onceStory = filteredHws.filter(hw => hw.category === "스토리");
     const onceBoss = filteredHws.filter(hw => hw.category === "필드보스");
     const onceWing = filteredHws.filter(hw => hw.category === "날개");
     const onceArt = filteredHws.filter(hw => hw.category === "명화");
     const onceEtc = filteredHws.filter(hw => !["기본", "스토리", "필드보스", "날개", "명화"].includes(hw.category));
-
     const categoryOrder = ["daily", "etc", "event", "weekly"];
-
     const groupedByCategory = Object.fromEntries(
       categoryOrder.map(cat => [cat, []])
     );
@@ -1791,7 +1747,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-25 14:46
+              업데이트 : 2026-02-25 15:05
             </div>
           </div>
 
