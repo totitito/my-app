@@ -1446,7 +1446,15 @@ function App() {
                       </button>
 
                       {/* 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
-                      <div style={{ position: "relative", minHeight: isCollapsed ? 60 : 160 }}>
+                      <div
+                        style={{
+                          position: "relative",
+                          minHeight: isCollapsed ? 60 : 160,  // ✅ 유지
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: isCollapsed ? "flex-start" : "center",
+                        }}
+                      >
 
                         {/* 초상화 "배경" */}
                         {!isCollapsed &&
@@ -1806,7 +1814,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-25 14:09
+              업데이트 : 2026-02-25 14:13
             </div>
           </div>
 
