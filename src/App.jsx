@@ -1589,35 +1589,76 @@ function App() {
                                 const scoreData = scores[targetName];
 
                                 return (
-                                  <div style={{ display: "flex", justifyContent: "center", gap: "6px", marginBottom: "0px", marginTop: "0px" }}>
-                                    <button
-                                      onClick={config.fetchFn}
-                                      style={{
-                                        ...btnStyle,
-                                        padding: "2px 5px",
-                                        fontSize: "10px",
-                                        backgroundColor: "#335a80",
-                                        textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
-                                      }}
-                                    >
-                                      갱신
-                                    </button>
+                                  <div>
+                                    {/* ✅ 전투력/아툴(또는 템렙/전투력) 표시 다시 추가 */}
+                                    {scoreData ? (
+                                      <div style={{ marginTop: "-8px", marginBottom: "2px" }}>
+                                        <span
+                                          style={{
+                                            fontSize: "10px",
+                                            color: "#ffffff",
+                                            textShadow: "1px 1px 3px rgba(0,0,0,1)",
+                                          }}
+                                        >
+                                          {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString?.() ?? "?"}
+                                        </span>
 
-                                    <button
-                                      onClick={() => {
-                                        if (window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
-                                          setData((prev) => prev.filter((_, i) => i !== idx));
-                                        }
-                                      }}
-                                      style={{
-                                        ...btnStyle,
-                                        padding: "2px 5px",
-                                        fontSize: "10px",
-                                        backgroundColor: "#600",
-                                      }}
-                                    >
-                                      삭제
-                                    </button>
+                                        <span
+                                          style={{
+                                            fontSize: "10px",
+                                            color: "#69b7ee",
+                                            textShadow: "1px 1px 3px rgba(0,0,0,1)",
+                                            marginLeft: "6px",
+                                          }}
+                                        >
+                                          {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString?.() ?? "?"}
+                                        </span>
+                                      </div>
+                                    ) : (
+                                      <div
+                                        style={{
+                                          fontSize: "10px",
+                                          color: "#888",
+                                          marginTop: "-4px",
+                                          marginBottom: "2px",
+                                          textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                                        }}
+                                      >
+                                        점수 미갱신
+                                      </div>
+                                    )}
+
+                                    {/* ✅ 갱신/삭제 버튼은 아래 한 줄로 유지 */}
+                                    <div style={{ display: "flex", justifyContent: "center", gap: "6px" }}>
+                                      <button
+                                        onClick={config.fetchFn}
+                                        style={{
+                                          ...btnStyle,
+                                          padding: "2px 5px",
+                                          fontSize: "10px",
+                                          backgroundColor: "#335a80",
+                                          textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                                        }}
+                                      >
+                                        갱신
+                                      </button>
+
+                                      <button
+                                        onClick={() => {
+                                          if (window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
+                                            setData((prev) => prev.filter((_, i) => i !== idx));
+                                          }
+                                        }}
+                                        style={{
+                                          ...btnStyle,
+                                          padding: "2px 5px",
+                                          fontSize: "10px",
+                                          backgroundColor: "#600",
+                                        }}
+                                      >
+                                        삭제
+                                      </button>
+                                    </div>
                                   </div>
                                 );
                               })()}
