@@ -1549,15 +1549,15 @@ function App() {
                                     fontWeight: "bold",
                                     color: "#fff",
                                     textShadow: "1px 1px 2px rgba(0,0,0,1)",
-                                    backgroundColor:
-                                      !isCollapsed && isShowPortrait
-                                        ? "rgba(0, 0, 0, 0.2)"
-                                        : "transparent",
-                                    padding:
-                                      !isCollapsed && isShowPortrait
-                                        ? "1px 8px"
-                                        : "0px",
-                                    borderRadius: "4px",
+                                    // backgroundColor:
+                                    //   !isCollapsed && isShowPortrait
+                                    //     ? "rgba(0, 0, 0, 0.2)"
+                                    //     : "transparent",
+                                    // padding:
+                                    //   !isCollapsed && isShowPortrait
+                                    //     ? "1px 8px"
+                                    //     : "0px",
+                                    // borderRadius: "4px",
                                     cursor: "pointer",
                                     userSelect: "none",
                                   }}
@@ -1814,7 +1814,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-25 14:13
+              업데이트 : 2026-02-25 14:16
             </div>
           </div>
 
@@ -1942,7 +1942,7 @@ function App() {
               <label style={{ ...btnStyle, backgroundColor: "#1a5e20", cursor: "pointer", textAlign: "center", display: "inline-block" }}>
                 Load<input type="file" accept=".json" onChange={importData} style={{ display: "none" }} />
               </label>
-              <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>업데이트 반영</button>
+              <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>숙제 최신화</button>
               <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button>
               <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
               
