@@ -480,7 +480,6 @@ const moveCandidateTo = (id, toIndex) => {
 
   return (
     <div style={{ marginTop: 12 }}>
-      {/* <div style={{ display: "flex", gap: 12, alignItems: "flex-start", flexWrap: "wrap" }}> */}
       <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
         {/* 좌: 파티(8 슬롯) */}
         {/* 왼쪽 레이드 파티 구성 패널 크기 조정 */}
@@ -673,27 +672,7 @@ const moveCandidateTo = (id, toIndex) => {
                 background: "#101010",
                 color: "#ddd",
               }}
-            />
-            <select
-              value={newCls}
-              onChange={(e) => setNewCls(e.target.value)}
-              style={{
-                padding: "8px 10px",
-                borderRadius: 10,
-                border: "1px solid #444",
-                background: "#101010",
-                color: "#ddd",
-              }}
-            >
-              <option value="수호성">수호성</option>
-              <option value="검성">검성</option>
-              <option value="살성">살성</option>
-              <option value="궁성">궁성</option>
-              <option value="마도성">마도성</option>
-              <option value="정령성">정령성</option>
-              <option value="호법성">호법성</option>
-              <option value="치유성">치유성</option>
-            </select>
+            />            
             <button
               onClick={addCandidate}
               style={{
@@ -838,22 +817,36 @@ const moveCandidateTo = (id, toIndex) => {
                           {c.name}
                         </span>
                       )}
-                      {/* <span style={clsBadgeStyle(c.cls)}>{c.cls}</span> */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();      // 드래그/드롭에 영향 안 주게
-                          cycleCandidateCls(c.id, e.shiftKey ? -1 : 1);
+                      <select
+                        value={c.cls}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          updateCandidateCls(c.id, e.target.value);
                         }}
+                        onClick={(e) => e.stopPropagation()}
                         style={{
-                          ...clsBadgeStyle(c.cls),
-                          cursor: "pointer",
-                          border: "none",
+                          padding: "4px 6px",
+                          borderRadius: 6,
+                          border: "1px solid #333",
+                          background: "rgba(0,0,0,0.35)",
+                          color: "#fff",
+                          fontWeight: "bold",
                         }}
-                        title="클릭해서 직업 변경"
+                        title="직업 선택"
                       >
-                        {c.cls}
-                      </button>
+                        {AION2_CLASSES.map((cls) => (
+                          <option
+                            key={cls}
+                            value={cls}
+                            style={{
+                              backgroundColor: "#2b2b2b",
+                              color: "#ffffff",
+                            }}
+                          >
+                            {cls}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div style={{ marginTop: 6, fontSize: 12 }}>
@@ -886,7 +879,7 @@ const moveCandidateTo = (id, toIndex) => {
                       }}
                       title="아툴에서 전투력/아툴 점수 다시 가져오기"
                     >
-                      전투력 갱신
+                      Update
                     </button>
 
                     <button
@@ -912,13 +905,23 @@ const moveCandidateTo = (id, toIndex) => {
                   </div>
                 </div>
               );
-            })}
+            })}          
+          </div>        
+        </div>
+
+        {/* 부캐 후보군 */}
+        <div
+          style={{ ...panelStyle, width: 300, flex: "0 0 380px" }}
+        >
+          <div style={{ fontWeight: "bold", marginBottom: 10, color: "#ddd" }}>
+            부캐 후보군
           </div>
 
-          {/* <div style={{ marginTop: 10, color: "#777", fontSize: 12 }}>
-            • 이 영역에 슬롯을 드롭하면 “파티에서 빼기”로 동작함
-          </div> */}
+          <div style={{ color: "#777", fontSize: 13 }}>
+            (여기에 부캐 목록 표시 예정)
+          </div>
         </div>
+
       </div>
     </div>
   );
