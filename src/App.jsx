@@ -1430,9 +1430,7 @@ function App() {
                       textAlign: "center", padding: "10px", fontWeight: "bold", 
                       position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
                       borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top",
-                      overflow: "hidden", // 배경이 셀 밖으로 안 튀게
-
-                      minHeight: isCollapsed ? 60 : 160,
+                      overflow: "hidden" // 배경이 셀 밖으로 안 튀게
                     }}>
 
                       {/* 접기/펴기 버튼 */}
@@ -1448,7 +1446,7 @@ function App() {
                       </button>
 
                       {/* ✅ 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
-                      <div style={{ position: "relative", zIndex: 2 }}>
+                      <div style={{ position: "relative", minHeight: isCollapsed ? 60 : 160 }}>
 
                         {/* ✅ 1) 초상화 "배경" (맨 뒤, 클릭 막지 않음) */}
                         {!isCollapsed && isShowPortrait &&
@@ -1764,7 +1762,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-25 13:29
+              업데이트 : 2026-02-25 13:45
             </div>
           </div>
 
