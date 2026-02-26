@@ -181,52 +181,53 @@ const initialHomeworks = [
   // 아이온2 - 업적 - 기본
   { id: "aion2-basic-foundation-quests", game: "aion2", name: "지역퀘, 봉던, 주둔지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
   { id: "aion2-achievement-add-friends", game: "aion2", name: "친추업적", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
-  // 아이온2 - 업적 - 필드보스
-  { id: "aion2-sentry-knash", game: "aion2", name: "감시병기 크나쉬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-black-tentacle-lawa", game: "aion2", name: "검은 촉수 라와", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-berserker-kusan", game: "aion2", name: "광투사 쿠산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Commander-Ragta", game: "aion2", name: "군단장 라그타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-ehdWHrdml-spdlzpf", game: "aion2", name: "동쪽의 네이켈", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-aksrogks-zhfls", game: "aion2", name: "만개한 코린", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Invincible-Solo-I", game: "aion2", name: "무적의 솔로 I", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-apostate-rayla", game: "aion2", name: "배교자 레일라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-centurion-Demiros", game: "aion2", name: "백부장 데미로스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-raged-sarus", game: "aion2", name: "분노한 사루스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-tjWHrdml-zpfmshs", game: "aion2", name: "서쪽의 케르논", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-gather-manager-moshav", game: "aion2", name: "수확관리자 모샤브", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-forest-warrior", game: "aion2", name: "숲전사 우라무", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-holy-ansas", game: "aion2", name: "신성한 안사스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Tjrdms-znxkfm", game: "aion2", name: "썩은 쿠타르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Researcher-Setram", game: "aion2", name: "연구관 세트람", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Soul-Ruler-Kashapa", game: "aion2", name: "영혼 지배자 카샤파", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-priest-garsim", game: "aion2", name: "제사장 가르심", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-chaser-taulo", game: "aion2", name: "추격자 타울로", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-silent-tartan", game: "aion2", name: "침묵의 타르탄", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-blood-fang", game: "aion2", name: "피송곳니 프닌", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-scholar-raula", game: "aion2", name: "학자 라울라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-guard-tigant", game: "aion2", name: "호위병 티간트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-dream-kassia", game: "aion2", name: "환몽의 카시아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Timeless-Isle-Timeless-Gartua", game: "aion2", name: "[영원의 섬] 영원의 가르투아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Black-Warrior-Aed", game: "aion2", name: "[알트가르드] 검은 전사 아에드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Berserker-Balg", game: "aion2", name: "[알트가르드] 광전사 발그", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-deceiver-trid", game: "aion2", name: "[알트가르드] 기만자 트리드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Melted-Danar", game: "aion2", name: "[알트가르드] 녹아내린 다나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Guruta", game: "aion2", name: "[알트가르드] 드라칸 부대병기 구루타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Axios", game: "aion2", name: "[알트가르드] 망혼의 아칸 악시오스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Noblude", game: "aion2", name: "[알트가르드] 모독자 노블루드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Shuzakan", game: "aion2", name: "[알트가르드] 백전노장 슈자칸", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Linkes", game: "aion2", name: "[알트가르드] 별동대장 링크스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Karuka", game: "aion2", name: "[알트가르드] 비전의 카루카", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Shirak", game: "aion2", name: "[알트가르드] 예리한 쉬라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Hadirun", game: "aion2", name: "[알트가르드] 중독된 하디룬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Advisor-Lesana", game: "aion2", name: "[알트가르드] 참모관 르사나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Barsien", game: "aion2", name: "[알트가르드] 처형자 바르시엔", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Supervisor-Nuta", game: "aion2", name: "[알트가르드] 총감독관 누타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Faithful-Lagit", game: "aion2", name: "[알트가르드] 충실한 라지트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Predator-Garsan", game: "aion2", name: "[알트가르드] 포식자 가르산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Bluewave-Kelpina", game: "aion2", name: "[알트가르드] 푸른물결 켈피나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Blood-Warrior-Lannar", game: "aion2", name: "[알트가르드] 혈전사 란나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
-  { id: "aion2-Altgarde-Bishveda", game: "aion2", name: "[알트가르드] 흑암의 비슈베다", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스", scope: "character", lastUpdated: {} },
+  // 아이온2 - 업적 - 필드보스(천족)
+  { id: "aion2-sentry-knash", game: "aion2", name: "감시병기 크나쉬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-black-tentacle-lawa", game: "aion2", name: "검은 촉수 라와", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-berserker-kusan", game: "aion2", name: "광투사 쿠산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Commander-Ragta", game: "aion2", name: "군단장 라그타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-ehdWHrdml-spdlzpf", game: "aion2", name: "동쪽의 네이켈", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-aksrogks-zhfls", game: "aion2", name: "만개한 코린", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Invincible-Solo-I", game: "aion2", name: "무적의 솔로 I", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-apostate-rayla", game: "aion2", name: "배교자 레일라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-centurion-Demiros", game: "aion2", name: "백부장 데미로스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-raged-sarus", game: "aion2", name: "분노한 사루스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-tjWHrdml-zpfmshs", game: "aion2", name: "서쪽의 케르논", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-gather-manager-moshav", game: "aion2", name: "수확관리자 모샤브", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-forest-warrior", game: "aion2", name: "숲전사 우라무", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-holy-ansas", game: "aion2", name: "신성한 안사스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Tjrdms-znxkfm", game: "aion2", name: "썩은 쿠타르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Researcher-Setram", game: "aion2", name: "연구관 세트람", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Soul-Ruler-Kashapa", game: "aion2", name: "영혼 지배자 카샤파", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-priest-garsim", game: "aion2", name: "제사장 가르심", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-chaser-taulo", game: "aion2", name: "추격자 타울로", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-silent-tartan", game: "aion2", name: "침묵의 타르탄", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-blood-fang", game: "aion2", name: "피송곳니 프닌", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-scholar-raula", game: "aion2", name: "학자 라울라", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-guard-tigant", game: "aion2", name: "호위병 티간트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-dream-kassia", game: "aion2", name: "환몽의 카시아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Timeless-Isle-Timeless-Gartua", game: "aion2", name: "[영원의 섬] 영원의 가르투아", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
+  // 아이온2 - 업적 - 필드보스(마족)
+  { id: "aion2-Altgarde-Black-Warrior-Aed", game: "aion2", name: "[알트가르드] 검은 전사 아에드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Berserker-Balg", game: "aion2", name: "[알트가르드] 광전사 발그", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-deceiver-trid", game: "aion2", name: "[알트가르드] 기만자 트리드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Melted-Danar", game: "aion2", name: "[알트가르드] 녹아내린 다나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Guruta", game: "aion2", name: "[알트가르드] 드라칸 부대병기 구루타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Axios", game: "aion2", name: "[알트가르드] 망혼의 아칸 악시오스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Noblude", game: "aion2", name: "[알트가르드] 모독자 노블루드", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Shuzakan", game: "aion2", name: "[알트가르드] 백전노장 슈자칸", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Linkes", game: "aion2", name: "[알트가르드] 별동대장 링크스", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Karuka", game: "aion2", name: "[알트가르드] 비전의 카루카", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Shirak", game: "aion2", name: "[알트가르드] 예리한 쉬라크", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Hadirun", game: "aion2", name: "[알트가르드] 중독된 하디룬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Advisor-Lesana", game: "aion2", name: "[알트가르드] 참모관 르사나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Barsien", game: "aion2", name: "[알트가르드] 처형자 바르시엔", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Supervisor-Nuta", game: "aion2", name: "[알트가르드] 총감독관 누타", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Faithful-Lagit", game: "aion2", name: "[알트가르드] 충실한 라지트", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Predator-Garsan", game: "aion2", name: "[알트가르드] 포식자 가르산", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Bluewave-Kelpina", game: "aion2", name: "[알트가르드] 푸른물결 켈피나", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Blood-Warrior-Lannar", game: "aion2", name: "[알트가르드] 혈전사 란나르", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
+  { id: "aion2-Altgarde-Bishveda", game: "aion2", name: "[알트가르드] 흑암의 비슈베다", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
   // 아이온2 - 업적 - 날개
   { id: "aion2-wing-ancient-aulaou-wings", game: "aion2", name: "[우루구구] 고대 아울라우의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
   { id: "aion2-wing-wings-of-blue-waves", game: "aion2", name: "[드라웁니르] 푸른 파도의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
@@ -1030,10 +1031,11 @@ function App() {
     const filteredHws = homeworks.filter(hw => hw.game === game && hw.scope === scope && (viewMode === "once" ? hw.resetPeriod === "once" : hw.resetPeriod !== "once"));
     const onceBasic = filteredHws.filter(hw => hw.category === "기본");
     const onceStory = filteredHws.filter(hw => hw.category === "스토리");
-    const onceBoss = filteredHws.filter(hw => hw.category === "필드보스");
+    const onceBossElyos = filteredHws.filter(hw => hw.category === "필드보스(천족)");
+    const onceBossAsmondians = filteredHws.filter(hw => hw.category === "필드보스(마족)");
     const onceWing = filteredHws.filter(hw => hw.category === "날개");
     const onceArt = filteredHws.filter(hw => hw.category === "명화");
-    const onceEtc = filteredHws.filter(hw => !["기본", "스토리", "필드보스", "날개", "명화"].includes(hw.category));
+    const onceEtc = filteredHws.filter(hw => !["기본", "스토리", "필드보스(천족)", "필드보스(마족)", "날개", "명화"].includes(hw.category));
     const categoryOrder = ["daily", "etc", "event", "weekly"];
     const groupedByCategory = Object.fromEntries(
       categoryOrder.map(cat => [cat, []])
@@ -1050,7 +1052,7 @@ function App() {
 
     const allFiltered =
       viewMode === "once"
-        ? [...onceBasic, ...onceStory, ...onceBoss, ...onceWing, ...onceArt, ...onceEtc]
+        ? [...onceBasic, ...onceStory, ...onceBossElyos, ...onceBossAsmondians, ...onceWing, ...onceArt, ...onceEtc]
         : categoryOrder.flatMap(cat => groupedByCategory[cat]);
 
     const categoryLabel = {
@@ -1141,8 +1143,10 @@ function App() {
                       <th colSpan={onceBasic.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>기본</th>}
                     {onceStory.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                       <th colSpan={onceStory.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>스토리</th>}
-                    {onceBoss.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
-                      <th colSpan={onceBoss.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>필드보스</th>}
+                    {onceBossElyos.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={onceBossElyos.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>필드보스(천족)</th>}
+                    {onceBossAsmondians.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
+                      <th colSpan={onceBossAsmondians.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>필드보스(마족)</th>}
                     {onceWing.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
                       <th colSpan={onceWing.filter(h => !hiddenHomeworks.includes(h.name)).length} style={{ padding: "8px" }}>날개</th>}
                     {onceArt.filter(h => !hiddenHomeworks.includes(h.name)).length > 0 && 
