@@ -22,7 +22,7 @@ const ARCANA_DATA = [
   {
     name: "양피지",
     note: "액티브 스킬",
-    recommended: "활력/마력",
+    recommended: "활력",
     skillsByClass: {
       수호성: ["심판", "맹렬한 일격", "쇠약의 맹타", "징벌"],
       검성: ["내려찍기", "파멸의 맹타", "도약 찍기", "예리한 일격"],
@@ -37,7 +37,7 @@ const ARCANA_DATA = [
   {
     name: "나침반",
     note: "액티브 스킬",
-    recommended: "활력/마력",
+    recommended: "순수",
     skillsByClass: {
       수호성: ["연속난타", "비호의 일격", "방패 강타", "방패 돌격"],
       검성: ["분쇄 파동", "절단의 맹타", "유린의 검", "돌진 일격"],
@@ -52,7 +52,7 @@ const ARCANA_DATA = [
   {
     name: "종",
     note: "패시브 스킬",
-    recommended: "마력",
+    recommended: "순수",
     skillsByClass: {
       수호성: ["격앙", "체력 강화", "단죄의 가호", "수호의 인장"],
       검성: ["공격 준비", "생존 자세", "피의 흡수", "생존 의지"],
@@ -67,7 +67,7 @@ const ARCANA_DATA = [
   {
     name: "거울",
     note: "패시브 스킬",
-    recommended: "마력",
+    recommended: "순수",
     skillsByClass: {
       수호성: ["충격 적중", "철벽 방어", "고통 차단", "생존 의지"],
       검성: ["충격 적중", "약점 파악", "노련한 반격", "살기 파멸"],
@@ -77,6 +77,21 @@ const ARCANA_DATA = [
       정령성: ["정신 집중", "침식", "연속 역류", "정령 보호"],
       치유성: ["대지의 은총", "치유력 강화", "찬란한 가호", "주신의 가호"],
       호법성: ["충격 적중", "고취의 주문", "대지의 약속", "바람의 약속"],
+    },
+  },
+  {
+    name: "천칭",
+    note: "전체 스킬",
+    recommended: "순수",
+    skillsByClass: {
+      수호성: [""],
+      검성: [""],
+      궁성: [""],
+      살성: [""],
+      마도성: [""],
+      정령성: [""],
+      치유성: [""],
+      호법성: [""],
     },
   },
 ];
@@ -117,7 +132,7 @@ export default function Aion2_ArcanaTable() {
       <div style={styles.card}>
         <div style={styles.header}>
           <div style={styles.title}>아르카나</div>
-          <div style={styles.sub}>천칭(예정)은 제외한 5종 기준</div>
+          {/* <div style={styles.sub}>천칭(예정)은 제외한 5종 기준</div> */}
         </div>
 
         <div style={styles.tableWrap}>
