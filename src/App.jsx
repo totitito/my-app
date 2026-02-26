@@ -322,6 +322,9 @@ function App() {
     () => localStorage.getItem(`viewMode-${game}`) || "repeat"
   );
 
+  // const [achvKey, setAchvKey] = useState(0);
+  const [achvResetKey, setAchvResetKey] = useState(0);
+
   // game이 바뀌면, 그 게임의 마지막 viewMode로 복원
   useEffect(() => {
     const saved = localStorage.getItem(`viewMode-${game}`);
@@ -670,11 +673,13 @@ function App() {
       const savedAcc = localStorage.getItem(`accounts-${g}`);
       const savedHidden = localStorage.getItem(`hidden-homeworks-${g}`);
       const savedScores = localStorage.getItem(`scores-${g}`);
+      const savedAchv = localStorage.getItem(`achievements-${g}-v2`);
 
       exportObj[`characters-${g}`] = savedChar ? JSON.parse(savedChar) : [];
       exportObj[`accounts-${g}`] = savedAcc ? JSON.parse(savedAcc) : [];
       exportObj.hiddenHomeworksByGame[g] = savedHidden ? JSON.parse(savedHidden) : [];
       exportObj[`scores-${g}`] = savedScores ? JSON.parse(savedScores) : {};
+      exportObj[`achievements-${g}-v2`] = savedAchv ? JSON.parse(savedAchv) : {};
     });
 
     const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: "application/json" });
@@ -743,6 +748,16 @@ function App() {
           if (data.hiddenHomeworksByGame[game]) {
             setHiddenHomeworks(data.hiddenHomeworksByGame[game]);
           }
+        }
+
+        // ✅ 업적 복구
+        const achvKey = `achievements-${game}-v2`;
+        if (data[achvKey]) {
+          localStorage.setItem(achvKey, JSON.stringify(data[achvKey]));
+          setAchvResetKey(prev => {
+            // console.log("achvResetKey 변경:", prev, "->", prev + 1); // ← 추가
+            return prev + 1;
+          });
         }
 
         alert("데이터를 성공적으로 불러왔습니다.");
@@ -1631,7 +1646,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-26 17:21
+              업데이트 : 2026-02-26 22:54
             </div>
           </div>
 
@@ -1829,7 +1844,7 @@ function App() {
 
       {game === "aion2" && viewMode === "aion2_achievements" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
-          <Aion2_AchievementsTab characters={characters} />
+          <Aion2_AchievementsTab key={achvResetKey} characters={characters} />
         </div>
       )}
 

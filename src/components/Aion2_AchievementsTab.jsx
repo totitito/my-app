@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { AION2_ACHIEVEMENTS } from "../data/aion2-Achievement";
 
-const ACHV_LS_KEY = (game) => `achievements-${game}`;
+const ACHV_LS_KEY = (game) => `achievements-${game}-v2`;
 
 // 1) 카테고리 목록(기존 하드코딩 대체)
 const CATS = ["기본","필드보스(천족)","필드보스(마족)","날개","명화"];
@@ -17,7 +17,7 @@ export default function Aion2_AchievementsTab({ characters = [] }) {
     }));
   };
 
-  console.log("characters:", characters);
+  // console.log("characters:", characters);
 
   const [achievementsState, setAchievementsState] = useState(() => {
     const saved = localStorage.getItem(ACHV_LS_KEY("aion2"));
@@ -30,7 +30,7 @@ export default function Aion2_AchievementsTab({ characters = [] }) {
         };
   });
 
-  useEffect(() => console.log("ACHV loaded:", achievementsState), []);
+  // useEffect(() => console.log("ACHV loaded:", achievementsState), []);
 
   useEffect(() => {
     localStorage.setItem(
@@ -127,12 +127,13 @@ export default function Aion2_AchievementsTab({ characters = [] }) {
           {!achievementsState.collapsed?.[cat] && (
             <table style={{ width: "850px", borderCollapse:"collapse", tableLayout:"fixed" }}>
               <thead>
-                <tr>
+                <tr style={{ background: "#363636" }}>
                   <th style={{ textAlign:"left", padding:"6px", border:"1px solid #333" }}>업적명</th>
                   {characters.map((c) => (
                     <th key={charLabel(c)}
                         style={{ width:64, padding:"6px 2px", border:"1px solid #333",
-                                wordBreak:"break-all", whiteSpace:"normal", lineHeight:1.1 }}>
+                                wordBreak:"break-all", whiteSpace:"normal", lineHeight:1.1,
+                                fontSize: 14 }}>
                       {charLabel(c)}
                     </th>
                   ))}
@@ -170,8 +171,13 @@ export default function Aion2_AchievementsTab({ characters = [] }) {
                               border: "1px solid #333",
                               cursor: "pointer",
                               background: checked ? "#222" : "#5a4f2a",
+                              textAlign: "center",
+                              fontSize: 11,
+                              color: checked ? "#555" : "#22221b",
+                              userSelect: "none",
                             }}
                           >
+                            {checked ? "(완료)" : "(미완료)"}
                           </td>
                         );
                       })}
