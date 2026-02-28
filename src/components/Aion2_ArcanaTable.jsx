@@ -1,5 +1,19 @@
 import React from "react";
 
+const RECOMMENDED_COLORS = {
+  활력: "#f0c040",
+  순수: "#ff4444",
+  광분: "#aa44ff",
+  마력: "#4499ff",
+};
+
+const RECOMMENDED_BG = {
+  활력: "#2a2310",
+  순수: "#2a1010",
+  광분: "#1e1028",
+  마력: "#101828",
+};
+
 const CLASSES = ["수호성", "검성", "살성", "궁성", "마도성", "정령성", "호법성", "치유성"];
 
 // 각 아르카나당 1행
@@ -7,7 +21,11 @@ const ARCANA_DATA = [
   {
     name: "성배",
     note: "전체 스킬",
-    recommended: "활력",
+    recommended: [
+      { main: "활력", sub: "시간 (전투 속도, 강타 저항)" },
+      { main: "광분", sub: "시간 (전투 속도, 강타 저항)" },
+      { main: "광분", sub: "시간 (전투 속도, 강타 저항)" },
+    ],
     skillsByClass: {
       수호성: ["심판", "연속난타", "맹렬한 일격", "격앙"],
       검성: ["분쇄 파동", "내려찍기", "파멸의 맹타", "절단의 맹타"],
@@ -22,7 +40,11 @@ const ARCANA_DATA = [
   {
     name: "양피지",
     note: "액티브 스킬",
-    recommended: "활력",
+    recommended: [
+      { main: "활력", sub: "생명 (생명력, 재생 확률)" },
+      { main: "광분", sub: "생명 (생명력, 재생 확률)" },
+      { main: "광분", sub: "생명 (생명력, 재생 확률)" },
+    ],
     skillsByClass: {
       수호성: ["심판", "맹렬한 일격", "쇠약의 맹타", "징벌"],
       검성: ["내려찍기", "파멸의 맹타", "도약 찍기", "예리한 일격"],
@@ -37,7 +59,12 @@ const ARCANA_DATA = [
   {
     name: "나침반",
     note: "액티브 스킬",
-    recommended: "순수",
+    recommended: [
+      { main: "순수", sub: "죽음 (치명타, 재생 관통)" },
+      { main: "광분", sub: "자유 (명중, 회피)" },
+      { main: "광분", sub: "자유 (명중, 회피)" },
+    ],
+
     skillsByClass: {
       수호성: ["연속난타", "비호의 일격", "방패 강타", "방패 돌격"],
       검성: ["분쇄 파동", "절단의 맹타", "유린의 검", "돌진 일격"],
@@ -52,7 +79,11 @@ const ARCANA_DATA = [
   {
     name: "종",
     note: "패시브 스킬",
-    recommended: "순수",
+    recommended: [
+      { main: "순수", sub: "지혜 (강타, 정신력 소모 감소)" },
+      { main: "광분", sub: "환상 (재사용 시간, 철벽 관통)" },
+      { main: "마력", sub: "지혜 (강타, 정신력 소모 감소)" },
+    ],
     skillsByClass: {
       수호성: ["격앙", "체력 강화", "단죄의 가호", "수호의 인장"],
       검성: ["공격 준비", "생존 자세", "피의 흡수", "생존 의지"],
@@ -67,7 +98,11 @@ const ARCANA_DATA = [
   {
     name: "거울",
     note: "패시브 스킬",
-    recommended: "순수",
+    recommended: [
+      { main: "순수", sub: "파괴 (공격력, 완벽 저항)" },
+      { main: "순수", sub: "파괴 (공격력, 완벽 저항)" },
+      { main: "마력", sub: "파괴 (공격력, 완벽 저항)" },
+    ],
     skillsByClass: {
       수호성: ["충격 적중", "철벽 방어", "고통 차단", "생존 의지"],
       검성: ["충격 적중", "약점 파악", "노련한 반격", "살기 파멸"],
@@ -82,7 +117,11 @@ const ARCANA_DATA = [
   {
     name: "천칭",
     note: "전체 스킬",
-    recommended: "순수",
+    recommended: [
+      { main: "순수", sub: "파괴 (공격력, 완벽 저항) /\n운명 (정신력, 철벽 확률)" },
+      { main: "순수", sub: "파괴 (공격력, 완벽 저항) /\n운명 (정신력, 철벽 확률)" },
+      { main: "광분", sub: "정의 (방어력, 완벽 확률) /\n생명 (생명력, 재생 확률)" },
+    ],
     skillsByClass: {
       수호성: [""],
       검성: [""],
@@ -94,6 +133,12 @@ const ARCANA_DATA = [
       호법성: [""],
     },
   },
+];
+
+const RECOMMENDED_TOTALS = [
+  ["전투 속도", "강타", "-", "-", "공격력", "공격력", "치명타", "정신력 소모 감소"],
+  ["전투 속도", "-", "명중", "재사용 시간", "공격력", "공격력", "-", "-"],
+  ["전투 속도", "강타", "명중", "-", "공격력", "-", "-", "정신력 소모 감소"],
 ];
 
 function buildSkillTotalsByClass(arcanaData) {
@@ -139,7 +184,9 @@ export default function Aion2_ArcanaTable() {
           <table style={styles.table}>
             <colgroup>
               <col style={{ width: 110 }} />
-              <col style={{ width: 90 }} />
+              <col style={{ width: 180 }} />
+              <col style={{ width: 180 }} />
+              <col style={{ width: 180 }} />
               {CLASSES.map((c) => (
                 <col key={c} style={{ width: 140 }} />
               ))}
@@ -148,7 +195,9 @@ export default function Aion2_ArcanaTable() {
             <thead>
               <tr>
                 <th style={styles.th}>아르카나</th>
-                <th style={styles.th}>추천</th>
+                <th style={styles.th}>주신스탯 추천1<br/>(2활력+4순수)</th>
+                <th style={styles.th}>주신스탯 추천2<br/>(4광분+2순수)</th>
+                <th style={styles.th}>주신스탯 추천3<br/>(4광분+2마력)</th>
                 {CLASSES.map((c) => (
                   <th key={c} style={styles.th}>
                     {c}
@@ -165,9 +214,12 @@ export default function Aion2_ArcanaTable() {
                     <div style={styles.note}>{arc.note}</div>
                   </td>
 
-                  <td style={styles.tdRecommended}>
-                    {arc.recommended}
-                  </td>
+                  {arc.recommended.map((rec, i) => (
+                    <td key={i} style={{ ...styles.tdRecommended, background: RECOMMENDED_BG[rec.main] || "#181818" }}>
+                      <div style={{ fontWeight: 800, color: RECOMMENDED_COLORS[rec.main] || "#fff" }}>{rec.main}</div>
+                      <div style={{ fontSize: 11, fontWeight: 400, marginTop: 3, opacity: 0.8, whiteSpace: "pre-line" }}>{rec.sub}</div>
+                    </td>
+                  ))}
 
                   {CLASSES.map((cls) => (
                     <td key={`${arc.name}-${cls}`} style={styles.td}>
@@ -180,12 +232,22 @@ export default function Aion2_ArcanaTable() {
 
             <tfoot>
               <tr>
-                <td style={{ ...styles.tdRecommended, color: "#d8c77a" }}>
+                <td style={{ ...styles.tdArcana, color: "#d8c77a", textAlign: "center", verticalAlign: "middle" }}>
                   <div style={{ fontWeight: 800 }}>합계</div>
                   {/* <div style={styles.note}>중복 포함</div> */}
                 </td>
 
-                <td style={styles.tdRecommended}>-</td>
+                {RECOMMENDED_TOTALS.map((col, i) => (
+                  <td key={i} style={styles.tdRecommended}>
+                    <ul style={styles.ul}>
+                      {col.map((item, j) => (
+                        <li key={j} style={{ ...styles.li, color: item === "-" ? "#555" : item === "정신력 소모 감소" ? "#4499ff" : "#ff5353" }}>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
+                ))}
 
                 {CLASSES.map((cls) => (
                   <td key={`total-${cls}`} style={styles.td}>
@@ -270,7 +332,7 @@ const styles = {
   th: {
     position: "sticky",
     top: 0,
-    background: "#222",
+    background: "#2a2a2a",
     borderBottom: "1px solid #333",
     padding: "10px 8px",
     textAlign: "center",
@@ -279,6 +341,7 @@ const styles = {
     zIndex: 1,
   },
   td: {
+    background: "#181818",
     borderBottom: "1px solid #2f2f2f",
     borderRight: "1px solid #2a2a2a",
     padding: "8px 10px",
@@ -290,8 +353,9 @@ const styles = {
     borderBottom: "1px solid #2f2f2f",
     borderRight: "1px solid #2a2a2a",
     padding: "8px 10px",
-    verticalAlign: "top",
-    background: "#1b1b1b",
+    verticalAlign: "middle",
+    textAlign: "center",
+    background: "#2a2a2a",
   },
   tdRecommended: {
     borderBottom: "1px solid #2f2f2f",
@@ -299,7 +363,7 @@ const styles = {
     padding: "8px",
     textAlign: "center",
     fontWeight: 800,
-    background: "#202020",
+    background: "#181818",
   },
   note: { marginTop: 6, fontSize: 11, opacity: 0.65 },
   ul: { 
