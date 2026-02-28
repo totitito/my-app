@@ -6,7 +6,7 @@ import { AION2_ACHIEVEMENTS } from "../data/aion2-Achievement";
 const ACHV_LS_KEY = (game) => `achievements-${game}-v2`;
 
 // 1) 카테고리 목록(기존 하드코딩 대체)
-const CATS = ["기본","필드보스(천족)","필드보스(마족)","날개","명화"];
+const CATS = ["기본","필드보스(천족)","필드보스(마족)","날개","명화(던전)","명화(슈고)","명화(기타)"];
 
 export default function Aion2_AchievementsTab({ characters = [] }) {
 
@@ -146,7 +146,9 @@ export default function Aion2_AchievementsTab({ characters = [] }) {
                   .map((a) => (
                     <tr key={a.id}>
                       <td style={{ padding:"6px", border:"1px solid #333" }}>
-                        {a.name}
+                        <span style={{ color: a.color || "inherit" }}>
+                          {a.name}
+                        </span>
                       </td>
 
                       {characters.map((c) => {
