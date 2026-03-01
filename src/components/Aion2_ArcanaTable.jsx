@@ -81,7 +81,7 @@ const ARCANA_DATA = [
     note: "패시브 스킬",
     recommended: [
       { main: "순수", sub: "지혜 (강타, 정신력 소모 감소)" },
-      { main: "광분", sub: "환상 (재사용 시간, 철벽 관통)" },
+      { main: "순수", sub: "파괴 (공격력, 완벽 저항)" },
       { main: "마력", sub: "지혜 (강타, 정신력 소모 감소)" },
     ],
     skillsByClass: {
@@ -100,7 +100,7 @@ const ARCANA_DATA = [
     note: "패시브 스킬",
     recommended: [
       { main: "순수", sub: "파괴 (공격력, 완벽 저항)" },
-      { main: "순수", sub: "파괴 (공격력, 완벽 저항)" },
+      { main: "광분", sub: "환상 (재사용 시간, 철벽 관통)" },
       { main: "마력", sub: "파괴 (공격력, 완벽 저항)" },
     ],
     skillsByClass: {
