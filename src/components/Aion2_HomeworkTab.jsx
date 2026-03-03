@@ -14,6 +14,8 @@ export default function Aion2_HomeworkTab({
 
   const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
 
+  const [editingCell, setEditingCell] = useState(null);
+
   const updateCount = (id, targetName, delta, e = null) => {
     setHomeworks(prev => prev.map(hw => {
       if (hw.id !== id) return hw;
@@ -491,7 +493,7 @@ export default function Aion2_HomeworkTab({
                   padding: "10px", 
                   position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
                   borderRight: "2px solid #444" 
-                }}>숙제명</th>
+                }}>{scope === "account" ? "계정명" : "캐릭명"}</th>
                 
                 {allFiltered.map(hw => {
                   if (hiddenHomeworks.includes(hw.name)) return null;
@@ -611,22 +613,24 @@ export default function Aion2_HomeworkTab({
                     }}>
 
                       {/* 접기/펴기 버튼 */}
-                      <button
-                        onClick={() => toggleCollapse(targetName)}
-                        style={{
-                          position: "absolute", top: "2px", right: "2px",
-                          fontSize: "10px", padding: "1px 4px", cursor: "pointer",
-                          backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", zIndex: 20
-                        }}
-                      >
-                        {isCollapsed ? "➕" : "➖"}
-                      </button>
+                      {scope !== "account" && (
+                        <button
+                          onClick={() => toggleCollapse(targetName)}
+                          style={{
+                            position: "absolute", top: "2px", right: "2px",
+                            fontSize: "10px", padding: "1px 4px", cursor: "pointer",
+                            backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", zIndex: 20
+                          }}
+                        >
+                          {isCollapsed ? "➕" : "➖"}
+                        </button>
+                      )}
 
                       {/* 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
                       <div
                         style={{
                           position: "relative",
-                          minHeight: isCollapsed ? 60 : 160,  // ✅ 유지
+                          minHeight: isCollapsed ? 60 : (scope === "account" ? 60 : 160),
                           display: "flex",
                           flexDirection: "column",
                           justifyContent: isCollapsed ? "flex-start" : "center",
@@ -910,28 +914,72 @@ export default function Aion2_HomeworkTab({
                               </div>
 
                               {/* 2. Input 창 영역: 버튼을 떼어내고 세로 배치 유도 */}
-                              <div style={{ marginBottom: isCollapsed ? "3px" : "5px" }}>
-                                <input 
-                                  type="number"
-                                  className="count-input"
-                                  value={val}
-                                  onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
-                                  onFocus={(e) => e.target.select()}
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                      e.target.blur();
-                                    }
-                                  }}
-                                  style={{
-                                    width: "45px",
-                                    textAlign: "center",
-                                    backgroundColor: "#222",
-                                    color: "#fff",
-                                    border: "1px solid #444",
-                                    transition: "background-color 0.2s, color 0.2s"
-                                  }}
-                                />
-                                <span style={{ color: isPending ? "#ccc" : "#888", fontSize: "13px" }}> / {hw.max}</span>
+                              <div 
+                                style={{ 
+                                  marginBottom: isCollapsed ? "3px" : "5px", 
+                                  cursor: "pointer",
+                                  // ✅ 아래 3줄이 핵심: div가 셀 전체를 꽉 채우게 만듦
+                                  width: "100%",
+                                  height: "100%",
+                                  minHeight: "30px", 
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center"
+                                }}
+                                // 1. 셀의 어느 배경(빈 곳)을 눌러도 0 ↔ max 토글
+                                onClick={() => {
+                                  if (editingCell?.hwId === hw.id && editingCell?.targetName === targetName) return;
+                                  
+                                  const curVal = Number(val);
+                                  const minVal = hw.min ?? 0;
+                                  const nextVal = (curVal === minVal) ? hw.max : minVal;
+                                  updateCount(hw.id, targetName, nextVal);
+                                }}
+                              >
+                                {editingCell?.hwId === hw.id && editingCell?.targetName === targetName ? (
+                                  <input 
+                                    type="number"
+                                    className="count-input"
+                                    autoFocus
+                                    value={val}
+                                    onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
+                                    onBlur={() => setEditingCell(null)}
+                                    onFocus={(e) => e.target.select()}
+                                    onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }}
+                                    onClick={(e) => e.stopPropagation()} // 인풋 클릭 시 토글 방지
+                                    style={{
+                                      width: "40px",
+                                      textAlign: "center",
+                                      backgroundColor: "#fff",
+                                      color: "#000",
+                                      border: "1px solid #62dafb",
+                                      borderRadius: "2px"
+                                    }}
+                                  />
+                                ) : (
+                                  // 2. 평상시 모습: 배경색을 없애고 숫자만 깔끔하게 표시
+                                  <span 
+                                    style={{ 
+                                      fontSize: "15px", 
+                                      fontWeight: isPending ? "bold" : "normal",
+                                      color: isPending ? "#fff" : "#666", // 진행 중이면 흰색, 완료면 흐리게
+                                      padding: "2px 4px",
+                                      display: "inline-block",
+                                      userSelect: "none"
+                                    }}
+                                    onClick={(e) => {
+                                      // 숫자를 직접 누르면 편집 모드(Input)로 전환
+                                      e.stopPropagation(); 
+                                      setEditingCell({ hwId: hw.id, targetName });
+                                    }}
+                                  >
+                                    {val}
+                                  </span>
+                                )}
+                                
+                                <span style={{ color: isPending ? "#ccc" : "#888", fontSize: "13px", userSelect: "none" }}>
+                                  &nbsp;/ {hw.max}
+                                </span>
                               </div>
                               
                               {/* 3. 하단 버튼군: -, 0, + 가로 배치 */}

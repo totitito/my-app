@@ -31,6 +31,7 @@ export const initialHomeworks = [
   { id: "aion2-nightmare", game: "aion2", name: "악몽", max: 14, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 2, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - 기타
   { id: "aion2-odd-energy", game: "aion2", name: "오드에너지", category: "etc", max: 840, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
+  // { id: "aion2-abyss-cloister", game: "aion2", name: "회랑", category: "etc", max: 1, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
   // 아이온2 - 반복 - Daily (이벤트)
   { id: "aion2-event-260211-bokpocket-exchange-daily", game: "aion2", name: "복주머니 일일 교환", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - Weekly (이벤트)

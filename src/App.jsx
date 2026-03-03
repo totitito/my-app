@@ -515,7 +515,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-02-28 23:24
+              업데이트 : 2026-03-03 15:42
             </div>
           </div>
 
@@ -572,19 +572,9 @@ function App() {
                   fontWeight: viewMode === "repeat" ? "bold" : "normal",
                 }}
               >
-                반복퀘
+                숙제
               </button>
-              {/* <button
-                onClick={() => setViewMode("once")}
-                style={{
-                  ...btnStyle,
-                  backgroundColor: viewMode === "once" ? "#333" : "#1e1e1e",
-                  border: viewMode === "once" ? "1px solid #777" : "1px solid #444",
-                  fontWeight: viewMode === "once" ? "bold" : "normal",// marginRight: "10px",
-                }}
-              >
-                업적
-              </button> */}
+
               {/* ✅ AION 2 전용 버튼들 */}
               {game === "aion2" && (
                 <>
