@@ -63,7 +63,12 @@ export const AION2_ACHIEVEMENTS = [
   { id: "aion2-horn-cave", game: "aion2", name: "[암굴] 어둠의 장막 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   { id: "aion2-dramata-nest", game: "aion2", name: "[드라마타] 드라마타 둥지의 날개", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   { id: "aion2-wing-cradle-of-nothingness", game: "aion2", name: "[무의요람] 무아의 날개", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-wings-of-sealing", game: "aion2", name: "[봉인 던전] 봉인의 날개", color: "#2f4bc8", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-wings-of-glory", game: "aion2", name: "[봉인 던전] 영광의 날개", color: "#2f4bc8", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   
+  // 아이온2 - 업적 - 조각상
+  { id: "aion2-statue-wings-of-sealing", game: "aion2", name: "봉인의 날개", color: "#53ee37", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "조각상", scope: "character", lastUpdated: {} },
+
   // 아이온2 - 업적 - 명화(던전)
   { id: "aion2-masterpiece-abyssal-reforging-rudra", game: "aion2", name: "심연의 루드라", color: "#ff4444", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
   { id: "aion2-masterpiece-cradle-of-nothingness", game: "aion2", name: "무의 요람", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
