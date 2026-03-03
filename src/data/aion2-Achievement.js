@@ -55,14 +55,14 @@ export const AION2_ACHIEVEMENTS = [
   { id: "aion2-Altgarde-Bishveda", game: "aion2", name: "[알트가르드] 흑암의 비슈베다", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
   
   // 아이온2 - 업적 - 날개
-  { id: "aion2-wing-ancient-aulaou-wings", game: "aion2", name: "[우루구구] 고대 아울라우의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
-  { id: "aion2-wing-wings-of-blue-waves", game: "aion2", name: "[드라웁니르] 푸른 파도의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
-  { id: "aion2-wing-black-fragmented-wings", game: "aion2", name: "[크라오] 검은 파편의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
-  { id: "aion2-wing-forest-spirit-wings", game: "aion2", name: "[바크론] 숲의 정령의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-fire-temple", game: "aion2", name: "[불신] 크로메데의 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-horn-cave", game: "aion2", name: "[암굴] 어둠의 장막 날개 깃털", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-dramata-nest", game: "aion2", name: "[드라마타] 드라마타 둥지의 날개", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-wing-cradle-of-nothingness", game: "aion2", name: "[무의요람] 무아의 날개", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-ancient-aulaou-wings", game: "aion2", name: "[우루구구] 고대 아울라우의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
+  { id: "aion2-wing-wings-of-blue-waves", game: "aion2", name: "[드라웁니르] 푸른 파도의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
+  { id: "aion2-wing-black-fragmented-wings", game: "aion2", name: "[크라오] 검은 파편의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
+  { id: "aion2-wing-forest-spirit-wings", game: "aion2", name: "[바크론] 숲의 정령의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-fire-temple", game: "aion2", name: "[불신] 크로메데의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-horn-cave", game: "aion2", name: "[암굴] 어둠의 장막 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-dramata-nest", game: "aion2", name: "[드라마타] 드라마타 둥지의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-cradle-of-nothingness", game: "aion2", name: "[무의요람] 무아의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   { id: "aion2-wing-wings-of-sealing", game: "aion2", name: "[봉인 던전] 봉인의 날개", color: "#2f4bc8", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   { id: "aion2-wing-wings-of-glory", game: "aion2", name: "[봉인 던전] 영광의 날개", color: "#2f4bc8", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   
