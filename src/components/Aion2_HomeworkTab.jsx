@@ -440,7 +440,7 @@ export default function Aion2_HomeworkTab({
               <tr style={{ backgroundColor: "#333" }}>
                 {scope === "character" && !isPortraitCollapsed && (
                   <th style={{ 
-                    width: "60px", padding: "8px", 
+                    width: "80px", padding: "8px", 
                     position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
                     borderRight: "1px solid #444"
                   }}>
@@ -646,7 +646,21 @@ export default function Aion2_HomeworkTab({
                 return (
                   <tr key={idx}>
                     {/* 1열: 초상화 */}
-                    {scope === "character" && !isPortraitCollapsed && (
+                    {scores[targetName]?.portrait ? (
+                      <img
+                        src={scores[targetName].portrait}
+                        alt={targetName}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "center top",
+                          display: "block",
+                        }}
+                      />
+                    ) : (
+                      <div style={{ color: "#555", fontSize: "11px", padding: "8px" }}>없음</div>
+                    )}
                       <td style={{
                         width: "60px", padding: "0",
                         position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
