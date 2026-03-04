@@ -660,7 +660,7 @@ export default function Aion2_HomeworkTab({
                       }}>
                         {!isCollapsed && scores[targetName]?.portrait && (
                           <div style={{
-                            width: "80px",
+                            width: "100%",
                             height: "100px",
                             overflow: "hidden",
                             position: "relative",
