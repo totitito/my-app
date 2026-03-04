@@ -665,7 +665,7 @@ export default function Aion2_HomeworkTab({
                                 minHeight: "100px",
                                 objectFit: "cover",
                                 objectPosition: "center center",
-                                display: "block",
+                                display: "inline-block",
                                 margin: "0 auto",
                               }}
                             />
