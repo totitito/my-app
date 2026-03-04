@@ -15,6 +15,7 @@ export default function Aion2_HomeworkTab({
   const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
 
   const [editingCell, setEditingCell] = useState(null);
+  const [isPortraitCollapsed, setIsPortraitCollapsed] = useState(false);
 
   const updateCount = (id, targetName, delta, e = null) => {
     setHomeworks(prev => prev.map(hw => {
@@ -363,7 +364,15 @@ export default function Aion2_HomeworkTab({
 
     const formatDate = (ts) => {
       if (!ts) return "기록 없음";
-      return fmtKST(Number(ts));
+      const d = new Date(Number(ts));
+      const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+      const kst = new Date(d.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+      const month = kst.getMonth() + 1;
+      const day = kst.getDate();
+      const dow = dayNames[kst.getDay()];
+      const hh = String(kst.getHours()).padStart(2, "0");
+      const mm = String(kst.getMinutes()).padStart(2, "0");
+      return `${month}/${day}(${dow})\n${hh}:${mm}`;
     };
 
     const nowMs = getNowMs();
@@ -429,11 +438,35 @@ export default function Aion2_HomeworkTab({
           <table border="1" style={{ borderCollapse: "separate", borderSpacing: 0, borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
             <thead>
               <tr style={{ backgroundColor: "#333" }}>
+                {scope === "character" && !isPortraitCollapsed && (
+                  <th style={{ 
+                    width: "60px", padding: "8px", 
+                    position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
+                    borderRight: "1px solid #444"
+                  }}>
+                    <button
+                      onClick={() => setIsPortraitCollapsed(true)}
+                      style={{ fontSize: "10px", padding: "1px 4px", cursor: "pointer", backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px" }}
+                    >
+                      ➖
+                    </button>
+                  </th>
+                )}
                 <th style={{ 
                   width: "140px", padding: "8px", 
-                  position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
+                  position: "sticky", left: scope === "character" && !isPortraitCollapsed ? 60 : 0, zIndex: 20, backgroundColor: "#333",
                   borderRight: "2px solid #444"
-                }}>구분</th>
+                }}>
+                  {scope === "character" && isPortraitCollapsed && (
+                    <button
+                      onClick={() => setIsPortraitCollapsed(false)}
+                      style={{ fontSize: "10px", padding: "1px 4px", cursor: "pointer", backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", marginRight: "4px" }}
+                    >
+                      ➕
+                    </button>
+                  )}
+                  구분
+                </th>
                 
                 {viewMode === "once" && (
                   <>
@@ -489,9 +522,16 @@ export default function Aion2_HomeworkTab({
 
               {/* 2행: 숙제명 */}
               <tr style={{ backgroundColor: "#333" }}>
+                {scope === "character" && !isPortraitCollapsed && (
+                  <th style={{ 
+                    width: "60px", padding: "10px", 
+                    position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
+                    borderRight: "1px solid #444"
+                  }}>초상화</th>
+                )}
                 <th style={{ 
                   padding: "10px", 
-                  position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
+                  position: "sticky", left: scope === "character" && !isPortraitCollapsed ? 60 : 0, zIndex: 20, backgroundColor: "#333",
                   borderRight: "2px solid #444" 
                 }}>{scope === "account" ? "계정명" : "캐릭명"}</th>
                 
@@ -605,13 +645,38 @@ export default function Aion2_HomeworkTab({
                 
                 return (
                   <tr key={idx}>
+                    {/* 1열: 초상화 */}
+                    {scope === "character" && !isPortraitCollapsed && (
+                      <td style={{
+                        width: "60px", padding: "0",
+                        position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
+                        borderRight: "1px solid #444", verticalAlign: "middle",
+                        overflow: "hidden", textAlign: "center"
+                      }}>
+                        {scores[targetName]?.portrait ? (
+                          <div
+                            style={{
+                              width: "60px",
+                              height: "100%",
+                              minHeight: "80px",
+                              backgroundImage: `url("${scores[targetName].portrait}")`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center top",
+                            }}
+                          />
+                        ) : (
+                          <div style={{ color: "#555", fontSize: "11px", padding: "8px" }}>없음</div>
+                        )}
+                      </td>
+                    )}
+
+                    {/* 2열: 캐릭터 정보 */}
                     <td style={{ 
                       textAlign: "center", padding: "10px", fontWeight: "bold", 
-                      position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
+                      position: "sticky", left: scope === "character" && !isPortraitCollapsed ? 60 : 0, zIndex: 10, backgroundColor: "#1e1e1e",
                       borderRight: "2px solid #444", verticalAlign: isCollapsed ? "middle" : "top",
-                      overflow: "hidden" // 배경이 셀 밖으로 안 튀게
+                      overflow: "hidden"
                     }}>
-
                       {/* 접기/펴기 버튼 */}
                       {scope !== "account" && (
                         <button
@@ -626,155 +691,69 @@ export default function Aion2_HomeworkTab({
                         </button>
                       )}
 
-                      {/* 배경/오버레이/콘텐츠 기준 잡는 래퍼 */}
-                      <div
-                        style={{
-                          position: "relative",
-                          minHeight: isCollapsed ? 60 : (scope === "account" ? 60 : 160),
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: isCollapsed ? "flex-start" : "center",
-                        }}
-                      >
-
-                        {/* 초상화 "배경" */}
-                        {!isCollapsed &&
-                          ["lostark", "aion2"].includes(game) &&
-                          scores[targetName]?.portrait && (
-                            <>
-                              {/* (A) 초상화 이미지: isShowPortrait일 때만 보임 */}
-                              {isShowPortrait && (
-                                <div
-                                  aria-hidden="true"
-                                  style={{
-                                    position: "absolute",
-                                    inset: 0,
-                                    backgroundImage: `url("${scores[targetName].portrait}")`,
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center top",
-                                    opacity: 1,
-                                    transform: "scale(1.0)",
-                                    pointerEvents: "none",
-                                    zIndex: 0,
-                                  }}
-                                />
-                              )}
-
-                              {/* ✅ (B) 클릭 오버레이: 초상화 ON/OFF와 무관하게 항상 존재 */}
-                              <div
-                                onClick={() => togglePortrait(idx, setData)}
-                                title="클릭하면 초상화 토글"
-                                style={{
-                                  position: "absolute",
-                                  inset: 0,
-                                  background: "transparent",
-                                  cursor: "pointer",
-                                  zIndex: 1, // 내용(zIndex 2)보다 낮게
-                                }}
-                              />
-                            </>
-                          )}
-
-                        {/* ✅ 3) 기존 내용은 위로 */}
+                      <div style={{
+                        position: "relative",
+                        minHeight: isCollapsed ? 60 : (scope === "account" ? 60 : 100),
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                      }}>
                         <div style={{ position: "relative", zIndex: 2 }}>
-
-                          {/* 캐릭터 나열 순서 변경하는 위/아래 화살표 */}
+                          {/* ▲▼ 버튼 */}
                           <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "0px" }}>
                             <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▲</button>
                             <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▼</button>
                           </div>
 
-                          {/* 캐릭명, Lv, 직업 */}
-                          <div>
-                            {/* 캐릭명 */}
-                            <div style={{ textAlign: "center", marginBottom: "2px" }}>
-                              {editingKey === `${scope}:${idx}` ? (
-                                <input
-                                  value={editingValue}
-                                  autoFocus
-                                  onChange={(e) => setEditingValue(e.target.value)}
-                                  onBlur={() =>
-                                    commitRenameInline(targetName, editingValue, idx, dataList, setData)
-                                  }
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      commitRenameInline(targetName, editingValue, idx, dataList, setData);
-                                    }
-                                    if (e.key === "Escape") {
-                                      setEditingKey(null);
-                                      setEditingValue("");
-                                    }
-                                  }}
-                                  style={{
-                                    width: "120px",
-                                    textAlign: "center",
-                                    backgroundColor: "#222",
-                                    color: "#fff",
-                                    border: "1px solid #555",
-                                    borderRadius: "4px",
-                                    padding: "2px 6px",
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                  }}
-                                />
-                              ) : (
-                                <span
-                                  onClick={() => {
-                                    setEditingKey(`${scope}:${idx}`);
-                                    setEditingValue(targetName);
-                                  }}
-                                  title="클릭해서 이름 변경"
-                                  style={{
-                                    display: "inline-block",
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                    color: "#fff",
-                                    textShadow: "1px 1px 2px rgba(0,0,0,1)",
-                                    // backgroundColor:
-                                    //   !isCollapsed && isShowPortrait
-                                    //     ? "rgba(0, 0, 0, 0.2)"
-                                    //     : "transparent",
-                                    // padding:
-                                    //   !isCollapsed && isShowPortrait
-                                    //     ? "1px 8px"
-                                    //     : "0px",
-                                    // borderRadius: "4px",
-                                    cursor: "pointer",
-                                    userSelect: "none",
-                                  }}
-                                >
-                                  {targetName}
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Lv, 직업 */}
-                            {(game === "lostark" || game === "aion2") && scores[targetName]?.job && (
-                              <div style={{ fontSize: "12px", textAlign: "center", marginTop: "-4px", textShadow: "1px 1px 3px rgba(0,0,0,1)", }}>
-                                {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
-                                {scores[targetName].job}
-                              </div>
+                          {/* 캐릭명 */}
+                          <div style={{ textAlign: "center", marginBottom: "2px" }}>
+                            {editingKey === `${scope}:${idx}` ? (
+                              <input
+                                value={editingValue}
+                                autoFocus
+                                onChange={(e) => setEditingValue(e.target.value)}
+                                onBlur={() => commitRenameInline(targetName, editingValue, idx, dataList, setData)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") commitRenameInline(targetName, editingValue, idx, dataList, setData);
+                                  if (e.key === "Escape") { setEditingKey(null); setEditingValue(""); }
+                                }}
+                                style={{
+                                  width: "120px", textAlign: "center", backgroundColor: "#222",
+                                  color: "#fff", border: "1px solid #555", borderRadius: "4px",
+                                  padding: "2px 6px", fontSize: "16px", fontWeight: "bold",
+                                }}
+                              />
+                            ) : (
+                              <span
+                                onClick={() => { setEditingKey(`${scope}:${idx}`); setEditingValue(targetName); }}
+                                title="클릭해서 이름 변경"
+                                style={{
+                                  display: "inline-block", fontSize: "16px", fontWeight: "bold",
+                                  color: "#fff", textShadow: "1px 1px 2px rgba(0,0,0,1)",
+                                  cursor: "pointer", userSelect: "none",
+                                }}
+                              >
+                                {targetName}
+                              </span>
                             )}
                           </div>
 
-                          {/* 전투력 등 캐릭터 추가 정보 */}
+                          {/* Lv, 직업 */}
+                          {(game === "lostark" || game === "aion2") && scores[targetName]?.job && (
+                            <div style={{ fontSize: "12px", textAlign: "center", marginTop: "-4px", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
+                              {scores[targetName]?.level ? `Lv. ${scores[targetName].level} ` : ""}
+                              {scores[targetName].job}
+                            </div>
+                          )}
+
+                          {/* 전투력 등 추가 정보 */}
                           {!isCollapsed && (
                             <>
-
                               {scope === "account" && (
                                 <div style={{ display: "flex", justifyContent: "center", gap: "6px", marginTop: "4px" }}>
                                   <button
-                                    onClick={() => {
-                                      if (window.confirm(`[${targetName}] 계정을 목록에서 삭제하시겠습니까?`)) {
-                                        setData((prev) => prev.filter((_, i) => i !== idx));
-                                      }
-                                    }}
-                                    style={{
-                                      ...btnStyle,
-                                      padding: "2px 5px",
-                                      fontSize: "10px",
-                                      backgroundColor: "#600",
-                                    }}
+                                    onClick={() => { if (window.confirm(`[${targetName}] 계정을 목록에서 삭제하시겠습니까?`)) setData((prev) => prev.filter((_, i) => i !== idx)); }}
+                                    style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#600" }}
                                   >
                                     삭제
                                   </button>
@@ -783,101 +762,37 @@ export default function Aion2_HomeworkTab({
 
                               {["aion2", "lostark"].includes(game) && scope === "character" && (() => {
                                 const gameConfig = {
-                                  "lostark": {
-                                    labels: ["템렙", "전투력"],
-                                    keys: ["itemLevel", "combatPower"],
-                                    fetchFn: () => fetchLoaScore(targetName)
-                                  },
-                                  "aion2": {
-                                    labels: ["전투력", "아툴"],
-                                    keys: ["combatPower", "combatScore"],
-                                    fetchFn: () => fetchScore(targetName)
-                                  }
+                                  "lostark": { labels: ["템렙", "전투력"], keys: ["itemLevel", "combatPower"], fetchFn: () => fetchLoaScore(targetName) },
+                                  "aion2": { labels: ["전투력", "아툴"], keys: ["combatPower", "combatScore"], fetchFn: () => fetchScore(targetName) }
                                 };
-
                                 const config = gameConfig[game];
-                                // config가 없을 경우를 대비한 안전장치
-                                if (!config) return null; 
-
+                                if (!config) return null;
                                 const scoreData = scores[targetName];
-
                                 return (
                                   <div>
-                                    {/* ✅ 전투력/아툴(또는 템렙/전투력) 표시 다시 추가 */}
                                     {scoreData ? (
                                       <div style={{ marginTop: "-8px", marginBottom: "2px" }}>
-                                        <span
-                                          style={{
-                                            fontSize: "10px",
-                                            color: "#ffffff",
-                                            textShadow: "1px 1px 3px rgba(0,0,0,1)",
-                                          }}
-                                        >
+                                        <span style={{ fontSize: "10px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
                                           {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString?.() ?? "?"}
                                         </span>
-
-                                        <span
-                                          style={{
-                                            fontSize: "10px",
-                                            color: "#69b7ee",
-                                            textShadow: "1px 1px 3px rgba(0,0,0,1)",
-                                            marginLeft: "6px",
-                                          }}
-                                        >
+                                        <span style={{ fontSize: "10px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
                                           {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString?.() ?? "?"}
                                         </span>
                                       </div>
                                     ) : (
-                                      <div
-                                        style={{
-                                          fontSize: "10px",
-                                          color: "#888",
-                                          marginTop: "-4px",
-                                          marginBottom: "2px",
-                                          textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
-                                        }}
-                                      >
+                                      <div style={{ fontSize: "10px", color: "#888", marginTop: "-4px", marginBottom: "2px", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>
                                         점수 미갱신
                                       </div>
                                     )}
-
-                                    {/* ✅ 갱신/삭제 버튼은 아래 한 줄로 유지 */}
                                     <div style={{ display: "flex", justifyContent: "center", gap: "6px" }}>
-                                      <button
-                                        onClick={config.fetchFn}
-                                        style={{
-                                          ...btnStyle,
-                                          padding: "2px 5px",
-                                          fontSize: "10px",
-                                          backgroundColor: "#335a80",
-                                          textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
-                                        }}
-                                      >
-                                        갱신
-                                      </button>
-
-                                      <button
-                                        onClick={() => {
-                                          if (window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) {
-                                            setData((prev) => prev.filter((_, i) => i !== idx));
-                                          }
-                                        }}
-                                        style={{
-                                          ...btnStyle,
-                                          padding: "2px 5px",
-                                          fontSize: "10px",
-                                          backgroundColor: "#600",
-                                        }}
-                                      >
-                                        삭제
-                                      </button>
+                                      <button onClick={config.fetchFn} style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#335a80", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>갱신</button>
+                                      <button onClick={() => { if (window.confirm(`[${targetName}] 캐릭터를 목록에서 삭제하시겠습니까?`)) setData((prev) => prev.filter((_, i) => i !== idx)); }} style={{ ...btnStyle, padding: "2px 5px", fontSize: "10px", backgroundColor: "#600" }}>삭제</button>
                                     </div>
                                   </div>
                                 );
                               })()}
                             </>
                           )}
-
                         </div>
                       </div>
                     </td>
@@ -894,13 +809,26 @@ export default function Aion2_HomeworkTab({
                       const isPending = val > 0 && !isExcluded;
 
                       return (
-                        <td key={`${idx}-${hw.id}`} style={{ 
-                          textAlign: "center", 
-                          padding: "10px", 
-                          backgroundColor: isPending ? "#4b4b20" : "transparent",
-                          position: "relative",
-                          verticalAlign: "middle" 
-                        }}>
+                        <td key={`${idx}-${hw.id}`} 
+                          onClick={(e) => {
+                            if (e.target.tagName === "INPUT") return;
+                            if (editingCell) {
+                              setEditingCell(null);
+                              return;
+                            }
+                            const curVal = Number(val);
+                            const minVal = hw.min ?? 0;
+                            const nextVal = (curVal === minVal) ? hw.max : minVal;
+                            updateCount(hw.id, targetName, nextVal);
+                          }}
+                          style={{ 
+                            textAlign: "center", 
+                            padding: "10px", 
+                            backgroundColor: isPending ? "#4b4b20" : "transparent",
+                            position: "relative",
+                            verticalAlign: "middle",
+                            cursor: "pointer"
+                          }}>
                           {/* 제외 체크 박스 */}
                           <div style={{ position: "absolute", top: "2px", right: "2px" }}>
                             <input type="checkbox" checked={isExcluded} onChange={() => toggleExclude(hw.id, targetName)} />
@@ -909,7 +837,7 @@ export default function Aion2_HomeworkTab({
                           {!isExcluded ? (
                             <>
                               {/* 1. 숙제 갱신 일자: 상단으로 이동 */}
-                              <div style={{ fontSize: "10px", color: "#777", marginBottom: isCollapsed ? "2px" : "6px", minHeight: "12px" }}>
+                              <div style={{ fontSize: "10px", color: "#777", marginBottom: isCollapsed ? "2px" : "6px", minHeight: "12px", whiteSpace: "pre", userSelect: "none" }}>
                                 {formatDate(hw.lastEdited?.[targetName] ?? hw.lastUpdated?.[targetName])}
                               </div>
 
@@ -926,15 +854,6 @@ export default function Aion2_HomeworkTab({
                                   alignItems: "center",
                                   justifyContent: "center"
                                 }}
-                                // 1. 셀의 어느 배경(빈 곳)을 눌러도 0 ↔ max 토글
-                                onClick={() => {
-                                  if (editingCell?.hwId === hw.id && editingCell?.targetName === targetName) return;
-                                  
-                                  const curVal = Number(val);
-                                  const minVal = hw.min ?? 0;
-                                  const nextVal = (curVal === minVal) ? hw.max : minVal;
-                                  updateCount(hw.id, targetName, nextVal);
-                                }}
                               >
                                 {editingCell?.hwId === hw.id && editingCell?.targetName === targetName ? (
                                   <input 
@@ -943,9 +862,12 @@ export default function Aion2_HomeworkTab({
                                     autoFocus
                                     value={val}
                                     onChange={(e) => updateCount(hw.id, targetName, e.target.value)}
-                                    onBlur={() => setEditingCell(null)}
+                                    onBlur={() => setTimeout(() => setEditingCell(null), 150)}
                                     onFocus={(e) => e.target.select()}
-                                    onKeyDown={(e) => { if (e.key === 'Enter') e.target.blur(); }}
+                                    onKeyDown={(e) => { 
+                                      if (e.key === 'Enter') e.target.blur();
+                                      if (e.key === 'Escape') { setEditingCell(null); }
+                                    }}
                                     onClick={(e) => e.stopPropagation()} // 인풋 클릭 시 토글 방지
                                     style={{
                                       width: "40px",
@@ -957,15 +879,17 @@ export default function Aion2_HomeworkTab({
                                     }}
                                   />
                                 ) : (
-                                  // 2. 평상시 모습: 배경색을 없애고 숫자만 깔끔하게 표시
                                   <span 
                                     style={{ 
                                       fontSize: "15px", 
                                       fontWeight: isPending ? "bold" : "normal",
-                                      color: isPending ? "#fff" : "#666", // 진행 중이면 흰색, 완료면 흐리게
+                                      color: isPending ? "#fff" : "#666",
                                       padding: "2px 4px",
                                       display: "inline-block",
-                                      userSelect: "none"
+                                      userSelect: "none",
+                                      border: `1px solid ${isPending ? "#999" : "#555"}`,
+                                      borderRadius: "3px",
+                                      minWidth: "24px",
                                     }}
                                     onClick={(e) => {
                                       // 숫자를 직접 누르면 편집 모드(Input)로 전환
@@ -982,7 +906,7 @@ export default function Aion2_HomeworkTab({
                                 </span>
                               </div>
                               
-                              {/* 3. 하단 버튼군: -, 0, + 가로 배치 */}
+                              {/* 3. 하단 버튼군: -, 0, + 가로 배치
                               <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
                                 <button 
                                   style={{ ...btnStyle, padding: "2px 0", width: "24px" }} 
@@ -1002,7 +926,7 @@ export default function Aion2_HomeworkTab({
                                 >
                                   +
                                 </button>
-                              </div>
+                              </div> */}
                             </>
                           ) : <div style={{ color: "#555", fontSize: "12px" }}>제외됨</div>}
                         </td>
