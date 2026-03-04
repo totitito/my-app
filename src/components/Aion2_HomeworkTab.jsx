@@ -659,11 +659,11 @@ export default function Aion2_HomeworkTab({
                             src={scores[targetName].portrait}
                             alt={targetName}
                             style={{
-                              width: "80px",
+                              width: "100%",
                               height: "100%",
                               minHeight: "100px",
                               objectFit: "cover",
-                              objectPosition: "center top",
+                              objectPosition: "center center",
                               display: "block",
                             }}
                           />
