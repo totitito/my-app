@@ -651,22 +651,25 @@ export default function Aion2_HomeworkTab({
                         width: "80px", padding: "0",
                         position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
                         borderRight: "1px solid #444", verticalAlign: "middle",
-                        overflow: "hidden", textAlign: "center",
-                        display: "flex", justifyContent: "center", alignItems: "center"
+                        overflow: "hidden", textAlign: "center"
+                        // display: "flex", justifyContent: "center", alignItems: "center"
                       }}>
                         {!isCollapsed && scores[targetName]?.portrait && (
-                          <img
-                            src={scores[targetName].portrait}
-                            alt={targetName}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              minHeight: "100px",
-                              objectFit: "cover",
-                              objectPosition: "center center",
-                              display: "block",
-                            }}
-                          />
+                          <div style={{ width: "80px", height: "100%", minHeight: "100px", overflow: "hidden" }}>
+                            <img
+                              src={scores[targetName].portrait}
+                              alt={targetName}
+                              style={{
+                                width: "80px",
+                                height: "100%",
+                                minHeight: "100px",
+                                objectFit: "cover",
+                                objectPosition: "center center",
+                                display: "block",
+                                margin: "0 auto",
+                              }}
+                            />
+                          </div>
                         )}
                       </td>
                     )}
