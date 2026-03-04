@@ -712,6 +712,16 @@ export default function Aion2_HomeworkTab({
                             <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▼</button>
                           </div>
 
+                          {/* 초상화 복구 버튼 */}
+                          {scope === "character" && isPortraitCollapsed && (
+                            <button
+                              onClick={() => setIsPortraitCollapsed(false)}
+                              style={{ ...btnStyle, fontSize: "10px", padding: "2px 6px", marginTop: "4px" }}
+                            >
+                              초상화 +
+                            </button>
+                          )}
+
                           {/* 캐릭명 */}
                           <div style={{ textAlign: "center", marginBottom: "2px" }}>
                             {editingKey === `${scope}:${idx}` ? (
