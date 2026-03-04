@@ -647,35 +647,39 @@ export default function Aion2_HomeworkTab({
                   <tr key={idx}>
                     {/* 1열: 초상화 */}
                     {scope === "character" && !isPortraitCollapsed && (
-                      <td
-                        style={{
-                          width: "80px",
-                          padding: 0,
-                          position: "sticky",
-                          left: 0,
-                          zIndex: 10,
-                          backgroundColor: "#1e1e1e",
-                          borderRight: "1px solid #444",
-                          overflow: "hidden",
-
-                          // ✅ 핵심: 완전 가운데 고정
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
+                      <td style={{
+                        width: "80px",
+                        padding: 0,
+                        position: "sticky",
+                        left: 0,
+                        zIndex: 10,
+                        backgroundColor: "#1e1e1e",
+                        borderRight: "1px solid #444",
+                        overflow: "hidden",
+                        verticalAlign: "middle",
+                      }}>
                         {!isCollapsed && scores[targetName]?.portrait && (
-                          <img
-                            src={scores[targetName].portrait}
-                            alt={targetName}
-                            style={{
-                              width: "80px",
-                              height: "100px",      // ✅ 고정 권장 (지금 minHeight로 흔들림 방지)
-                              objectFit: "cover",
-                              objectPosition: "center",
-                              display: "block",     // ✅ inline 영향 제거
-                            }}
-                          />
+                          <div style={{
+                            width: "80px",
+                            height: "100px",
+                            overflow: "hidden",
+                            position: "relative",
+                          }}>
+                            <img
+                              src={scores[targetName].portrait}
+                              alt={targetName}
+                              style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                objectPosition: "center top",
+                              }}
+                            />
+                          </div>
                         )}
                       </td>
                     )}
