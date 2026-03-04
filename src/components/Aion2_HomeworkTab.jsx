@@ -646,29 +646,29 @@ export default function Aion2_HomeworkTab({
                 return (
                   <tr key={idx}>
                     {/* 1열: 초상화 */}
-                    {scope === "character" && !isPortraitCollapsed && !isCollapsed && (
+                    {scope === "character" && !isPortraitCollapsed && (
                       <td style={{
                         width: "80px", padding: "0",
                         position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
                         borderRight: "1px solid #444", verticalAlign: "middle",
                         overflow: "hidden", textAlign: "center"
                       }}>
-                      {scores[targetName]?.portrait ? (
-                        <div
-                          style={{
-                            width: "80px",
-                            height: "100%",
-                            minHeight: "80px",
-                            backgroundImage: `url("${scores[targetName].portrait}")`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center center",
-                          }}
-                        />
-                      ) : (
-                        <div style={{ color: "#555", fontSize: "11px", padding: "8px" }}>없음</div>
-                      )}
-                    </td>
-                  )}
+                        {!isCollapsed && scores[targetName]?.portrait && (
+                          <img
+                            src={scores[targetName].portrait}
+                            alt={targetName}
+                            style={{
+                              width: "80px",
+                              height: "100%",
+                              minHeight: "100px",
+                              objectFit: "cover",
+                              objectPosition: "center top",
+                              display: "block",
+                            }}
+                          />
+                        )}
+                      </td>
+                    )}
 
                     {/* 2열: 캐릭터 정보 */}
                     <td style={{ 
