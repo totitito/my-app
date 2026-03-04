@@ -647,29 +647,35 @@ export default function Aion2_HomeworkTab({
                   <tr key={idx}>
                     {/* 1열: 초상화 */}
                     {scope === "character" && !isPortraitCollapsed && (
-                      <td style={{
-                        width: "80px", padding: "0",
-                        position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
-                        borderRight: "1px solid #444", verticalAlign: "middle",
-                        overflow: "hidden", textAlign: "center"
-                        // display: "flex", justifyContent: "center", alignItems: "center"
-                      }}>
+                      <td
+                        style={{
+                          width: "80px",
+                          padding: 0,
+                          position: "sticky",
+                          left: 0,
+                          zIndex: 10,
+                          backgroundColor: "#1e1e1e",
+                          borderRight: "1px solid #444",
+                          overflow: "hidden",
+
+                          // ✅ 핵심: 완전 가운데 고정
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
                         {!isCollapsed && scores[targetName]?.portrait && (
-                          <div style={{ width: "80px", height: "100%", minHeight: "100px", overflow: "hidden" }}>
-                            <img
-                              src={scores[targetName].portrait}
-                              alt={targetName}
-                              style={{
-                                width: "80px",
-                                height: "100%",
-                                minHeight: "100px",
-                                objectFit: "cover",
-                                objectPosition: "center center",
-                                display: "inline-block",
-                                margin: "0 auto",
-                              }}
-                            />
-                          </div>
+                          <img
+                            src={scores[targetName].portrait}
+                            alt={targetName}
+                            style={{
+                              width: "80px",
+                              height: "100px",      // ✅ 고정 권장 (지금 minHeight로 흔들림 방지)
+                              objectFit: "cover",
+                              objectPosition: "center",
+                              display: "block",     // ✅ inline 영향 제거
+                            }}
+                          />
                         )}
                       </td>
                     )}
