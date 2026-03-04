@@ -438,33 +438,13 @@ export default function Aion2_HomeworkTab({
           <table border="1" style={{ borderCollapse: "separate", borderSpacing: 0, borderColor: "#444", whiteSpace: "nowrap", minWidth: "fit-content" }}>
             <thead>
               <tr style={{ backgroundColor: "#333" }}>
-                {scope === "character" && !isPortraitCollapsed && (
-                  <th style={{ 
-                    width: "80px", padding: "8px", 
+                <th 
+                  colSpan={scope === "character" && !isPortraitCollapsed ? 2 : 1}
+                  style={{ 
+                    width: "140px", padding: "8px", 
                     position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
-                    borderRight: "1px solid #444"
+                    borderRight: "2px solid #444"
                   }}>
-                    <button
-                      onClick={() => setIsPortraitCollapsed(true)}
-                      style={{ fontSize: "10px", padding: "1px 4px", cursor: "pointer", backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px" }}
-                    >
-                      ➖
-                    </button>
-                  </th>
-                )}
-                <th style={{ 
-                  width: "140px", padding: "8px", 
-                  position: "sticky", left: scope === "character" && !isPortraitCollapsed ? 60 : 0, zIndex: 20, backgroundColor: "#333",
-                  borderRight: "2px solid #444"
-                }}>
-                  {scope === "character" && isPortraitCollapsed && (
-                    <button
-                      onClick={() => setIsPortraitCollapsed(false)}
-                      style={{ fontSize: "10px", padding: "1px 4px", cursor: "pointer", backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", marginRight: "4px" }}
-                    >
-                      ➕
-                    </button>
-                  )}
                   구분
                 </th>
                 
@@ -526,14 +506,35 @@ export default function Aion2_HomeworkTab({
                   <th style={{ 
                     width: "60px", padding: "10px", 
                     position: "sticky", left: 0, zIndex: 20, backgroundColor: "#333",
-                    borderRight: "1px solid #444"
-                  }}>초상화</th>
+                    borderRight: "1px solid #444", textAlign: "center"
+                  }}>
+                    초상화
+                    <br/>
+                    <button
+                      onClick={() => setIsPortraitCollapsed(true)}
+                      style={{ fontSize: "10px", padding: "1px 4px", cursor: "pointer", backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", marginTop: "4px" }}
+                    >
+                      초상화 ➖
+                    </button>
+                  </th>
                 )}
                 <th style={{ 
                   padding: "10px", 
                   position: "sticky", left: scope === "character" && !isPortraitCollapsed ? 60 : 0, zIndex: 20, backgroundColor: "#333",
-                  borderRight: "2px solid #444" 
-                }}>{scope === "account" ? "계정명" : "캐릭명"}</th>
+                  borderRight: "2px solid #444", textAlign: "center"
+                }}>
+                  {scope === "account" ? "계정명" : "캐릭명"}
+                  {scope === "character" && isPortraitCollapsed && (
+                    <div>
+                      <button
+                        onClick={() => setIsPortraitCollapsed(false)}
+                        style={{ fontSize: "10px", padding: "1px 4px", cursor: "pointer", backgroundColor: "#444", color: "#fff", border: "none", borderRadius: "3px", marginTop: "4px" }}
+                      >
+                        초상화 ➕
+                      </button>
+                    </div>
+                  )}
+                </th>
                 
                 {allFiltered.map(hw => {
                   if (hiddenHomeworks.includes(hw.name)) return null;
@@ -710,17 +711,7 @@ export default function Aion2_HomeworkTab({
                           <div style={{ display: "flex", gap: "2px", justifyContent: "center", marginBottom: "0px" }}>
                             <button onClick={() => moveTarget(idx, "up", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▲</button>
                             <button onClick={() => moveTarget(idx, "down", dataList, setData)} style={{...btnStyle, padding: "3px 6px", fontSize: "11px" }}>▼</button>
-                          </div>
-
-                          {/* 초상화 복구 버튼 */}
-                          {scope === "character" && isPortraitCollapsed && (
-                            <button
-                              onClick={() => setIsPortraitCollapsed(false)}
-                              style={{ ...btnStyle, fontSize: "10px", padding: "2px 6px", marginTop: "4px" }}
-                            >
-                              초상화 +
-                            </button>
-                          )}
+                          </div>                          
 
                           {/* 캐릭명 */}
                           <div style={{ textAlign: "center", marginBottom: "2px" }}>
