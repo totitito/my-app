@@ -649,7 +649,6 @@ export default function Aion2_HomeworkTab({
                     {scope === "character" && !isPortraitCollapsed && (
                       <td style={{
                         width: "80px",
-                        height: "100%",
                         padding: 0,
                         position: "sticky",
                         left: 0,
@@ -658,29 +657,22 @@ export default function Aion2_HomeworkTab({
                         borderRight: "1px solid #444",
                         overflow: "hidden",
                         verticalAlign: "middle",
+                        position: "relative",
                       }}>
                         {!isCollapsed && scores[targetName]?.portrait && (
-                          <div style={{
-                            width: "100%",
-                            height: "100px",
-                            overflow: "hidden",
-                            position: "relative",
-                          }}>
-                            <img
-                              src={scores[targetName].portrait}
-                              alt={targetName}
-                              style={{
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                                objectPosition: "center top",
-                              }}
-                            />
-                          </div>
+                          <img
+                            src={scores[targetName].portrait}
+                            alt={targetName}
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              objectPosition: "center top",
+                            }}
+                          />
                         )}
                       </td>
                     )}
