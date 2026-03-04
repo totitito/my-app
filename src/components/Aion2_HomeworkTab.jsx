@@ -649,6 +649,7 @@ export default function Aion2_HomeworkTab({
                     {scope === "character" && !isPortraitCollapsed && (
                       <td style={{
                         width: "80px",
+                        height: "100%",
                         padding: 0,
                         position: "sticky",
                         left: 0,
@@ -661,7 +662,7 @@ export default function Aion2_HomeworkTab({
                         {!isCollapsed && scores[targetName]?.portrait && (
                           <div style={{
                             width: "100%",
-                            height: "100%",
+                            height: "100px",
                             overflow: "hidden",
                             position: "relative",
                           }}>
