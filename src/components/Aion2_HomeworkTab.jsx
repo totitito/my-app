@@ -646,43 +646,29 @@ export default function Aion2_HomeworkTab({
                 return (
                   <tr key={idx}>
                     {/* 1열: 초상화 */}
-                    {scores[targetName]?.portrait ? (
-                      <img
-                        src={scores[targetName].portrait}
-                        alt={targetName}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          objectPosition: "center top",
-                          display: "block",
-                        }}
-                      />
-                    ) : (
-                      <div style={{ color: "#555", fontSize: "11px", padding: "8px" }}>없음</div>
-                    )}
+                    {scope === "character" && !isPortraitCollapsed && !isCollapsed && (
                       <td style={{
-                        width: "60px", padding: "0",
+                        width: "80px", padding: "0",
                         position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
                         borderRight: "1px solid #444", verticalAlign: "middle",
                         overflow: "hidden", textAlign: "center"
                       }}>
-                        {scores[targetName]?.portrait ? (
-                          <div
-                            style={{
-                              width: "60px",
-                              height: "100%",
-                              minHeight: "80px",
-                              backgroundImage: `url("${scores[targetName].portrait}")`,
-                              backgroundSize: "cover",
-                              backgroundPosition: "center top",
-                            }}
-                          />
-                        ) : (
-                          <div style={{ color: "#555", fontSize: "11px", padding: "8px" }}>없음</div>
-                        )}
-                      </td>
-                    )}
+                      {scores[targetName]?.portrait ? (
+                        <div
+                          style={{
+                            width: "80px",
+                            height: "100%",
+                            minHeight: "80px",
+                            backgroundImage: `url("${scores[targetName].portrait}")`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center center",
+                          }}
+                        />
+                      ) : (
+                        <div style={{ color: "#555", fontSize: "11px", padding: "8px" }}>없음</div>
+                      )}
+                    </td>
+                  )}
 
                     {/* 2열: 캐릭터 정보 */}
                     <td style={{ 
