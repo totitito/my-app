@@ -651,7 +651,8 @@ export default function Aion2_HomeworkTab({
                         width: "80px", padding: "0",
                         position: "sticky", left: 0, zIndex: 10, backgroundColor: "#1e1e1e",
                         borderRight: "1px solid #444", verticalAlign: "middle",
-                        overflow: "hidden", textAlign: "center"
+                        overflow: "hidden", textAlign: "center",
+                        display: "flex", justifyContent: "center", alignItems: "center"
                       }}>
                         {!isCollapsed && scores[targetName]?.portrait && (
                           <img
