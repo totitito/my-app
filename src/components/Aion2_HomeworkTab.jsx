@@ -820,6 +820,7 @@ export default function Aion2_HomeworkTab({
                         <td key={`${idx}-${hw.id}`} 
                           onClick={(e) => {
                             if (e.target.tagName === "INPUT") return;
+                            if (isExcluded) return;
                             if (editingCell) {
                               setEditingCell(null);
                               return;
