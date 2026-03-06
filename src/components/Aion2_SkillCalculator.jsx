@@ -627,55 +627,143 @@ function SkillCard({
       padding: "12px", marginBottom: "10px",
     }}>
       {/* 헤더 */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
+          alignItems: "center",
+          marginBottom: "10px",
+          columnGap: "12px",
+        }}
+      >
+        {/* 좌측: 스킬포인트 + 데바니온 */}
+        <div style={{ display: "flex", alignItems: "center", gap: "14px", justifySelf: "start" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+            <label style={{ fontSize: "10px", color: S.textDim }}>스킬포인트</label>
+            <input
+              type="number"
+              value={skill.skillPoints}
+              min={0}
+              max={10}
+              onChange={(e) => onChange({ ...skill, skillPoints: Number(e.target.value) })}
+              onFocus={handleInputFocus}
+              onKeyDown={handleInputKeyDown}
+              style={inputStyle}
+            />
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+            <label style={{ fontSize: "10px", color: S.textDim }}>데바니온</label>
+            <input
+              type="number"
+              value={skill.devanion}
+              min={0}
+              max={4}
+              onChange={(e) => onChange({ ...skill, devanion: Number(e.target.value) })}
+              onFocus={handleInputFocus}
+              onKeyDown={handleInputKeyDown}
+              style={inputStyle}
+            />
+          </div>
+        </div>
+
+        {/* 가운데: 이름 / 타입 / 우선순위 */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            justifySelf: "center",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
           <span
             style={{
               fontSize: "13px",
               fontWeight: "bold",
-              color: skill.type === "active" ? "#ff4d4f" : "#1e88e5"
+              color: skill.type === "active" ? "#ff4d4f" : "#1e88e5",
             }}
           >
             {skill.name}
           </span>
-          <span style={{ fontSize: "11px", color: S.textDim, backgroundColor: S.surface2, padding: "1px 6px", borderRadius: "3px" }}>
+
+          <span
+            style={{
+              fontSize: "11px",
+              color: S.textDim,
+              backgroundColor: S.surface2,
+              padding: "1px 6px",
+              borderRadius: "3px",
+            }}
+          >
             {skill.type === "active" ? "액티브" : skill.type === "passive" ? "패시브" : skill.type ?? "?"}
           </span>
-          {skill.priority && <span style={{ fontSize: "10px", color: S.textDim }}>우선순위 {skill.priority}위</span>}
+
+          {skill.priority && (
+            <span style={{ fontSize: "10px", color: S.textDim }}>
+              우선순위 {skill.priority}위
+            </span>
+          )}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <span style={{ fontSize: "20px", fontWeight: "bold", color: diff <= 0 ? S.ok : diff <= 3 ? S.warn : "#e57373" }}>
+
+        {/* 우측: 현재레벨 / 목표 / 삭제 */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            justifySelf: "end",
+          }}
+        >
+          <span
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: diff <= 0 ? S.ok : diff <= 3 ? S.warn : "#e57373",
+            }}
+          >
             Lv.{level}
           </span>
-          <span style={{ fontSize: "11px", color: S.textDim }}>/ 목표
-            <input type="number" value={skill.targetLevel} min={1} max={40}
+
+          <span style={{ fontSize: "11px", color: S.textDim }}>
+            / 목표
+            <input
+              type="number"
+              value={skill.targetLevel}
+              min={1}
+              max={40}
               onChange={(e) => onChange({ ...skill, targetLevel: Number(e.target.value) })}
               onFocus={handleInputFocus}
               onKeyDown={handleInputKeyDown}
-              style={{ width: "36px", marginLeft: "4px", backgroundColor: S.surface2, color: S.text, border: `1px solid ${S.border}`, borderRadius: "3px", padding: "1px 3px", fontSize: "11px", textAlign: "center" }}
+              style={{
+                width: "36px",
+                marginLeft: "4px",
+                backgroundColor: S.surface2,
+                color: S.text,
+                border: `1px solid ${S.border}`,
+                borderRadius: "3px",
+                padding: "1px 3px",
+                fontSize: "11px",
+                textAlign: "center",
+              }}
             />
           </span>
-          <button onClick={onRemove} style={{ background: "none", border: "none", color: "#666", cursor: "pointer", fontSize: "16px", lineHeight: 1, padding: "0 2px" }}>×</button>
-        </div>
-      </div>
 
-      {/* 스킬포인트 + 데바니온 */}
-      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "10px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
-          <label style={{ fontSize: "10px", color: S.textDim }}>스킬포인트</label>
-          <input type="number" value={skill.skillPoints} min={0} max={10}
-            onChange={(e) => onChange({ ...skill, skillPoints: Number(e.target.value) })}
-            onFocus={handleInputFocus}
-            onKeyDown={handleInputKeyDown}
-            style={inputStyle} />
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
-          <label style={{ fontSize: "10px", color: S.textDim }}>데바니온</label>
-          <input type="number" value={skill.devanion} min={0} max={4}
-            onChange={(e) => onChange({ ...skill, devanion: Number(e.target.value) })}
-            onFocus={handleInputFocus}
-            onKeyDown={handleInputKeyDown}
-            style={inputStyle} />
+          <button
+            onClick={onRemove}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#666",
+              cursor: "pointer",
+              fontSize: "16px",
+              lineHeight: 1,
+              padding: "0 2px",
+            }}
+          >
+            ×
+          </button>
         </div>
       </div>
 
