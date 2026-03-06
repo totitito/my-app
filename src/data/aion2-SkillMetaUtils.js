@@ -1,7 +1,7 @@
-// src/data/skillColorUtils.js
+// src/data/skillColorUtils.js -> skillMetaUtils.js
 // 아툴 스킬 우선순위 데이터 기반 자동 색상 매핑 유틸리티
 
-import SKILL_PRIORITY_RAW from "./skillPriorityData.json";
+import SKILL_PRIORITY_RAW from "./aion2-skillpriority.json";
 
 /**
  * 색상 정의
@@ -60,15 +60,17 @@ function priorityToTier(priority) {
  */
 const SKILL_MAP = {};
 
-for (const [job, typeMap] of Object.entries(SKILL_PRIORITY_RAW)) {
+for (const [job, jobData] of Object.entries(SKILL_PRIORITY_RAW.jobs ?? SKILL_PRIORITY_RAW)) {
   SKILL_MAP[job] = {};
+  const typeMap = jobData.data ?? jobData;
   for (const [skillType, skills] of Object.entries(typeMap)) {
+    if (!Array.isArray(skills)) continue;
     for (const { skill_name, priority } of skills) {
       const tier = priorityToTier(priority);
       const color = tier ? (TIER_COLORS[skillType]?.[tier] ?? null) : null;
       // 같은 스킬명이 여러 타입에 있을 수 있으므로 타입별로 저장
       if (!SKILL_MAP[job][skill_name]) {
-        SKILL_MAP[job][skill_name] = [];
+      SKILL_MAP[job][skill_name] = [];
       }
       SKILL_MAP[job][skill_name].push({ type: skillType, priority, tier, color });
     }
@@ -82,7 +84,7 @@ for (const [job, typeMap] of Object.entries(SKILL_PRIORITY_RAW)) {
  * @param {string} [skillType] - "active" | "passive" | "stigma" (없으면 첫 번째 매칭)
  * @returns {{ type, priority, tier, color } | null}
  */
-export function getSkillColorInfo(job, skillName, skillType = null) {
+export function getSkillMeta(job, skillName, skillType = null) {
   const jobMap = SKILL_MAP[job];
   if (!jobMap) return null;
 
@@ -103,7 +105,7 @@ export function getSkillColorInfo(job, skillName, skillType = null) {
  * @returns {string | null}
  */
 export function getSkillColor(job, skillName, skillType = null) {
-  return getSkillColorInfo(job, skillName, skillType)?.color ?? null;
+  return getSkillMeta(job, skillName, skillType)?.color ?? null;
 }
 
 /**
@@ -120,7 +122,7 @@ export function injectSkillColors(arcanaSkills) {
       result[job][arcana] = skills.map((skill) => {
         // 문자열이면 객체로 변환
         const skillObj = typeof skill === "string" ? { name: skill } : { ...skill };
-        const info = getSkillColorInfo(job, skillObj.name, skillObj.type ?? null);
+        const info = getSkillMeta(job, skillObj.name, skillObj.type ?? null);
         return {
           ...skillObj,
           priority: info?.priority ?? null,

@@ -7,6 +7,7 @@ import Aion2_ArcanaTable from "./components/Aion2_ArcanaTable";
 import Aion2_HomeworkTab from "./components/Aion2_HomeworkTab";
 import { initialHomeworks } from "./data/initialHomeworks";
 import { getCategory, fmtKST, getNowMs, getDisplayVal } from "./data/homeworkUtils";
+import Aion2_SkillCalculator from "./components/Aion2_SkillCalculator";
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
 import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
 import Aion2_RaidPartyBuilder from "./components/Aion2_RaidPartyBuilder";
@@ -515,7 +516,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-04 14:58
+              업데이트 : 2026-03-06 16:09
             </div>
           </div>
 
@@ -622,7 +623,19 @@ function App() {
                       fontWeight: viewMode === "aion2_skill" ? "bold" : "normal",
                     }}
                   >
-                    스킬
+                    스킬 채택률
+                  </button>
+
+                  <button
+                    onClick={() => setViewMode("aion2_skillcalc")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_skillcalc" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_skillcalc" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_skillcalc" ? "bold" : "normal",
+                    }}
+                  >
+                    스킬 계산기
                   </button>
 
                   <button
@@ -695,6 +708,12 @@ function App() {
       {game === "aion2" && viewMode === "aion2_skill" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
           <Aion2_SkillPriorityTable />
+        </div>
+      )}
+
+      {game === "aion2" && viewMode === "aion2_skillcalc" && (
+        <div style={{ marginTop: 20, paddingTop: 12 }}>
+          <Aion2_SkillCalculator />
         </div>
       )}
 
