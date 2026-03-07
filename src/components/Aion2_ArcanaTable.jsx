@@ -78,7 +78,6 @@ const ARCANA_SIM_RESULT = {
   },
 };
 
-// 각 아르카나당 1행
 const ARCANA_DATA = [
   {
     name: "성배",
@@ -126,7 +125,6 @@ const ARCANA_DATA = [
       { main: "광분", sub: "자유 (명중, 회피)" },
       { main: "광분", sub: "자유 (명중, 회피)" },
     ],
-
     skillsByClass: {
       수호성: ["연속난타", "비호의 일격", "방패 강타", "방패 돌격"],
       검성: ["분쇄 파동", "절단의 맹타", "유린의 검", "돌진 일격"],
@@ -197,48 +195,64 @@ const ARCANA_DATA = [
   },
 ];
 
-const RECOMMENDED_TOTALS = [
-  ["전투 속도", "강타", "-", "-", "공격력", "공격력", "치명타", "정신력 소모"],
-  ["전투 속도", "-", "명중", "재사용 시간", "공격력", "공격력", "-", "-"],
-  ["전투 속도", "강타", "명중", "-", "공격력", "-", "-", "정신력 소모"],
-];
-
 const STAT_COLORS = {
-  // 1티어 공격
   "전투 속도": "#ff4d4d",
   강타: "#ff4d4d",
   공격력: "#ff4d4d",
   치명타: "#ff4d4d",
   쿨감: "#ff4d4d",
-
-  // 2티어 공격
   명중: "#ff9a3c",
-
-  // 3티어 공격
-  // 완벽: "#ffff00",
   완벽: "#bbbbbb",
-
-  // 4티어 공격
-  "이동 속도": "#bbbbbb",  
+  "이동 속도": "#bbbbbb",
   "철벽 관통": "#bbbbbb",
   "재생 관통": "#bbbbbb",
-
-  // 정신력 계열
   "정신력 소모": "#3bd16f",
   정신력: "#3bd16f",
-
-  // 일반 방어
   방어력: "#4da6ff",
   회피: "#4da6ff",
   생명력: "#4da6ff",
   "재생 확률": "#4da6ff",
   막기: "#4da6ff",
-
-  // PVP 방어
   철벽: "#00ffff",
   "강타 저항": "#b06cff",
   "완벽 저항": "#b06cff",
 };
+
+const SET_EFFECTS = {
+  활력: {
+    2: { type: "활력", count: 2, desc: "PVE 공격력 60" },
+    4: { type: "활력", count: 4, desc: "PVE 공격력 150" },
+  },
+  마력: {
+    2: { type: "마력", count: 2, desc: "정신력 1500 회복" },
+    4: { type: "마력", count: 4, desc: "PVE 방어력 1000" },
+  },
+  광분: {
+    2: { type: "광분", count: 2, desc: "PVE 공격력 50" },
+    4: { type: "광분", count: 4, desc: "보피증 5%, 보피내 10%" },
+  },
+  순수: {
+    2: { type: "순수", count: 2, desc: "PVE 방어력 500" },
+    4: { type: "순수", count: 4, desc: "치피증 5%, 방어력 1000" },
+  },
+};
+
+const LS_KEY = "aion2-arcana-sim-v2";
+
+function createPreset(name = "새 프리셋") {
+  return {
+    id: crypto.randomUUID(),
+    name,
+    selections: {
+      성배: "활력",
+      양피지: "활력",
+      나침반: "활력",
+      종: "활력",
+      거울: "활력",
+      천칭: "광분",
+    },
+  };
+}
 
 function renderColoredDetailStats(detailStats) {
   const items = detailStats
@@ -254,56 +268,16 @@ function renderColoredDetailStats(detailStats) {
   ));
 }
 
-function buildSkillTotalsByClass(arcanaData) {
-  const totals = {};
-
-  CLASSES.forEach((cls) => {
-    const map = new Map();
-
-    arcanaData.forEach((arc) => {
-      const skills = arc.skillsByClass?.[cls] || [];
-      skills.slice(0, 4).forEach((s) => {
-        if (!s) return;
-        map.set(s, (map.get(s) || 0) + 1); // ✅ 등장 횟수 누적
-      });
-    });
-
-    // 보기 좋게: 많이 등장한 순 → 이름순
-    totals[cls] = Array.from(map.entries())
-      .sort((a, b) => (b[1] - a[1]) || a[0].localeCompare(b[0], "ko"))
-      .map(([name, cnt]) => ({ name, cnt }));
-  });
-
-  return totals;
-}
-
-function emptySkills() {
-  return Object.fromEntries(CLASSES.map((c) => [c, []]));
-}
-
-function ArcanaStatCell({
-  arcName,
-  selectedType,
-  locked = false,
-  onChange,
-}) {
+function ArcanaStatCell({ arcName, selectedType, locked = false, onChange }) {
   const result = ARCANA_SIM_RESULT[arcName]?.[selectedType] ?? { godStats: [], detailStats: [] };
 
   return (
-    <td
-      style={{
-        ...styles.td,
-        background: "#181818",
-        verticalAlign: "middle",
-        textAlign: "center",
-      }}
-    >
+    <td style={{ ...styles.td, background: "#181818", verticalAlign: "middle", textAlign: "center" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
         <div style={{ display: "flex", gap: 4 }}>
           {["활력", "마력", "광분", "순수"].map((opt) => {
             const disabled = locked || (arcName === "천칭" && (opt === "활력" || opt === "마력"));
             const isActive = selectedType === opt;
-
             return (
               <button
                 key={opt}
@@ -326,14 +300,12 @@ function ArcanaStatCell({
             );
           })}
         </div>
-
         <div style={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "flex-start" }}>
           {result.godStats.map((godStat, idx) => (
             <div key={idx} style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <div style={{ fontSize: 12, color: "#fff", minWidth: 60, whiteSpace: "pre-line", fontWeight: 400 }}>
                 {godStat}
               </div>
-
               <div style={{ fontSize: 11, fontWeight: 400, whiteSpace: "normal", lineHeight: 1.2 }}>
                 {renderColoredDetailStats([result.detailStats[idx] || ""])}
               </div>
@@ -346,202 +318,114 @@ function ArcanaStatCell({
 }
 
 export default function Aion2_ArcanaTable() {
+  const [editingPresetId, setEditingPresetId] = useState(null);
 
-  const [simSelections, setSimSelections] = useState(() => {
-    const saved = localStorage.getItem("aion2-arcana-sim-selections");
-
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {}
-    }
-
-    return {
-      preset1: {
-        성배: "활력",
-        양피지: "활력",
-        나침반: "활력",
-        종: "활력",
-        거울: "활력",
-        천칭: "광분",
-      },
-      preset2: {
-        성배: "활력",
-        양피지: "활력",
-        나침반: "활력",
-        종: "활력",
-        거울: "활력",
-        천칭: "광분",
-      },
-    };
+  const [presets, setPresets] = useState(() => {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed.presets) && parsed.presets.length > 0) {
+          return parsed.presets;
+        }
+      }
+    } catch {}
+    return [
+      createPreset("프리셋1"),
+      createPreset("프리셋2"),
+    ];
   });
 
   const [selectedClass, setSelectedClass] = useState(() => {
     return localStorage.getItem("aion2-selected-class") || "수호성";
   });
 
-  const handleSimChange = (preset, arcanaName, value) => {
-    if (arcanaName === "천칭" && (value === "활력" || value === "마력")) {
-      return;
-    }
-
-    setSimSelections((prev) => ({
-      ...prev,
-      [preset]: {
-        ...prev[preset],
-        [arcanaName]: value,
-      },
-    }));
-  };
-
-  const getSimResult = (arcanaName, forcedType, preset = "preset1") => {
-    const selectedType = forcedType ?? simSelections[preset]?.[arcanaName] ?? simSelections[arcanaName];
-    return ARCANA_SIM_RESULT[arcanaName]?.[selectedType] ?? { godStats: [], detailStats: [] };
-  };
-
   useEffect(() => {
-    localStorage.setItem(
-      "aion2-arcana-sim-selections",
-      JSON.stringify(simSelections)
-    );
-  }, [simSelections]);
+    localStorage.setItem(LS_KEY, JSON.stringify({ presets }));
+  }, [presets]);
 
   useEffect(() => {
     localStorage.setItem("aion2-selected-class", selectedClass);
   }, [selectedClass]);
 
+  function addPreset() {
+    setPresets((prev) => [...prev, createPreset(`프리셋${prev.length + 1}`)]);
+  }
+
+  function removePreset(id) {
+    setPresets((prev) => prev.filter((p) => p.id !== id));
+  }
+
+  function renamePreset(id, name) {
+    setPresets((prev) => prev.map((p) => p.id === id ? { ...p, name } : p));
+  }
+
+  function handleSimChange(presetId, arcanaName, value) {
+    if (arcanaName === "천칭" && (value === "활력" || value === "마력")) return;
+    setPresets((prev) =>
+      prev.map((p) =>
+        p.id === presetId
+          ? { ...p, selections: { ...p.selections, [arcanaName]: value } }
+          : p
+      )
+    );
+  }
+
   const STAT_ORDER = [
-    "강타",
-    "전투 속도",
-    "공격력",
-    "치명타",
-    "쿨감",
-
-    "명중",    
-
-    "이동 속도",
-    "완벽",
-    "철벽 관통",
-    "재생 관통",
-
-    "정신력 소모",
-    "정신력",
-
-    "생명력",
-    "방어력",
-    "회피",
-    "막기",
-    "재생 확률",
-
-    "철벽",
-    "강타 저항",
-    "완벽 저항",
+    "강타", "전투 속도", "공격력", "치명타", "쿨감",
+    "명중",
+    "이동 속도", "완벽", "철벽 관통", "재생 관통",
+    "정신력 소모", "정신력",
+    "생명력", "방어력", "회피", "막기", "재생 확률",
+    "철벽", "강타 저항", "완벽 저항",
   ];
 
-  const SET_EFFECTS = {
-    활력: {
-      // 2: { type: "활력", count: 2, desc: "생명력 70% 이상일 때 PVE 공격력 60 증가" },
-      2: { type: "활력", count: 2, desc: "PVE 공격력 60" },
-      // 4: { type: "활력", count: 4, desc: "생명력 70% 이상일 때 PVE 공격력 150 증가" },
-      4: { type: "활력", count: 4, desc: "PVE 공격력 150" },
-    },
-    마력: {
-      // 2: { type: "마력", count: 2, desc: "정신력이 20% 이하일 때 정신력 1500 회복 (재시전 시간 30초)" },
-      // 4: { type: "마력", count: 4, desc: "정신력이 50% 이상일 때 PVE 방어력 1000 증가" },
-      2: { type: "마력", count: 2, desc: "정신력 1500 회복" },
-      4: { type: "마력", count: 4, desc: "PVE 방어력 1000" },
-    },
-    광분: {
-      // 2: { type: "광분", count: 2, desc: "PVE 공격력 50 증가" },
-      // 4: { type: "광분", count: 4, desc: "보스 피해 증폭 5%, 생명력이 70% 이하일 때 보스 피해 내성 10% 증가" },
-      2: { type: "광분", count: 2, desc: "PVE 공격력 50" },
-      4: { type: "광분", count: 4, desc: "보피증 5%, 보피내 10%" },
-    },
-    순수: {
-      // 2: { type: "순수", count: 2, desc: "PVE 방어력 500 증가" },
-      // 4: { type: "순수", count: 4, desc: "치명타 피해 증폭 5%, 생명력이 70% 이하일 때 방어력 1000 증가" },
-      2: { type: "순수", count: 2, desc: "PVE 방어력 500" },
-      4: { type: "순수", count: 4, desc: "치피증 5%, 방어력 1000" },
-    },
-  };
-
-  function getSetEffects(typeCounts) {
-    const result = [];
-
-    ["활력", "마력", "광분", "순수"].forEach((type) => {
-      const count = typeCounts[type] || 0;
-      if (count >= 2) result.push(SET_EFFECTS[type][2]);
-      if (count >= 4) result.push(SET_EFFECTS[type][4]);
-    });
-
-    return result;
-  }
-
-  const COLUMN_KEYS = ["rec1", "rec2", "rec3", "preset1", "preset2"];
-
-  function getSelectedTypeByKey(key, arc, simSelections) {
-    if (key === "rec1") return arc.recommended?.[0]?.main;
-    if (key === "rec2") return arc.recommended?.[1]?.main;
-    if (key === "rec3") return arc.recommended?.[2]?.main;
-    if (key === "preset1") return simSelections.preset1?.[arc.name] ?? simSelections[arc.name];
-    if (key === "preset2") return simSelections.preset2?.[arc.name];
-    return null;
-  }
-
-  function buildTypeCounts(key, arcanaData, simSelections) {
-    const counts = {};
-
-    arcanaData.forEach((arc) => {
-      const type = getSelectedTypeByKey(key, arc, simSelections);
-      if (type) counts[type] = (counts[type] || 0) + 1;
-    });
-
-    return counts;
-  }
-
-  function buildDetailStatsMap(key, arcanaData, simSelections) {
+  function buildDetailStatsMap(selections) {
     const map = {};
-
-    arcanaData.forEach((arc) => {
-      const type = getSelectedTypeByKey(key, arc, simSelections);
+    ARCANA_DATA.forEach((arc) => {
+      const type = selections?.[arc.name];
       if (!type) return;
-
       const result = ARCANA_SIM_RESULT[arc.name]?.[type] ?? { detailStats: [] };
       const weight = arc.name === "천칭" ? 0.5 : 1;
-
       result.detailStats.forEach((s) => {
         s.split(",").map((x) => x.trim()).forEach((stat) => {
           map[stat] = (map[stat] || 0) + weight;
         });
       });
     });
-
     return map;
   }
 
-  const detailStatsMaps = Object.fromEntries(
-    COLUMN_KEYS.map((key) => [key, buildDetailStatsMap(key, ARCANA_DATA, simSelections)])
-  );
+  function buildTypeCounts(selections) {
+    const counts = {};
+    ARCANA_DATA.forEach((arc) => {
+      const type = selections?.[arc.name];
+      if (type) counts[type] = (counts[type] || 0) + 1;
+    });
+    return counts;
+  }
 
-  const detailStatsLists = Object.fromEntries(
-    COLUMN_KEYS.map((key) => [
-      key,
-      Object.keys(detailStatsMaps[key]).sort(
-        (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
-      ),
-    ])
-  );
+  function getSetEffects(typeCounts) {
+    const result = [];
+    ["활력", "마력", "광분", "순수"].forEach((type) => {
+      const count = typeCounts[type] || 0;
+      if (count >= 2) result.push(SET_EFFECTS[type][2]);
+      if (count >= 4) result.push(SET_EFFECTS[type][4]);
+    });
+    return result;
+  }
 
-  const typeCountsMap = Object.fromEntries(
-    COLUMN_KEYS.map((key) => [key, buildTypeCounts(key, ARCANA_DATA, simSelections)])
-  );
+  const REC_COLS = [
+    { key: "rec1", label: "추천1\n2활력+4순수\n(활력 성배 잘 뜬 경우)", selections: Object.fromEntries(ARCANA_DATA.map((a) => [a.name, a.recommended[0]?.main])) },
+    { key: "rec2", label: "추천2\n4광분+2순수", selections: Object.fromEntries(ARCANA_DATA.map((a) => [a.name, a.recommended[1]?.main])) },
+    { key: "rec3", label: "추천3\n4광분+2마력", selections: Object.fromEntries(ARCANA_DATA.map((a) => [a.name, a.recommended[2]?.main])) },
+  ];
 
   return (
     <div style={{ marginTop: 12 }}>
       <div style={styles.card}>
         <div style={styles.header}>
           <div style={styles.title}>아르카나</div>
-          {/* <div style={styles.sub}>천칭(예정)은 제외한 5종 기준</div> */}
         </div>
 
         <div style={styles.tableWrap}>
@@ -551,8 +435,7 @@ export default function Aion2_ArcanaTable() {
               <col style={{ width: 200 }} />
               <col style={{ width: 200 }} />
               <col style={{ width: 200 }} />
-              <col style={{ width: 200 }} />
-              <col style={{ width: 200 }} />
+              {presets.map((p) => <col key={p.id} style={{ width: 200 }} />)}
               <col style={{ width: 180 }} />
               <col style={{ width: 120 }} />
             </colgroup>
@@ -560,175 +443,197 @@ export default function Aion2_ArcanaTable() {
             <thead>
               <tr>
                 <th style={styles.th}>아르카나</th>
-                <th style={styles.th}>추천1<br/>2활력+4순수<br/>(활력 성배 잘 뜬 경우)</th>
-                <th style={styles.th}>추천2<br/>4광분+2순수</th>
-                <th style={styles.th}>추천3<br/>4광분+2마력</th>
-                <th style={styles.th}>프리셋1</th>
-                <th style={styles.th}>프리셋2</th>
-
+                <th style={styles.th}>{"추천1\n2활력+4순수\n(활력 성배 잘 뜬 경우)".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
+                <th style={styles.th}>{"추천2\n4광분+2순수".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
+                <th style={styles.th}>{"추천3\n4광분+2마력".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
+                {presets.map((p, idx) => (
+                  <th key={p.id} style={styles.th}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                      {editingPresetId === p.id ? (
+                        <input
+                          autoFocus
+                          value={p.name}
+                          onChange={(e) => renamePreset(p.id, e.target.value)}
+                          onFocus={(e) => e.target.select()}
+                          onBlur={() => setEditingPresetId(null)}
+                          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); setEditingPresetId(null); } }}
+                          style={{
+                            background: "#1a2a3a", border: "1px solid #5b9bd5", borderRadius: 4,
+                            color: "#e0e0e0", fontSize: 13, textAlign: "center",
+                            padding: "2px 6px", width: `${Math.max(p.name.length, 6)}ch`,
+                          }}
+                        />
+                      ) : (
+                        <span
+                          onClick={() => setEditingPresetId(p.id)}
+                          style={{ cursor: "pointer", borderBottom: "1px dashed #5b9bd5", paddingBottom: 1 }}
+                        >
+                          {p.name}
+                        </span>
+                      )}
+                      {idx === 0 ? (
+                        <button
+                          onClick={addPreset}
+                          style={{
+                            backgroundColor: "#1e3a52", color: "#7ec8f0",
+                            border: "1px solid #2e6a9e", borderRadius: 4,
+                            padding: "2px 8px", fontSize: 11, cursor: "pointer",
+                          }}
+                        >
+                          + 프리셋
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => removePreset(p.id)}
+                          style={{
+                            backgroundColor: "#3a1e1e", color: "#e07070",
+                            border: "1px solid #7a3a3a", borderRadius: 4,
+                            padding: "2px 8px", fontSize: 11, cursor: "pointer",
+                          }}
+                        >
+                          삭제
+                        </button>
+                      )}
+                    </div>
+                  </th>
+                ))}
                 <th style={styles.th}>주신 스탯 우선순위<br/>(딜러 기준)</th>
-
                 <th style={styles.th}>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
                     <div>추천 스킬</div>
                     <select
                       value={selectedClass}
                       onChange={(e) => setSelectedClass(e.target.value)}
-                      style={{
-                        background: "#1f1f1f",
-                        color: "#fff",
-                        border: "1px solid #555",
-                        borderRadius: 6,
-                        padding: "4px 8px",
-                        fontSize: 12,
-                      }}
+                      style={{ background: "#1f1f1f", color: "#fff", border: "1px solid #555", borderRadius: 6, padding: "4px 8px", fontSize: 12 }}
                     >
-                      {CLASSES.map((cls) => (
-                        <option key={cls} value={cls}>
-                          {cls}
-                        </option>
-                      ))}
+                      {CLASSES.map((cls) => <option key={cls} value={cls}>{cls}</option>)}
                     </select>
                   </div>
                 </th>
-
-                
-
               </tr>
             </thead>
 
             <tbody>
               {ARCANA_DATA.map((arc) => (
                 <tr key={arc.name}>
-                  <td style={{ ...styles.tdArcana }}>
+                  <td style={styles.tdArcana}>
                     <div style={{ fontWeight: 800 }}>{arc.name}</div>
                     <div style={styles.note}>{arc.note}</div>
                   </td>
 
                   {arc.recommended.map((rec, i) => (
+                    <ArcanaStatCell key={i} arcName={arc.name} selectedType={rec.main} locked={true} />
+                  ))}
+
+                  {presets.map((p) => (
                     <ArcanaStatCell
-                      key={i}
+                      key={p.id}
                       arcName={arc.name}
-                      selectedType={rec.main}
-                      locked={true}
+                      selectedType={p.selections?.[arc.name] ?? "활력"}
+                      locked={false}
+                      onChange={(opt) => handleSimChange(p.id, arc.name, opt)}
                     />
                   ))}
 
-                  <ArcanaStatCell
-                    arcName={arc.name}
-                    selectedType={simSelections.preset1?.[arc.name] || simSelections[arc.name] || "활력"}
-                    locked={false}
-                    onChange={(opt) => handleSimChange("preset1", arc.name, opt)}
-                  />
-
-                  <ArcanaStatCell
-                    arcName={arc.name}
-                    selectedType={simSelections.preset2?.[arc.name] || "활력"}
-                    locked={false}
-                    onChange={(opt) => handleSimChange("preset2", arc.name, opt)}
-                  />
-
                   {arc.name === ARCANA_DATA[0].name && (
-                  <td style={styles.td} rowSpan={ARCANA_DATA.length}>
-                    <div style={{ fontSize: 12, lineHeight: 1.5 }}>
-
-                      <div style={{ color: "#ff4d4d", fontWeight: 700 }}>&lt;1티어&gt;</div>
-                      <div style={{ color: "#ff4d4d" }}>파괴 : 공격력, 완벽 저항</div>
-                      <div style={{ color: "#ff4d4d" }}>시간 : 전투 속도, 강타 저항</div>
-                      <div style={{ color: "#ff4d4d" }}>지혜 : 강타, 정신력 소모</div>
-
-                      <div style={{ marginTop: 6, color: "#ff9a3c", fontWeight: 700 }}>&lt;2티어&gt;</div>
-                      <div style={{ color: "#ff9a3c" }}>죽음 : 치명타, 재생 관통</div>
-                      <div style={{ color: "#ff9a3c" }}>환상 : 쿨감, 철벽 관통</div>
-
-                      <div style={{ marginTop: 6, color: "#ffd84d", fontWeight: 700 }}>&lt;3티어&gt;</div>
-                      <div style={{ color: "#ffd84d" }}>자유 : 명중, 회피</div>
-
-                      <div style={{ marginTop: 6, color: "#bbbbbb", fontWeight: 700 }}>&lt;4티어&gt;</div>
-                      <div style={{ color: "#bbbbbb" }}>생명 : 생명력, 재생</div>
-                      <div style={{ color: "#bbbbbb" }}>공간 : 이동속도, 막기</div>
-                      <div style={{ color: "#bbbbbb" }}>정의 : 완벽, 방어력</div>
-                      <div style={{ color: "#bbbbbb" }}>운명 : 철벽, 정신력</div>
-
-                    </div>
-                  </td>
+                    <td style={styles.td} rowSpan={ARCANA_DATA.length}>
+                      <div style={{ fontSize: 12, lineHeight: 1.5 }}>
+                        <div style={{ color: "#ff4d4d", fontWeight: 700 }}>&lt;1티어&gt;</div>
+                        <div style={{ color: "#ff4d4d" }}>파괴 : 공격력, 완벽 저항</div>
+                        <div style={{ color: "#ff4d4d" }}>시간 : 전투 속도, 강타 저항</div>
+                        <div style={{ color: "#ff4d4d" }}>지혜 : 강타, 정신력 소모</div>
+                        <div style={{ marginTop: 6, color: "#ff9a3c", fontWeight: 700 }}>&lt;2티어&gt;</div>
+                        <div style={{ color: "#ff9a3c" }}>죽음 : 치명타, 재생 관통</div>
+                        <div style={{ color: "#ff9a3c" }}>환상 : 쿨감, 철벽 관통</div>
+                        <div style={{ marginTop: 6, color: "#ffd84d", fontWeight: 700 }}>&lt;3티어&gt;</div>
+                        <div style={{ color: "#ffd84d" }}>자유 : 명중, 회피</div>
+                        <div style={{ marginTop: 6, color: "#bbbbbb", fontWeight: 700 }}>&lt;4티어&gt;</div>
+                        <div style={{ color: "#bbbbbb" }}>생명 : 생명력, 재생</div>
+                        <div style={{ color: "#bbbbbb" }}>공간 : 이동속도, 막기</div>
+                        <div style={{ color: "#bbbbbb" }}>정의 : 완벽, 방어력</div>
+                        <div style={{ color: "#bbbbbb" }}>운명 : 철벽, 정신력</div>
+                      </div>
+                    </td>
                   )}
 
                   <td style={styles.td}>
                     {renderSkillList(arc.skillsByClass?.[selectedClass])}
                   </td>
-
                 </tr>
               ))}
             </tbody>
 
             <tfoot>
               <tr>
-                <td style={{ ...styles.tdArcana, textAlign: "center" }}>
-                  합계
-                </td>
-
-                {COLUMN_KEYS.map((key) => (
-                  <td key={`sum-${key}`} style={styles.td}>
-                    <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-                      {detailStatsLists[key].map((stat, idx) => (
-                        <li key={`${key}-${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
-                          <li
-                            key={`${key}-${stat}-${idx}`}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              gap: 8,
-                              color: STAT_COLORS[stat] || "#fff",
-                              borderBottom: idx < detailStatsLists[key].length - 1 ? "1px solid #2a2a2a" : "none",
-                              padding: "2px 0",
-                            }}
-                          >
-                            <span>
-                              {/* {stat}{detailStatsMaps[key][stat] === 1 ? "" : ` x${detailStatsMaps[key][stat]}`} */}
-                              {stat}
-                            </span>
-
+                <td style={{ ...styles.tdArcana, textAlign: "center" }}>합계</td>
+                {REC_COLS.map(({ key, selections }) => {
+                  const map = buildDetailStatsMap(selections);
+                  const list = Object.keys(map).sort((a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b));
+                  return (
+                    <td key={key} style={styles.td}>
+                      <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+                        {list.map((stat, idx) => (
+                          <li key={`${key}-${stat}-${idx}`} style={{
+                            display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+                            color: STAT_COLORS[stat] || "#fff",
+                            borderBottom: idx < list.length - 1 ? "1px solid #2a2a2a" : "none",
+                            padding: "2px 0",
+                          }}>
+                            <span>{stat}</span>
                             <div style={{ display: "flex", gap: 3 }}>
-                              {Array.from({ length: Math.round(detailStatsMaps[key][stat] * 2) }).map((_, i) => (
-                                <div
-                                  key={i}
-                                  style={{
-                                    width: 30,
-                                    height: 6,
-                                    borderRadius: 1,
-                                    background: STAT_COLORS[stat] || "#fff",
-                                  }}
-                                />
+                              {Array.from({ length: Math.round(map[stat] * 2) }).map((_, i) => (
+                                <div key={i} style={{ width: 30, height: 6, borderRadius: 1, background: STAT_COLORS[stat] || "#fff" }} />
                               ))}
                             </div>
                           </li>
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
-                ))}
-
+                        ))}
+                      </ul>
+                    </td>
+                  );
+                })}
+                {presets.map((p) => {
+                  const map = buildDetailStatsMap(p.selections);
+                  const list = Object.keys(map).sort((a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b));
+                  return (
+                    <td key={p.id} style={styles.td}>
+                      <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+                        {list.map((stat, idx) => (
+                          <li key={`${p.id}-${stat}-${idx}`} style={{
+                            display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+                            color: STAT_COLORS[stat] || "#fff",
+                            borderBottom: idx < list.length - 1 ? "1px solid #2a2a2a" : "none",
+                            padding: "2px 0",
+                          }}>
+                            <span>{stat}</span>
+                            <div style={{ display: "flex", gap: 3 }}>
+                              {Array.from({ length: Math.round(map[stat] * 2) }).map((_, i) => (
+                                <div key={i} style={{ width: 30, height: 6, borderRadius: 1, background: STAT_COLORS[stat] || "#fff" }} />
+                              ))}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                  );
+                })}
                 <td style={styles.td}></td>
               </tr>
-              
+
               <tr>
-                <td style={{ ...styles.tdArcana, textAlign: "center" }}>
-                  세트효과
-                </td>
-
-                {COLUMN_KEYS.map((key) => (
-                  <td key={`set-${key}`} style={styles.td}>
-                    {renderSetEffectsList(getSetEffects(typeCountsMap[key]))}
+                <td style={{ ...styles.tdArcana, textAlign: "center" }}>세트효과</td>
+                {REC_COLS.map(({ key, selections }) => (
+                  <td key={key} style={styles.td}>
+                    {renderSetEffectsList(getSetEffects(buildTypeCounts(selections)))}
                   </td>
                 ))}
-
+                {presets.map((p) => (
+                  <td key={p.id} style={styles.td}>
+                    {renderSetEffectsList(getSetEffects(buildTypeCounts(p.selections)))}
+                  </td>
+                ))}
                 <td style={styles.td}></td>
               </tr>
-
             </tfoot>
-
           </table>
         </div>
       </div>
@@ -741,49 +646,28 @@ function renderSkillList(arr) {
   return (
     <ul style={styles.ul}>
       {arr.slice(0, 4).map((s, i) => (
-        <li key={`${s}-${i}`} style={styles.li}>
-          {s}
-        </li>
+        <li key={`${s}-${i}`} style={styles.li}>{s}</li>
       ))}
     </ul>
   );
 }
 
 function renderSetEffectsList(items) {
-  if (!items || items.length === 0) {
-    return <span style={{ opacity: 0.45 }}>-</span>;
-  }
-
+  if (!items || items.length === 0) return <span style={{ opacity: 0.45 }}>-</span>;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {items.map((item, idx) => (
         <div key={`${item.type}-${item.count}-${idx}`} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-            <span
-              style={{
-                padding: "4px 8px",
-                fontSize: 11,
-                borderRadius: 6,
-                border: "1px solid #555",
-                background: RECOMMENDED_BG[item.type] || "#222",
-                color: "#fff",
-                whiteSpace: "nowrap",
-                lineHeight: 1.1,
-                fontWeight: 400,
-              }}
-            >
+            <span style={{
+              padding: "4px 8px", fontSize: 11, borderRadius: 6, border: "1px solid #555",
+              background: RECOMMENDED_BG[item.type] || "#222", color: "#fff",
+              whiteSpace: "nowrap", lineHeight: 1.1, fontWeight: 400,
+            }}>
               {item.type} ({item.count})
             </span>
           </div>
-
-          <div
-            style={{
-              fontSize: 12,
-              color: "#d6d6d6",
-              lineHeight: 1.4,
-              wordBreak: "keep-all",
-            }}
-          >
+          <div style={{ fontSize: 12, color: "#d6d6d6", lineHeight: 1.4, wordBreak: "keep-all" }}>
             {item.desc}
           </div>
         </div>
@@ -792,89 +676,34 @@ function renderSetEffectsList(items) {
   );
 }
 
-function renderTotalsList(items) {
-  if (!items || items.length === 0)
-    return <span style={{ opacity: 0.45 }}>-</span>;
-
-  return (
-    <ul style={styles.ul}>
-      {items.map(({ name, cnt }) => (
-        <li
-          key={name}
-          style={{
-            ...styles.li,
-            color: "#e4daad",
-            fontWeight: 500
-          }}
-        >
-          {name} +{cnt}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 const styles = {
   card: {
-    background: "#1e1e1e",
-    border: "1px solid #3b3b3b",
-    borderRadius: 12,
-    padding: 12,
+    background: "#1e1e1e", border: "1px solid #3b3b3b", borderRadius: 12, padding: 12,
   },
-  header: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 4,
-    marginBottom: 10,
-  },
+  header: { display: "flex", flexDirection: "column", gap: 4, marginBottom: 10 },
   title: { fontSize: 18, fontWeight: 800 },
   sub: { fontSize: 12, opacity: 0.7 },
-  tableWrap: {
-    overflowX: "auto",
-    border: "1px solid #333",
-    borderRadius: 10,
-  },
+  tableWrap: { overflowX: "auto", border: "1px solid #333", borderRadius: 10 },
   table: {
-    width: "100%",
-    borderCollapse: "separate",
-    borderSpacing: 0,
-    minWidth: 110 + 5 * 200 + 180,
-    background: "#181818",
+    width: "100%", borderCollapse: "separate", borderSpacing: 0,
+    minWidth: 110 + 5 * 200 + 180, background: "#181818",
   },
   th: {
-    position: "sticky",
-    top: 0,
-    background: "#2a2a2a",
-    borderBottom: "1px solid #333",
-    padding: "10px 8px",
-    textAlign: "center",
-    fontWeight: 800,
-    fontSize: 13,
-    zIndex: 1,
+    position: "sticky", top: 0, background: "#2a2a2a",
+    borderBottom: "1px solid #333", padding: "10px 8px",
+    textAlign: "center", fontWeight: 800, fontSize: 13, zIndex: 1,
   },
   td: {
-    background: "#181818",
-    borderBottom: "1px solid #2f2f2f",
-    borderRight: "1px solid #2a2a2a",
-    padding: "8px 10px",
-    verticalAlign: "top",
-    fontSize: 13,
-    lineHeight: 1.35,
+    background: "#181818", borderBottom: "1px solid #2f2f2f",
+    borderRight: "1px solid #2a2a2a", padding: "8px 10px",
+    verticalAlign: "top", fontSize: 13, lineHeight: 1.35,
   },
   tdArcana: {
-    borderBottom: "1px solid #2f2f2f",
-    borderRight: "1px solid #2a2a2a",
-    padding: "8px 10px",
-    verticalAlign: "middle",
-    textAlign: "center",
-    background: "#2a2a2a",
+    borderBottom: "1px solid #2f2f2f", borderRight: "1px solid #2a2a2a",
+    padding: "8px 10px", verticalAlign: "middle", textAlign: "center", background: "#2a2a2a",
   },
   note: { marginTop: 6, fontSize: 11, opacity: 0.65 },
-  ul: { 
-    margin: 0, 
-    padding: 0,
-    listStyle: "none"
-  },
+  ul: { margin: 0, padding: 0, listStyle: "none" },
   li: { margin: "2px 0" },
   footer: { marginTop: 10, fontSize: 12, opacity: 0.7 },
 };
