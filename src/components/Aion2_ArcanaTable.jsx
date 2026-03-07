@@ -553,6 +553,7 @@ export default function Aion2_ArcanaTable() {
               <col style={{ width: 200 }} />
               <col style={{ width: 200 }} />
               <col style={{ width: 200 }} />
+              <col style={{ width: 180 }} />
               <col style={{ width: 120 }} />
             </colgroup>
 
@@ -564,6 +565,8 @@ export default function Aion2_ArcanaTable() {
                 <th style={styles.th}>추천3<br/>4광분+2마력</th>
                 <th style={styles.th}>프리셋1</th>
                 <th style={styles.th}>프리셋2</th>
+
+                <th style={styles.th}>주신 스탯 우선순위<br/>(딜러 기준)</th>
 
                 <th style={styles.th}>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
@@ -588,6 +591,8 @@ export default function Aion2_ArcanaTable() {
                     </select>
                   </div>
                 </th>
+
+                
 
               </tr>
             </thead>
@@ -623,9 +628,36 @@ export default function Aion2_ArcanaTable() {
                     onChange={(opt) => handleSimChange("preset2", arc.name, opt)}
                   />
 
+                  {arc.name === ARCANA_DATA[0].name && (
+                  <td style={styles.td} rowSpan={ARCANA_DATA.length}>
+                    <div style={{ fontSize: 12, lineHeight: 1.5 }}>
+
+                      <div style={{ color: "#ff4d4d", fontWeight: 700 }}>&lt;1티어&gt;</div>
+                      <div style={{ color: "#ff4d4d" }}>파괴 : 공격력, 완벽 저항</div>
+                      <div style={{ color: "#ff4d4d" }}>시간 : 전투 속도, 강타 저항</div>
+                      <div style={{ color: "#ff4d4d" }}>지혜 : 강타, 정신력 소모</div>
+
+                      <div style={{ marginTop: 6, color: "#ff9a3c", fontWeight: 700 }}>&lt;2티어&gt;</div>
+                      <div style={{ color: "#ff9a3c" }}>죽음 : 치명타, 재생 관통</div>
+                      <div style={{ color: "#ff9a3c" }}>환상 : 쿨감, 철벽 관통</div>
+
+                      <div style={{ marginTop: 6, color: "#ffd84d", fontWeight: 700 }}>&lt;3티어&gt;</div>
+                      <div style={{ color: "#ffd84d" }}>자유 : 명중, 회피</div>
+
+                      <div style={{ marginTop: 6, color: "#bbbbbb", fontWeight: 700 }}>&lt;4티어&gt;</div>
+                      <div style={{ color: "#bbbbbb" }}>생명 : 생명력, 재생</div>
+                      <div style={{ color: "#bbbbbb" }}>공간 : 이동속도, 막기</div>
+                      <div style={{ color: "#bbbbbb" }}>정의 : 완벽, 방어력</div>
+                      <div style={{ color: "#bbbbbb" }}>운명 : 철벽, 정신력</div>
+
+                    </div>
+                  </td>
+                  )}
+
                   <td style={styles.td}>
                     {renderSkillList(arc.skillsByClass?.[selectedClass])}
                   </td>
+
                 </tr>
               ))}
             </tbody>
