@@ -404,7 +404,9 @@ function InlineSkillDropdown({
           borderRadius: "3px",
           fontSize: "11px",
           textAlign: "center",
-          padding: "4px 8px",
+          padding: "0 8px",
+          height: "22px",
+          boxSizing: "border-box",
           cursor: "pointer",
           whiteSpace: "nowrap",
         }}
@@ -1046,40 +1048,51 @@ export default function Aion2_SkillCalculator() {
 
       {activePreset && (
         <>
-          <div style={{ marginBottom: "18px" }}>
-            <div style={{ fontSize: "12px", color: S.textDim, marginBottom: "8px" }}>
+          <div style={{ marginBottom: "14px" }}>
+            <div style={{ fontSize: "12px", color: S.textDim, marginBottom: "6px" }}>
               장비
             </div>
 
-            {/* 1행: 액티브 장비 */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(4, minmax(140px, 1fr))",
-                gap: "12px",
-                marginBottom: "14px",
+                gridTemplateColumns: "repeat(14, minmax(92px, 1fr))",
+                gap: "8px",
+                alignItems: "start",
+                marginBottom: "10px",
               }}
             >
               {[
-                { id: "weapon", label: "무기" },
-                { id: "gauntlet", label: "가더" },
-                { id: "ring1", label: "반지1" },
-                { id: "ring2", label: "반지2" },
+                { id: "weapon", label: "무기", mode: "active" },
+                { id: "gauntlet", label: "가더", mode: "active" },
+                { id: "ring1", label: "반지1", mode: "active" },
+                { id: "ring2", label: "반지2", mode: "active" },
+                
+                { id: "head", label: "머리", mode: "passive" },
+                { id: "shoulder", label: "어깨", mode: "passive" },
+                { id: "chest", label: "가슴", mode: "passive" },
+                { id: "legs", label: "다리", mode: "passive" },
+                { id: "hands", label: "손", mode: "passive" },
+                { id: "feet", label: "발", mode: "passive" },
+                { id: "cloak", label: "망토", mode: "passive" },
+                { id: "necklace", label: "목걸이", mode: "passive" },
+                { id: "earring1", label: "귀걸이1", mode: "passive" },
+                { id: "earring2", label: "귀걸이2", mode: "passive" },
               ].map((slot) => {
                 const entries = activePreset.equippedGear?.[slot.id] ?? [];
 
                 return (
                   <div key={slot.id}>
-                    <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "4px" }}>
+                    <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "3px" }}>
                       {slot.label}
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
                       {entries.map((entry, idx) => (
-                        <div key={idx} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <div key={idx} style={{ display: "flex", alignItems: "flex-end", gap: "3px" }}>
                           <InlineSkillDropdown
                             job={activePreset.job}
-                            mode="active"
+                            mode={slot.mode}
                             value={entry.skillName ?? ""}
                             placeholder="스킬 선택"
                             excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
@@ -1133,128 +1146,10 @@ export default function Aion2_SkillCalculator() {
                         </div>
                       ))}
 
-                      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
                         <InlineSkillDropdown
                           job={activePreset.job}
-                          mode="active"
-                          value=""
-                          placeholder="스킬 선택"
-                          excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
-                          onSelect={(value) => {
-                            if (!value) return;
-
-                            setPresets((prev) =>
-                              prev.map((p) => {
-                                if (p.id !== activePresetId) return p;
-                                return {
-                                  ...p,
-                                  equippedGear: {
-                                    ...p.equippedGear,
-                                    [slot.id]: [...(p.equippedGear?.[slot.id] ?? []), { skillName: value, level: 1 }],
-                                  },
-                                };
-                              })
-                            );
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* 2행: 패시브 장비 */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(10, minmax(120px, 1fr))",
-                gap: "10px",
-              }}
-            >
-              {[
-                { id: "head", label: "머리" },
-                { id: "shoulder", label: "어깨" },
-                { id: "chest", label: "가슴" },
-                { id: "legs", label: "다리" },
-                { id: "hands", label: "손" },
-                { id: "feet", label: "발" },
-                { id: "cloak", label: "망토" },
-                { id: "necklace", label: "목걸이" },
-                { id: "earring1", label: "귀걸이1" },
-                { id: "earring2", label: "귀걸이2" },
-              ].map((slot) => {
-                const entries = activePreset.equippedGear?.[slot.id] ?? [];
-
-                return (
-                  <div key={slot.id}>
-                    <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "4px" }}>
-                      {slot.label}
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                      {entries.map((entry, idx) => (
-                        <div key={idx} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                          <InlineSkillDropdown
-                            job={activePreset.job}
-                            mode="passive"
-                            value={entry.skillName ?? ""}
-                            placeholder="스킬 선택"
-                            excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
-                            onSelect={(value) => {
-                              setPresets((prev) =>
-                                prev.map((p) => {
-                                  if (p.id !== activePresetId) return p;
-                                  const next = [...(p.equippedGear?.[slot.id] ?? [])];
-                                  next[idx] = { skillName: value, level: 1 };
-                                  return {
-                                    ...p,
-                                    equippedGear: {
-                                      ...p.equippedGear,
-                                      [slot.id]: next,
-                                    },
-                                  };
-                                })
-                              );
-                            }}
-                          />
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPresets((prev) =>
-                                prev.map((p) => {
-                                  if (p.id !== activePresetId) return p;
-                                  const next = (p.equippedGear?.[slot.id] ?? []).filter((_, i) => i !== idx);
-                                  return {
-                                    ...p,
-                                    equippedGear: {
-                                      ...p.equippedGear,
-                                      [slot.id]: next,
-                                    },
-                                  };
-                                })
-                              );
-                            }}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              color: "#666",
-                              cursor: "pointer",
-                              fontSize: "14px",
-                              lineHeight: 1,
-                              padding: "0 2px",
-                            }}
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-
-                      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                        <InlineSkillDropdown
-                          job={activePreset.job}
-                          mode="passive"
+                          mode={slot.mode}
                           value=""
                           placeholder="스킬 선택"
                           excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
@@ -1283,8 +1178,9 @@ export default function Aion2_SkillCalculator() {
             </div>
           </div>
 
-          <div style={{ marginBottom: "16px" }}>
-            <div style={{ fontSize: "12px", color: S.textDim, marginBottom: "8px" }}>
+          <hr style={{ border: "none", borderTop: "1px solid #444", margin: "12px 0" }} />
+          <div style={{ marginBottom: "12px" }}>
+            <div style={{ fontSize: "12px", color: S.textDim, marginBottom: "6px" }}>
               아르카나
             </div>
 
@@ -1292,7 +1188,7 @@ export default function Aion2_SkillCalculator() {
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(6, minmax(120px, 1fr))",
-                gap: "12px",
+                gap: "8px",
               }}
             >
               {PRESET_ARCANA_SLOTS.map((slot) => {
@@ -1304,10 +1200,9 @@ export default function Aion2_SkillCalculator() {
                       {slot.label}
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
                       {entries.map((entry, idx) => (
-                        <div key={idx} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                          <InlineSkillDropdown
+                        <div key={idx} style={{ display: "flex", alignItems: "center", gap: "3px" }}>                          <InlineSkillDropdown
                             job={activePreset.job}
                             mode="all"
                             value={entry.skillName ?? ""}
@@ -1370,7 +1265,15 @@ export default function Aion2_SkillCalculator() {
                             }}
                             onFocus={handleInputFocus}
                             onKeyDown={handleInputKeyDown}
-                            style={{ ...inputStyle, width: "36px" }}
+                            style={{
+                              ...inputStyle,
+                              width: "36px",
+                              height: "22px",
+                              padding: "0 4px",
+                              fontSize: "11px",
+                              boxSizing: "border-box",
+                              marginBottom: "-3px"
+                            }}
                           />
 
                           <button
@@ -1398,6 +1301,8 @@ export default function Aion2_SkillCalculator() {
                               color: "#666",
                               cursor: "pointer",
                               fontSize: "14px",
+                              lineHeight: 1,
+                              padding: "0 2px",
                             }}
                           >
                             ×
@@ -1441,6 +1346,7 @@ export default function Aion2_SkillCalculator() {
             </div>
           </div>
 
+          <hr style={{ border: "none", borderTop: "1px solid #444", margin: "12px 0" }} />
           <SkillDropdown
             job={activePreset.job}
             addedSkills={activePreset.skills.map((s) => s.name)}
