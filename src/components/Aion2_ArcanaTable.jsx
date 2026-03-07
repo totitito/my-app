@@ -373,6 +373,10 @@ export default function Aion2_ArcanaTable() {
     };
   });
 
+  const [selectedClass, setSelectedClass] = useState(() => {
+    return localStorage.getItem("aion2-selected-class") || "수호성";
+  });
+
   const handleSimChange = (preset, arcanaName, value) => {
     if (arcanaName === "천칭" && (value === "활력" || value === "마력")) {
       return;
@@ -398,6 +402,10 @@ export default function Aion2_ArcanaTable() {
       JSON.stringify(simSelections)
     );
   }, [simSelections]);
+
+  useEffect(() => {
+    localStorage.setItem("aion2-selected-class", selectedClass);
+  }, [selectedClass]);
 
   const STAT_ORDER = [
     "강타",
@@ -427,94 +435,103 @@ export default function Aion2_ArcanaTable() {
     "완벽 저항",
   ];
 
-  const simDetailStatsMap = {};
+  const SET_EFFECTS = {
+    활력: {
+      // 2: { type: "활력", count: 2, desc: "생명력 70% 이상일 때 PVE 공격력 60 증가" },
+      2: { type: "활력", count: 2, desc: "PVE 공격력 60" },
+      // 4: { type: "활력", count: 4, desc: "생명력 70% 이상일 때 PVE 공격력 150 증가" },
+      4: { type: "활력", count: 4, desc: "PVE 공격력 150" },
+    },
+    마력: {
+      // 2: { type: "마력", count: 2, desc: "정신력이 20% 이하일 때 정신력 1500 회복 (재시전 시간 30초)" },
+      // 4: { type: "마력", count: 4, desc: "정신력이 50% 이상일 때 PVE 방어력 1000 증가" },
+      2: { type: "마력", count: 2, desc: "정신력 1500 회복" },
+      4: { type: "마력", count: 4, desc: "PVE 방어력 1000" },
+    },
+    광분: {
+      // 2: { type: "광분", count: 2, desc: "PVE 공격력 50 증가" },
+      // 4: { type: "광분", count: 4, desc: "보스 피해 증폭 5%, 생명력이 70% 이하일 때 보스 피해 내성 10% 증가" },
+      2: { type: "광분", count: 2, desc: "PVE 공격력 50" },
+      4: { type: "광분", count: 4, desc: "보피증 5%, 보피내 10%" },
+    },
+    순수: {
+      // 2: { type: "순수", count: 2, desc: "PVE 방어력 500 증가" },
+      // 4: { type: "순수", count: 4, desc: "치명타 피해 증폭 5%, 생명력이 70% 이하일 때 방어력 1000 증가" },
+      2: { type: "순수", count: 2, desc: "PVE 방어력 500" },
+      4: { type: "순수", count: 4, desc: "치피증 5%, 방어력 1000" },
+    },
+  };
 
-  ARCANA_DATA.forEach((arc) => {
-    const result = getSimResult(arc.name);
-    const weight = arc.name === "천칭" ? 0.5 : 1;
+  function getSetEffects(typeCounts) {
+    const result = [];
 
-    result.detailStats.forEach((s) => {
-      s.split(",").map((x) => x.trim()).forEach((stat) => {
-        simDetailStatsMap[stat] = (simDetailStatsMap[stat] || 0) + weight;
+    ["활력", "마력", "광분", "순수"].forEach((type) => {
+      const count = typeCounts[type] || 0;
+      if (count >= 2) result.push(SET_EFFECTS[type][2]);
+      if (count >= 4) result.push(SET_EFFECTS[type][4]);
+    });
+
+    return result;
+  }
+
+  const COLUMN_KEYS = ["rec1", "rec2", "rec3", "preset1", "preset2"];
+
+  function getSelectedTypeByKey(key, arc, simSelections) {
+    if (key === "rec1") return arc.recommended?.[0]?.main;
+    if (key === "rec2") return arc.recommended?.[1]?.main;
+    if (key === "rec3") return arc.recommended?.[2]?.main;
+    if (key === "preset1") return simSelections.preset1?.[arc.name] ?? simSelections[arc.name];
+    if (key === "preset2") return simSelections.preset2?.[arc.name];
+    return null;
+  }
+
+  function buildTypeCounts(key, arcanaData, simSelections) {
+    const counts = {};
+
+    arcanaData.forEach((arc) => {
+      const type = getSelectedTypeByKey(key, arc, simSelections);
+      if (type) counts[type] = (counts[type] || 0) + 1;
+    });
+
+    return counts;
+  }
+
+  function buildDetailStatsMap(key, arcanaData, simSelections) {
+    const map = {};
+
+    arcanaData.forEach((arc) => {
+      const type = getSelectedTypeByKey(key, arc, simSelections);
+      if (!type) return;
+
+      const result = ARCANA_SIM_RESULT[arc.name]?.[type] ?? { detailStats: [] };
+      const weight = arc.name === "천칭" ? 0.5 : 1;
+
+      result.detailStats.forEach((s) => {
+        s.split(",").map((x) => x.trim()).forEach((stat) => {
+          map[stat] = (map[stat] || 0) + weight;
+        });
       });
     });
-  });
 
-  const simDetailStats = Object.keys(simDetailStatsMap).sort(
-    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+    return map;
+  }
+
+  const detailStatsMaps = Object.fromEntries(
+    COLUMN_KEYS.map((key) => [key, buildDetailStatsMap(key, ARCANA_DATA, simSelections)])
   );
 
-  const sim2DetailStatsMap = {};
-
-  ARCANA_DATA.forEach((arc) => {
-    const result = getSimResult(arc.name, null, "preset2");
-    const weight = arc.name === "천칭" ? 0.5 : 1;
-
-    result.detailStats.forEach((s) => {
-      s.split(",").map((x) => x.trim()).forEach((stat) => {
-        sim2DetailStatsMap[stat] = (sim2DetailStatsMap[stat] || 0) + weight;
-      });
-    });
-  });
-
-  const sim2DetailStats = Object.keys(sim2DetailStatsMap).sort(
-    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+  const detailStatsLists = Object.fromEntries(
+    COLUMN_KEYS.map((key) => [
+      key,
+      Object.keys(detailStatsMaps[key]).sort(
+        (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+      ),
+    ])
   );
 
-  const rec1DetailStatsMap = {};
-
-  ARCANA_DATA.forEach((arc) => {
-    const result = getSimResult(arc.name, arc.recommended?.[0]?.main);
-    const weight = arc.name === "천칭" ? 0.5 : 1;
-
-    result.detailStats.forEach((s) => {
-      s.split(",").map((x) => x.trim()).forEach((stat) => {
-        rec1DetailStatsMap[stat] = (rec1DetailStatsMap[stat] || 0) + weight;
-      });
-    });
-  });
-
-  const rec1DetailStats = Object.keys(rec1DetailStatsMap).sort(
-    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+  const typeCountsMap = Object.fromEntries(
+    COLUMN_KEYS.map((key) => [key, buildTypeCounts(key, ARCANA_DATA, simSelections)])
   );
-
-  const rec2DetailStatsMap = {};
-
-  ARCANA_DATA.forEach((arc) => {
-    const result = getSimResult(arc.name, arc.recommended?.[1]?.main);
-    const weight = arc.name === "천칭" ? 0.5 : 1;
-
-    result.detailStats.forEach((s) => {
-      s.split(",").map((x) => x.trim()).forEach((stat) => {
-        rec2DetailStatsMap[stat] = (rec2DetailStatsMap[stat] || 0) + weight;
-      });
-    });
-  });
-
-  const rec2DetailStats = Object.keys(rec2DetailStatsMap).sort(
-    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
-  );
-
-  const rec3DetailStatsMap = {};
-
-  ARCANA_DATA.forEach((arc) => {
-    const result = getSimResult(arc.name, arc.recommended?.[2]?.main);
-    const weight = arc.name === "천칭" ? 0.5 : 1;
-
-    result.detailStats.forEach((s) => {
-      s.split(",").map((x) => x.trim()).forEach((stat) => {
-        rec3DetailStatsMap[stat] = (rec3DetailStatsMap[stat] || 0) + weight;
-      });
-    });
-  });
-
-  const rec3DetailStats = Object.keys(rec3DetailStatsMap).sort(
-    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
-  );
-
-  simDetailStats.sort((a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b));
-
-  const totalsByClass = buildSkillTotalsByClass(ARCANA_DATA);
 
   return (
     <div style={{ marginTop: 12 }}>
@@ -533,9 +550,7 @@ export default function Aion2_ArcanaTable() {
               <col style={{ width: 200 }} />
               <col style={{ width: 200 }} />
               <col style={{ width: 200 }} />
-              {CLASSES.map((c) => (
-                <col key={c} style={{ width: 140 }} />
-              ))}
+              <col style={{ width: 120 }} />
             </colgroup>
 
             <thead>
@@ -546,11 +561,31 @@ export default function Aion2_ArcanaTable() {
                 <th style={styles.th}>추천3<br/>4광분+2마력</th>
                 <th style={styles.th}>프리셋1</th>
                 <th style={styles.th}>프리셋2</th>
-                {CLASSES.map((c) => (
-                  <th key={c} style={styles.th}>
-                    {c}
-                  </th>
-                ))}
+
+                <th style={styles.th}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+                    <div>추천 스킬</div>
+                    <select
+                      value={selectedClass}
+                      onChange={(e) => setSelectedClass(e.target.value)}
+                      style={{
+                        background: "#1f1f1f",
+                        color: "#fff",
+                        border: "1px solid #555",
+                        borderRadius: 6,
+                        padding: "4px 8px",
+                        fontSize: 12,
+                      }}
+                    >
+                      {CLASSES.map((cls) => (
+                        <option key={cls} value={cls}>
+                          {cls}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </th>
+
               </tr>
             </thead>
 
@@ -585,11 +620,9 @@ export default function Aion2_ArcanaTable() {
                     onChange={(opt) => handleSimChange("preset2", arc.name, opt)}
                   />
 
-                  {CLASSES.map((cls) => (
-                    <td key={`${arc.name}-${cls}`} style={styles.td}>
-                      {renderSkillList(arc.skillsByClass?.[cls])}
-                    </td>
-                  ))}
+                  <td style={styles.td}>
+                    {renderSkillList(arc.skillsByClass?.[selectedClass])}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -600,60 +633,65 @@ export default function Aion2_ArcanaTable() {
                   합계
                 </td>
 
-                <td style={styles.td}>
-                  <ul style={{ margin: 0, paddingLeft: 18 }}>
-                    {rec1DetailStats.map((stat, idx) => (
-                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
-                        {stat}{rec1DetailStatsMap[stat] === 1 ? "" : ` x${rec1DetailStatsMap[stat]}`}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
+                {COLUMN_KEYS.map((key) => (
+                  <td key={`sum-${key}`} style={styles.td}>
+                    <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+                      {detailStatsLists[key].map((stat, idx) => (
+                        <li key={`${key}-${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
+                          <li
+                            key={`${key}-${stat}-${idx}`}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              gap: 8,
+                              color: STAT_COLORS[stat] || "#fff",
+                              borderBottom: idx < detailStatsLists[key].length - 1 ? "1px solid #2a2a2a" : "none",
+                              padding: "2px 0",
+                            }}
+                          >
+                            <span>
+                              {/* {stat}{detailStatsMaps[key][stat] === 1 ? "" : ` x${detailStatsMaps[key][stat]}`} */}
+                              {stat}
+                            </span>
 
-                <td style={styles.td}>
-                  <ul style={{ margin: 0, paddingLeft: 18 }}>
-                    {rec2DetailStats.map((stat, idx) => (
-                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
-                        {stat}{rec2DetailStatsMap[stat] === 1 ? "" : ` x${rec2DetailStatsMap[stat]}`}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-
-                <td style={styles.td}>
-                  <ul style={{ margin: 0, paddingLeft: 18 }}>
-                    {rec3DetailStats.map((stat, idx) => (
-                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
-                        {stat}{rec3DetailStatsMap[stat] === 1 ? "" : ` x${rec3DetailStatsMap[stat]}`}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-
-                <td style={styles.td}>
-                  <ul style={{ margin: 0, paddingLeft: 18 }}>
-                    {simDetailStats.map((stat, idx) => (
-                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
-                        {stat}{simDetailStatsMap[stat] === 1 ? "" : ` x${simDetailStatsMap[stat]}`}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-
-                <td style={styles.td}>
-                  <ul style={{ margin: 0, paddingLeft: 18 }}>
-                    {sim2DetailStats.map((stat, idx) => (
-                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
-                        {stat}{sim2DetailStatsMap[stat] === 1 ? "" : ` x${sim2DetailStatsMap[stat]}`}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-
-                {CLASSES.map((cls) => (
-                  <td key={`tfoot-empty-${cls}`} style={styles.td}></td>
+                            <div style={{ display: "flex", gap: 3 }}>
+                              {Array.from({ length: Math.round(detailStatsMaps[key][stat] * 2) }).map((_, i) => (
+                                <div
+                                  key={i}
+                                  style={{
+                                    width: 30,
+                                    height: 6,
+                                    borderRadius: 1,
+                                    background: STAT_COLORS[stat] || "#fff",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </li>
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
                 ))}
+
+                <td style={styles.td}></td>
               </tr>
+              
+              <tr>
+                <td style={{ ...styles.tdArcana, textAlign: "center" }}>
+                  세트효과
+                </td>
+
+                {COLUMN_KEYS.map((key) => (
+                  <td key={`set-${key}`} style={styles.td}>
+                    {renderSetEffectsList(getSetEffects(typeCountsMap[key]))}
+                  </td>
+                ))}
+
+                <td style={styles.td}></td>
+              </tr>
+
             </tfoot>
 
           </table>
@@ -673,6 +711,49 @@ function renderSkillList(arr) {
         </li>
       ))}
     </ul>
+  );
+}
+
+function renderSetEffectsList(items) {
+  if (!items || items.length === 0) {
+    return <span style={{ opacity: 0.45 }}>-</span>;
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      {items.map((item, idx) => (
+        <div key={`${item.type}-${item.count}-${idx}`} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+            <span
+              style={{
+                padding: "4px 8px",
+                fontSize: 11,
+                borderRadius: 6,
+                border: "1px solid #555",
+                background: RECOMMENDED_BG[item.type] || "#222",
+                color: "#fff",
+                whiteSpace: "nowrap",
+                lineHeight: 1.1,
+                fontWeight: 400,
+              }}
+            >
+              {item.type} ({item.count})
+            </span>
+          </div>
+
+          <div
+            style={{
+              fontSize: 12,
+              color: "#d6d6d6",
+              lineHeight: 1.4,
+              wordBreak: "keep-all",
+            }}
+          >
+            {item.desc}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -722,7 +803,7 @@ const styles = {
     width: "100%",
     borderCollapse: "separate",
     borderSpacing: 0,
-    minWidth: 110 + 5 * 200 + 8 * 140,
+    minWidth: 110 + 5 * 200 + 180,
     background: "#181818",
   },
   th: {
