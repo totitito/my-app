@@ -516,7 +516,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-08 08:24
+              업데이트 : 2026-03-08 08:42
             </div>
           </div>
 
@@ -590,18 +590,7 @@ function App() {
                   >
                     업적
                   </button>
-                  <button
-                    onClick={() => setViewMode("aion2_arcana")}
-                    style={{
-                      ...btnStyle,
-                      backgroundColor: viewMode === "aion2_arcana" ? "#333" : "#1e1e1e",
-                      border: viewMode === "aion2_arcana" ? "1px solid #777" : "1px solid #444",
-                      fontWeight: viewMode === "aion2_arcana" ? "bold" : "normal",
-                    }}
-                  >
-                    아르카나
-                  </button>
-                  
+
                   <button
                     onClick={() => setViewMode("aion2_soul")}
                     style={{
@@ -615,15 +604,15 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode("aion2_skill")}
+                    onClick={() => setViewMode("aion2_arcana")}
                     style={{
                       ...btnStyle,
-                      backgroundColor: viewMode === "aion2_skill" ? "#333" : "#1e1e1e",
-                      border: viewMode === "aion2_skill" ? "1px solid #777" : "1px solid #444",
-                      fontWeight: viewMode === "aion2_skill" ? "bold" : "normal",
+                      backgroundColor: viewMode === "aion2_arcana" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_arcana" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_arcana" ? "bold" : "normal",
                     }}
                   >
-                    스킬 채택률
+                    아르카나
                   </button>
 
                   <button
@@ -636,6 +625,18 @@ function App() {
                     }}
                   >
                     스킬 계산기
+                  </button>
+
+                  <button
+                    onClick={() => setViewMode("aion2_skill")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_skill" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_skill" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_skill" ? "bold" : "normal",
+                    }}
+                  >
+                    스킬 채택률
                   </button>
 
                   <button
