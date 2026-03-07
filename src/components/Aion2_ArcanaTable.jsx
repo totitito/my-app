@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const RECOMMENDED_COLORS = {
   활력: "#f0c040",
@@ -8,13 +8,75 @@ const RECOMMENDED_COLORS = {
 };
 
 const RECOMMENDED_BG = {
-  활력: "#2a2310",
-  순수: "#2a1010",
-  광분: "#1e1028",
-  마력: "#101828",
+  활력: "#76622c",
+  순수: "#762e2e",
+  광분: "#5d2d7f",
+  마력: "#2c4375",
 };
 
 const CLASSES = ["수호성", "검성", "살성", "궁성", "마도성", "정령성", "호법성", "치유성"];
+
+const ARCANA_NAMES = ["성배", "양피지", "나침반", "종", "거울", "천칭"];
+
+const ARCANA_OPTIONS = ["활력", "마력", "광분", "순수"];
+
+const GOD_STAT_TO_DETAIL = {
+  정의: "방어력, 완벽",
+  자유: "명중, 회피",
+  환상: "쿨감, 철벽 관통",
+  생명: "생명력, 재생 확률",
+  시간: "공속, 강타 저항",
+  파괴: "공격력, 완벽 저항",
+  죽음: "치명타, 재생 관통",
+  지혜: "정신력 소모, 강타",
+  운명: "정신력, 철벽",
+  공간: "이속, 막기",
+};
+
+const ARCANA_SIM_RESULT = {
+  성배: {
+    활력: { godStats: ["시간 20"], detailStats: ["공속, 강타 저항"] },
+    광분: { godStats: ["시간 20"], detailStats: ["공속, 강타 저항"] },
+    마력: { godStats: ["공간 20"], detailStats: ["이속, 막기"] },
+    순수: { godStats: ["공간 20"], detailStats: ["이속, 막기"] },
+  },
+  양피지: {
+    활력: { godStats: ["생명 20"], detailStats: ["생명력, 재생 확률"] },
+    광분: { godStats: ["생명 20"], detailStats: ["생명력, 재생 확률"] },
+    마력: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
+    순수: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
+  },
+  나침반: {
+    활력: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
+    광분: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
+    마력: { godStats: ["죽음 20"], detailStats: ["치명타, 재생 관통"] },
+    순수: { godStats: ["죽음 20"], detailStats: ["치명타, 재생 관통"] },
+  },
+  종: {
+    활력: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
+    광분: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
+    마력: { godStats: ["파괴 20"], detailStats: ["공격력, 완벽 저항"] },
+    순수: { godStats: ["파괴 20"], detailStats: ["공격력, 완벽 저항"] },
+  },
+  거울: {
+    활력: { godStats: ["환상 20"], detailStats: ["쿨감, 철벽 관통"] },
+    광분: { godStats: ["환상 20"], detailStats: ["쿨감, 철벽 관통"] },
+    마력: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
+    순수: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
+  },
+  천칭: {
+    활력: { godStats: [], detailStats: [] },
+    마력: { godStats: [], detailStats: [] },
+    광분: {
+      godStats: ["정의 10", "생명 10"],
+      detailStats: ["방어력, 완벽", "생명력, 재생 확률"],
+    },
+    순수: {
+      godStats: ["파괴 10", "운명 10"],
+      detailStats: ["공격력, 완벽 저항", "정신력, 철벽"],
+    },
+  },
+};
 
 // 각 아르카나당 1행
 const ARCANA_DATA = [
@@ -22,9 +84,9 @@ const ARCANA_DATA = [
     name: "성배",
     note: "전체 스킬",
     recommended: [
-      { main: "활력", sub: "시간 (전투 속도, 강타 저항)" },
-      { main: "광분", sub: "시간 (전투 속도, 강타 저항)" },
-      { main: "광분", sub: "시간 (전투 속도, 강타 저항)" },
+      { main: "활력", sub: "시간 (공속, 강타 저항)" },
+      { main: "광분", sub: "시간 (공속, 강타 저항)" },
+      { main: "광분", sub: "시간 (공속, 강타 저항)" },
     ],
     skillsByClass: {
       수호성: ["심판", "연속난타", "맹렬한 일격", "격앙"],
@@ -99,9 +161,9 @@ const ARCANA_DATA = [
     name: "거울",
     note: "패시브 스킬",
     recommended: [
-      { main: "순수", sub: "지혜 (강타, 정신력 소모 감소)" },
+      { main: "순수", sub: "지혜 (강타, 정신력 소모)" },
       { main: "광분", sub: "환상 (재사용 시간, 철벽 관통)" },
-      { main: "마력", sub: "지혜 (강타, 정신력 소모 감소)" },
+      { main: "마력", sub: "지혜 (강타, 정신력 소모)" },
     ],
     skillsByClass: {
       수호성: ["충격 적중", "철벽 방어", "고통 차단", "생존 의지"],
@@ -136,10 +198,58 @@ const ARCANA_DATA = [
 ];
 
 const RECOMMENDED_TOTALS = [
-  ["전투 속도", "강타", "-", "-", "공격력", "공격력", "치명타", "정신력 소모 감소"],
-  ["전투 속도", "-", "명중", "재사용 시간", "공격력", "공격력", "-", "-"],
-  ["전투 속도", "강타", "명중", "-", "공격력", "-", "-", "정신력 소모 감소"],
+  ["공속", "강타", "-", "-", "공격력", "공격력", "치명타", "정신력 소모"],
+  ["공속", "-", "명중", "재사용 시간", "공격력", "공격력", "-", "-"],
+  ["공속", "강타", "명중", "-", "공격력", "-", "-", "정신력 소모"],
 ];
+
+const STAT_COLORS = {
+  // 1티어 공격
+  명중: "#ff4d4d",
+  공속: "#ff4d4d",
+  강타: "#ff4d4d",
+  쿨감: "#ff4d4d",
+
+  // 2티어 공격
+  공격력: "#ff9a3c",
+  치명타: "#ff9a3c",
+
+  // 3티어 공격
+  이속: "#bbbbbb",
+  완벽: "#bbbbbb",
+  "철벽 관통": "#bbbbbb",
+  "재생 관통": "#bbbbbb",
+
+  // 정신력 계열
+  "정신력 소모": "#3bd16f",
+  정신력: "#3bd16f",
+
+  // 일반 방어
+  방어력: "#4da6ff",
+  회피: "#4da6ff",
+  생명력: "#4da6ff",
+  "재생 확률": "#4da6ff",
+  막기: "#4da6ff",
+
+  // PVP 방어
+  철벽: "#b06cff",
+  "강타 저항": "#b06cff",
+  "완벽 저항": "#b06cff",
+};
+
+function renderColoredDetailStats(detailStats) {
+  const items = detailStats
+    .flatMap((text) => text.split(","))
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return items.map((stat, idx) => (
+    <React.Fragment key={`${stat}-${idx}`}>
+      <span style={{ color: STAT_COLORS[stat] || "#9ecbff" }}>{stat}</span>
+      {idx < items.length - 1 ? <span style={{ color: "#888" }}>, </span> : null}
+    </React.Fragment>
+  ));
+}
 
 function buildSkillTotalsByClass(arcanaData) {
   const totals = {};
@@ -168,7 +278,241 @@ function emptySkills() {
   return Object.fromEntries(CLASSES.map((c) => [c, []]));
 }
 
+function ArcanaStatCell({
+  arcName,
+  selectedType,
+  locked = false,
+  onChange,
+}) {
+  const result = ARCANA_SIM_RESULT[arcName]?.[selectedType] ?? { godStats: [], detailStats: [] };
+
+  return (
+    <td
+      style={{
+        ...styles.td,
+        background: "#181818",
+        verticalAlign: "middle",
+        textAlign: "center",
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 4 }}>
+          {["활력", "마력", "광분", "순수"].map((opt) => {
+            const disabled = locked || (arcName === "천칭" && (opt === "활력" || opt === "마력"));
+            const isActive = selectedType === opt;
+
+            return (
+              <button
+                key={opt}
+                disabled={disabled}
+                onClick={() => !disabled && onChange?.(opt)}
+                style={{
+                  padding: "4px 8px",
+                  fontSize: 11,
+                  borderRadius: 6,
+                  border: "1px solid #555",
+                  background: isActive ? (RECOMMENDED_BG[opt] || "#222") : "#222",
+                  color: "#fff",
+                  whiteSpace: "nowrap",
+                  opacity: disabled && !isActive ? 0.35 : 1,
+                  cursor: disabled ? "default" : "pointer",
+                }}
+              >
+                {opt}
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "flex-start" }}>
+          {result.godStats.map((godStat, idx) => (
+            <div key={idx} style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <div style={{ fontSize: 12, color: "#fff", minWidth: 60, whiteSpace: "pre-line", fontWeight: 400 }}>
+                {godStat}
+              </div>
+
+              <div style={{ fontSize: 11, fontWeight: 400, whiteSpace: "normal", lineHeight: 1.2 }}>
+                {renderColoredDetailStats([result.detailStats[idx] || ""])}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </td>
+  );
+}
+
 export default function Aion2_ArcanaTable() {
+
+  const [simSelections, setSimSelections] = useState(() => {
+    const saved = localStorage.getItem("aion2-arcana-sim-selections");
+
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+
+    return {
+      preset1: {
+        성배: "활력",
+        양피지: "활력",
+        나침반: "활력",
+        종: "활력",
+        거울: "활력",
+        천칭: "광분",
+      },
+      preset2: {
+        성배: "활력",
+        양피지: "활력",
+        나침반: "활력",
+        종: "활력",
+        거울: "활력",
+        천칭: "광분",
+      },
+    };
+  });
+
+  const handleSimChange = (preset, arcanaName, value) => {
+    if (arcanaName === "천칭" && (value === "활력" || value === "마력")) {
+      return;
+    }
+
+    setSimSelections((prev) => ({
+      ...prev,
+      [preset]: {
+        ...prev[preset],
+        [arcanaName]: value,
+      },
+    }));
+  };
+
+  const getSimResult = (arcanaName, forcedType, preset = "preset1") => {
+    const selectedType = forcedType ?? simSelections[preset]?.[arcanaName] ?? simSelections[arcanaName];
+    return ARCANA_SIM_RESULT[arcanaName]?.[selectedType] ?? { godStats: [], detailStats: [] };
+  };
+
+  useEffect(() => {
+    localStorage.setItem(
+      "aion2-arcana-sim-selections",
+      JSON.stringify(simSelections)
+    );
+  }, [simSelections]);
+
+  const STAT_ORDER = [
+    "강타",
+    "공속",
+    "명중",
+    "쿨감",
+
+    "공격력",
+    "치명타",
+
+    "이속",
+    "완벽",
+    "철벽 관통",
+    "재생 관통",
+
+    "정신력 소모",
+    "정신력",
+
+    "생명력",
+    "방어력",
+    "회피",
+    "막기",
+    "재생 확률",
+
+    "철벽",
+    "강타 저항",
+    "완벽 저항",
+  ];
+
+  const simDetailStatsMap = {};
+
+  ARCANA_DATA.forEach((arc) => {
+    const result = getSimResult(arc.name);
+    const weight = arc.name === "천칭" ? 0.5 : 1;
+
+    result.detailStats.forEach((s) => {
+      s.split(",").map((x) => x.trim()).forEach((stat) => {
+        simDetailStatsMap[stat] = (simDetailStatsMap[stat] || 0) + weight;
+      });
+    });
+  });
+
+  const simDetailStats = Object.keys(simDetailStatsMap).sort(
+    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+  );
+
+  const sim2DetailStatsMap = {};
+
+  ARCANA_DATA.forEach((arc) => {
+    const result = getSimResult(arc.name, null, "preset2");
+    const weight = arc.name === "천칭" ? 0.5 : 1;
+
+    result.detailStats.forEach((s) => {
+      s.split(",").map((x) => x.trim()).forEach((stat) => {
+        sim2DetailStatsMap[stat] = (sim2DetailStatsMap[stat] || 0) + weight;
+      });
+    });
+  });
+
+  const sim2DetailStats = Object.keys(sim2DetailStatsMap).sort(
+    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+  );
+
+  const rec1DetailStatsMap = {};
+
+  ARCANA_DATA.forEach((arc) => {
+    const result = getSimResult(arc.name, arc.recommended?.[0]?.main);
+    const weight = arc.name === "천칭" ? 0.5 : 1;
+
+    result.detailStats.forEach((s) => {
+      s.split(",").map((x) => x.trim()).forEach((stat) => {
+        rec1DetailStatsMap[stat] = (rec1DetailStatsMap[stat] || 0) + weight;
+      });
+    });
+  });
+
+  const rec1DetailStats = Object.keys(rec1DetailStatsMap).sort(
+    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+  );
+
+  const rec2DetailStatsMap = {};
+
+  ARCANA_DATA.forEach((arc) => {
+    const result = getSimResult(arc.name, arc.recommended?.[1]?.main);
+    const weight = arc.name === "천칭" ? 0.5 : 1;
+
+    result.detailStats.forEach((s) => {
+      s.split(",").map((x) => x.trim()).forEach((stat) => {
+        rec2DetailStatsMap[stat] = (rec2DetailStatsMap[stat] || 0) + weight;
+      });
+    });
+  });
+
+  const rec2DetailStats = Object.keys(rec2DetailStatsMap).sort(
+    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+  );
+
+  const rec3DetailStatsMap = {};
+
+  ARCANA_DATA.forEach((arc) => {
+    const result = getSimResult(arc.name, arc.recommended?.[2]?.main);
+    const weight = arc.name === "천칭" ? 0.5 : 1;
+
+    result.detailStats.forEach((s) => {
+      s.split(",").map((x) => x.trim()).forEach((stat) => {
+        rec3DetailStatsMap[stat] = (rec3DetailStatsMap[stat] || 0) + weight;
+      });
+    });
+  });
+
+  const rec3DetailStats = Object.keys(rec3DetailStatsMap).sort(
+    (a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b)
+  );
+
+  simDetailStats.sort((a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b));
 
   const totalsByClass = buildSkillTotalsByClass(ARCANA_DATA);
 
@@ -184,9 +528,11 @@ export default function Aion2_ArcanaTable() {
           <table style={styles.table}>
             <colgroup>
               <col style={{ width: 110 }} />
-              <col style={{ width: 180 }} />
-              <col style={{ width: 180 }} />
-              <col style={{ width: 180 }} />
+              <col style={{ width: 200 }} />
+              <col style={{ width: 200 }} />
+              <col style={{ width: 200 }} />
+              <col style={{ width: 200 }} />
+              <col style={{ width: 200 }} />
               {CLASSES.map((c) => (
                 <col key={c} style={{ width: 140 }} />
               ))}
@@ -195,9 +541,11 @@ export default function Aion2_ArcanaTable() {
             <thead>
               <tr>
                 <th style={styles.th}>아르카나</th>
-                <th style={styles.th}>주신스탯 추천1<br/>(2활력+4순수)</th>
-                <th style={styles.th}>주신스탯 추천2<br/>(4광분+2순수)</th>
-                <th style={styles.th}>주신스탯 추천3<br/>(4광분+2마력)</th>
+                <th style={styles.th}>추천1<br/>2활력+4순수<br/>(활력 성배 잘 뜬 경우)</th>
+                <th style={styles.th}>추천2<br/>4광분+2순수</th>
+                <th style={styles.th}>추천3<br/>4광분+2마력</th>
+                <th style={styles.th}>프리셋1</th>
+                <th style={styles.th}>프리셋2</th>
                 {CLASSES.map((c) => (
                   <th key={c} style={styles.th}>
                     {c}
@@ -215,11 +563,27 @@ export default function Aion2_ArcanaTable() {
                   </td>
 
                   {arc.recommended.map((rec, i) => (
-                    <td key={i} style={{ ...styles.tdRecommended, background: RECOMMENDED_BG[rec.main] || "#181818" }}>
-                      <div style={{ fontWeight: 800, color: RECOMMENDED_COLORS[rec.main] || "#fff" }}>{rec.main}</div>
-                      <div style={{ fontSize: 11, fontWeight: 400, marginTop: 3, opacity: 0.8, whiteSpace: "pre-line" }}>{rec.sub}</div>
-                    </td>
+                    <ArcanaStatCell
+                      key={i}
+                      arcName={arc.name}
+                      selectedType={rec.main}
+                      locked={true}
+                    />
                   ))}
+
+                  <ArcanaStatCell
+                    arcName={arc.name}
+                    selectedType={simSelections.preset1?.[arc.name] || simSelections[arc.name] || "활력"}
+                    locked={false}
+                    onChange={(opt) => handleSimChange("preset1", arc.name, opt)}
+                  />
+
+                  <ArcanaStatCell
+                    arcName={arc.name}
+                    selectedType={simSelections.preset2?.[arc.name] || "활력"}
+                    locked={false}
+                    onChange={(opt) => handleSimChange("preset2", arc.name, opt)}
+                  />
 
                   {CLASSES.map((cls) => (
                     <td key={`${arc.name}-${cls}`} style={styles.td}>
@@ -232,36 +596,68 @@ export default function Aion2_ArcanaTable() {
 
             <tfoot>
               <tr>
-                <td style={{ ...styles.tdArcana, color: "#d8c77a", textAlign: "center", verticalAlign: "middle" }}>
-                  <div style={{ fontWeight: 800 }}>합계</div>
-                  {/* <div style={styles.note}>중복 포함</div> */}
+                <td style={{ ...styles.tdArcana, textAlign: "center" }}>
+                  합계
                 </td>
 
-                {RECOMMENDED_TOTALS.map((col, i) => (
-                  <td key={i} style={styles.tdRecommended}>
-                    <ul style={styles.ul}>
-                      {col.map((item, j) => (
-                        <li key={j} style={{ ...styles.li, color: item === "-" ? "#555" : item === "정신력 소모 감소" ? "#4499ff" : "#ff5353" }}>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
-                ))}
+                <td style={styles.td}>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {rec1DetailStats.map((stat, idx) => (
+                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
+                        {stat}{rec1DetailStatsMap[stat] === 1 ? "" : ` x${rec1DetailStatsMap[stat]}`}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+
+                <td style={styles.td}>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {rec2DetailStats.map((stat, idx) => (
+                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
+                        {stat}{rec2DetailStatsMap[stat] === 1 ? "" : ` x${rec2DetailStatsMap[stat]}`}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+
+                <td style={styles.td}>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {rec3DetailStats.map((stat, idx) => (
+                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
+                        {stat}{rec3DetailStatsMap[stat] === 1 ? "" : ` x${rec3DetailStatsMap[stat]}`}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+
+                <td style={styles.td}>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {simDetailStats.map((stat, idx) => (
+                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
+                        {stat}{simDetailStatsMap[stat] === 1 ? "" : ` x${simDetailStatsMap[stat]}`}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+
+                <td style={styles.td}>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {sim2DetailStats.map((stat, idx) => (
+                      <li key={`${stat}-${idx}`} style={{ color: STAT_COLORS[stat] || "#fff" }}>
+                        {stat}{sim2DetailStatsMap[stat] === 1 ? "" : ` x${sim2DetailStatsMap[stat]}`}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
 
                 {CLASSES.map((cls) => (
-                  <td key={`total-${cls}`} style={styles.td}>
-                    {renderTotalsList(totalsByClass[cls])}
-                  </td>
+                  <td key={`tfoot-empty-${cls}`} style={styles.td}></td>
                 ))}
               </tr>
             </tfoot>
+
           </table>
         </div>
-
-        {/* <div style={styles.footer}>
-          * 추천은 활력 / 마력 / 무관 중 하나만 표기.
-        </div> */}
       </div>
     </div>
   );
@@ -291,7 +687,7 @@ function renderTotalsList(items) {
           key={name}
           style={{
             ...styles.li,
-            color: "#e4daad",   // ⭐ 옅은 노랑
+            color: "#e4daad",
             fontWeight: 500
           }}
         >
@@ -326,7 +722,7 @@ const styles = {
     width: "100%",
     borderCollapse: "separate",
     borderSpacing: 0,
-    minWidth: 110 + 90 + 8 * 140,
+    minWidth: 110 + 5 * 200 + 8 * 140,
     background: "#181818",
   },
   th: {
@@ -357,19 +753,9 @@ const styles = {
     textAlign: "center",
     background: "#2a2a2a",
   },
-  tdRecommended: {
-    borderBottom: "1px solid #2f2f2f",
-    borderRight: "1px solid #2a2a2a",
-    padding: "8px",
-    textAlign: "center",
-    fontWeight: 800,
-    background: "#181818",
-  },
   note: { marginTop: 6, fontSize: 11, opacity: 0.65 },
   ul: { 
     margin: 0, 
-    //paddingLeft: 16,
-    // textAlign: "center",
     padding: 0,
     listStyle: "none"
   },
