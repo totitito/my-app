@@ -1207,7 +1207,7 @@ export default function Aion2_SkillCalculator() {
                             mode="all"
                             value={entry.skillName ?? ""}
                             placeholder="스킬 선택"
-                            allowedSkills={ARCANA_SKILL_INDEX[slot.id] ?? []}
+                            allowedSkills={(ARCANA_SKILLS[activePreset.job]?.[slot.id] ?? []).map(s => typeof s === "string" ? s : s.name)}
                             excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
                             onSelect={(value) => {
                               setPresets((prev) =>
@@ -1316,7 +1316,7 @@ export default function Aion2_SkillCalculator() {
                           mode="all"
                           value=""
                           placeholder="스킬 선택"
-                          allowedSkills={ARCANA_SKILL_INDEX[slot.id] ?? []}
+                          allowedSkills={(ARCANA_SKILLS[activePreset.job]?.[slot.id] ?? []).map(s => typeof s === "string" ? s : s.name)}
                           excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
                           onSelect={(value) => {
                             if (!value) return;
