@@ -198,14 +198,16 @@ function SkillDropdown({ job, addedSkills, onSelect }) {
       <button
         onClick={() => setOpen((v) => !v)}
         style={{
-          backgroundColor: S.surface2, color: S.textDim,
+          backgroundColor: S.surface2,
+          // backgroundColor: "#424242",
+          color: S.textDim,
           border: `1px solid ${S.border}`, borderRadius: "4px",
           padding: "7px 12px", fontSize: "13px", cursor: "pointer",
           display: "flex", alignItems: "center", gap: "6px",
         }}
       >
-        + 스킬 추가
-        <span style={{ fontSize: "10px" }}>{open ? "▲" : "▼"}</span>
+        ▼ 관심 스킬 추가 ▼
+        {/* <span style={{ fontSize: "10px" }}>{open ? "▲" : "▼"}</span> */}
       </button>
 
       {open && (
@@ -331,6 +333,8 @@ function InlineSkillDropdown({
   placeholder = "스킬 선택",
   excludedSkills = [],
   allowedSkills = null,
+  allowDelete = false,
+  disableDelete = false,
   onSelect,
 }) {
   const [open, setOpen] = useState(false);
@@ -579,22 +583,31 @@ function InlineSkillDropdown({
                 </div>
               ))}
 
-              <div
-                onClick={() => {
-                  onSelect("");
-                  setOpen(false);
-                }}
-                style={{
-                  padding: "6px 8px",
-                  cursor: "pointer",
-                  fontSize: "12px",
-                  color: S.textDim,
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = S.surface2)}
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-              >
-                비우기
-              </div>
+              {allowDelete && (
+                <div
+                  onClick={() => {
+                    if (disableDelete) return;
+                    onSelect("__DELETE__");
+                    setOpen(false);
+                  }}
+                  style={{
+                    padding: "6px 8px",
+                    cursor: disableDelete ? "default" : "pointer",
+                    fontSize: "12px",
+                    color: disableDelete ? "#666" : "#e57373",
+                    borderTop: `1px solid ${S.border}`,
+                    marginTop: "4px",
+                  }}
+                  onMouseOver={(e) => {
+                    if (!disableDelete) e.currentTarget.style.backgroundColor = S.surface2;
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                >
+                  삭제
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -626,48 +639,20 @@ function SkillCard({
     <div style={{
       backgroundColor: S.surface, border: `1px solid ${borderColor}`,
       borderLeft: `3px solid ${borderColor}`, borderRadius: "6px",
-      padding: "12px", marginBottom: "10px",
+      padding: "8px 12px", marginBottom: "10px",
     }}>
       {/* 헤더 */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr auto 1fr",
+          display: "flex",
           alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          rowGap: "6px",
+          columnGap: "10px",
           marginBottom: "10px",
-          columnGap: "12px",
         }}
-      >
-        {/* 좌측: 스킬포인트 + 데바니온 */}
-        <div style={{ display: "flex", alignItems: "center", gap: "14px", justifySelf: "start" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
-            <label style={{ fontSize: "10px", color: S.textDim }}>스킬포인트</label>
-            <input
-              type="number"
-              value={skill.skillPoints}
-              min={0}
-              max={10}
-              onChange={(e) => onChange({ ...skill, skillPoints: Number(e.target.value) })}
-              onFocus={handleInputFocus}
-              onKeyDown={handleInputKeyDown}
-              style={inputStyle}
-            />
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
-            <label style={{ fontSize: "10px", color: S.textDim }}>데바니온</label>
-            <input
-              type="number"
-              value={skill.devanion}
-              min={0}
-              max={4}
-              onChange={(e) => onChange({ ...skill, devanion: Number(e.target.value) })}
-              onFocus={handleInputFocus}
-              onKeyDown={handleInputKeyDown}
-              style={inputStyle}
-            />
-          </div>
-        </div>
+      >        
 
         {/* 가운데: 이름 / 타입 / 우선순위 */}
         <div
@@ -799,40 +784,83 @@ function SkillCard({
           })}
         </div>
       </div>
+        
+        {/* 아르카나 */}
+        <div style={{ marginBottom: "8px" }}>
+          <div style={{ fontSize: "10px", color: S.textDim, marginBottom: "5px" }}>
+            아르카나 (+{Object.values(mergedArcanaLevels).reduce((a, b) => a + b, 0)})
+          </div>
 
-      {/* 아르카나 */}
-      <div style={{ marginBottom: "8px" }}>
-        <div style={{ fontSize: "10px", color: S.textDim, marginBottom: "5px" }}>
-          아르카나 (+{Object.values(mergedArcanaLevels).reduce((a, b) => a + b, 0)})
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-          {ARCANAS.map((arcana) => {
-            const skillList = ARCANA_SKILL_INDEX[arcana] ?? [];
-            const hasSkill = skillList.some((s) => (typeof s === "string" ? s : s.name) === skill.name);
-            const val = mergedArcanaLevels[arcana] ?? 0;
-            return (
-              <div key={arcana} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2px", opacity: hasSkill ? 1 : 0.3 }}>
-                <span style={{ fontSize: "10px", color: S.textDim }}>{arcana}</span>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: "12px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", alignItems: "flex-end" }}>
+              {ARCANAS.map((arcana) => {
+                const skillList = ARCANA_SKILL_INDEX[arcana] ?? [];
+                const hasSkill = skillList.some((s) => (typeof s === "string" ? s : s.name) === skill.name);
+                const val = mergedArcanaLevels[arcana] ?? 0;
+                return (
+                  <div
+                    key={arcana}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "2px",
+                      opacity: hasSkill ? 1 : 0.3,
+                    }}
+                  >
+                    <span style={{ fontSize: "10px", color: S.textDim }}>{arcana}</span>
+                    <input
+                      type="number"
+                      value={val}
+                      min={0}
+                      max={4}
+                      disabled={!hasSkill}
+                      onChange={(e) => {
+                        const raw = Number(e.target.value);
+                        const level = Number.isNaN(raw) ? 0 : Math.max(0, Math.min(4, raw));
+                        onSetArcanaLevel(arcana, level);
+                      }}
+                      onFocus={handleInputFocus}
+                      onKeyDown={handleInputKeyDown}
+                      style={{ ...inputStyle, width: "36px", textAlign: "center", opacity: hasSkill ? 1 : 0.4 }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ display: "flex", gap: "5px", marginLeft: "auto", alignItems: "flex-end" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                <label style={{ fontSize: "10px", color: S.textDim }}>스킬포인트</label>
                 <input
                   type="number"
-                  value={val}
+                  value={skill.skillPoints}
                   min={0}
-                  max={4}
-                  disabled={!hasSkill}
-                  onChange={(e) => {
-                    const raw = Number(e.target.value);
-                    const level = Number.isNaN(raw) ? 0 : Math.max(0, Math.min(4, raw));
-                    onSetArcanaLevel(arcana, level);
-                  }}
+                  max={10}
+                  onChange={(e) => onChange({ ...skill, skillPoints: Number(e.target.value) })}
                   onFocus={handleInputFocus}
                   onKeyDown={handleInputKeyDown}
-                  style={{ ...inputStyle, width: "36px", textAlign: "center", opacity: hasSkill ? 1 : 0.4 }}
+                  style={{ ...inputStyle, width: "36px", textAlign: "center" }}
                 />
               </div>
-            );
-          })}
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                <label style={{ fontSize: "10px", color: S.textDim }}>데바니온</label>
+                <input
+                  type="number"
+                  value={skill.devanion}
+                  min={0}
+                  max={4}
+                  onChange={(e) => onChange({ ...skill, devanion: Number(e.target.value) })}
+                  onFocus={handleInputFocus}
+                  onKeyDown={handleInputKeyDown}
+                  style={{ ...inputStyle, width: "36px", textAlign: "center" }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      
     </div>
   );
 }
@@ -902,6 +930,8 @@ export default function Aion2_SkillCalculator() {
       return "수호성";
     }
   });
+
+  const [showWeaponGauntlet, setShowWeaponGauntlet] = useState(false);
 
   const filteredPresets = presets.filter((p) => p.job === selectedJob);
   const activePreset = filteredPresets.find((p) => p.id === activePresetId) ?? null;
@@ -1002,6 +1032,29 @@ export default function Aion2_SkillCalculator() {
     ));
   }
 
+  const gearSlotsToShow = [
+    { id: "weapon", label: "무기", mode: "active" },
+    { id: "gauntlet", label: "가더", mode: "active" },
+
+    { id: "head", label: "머리", mode: "passive" },
+    { id: "shoulder", label: "어깨", mode: "passive" },
+    { id: "chest", label: "가슴", mode: "passive" },
+    { id: "legs", label: "다리", mode: "passive" },
+    { id: "hands", label: "손", mode: "passive" },
+    { id: "cloak", label: "망토", mode: "passive" },
+    { id: "feet", label: "발", mode: "passive" },
+
+    { id: "earring1", label: "귀걸이1", mode: "passive" },
+    { id: "earring2", label: "귀걸이2", mode: "passive" },
+    { id: "necklace", label: "목걸이", mode: "passive" },
+
+    { id: "ring1", label: "반지1", mode: "active" },
+    { id: "ring2", label: "반지2", mode: "active" },
+  ].filter((slot) => {
+    if (showWeaponGauntlet) return true;
+    return slot.id !== "weapon" && slot.id !== "gauntlet";
+  });
+
   return (
     <div style={{ backgroundColor: S.bg, minHeight: "100%", padding: "16px", color: S.text, fontFamily: "inherit" }}>
 
@@ -1049,36 +1102,50 @@ export default function Aion2_SkillCalculator() {
       {activePreset && (
         <>
           <div style={{ marginBottom: "14px" }}>
-            <div style={{ fontSize: "12px", color: S.textDim, marginBottom: "6px" }}>
-              장비
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: "6px",
+              }}
+            >
+              <div style={{
+                fontSize: "13px",
+                color: S.text,
+                fontWeight: "600",
+                letterSpacing: "0.2px",
+              }}>
+                장비
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowWeaponGauntlet((prev) => !prev)}
+                style={{
+                  backgroundColor: S.surface2,
+                  color: S.textDim,
+                  border: `1px solid ${S.border}`,
+                  borderRadius: "4px",
+                  padding: "3px 8px",
+                  fontSize: "11px",
+                  cursor: "pointer",
+                }}
+              >
+                {showWeaponGauntlet ? "무기/가더 ➖" : "무기/가더 ➕"}
+              </button>
             </div>
 
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(14, minmax(92px, 1fr))",
+                gridTemplateColumns: `repeat(${gearSlotsToShow.length}, minmax(92px, 1fr))`,
                 gap: "8px",
                 alignItems: "start",
                 marginBottom: "10px",
               }}
             >
-              {[
-                { id: "weapon", label: "무기", mode: "active" },
-                { id: "gauntlet", label: "가더", mode: "active" },
-                { id: "ring1", label: "반지1", mode: "active" },
-                { id: "ring2", label: "반지2", mode: "active" },
-                
-                { id: "head", label: "머리", mode: "passive" },
-                { id: "shoulder", label: "어깨", mode: "passive" },
-                { id: "chest", label: "가슴", mode: "passive" },
-                { id: "legs", label: "다리", mode: "passive" },
-                { id: "hands", label: "손", mode: "passive" },
-                { id: "feet", label: "발", mode: "passive" },
-                { id: "cloak", label: "망토", mode: "passive" },
-                { id: "necklace", label: "목걸이", mode: "passive" },
-                { id: "earring1", label: "귀걸이1", mode: "passive" },
-                { id: "earring2", label: "귀걸이2", mode: "passive" },
-              ].map((slot) => {
+              {gearSlotsToShow.map((slot) => {
                 const entries = activePreset.equippedGear?.[slot.id] ?? [];
 
                 return (
@@ -1096,81 +1163,66 @@ export default function Aion2_SkillCalculator() {
                             value={entry.skillName ?? ""}
                             placeholder="스킬 선택"
                             excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
+                            allowDelete={true}
+                            disableDelete={false}
                             onSelect={(value) => {
                               setPresets((prev) =>
                                 prev.map((p) => {
                                   if (p.id !== activePresetId) return p;
-                                  const next = [...(p.equippedGear?.[slot.id] ?? [])];
-                                  next[idx] = { skillName: value, level: 1 };
+
+                                  const list = [...(p.equippedGear?.[slot.id] ?? [])];
+
+                                  if (value === "__DELETE__") {
+                                    if (list.length === 1) {
+                                      list[idx] = { skillName: "", level: 1 };
+                                    } else {
+                                      list.splice(idx, 1);
+                                    }
+                                  } else {
+                                    list[idx] = { skillName: value, level: 1 };
+                                  }
                                   return {
                                     ...p,
                                     equippedGear: {
                                       ...p.equippedGear,
-                                      [slot.id]: next,
+                                      [slot.id]: list,
                                     },
                                   };
                                 })
                               );
                             }}
                           />
+                          
+                        </div>
+                      ))}
 
-                          <button
-                            type="button"
-                            onClick={() => {
+                      {!entries.some((e) => !e.skillName) && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+                          <InlineSkillDropdown
+                            job={activePreset.job}
+                            mode={slot.mode}
+                            value=""
+                            placeholder="스킬 선택"
+                            excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
+                            onSelect={(value) => {
+                              if (!value) return;
+
                               setPresets((prev) =>
                                 prev.map((p) => {
                                   if (p.id !== activePresetId) return p;
-                                  const next = (p.equippedGear?.[slot.id] ?? []).filter((_, i) => i !== idx);
                                   return {
                                     ...p,
                                     equippedGear: {
                                       ...p.equippedGear,
-                                      [slot.id]: next,
+                                      [slot.id]: [...(p.equippedGear?.[slot.id] ?? []), { skillName: value, level: 1 }],
                                     },
                                   };
                                 })
                               );
                             }}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              color: "#666",
-                              cursor: "pointer",
-                              fontSize: "14px",
-                              lineHeight: 1,
-                              padding: "0 2px",
-                            }}
-                          >
-                            ×
-                          </button>
+                          />
                         </div>
-                      ))}
-
-                      <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
-                        <InlineSkillDropdown
-                          job={activePreset.job}
-                          mode={slot.mode}
-                          value=""
-                          placeholder="스킬 선택"
-                          excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
-                          onSelect={(value) => {
-                            if (!value) return;
-
-                            setPresets((prev) =>
-                              prev.map((p) => {
-                                if (p.id !== activePresetId) return p;
-                                return {
-                                  ...p,
-                                  equippedGear: {
-                                    ...p.equippedGear,
-                                    [slot.id]: [...(p.equippedGear?.[slot.id] ?? []), { skillName: value, level: 1 }],
-                                  },
-                                };
-                              })
-                            );
-                          }}
-                        />
-                      </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -1178,9 +1230,17 @@ export default function Aion2_SkillCalculator() {
             </div>
           </div>
 
+          
+
           <hr style={{ border: "none", borderTop: "1px solid #444", margin: "12px 0" }} />
           <div style={{ marginBottom: "12px" }}>
-            <div style={{ fontSize: "12px", color: S.textDim, marginBottom: "6px" }}>
+            {/* <div style={{ fontSize: "12px", color: S.textDim, marginBottom: "6px" }}> */}
+            <div style={{
+              fontSize: "13px",
+              color: S.text,
+              fontWeight: "600",
+              letterSpacing: "0.2px",
+            }}>
               아르카나
             </div>
 
