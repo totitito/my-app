@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { ARCANA_SKILLS } from "../data/aion2-ArcanaSkillList";
+import { getSkillMeta } from "../data/aion2-SkillMetaUtils";
 
 const RECOMMENDED_COLORS = {
   활력: "#f0c040",
@@ -15,6 +17,19 @@ const RECOMMENDED_BG = {
 };
 
 const CLASSES = ["수호성", "검성", "살성", "궁성", "마도성", "정령성", "호법성", "치유성"];
+
+const S = {
+  bg: "#1a1a1a",
+  surface: "#242424",
+  surface2: "#2e2e2e",
+  border: "#3a3a3a",
+  text: "#e0e0e0",
+  textDim: "#888",
+  accent: "#5b9bd5",
+  ok: "#4caf50",
+  warn: "#f5a623",
+  tip: "#5b9bd5",
+};
 
 const ARCANA_NAMES = ["성배", "양피지", "나침반", "종", "거울", "천칭"];
 
@@ -87,16 +102,7 @@ const ARCANA_DATA = [
       { main: "광분", sub: "시간 (전투 속도, 강타 저항)" },
       { main: "광분", sub: "시간 (전투 속도, 강타 저항)" },
     ],
-    skillsByClass: {
-      수호성: ["심판", "연속난타", "맹렬한 일격", "격앙"],
-      검성: ["분쇄 파동", "내려찍기", "파멸의 맹타", "절단의 맹타"],
-      살성: ["심장 찌르기", "빠른 베기", "기습", "문양 폭발"],
-      궁성: ["저격", "속사", "조준 화살", "송곳 화살"],
-      마도성: ["불꽃 폭발", "불꽃 화살", "혹한의 바람", "불꽃 작살"],
-      정령성: ["화염 전소", "냉기 충격", "원소 융합", "현혹: 저주"],
-      호법성: ["암격쇄", "격파쇄", "백열격", "쾌유의 주문"],
-      치유성: ["쾌유의 광휘", "심판의 번개", "치유의 빛", "재생의 빛"],
-    },
+    skillsByClass: {},
   },
   {
     name: "양피지",
@@ -106,16 +112,7 @@ const ARCANA_DATA = [
       { main: "광분", sub: "생명 (생명력, 재생 확률)" },
       { main: "광분", sub: "생명 (생명력, 재생 확률)" },
     ],
-    skillsByClass: {
-      수호성: ["심판", "맹렬한 일격", "쇠약의 맹타", "징벌"],
-      검성: ["내려찍기", "파멸의 맹타", "도약 찍기", "예리한 일격"],
-      궁성: ["저격", "속사", "송곳 화살", "파열 화살"],
-      살성: ["심장 찌르기", "빠른 베기", "문양 폭발", "암습"],
-      마도성: ["불꽃 폭발", "불꽃 화살", "불꽃 작살", "집중의 기원"],
-      정령성: ["냉기 충격", "원소 융합", "현혹: 저주", "공간 지배"],
-      치유성: ["쾌유의 광휘", "단죄", "악화의 낙인", "벽력"],
-      호법성: ["암격쇄", "격파쇄", "회전격", "돌진 격파"],
-    },
+    skillsByClass: {},
   },
   {
     name: "나침반",
@@ -125,16 +122,7 @@ const ARCANA_DATA = [
       { main: "광분", sub: "자유 (명중, 회피)" },
       { main: "광분", sub: "자유 (명중, 회피)" },
     ],
-    skillsByClass: {
-      수호성: ["연속난타", "비호의 일격", "방패 강타", "방패 돌격"],
-      검성: ["분쇄 파동", "절단의 맹타", "유린의 검", "돌진 일격"],
-      궁성: ["조준 화살", "표적 화살", "제압 화살", "광풍 화살"],
-      살성: ["기습", "맹수의 포효", "폭풍 난무", "섬광 베기"],
-      마도성: ["혹한의 바람", "얼음 사슬", "겨울의 속박", "빙결"],
-      정령성: ["화염 전소", "소환: 바람", "소환: 물", "영혼의 절규"],
-      치유성: ["치유의 빛", "심판의 번개", "재생의 빛", "신성한 기운"],
-      호법성: ["백열격", "쾌유의 주문", "타격쇄", "질풍 난무"],
-    },
+    skillsByClass: {},
   },
   {
     name: "종",
@@ -144,16 +132,7 @@ const ARCANA_DATA = [
       { main: "순수", sub: "파괴 (공격력, 완벽 저항)" },
       { main: "마력", sub: "파괴 (공격력, 완벽 저항)" },
     ],
-    skillsByClass: {
-      수호성: ["격앙", "체력 강화", "단죄의 가호", "수호의 인장"],
-      검성: ["공격 준비", "생존 자세", "피의 흡수", "생존 의지"],
-      궁성: ["사냥꾼의 결의", "속박의 눈", "경계의 눈", "회생의 계약"],
-      살성: ["강습 자세", "육감 극대화", "회생의 계약", "기습 자세"],
-      마도성: ["불의 표식", "냉기 소환", "회생의 계약", "저항의 은혜"],
-      정령성: ["정령 타격", "정령 강림", "원소 결집", "정령 교감"],
-      치유성: ["불사의 장막", "주신의 은총", "따뜻한 가호", "생존 의지"],
-      호법성: ["공격 준비", "생명의 축복", "보호진", "생존 의지"],
-    },
+    skillsByClass: {},
   },
   {
     name: "거울",
@@ -163,16 +142,7 @@ const ARCANA_DATA = [
       { main: "광분", sub: "환상 (재사용 시간, 철벽 관통)" },
       { main: "마력", sub: "지혜 (강타, 정신력 소모)" },
     ],
-    skillsByClass: {
-      수호성: ["충격 적중", "철벽 방어", "고통 차단", "생존 의지"],
-      검성: ["충격 적중", "약점 파악", "노련한 반격", "살기 파멸"],
-      궁성: ["집중의 눈", "사냥꾼의 혼", "집중 포화", "근접 사격"],
-      살성: ["배후 강타", "빈틈 노리기", "충격 적중", "방어 균열"],
-      마도성: ["불꽃의 로브", "생기 증발", "정기 흡수", "강화의 은혜"],
-      정령성: ["정신 집중", "침식", "연속 역류", "정령 보호"],
-      치유성: ["대지의 은총", "치유력 강화", "찬란한 가호", "주신의 가호"],
-      호법성: ["충격 적중", "고취의 주문", "대지의 약속", "바람의 약속"],
-    },
+    skillsByClass: {},
   },
   {
     name: "천칭",
@@ -182,26 +152,17 @@ const ARCANA_DATA = [
       { main: "순수", sub: "파괴 (공격력, 완벽 저항) /\n운명 (정신력, 철벽 확률)" },
       { main: "광분", sub: "정의 (방어력, 완벽 확률) /\n생명 (생명력, 재생 확률)" },
     ],
-    skillsByClass: {
-      수호성: [""],
-      검성: [""],
-      궁성: [""],
-      살성: [""],
-      마도성: [""],
-      정령성: [""],
-      치유성: [""],
-      호법성: [""],
-    },
+    skillsByClass: {},
   },
 ];
 
 const STAT_COLORS = {
   "전투 속도": "#ff4d4d",
   강타: "#ff4d4d",
-  공격력: "#ff4d4d",
-  치명타: "#ff4d4d",
-  쿨감: "#ff4d4d",
-  명중: "#ff9a3c",
+  공격력: "#ff9a3c",
+  치명타: "#ff9a3c",
+  쿨감: "#ff9a3c",
+  명중: "#fff53c",
   완벽: "#bbbbbb",
   "이동 속도": "#bbbbbb",
   "철벽 관통": "#bbbbbb",
@@ -272,7 +233,7 @@ function ArcanaStatCell({ arcName, selectedType, locked = false, onChange }) {
   const result = ARCANA_SIM_RESULT[arcName]?.[selectedType] ?? { godStats: [], detailStats: [] };
 
   return (
-    <td style={{ ...styles.td, background: "#181818", verticalAlign: "middle", textAlign: "center" }}>
+    <td style={{ ...styles.td, background: "#181818", verticalAlign: "middle", textAlign: "center", padding: "4px" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
         <div style={{ display: "flex", gap: 4 }}>
           {["활력", "마력", "광분", "순수"].map((opt) => {
@@ -340,12 +301,30 @@ export default function Aion2_ArcanaTable() {
     return localStorage.getItem("aion2-selected-class") || "수호성";
   });
 
+  const [selectedSkillsByArcana, setSelectedSkillsByArcana] = useState(() => {
+    const initial = {};
+    ARCANA_DATA.forEach((arc) => {
+      initial[arc.name] = getTopArcanaSkills("수호성", arc.name);
+    });
+    return initial;
+  });
+
   useEffect(() => {
     localStorage.setItem(LS_KEY, JSON.stringify({ presets }));
   }, [presets]);
 
   useEffect(() => {
     localStorage.setItem("aion2-selected-class", selectedClass);
+  }, [selectedClass]);
+
+  useEffect(() => {
+    setSelectedSkillsByArcana(() => {
+      const next = {};
+      ARCANA_DATA.forEach((arc) => {
+        next[arc.name] = getTopArcanaSkills(selectedClass, arc.name);
+      });
+      return next;
+    });
   }, [selectedClass]);
 
   function addPreset() {
@@ -369,6 +348,15 @@ export default function Aion2_ArcanaTable() {
           : p
       )
     );
+  }
+
+  function handleSkillChange(arcanaName, index, value) {
+    setSelectedSkillsByArcana((prev) => ({
+      ...prev,
+      [arcanaName]: (prev[arcanaName] ?? []).map((skill, i) =>
+        i === index ? value : skill
+      ),
+    }));
   }
 
   const STAT_ORDER = [
@@ -430,20 +418,21 @@ export default function Aion2_ArcanaTable() {
 
         <div style={styles.tableWrap}>
           <table style={styles.table}>
+            {/* 표 열 크기 조정 */}
             <colgroup>
               <col style={{ width: 110 }} />
               <col style={{ width: 200 }} />
               <col style={{ width: 200 }} />
               <col style={{ width: 200 }} />
               {presets.map((p) => <col key={p.id} style={{ width: 200 }} />)}
-              <col style={{ width: 180 }} />
-              <col style={{ width: 120 }} />
+              <col style={{ width: 220 }} />
+              <col style={{ width: 110 }} />
             </colgroup>
 
             <thead>
               <tr>
                 <th style={styles.th}>아르카나</th>
-                <th style={styles.th}>{"추천1\n2활력+4순수\n(활력 성배 잘 뜬 경우)".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
+                <th style={styles.th}>{"추천1\n2활력+4순수".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
                 <th style={styles.th}>{"추천2\n4광분+2순수".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
                 <th style={styles.th}>{"추천3\n4광분+2마력".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
                 {presets.map((p, idx) => (
@@ -536,8 +525,15 @@ export default function Aion2_ArcanaTable() {
                   ))}
 
                   {arc.name === ARCANA_DATA[0].name && (
-                    <td style={styles.td} rowSpan={ARCANA_DATA.length}>
-                      <div style={{ fontSize: 12, lineHeight: 1.5 }}>
+                    <td
+                      style={{
+                        ...styles.td,
+                        verticalAlign: "top",
+                        borderBottom: "none"
+                      }}
+                      rowSpan={ARCANA_DATA.length + 2}
+                    >
+                      <div style={{ fontSize: 12, lineHeight: 1.5, height: "100%", display: "flex", flexDirection: "column" }}>
                         <div style={{ color: "#ff4d4d", fontWeight: 700 }}>&lt;1티어&gt;</div>
                         <div style={{ color: "#ff4d4d" }}>파괴 : 공격력, 완벽 저항</div>
                         <div style={{ color: "#ff4d4d" }}>시간 : 전투 속도, 강타 저항</div>
@@ -552,12 +548,56 @@ export default function Aion2_ArcanaTable() {
                         <div style={{ color: "#bbbbbb" }}>공간 : 이동속도, 막기</div>
                         <div style={{ color: "#bbbbbb" }}>정의 : 완벽, 방어력</div>
                         <div style={{ color: "#bbbbbb" }}>운명 : 철벽, 정신력</div>
+
+                        <div style={{ marginTop: "12px", borderTop: "1px solid #333", paddingTop: "8px" }}>
+
+                          {Object.values(SET_EFFECTS).flatMap((set) =>
+                            Object.values(set).map((s) => (
+                              <div
+                                key={`${s.type}-${s.count}`}
+                                style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}
+                              >
+                                <span
+                                  style={{
+                                    padding: "4px 8px",
+                                    fontSize: 11,
+                                    borderRadius: 6,
+                                    border: "1px solid #555",
+                                    background: RECOMMENDED_BG[s.type] || "#222",
+                                    color: "#fff",
+                                    whiteSpace: "nowrap",
+                                    lineHeight: 1.1,
+                                    fontWeight: 400,
+                                  }}
+                                >
+                                  {s.type} ({s.count})
+                                </span>
+
+                                <span style={{ fontSize: "12px", color: "#aaa" }}>
+                                  {s.desc}
+                                </span>
+                              </div>
+                            ))
+                          )}
+
+                        </div>
+
                       </div>
                     </td>
                   )}
 
-                  <td style={styles.td}>
-                    {renderSkillList(arc.skillsByClass?.[selectedClass])}
+                  <td style={{ ...styles.td, verticalAlign: "middle" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 2, padding: "3px 0" }}>
+                      {(selectedSkillsByArcana[arc.name] ?? []).map((skill, idx) => (
+                        <InlineSkillDropdown
+                          key={`${arc.name}-${idx}`}
+                          job={selectedClass}
+                          value={skill ?? ""}
+                          allowedSkills={ARCANA_SKILLS[selectedClass]?.[arc.name] ?? []}
+                          onSelect={(value) => handleSkillChange(arc.name, idx, value)}
+                        />
+                      ))}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -616,7 +656,6 @@ export default function Aion2_ArcanaTable() {
                     </td>
                   );
                 })}
-                <td style={styles.td}></td>
               </tr>
 
               <tr>
@@ -631,7 +670,6 @@ export default function Aion2_ArcanaTable() {
                     {renderSetEffectsList(getSetEffects(buildTypeCounts(p.selections)))}
                   </td>
                 ))}
-                <td style={styles.td}></td>
               </tr>
             </tfoot>
           </table>
@@ -639,6 +677,309 @@ export default function Aion2_ArcanaTable() {
       </div>
     </div>
   );
+}
+
+function InlineSkillDropdown({
+  job,
+  mode = "all",
+  value,
+  placeholder = "스킬 선택",
+  excludedSkills = [],
+  allowedSkills = null,
+  onSelect,
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  const baseSkills = [...new Set(
+    Object.values(ARCANA_SKILLS[job] ?? {}).flat()
+      .map((s) => typeof s === "string" ? s : s.name)
+  )];
+
+  const allSkills = Array.isArray(allowedSkills) && allowedSkills.length > 0
+    ? baseSkills.filter((s) => allowedSkills.includes(s))
+    : baseSkills;
+
+  const skillMeta = allSkills
+    .map((name) => ({
+      name,
+      info: getSkillMeta(job, name),
+    }))
+    .filter((item) => item.info);
+
+  const activeSkills = skillMeta
+    .filter((item) => item.info?.type === "active")
+    .sort((a, b) => (a.info?.priority ?? 999) - (b.info?.priority ?? 999));
+
+  const passiveSkills = skillMeta
+    .filter((item) => item.info?.type === "passive")
+    .sort((a, b) => (a.info?.priority ?? 999) - (b.info?.priority ?? 999));
+
+  function isDisabledSkill(name) {
+    return name !== value && excludedSkills.includes(name);
+  }
+
+  const singleList =
+    mode === "active" ? activeSkills :
+    mode === "passive" ? passiveSkills :
+    [];
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const selectedMeta =
+    value
+      ? skillMeta.find((item) => item.name === value)
+      : null;
+
+  const selectedColor =
+    selectedMeta?.info?.type === "active"
+      ? "#ff4d4f"
+      : selectedMeta?.info?.type === "passive"
+        ? "#3b82f6"
+        : S.text;
+
+  return (
+    <div ref={ref} style={{ position: "relative", display: "inline-block" }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          minWidth: "120px",
+          backgroundColor: S.surface2,
+          color: value ? selectedColor : S.textDim,
+          border: `1px solid ${S.border}`,
+          borderRadius: "3px",
+          fontSize: "11px",
+          textAlign: "center",
+          padding: "0 6px",
+          height: "18px",
+          boxSizing: "border-box",
+          cursor: "pointer",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>{value || placeholder}</span>
+          <span style={{ fontSize: "10px", color: "#fff" }}>▼</span>
+        </span>
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: "100%",
+            right: 0,
+            zIndex: 300,
+            marginTop: "2px",
+            backgroundColor: S.surface,
+            border: `1px solid ${S.border}`,
+            borderRadius: "4px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+            padding: "8px",
+            minWidth: mode === "all" ? "auto" : "180px",
+          }}
+        >
+          {mode === "all" ? (
+            (() => {
+              const hasActive = activeSkills.length > 0;
+              const hasPassive = passiveSkills.length > 0;
+              const twoCols = hasActive && hasPassive;
+
+              return (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: twoCols ? "1fr 1fr" : "1fr",
+                    gap: "12px",
+                    width: twoCols ? "300px" : "150px",
+                  }}
+                >
+                  {hasActive && (
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: S.textDim,
+                          marginBottom: "6px",
+                          paddingBottom: "4px",
+                          borderBottom: `1px solid ${S.border}`,
+                        }}
+                      >
+                        ● 액티브
+                      </div>
+
+                      {activeSkills.map(({ name, info }) => (
+                        <div
+                          key={name}
+                          onClick={() => {
+                            if (isDisabledSkill(name)) return;
+                            onSelect(name);
+                            setOpen(false);
+                          }}
+                          style={{
+                            padding: "6px 8px",
+                            cursor: isDisabledSkill(name) ? "not-allowed" : "pointer",
+                            opacity: isDisabledSkill(name) ? 0.35 : 1,
+                            fontSize: "12px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            borderBottom: `1px solid ${S.border}`,
+                          }}
+                          onMouseOver={(e) => {
+                            if (!isDisabledSkill(name)) e.currentTarget.style.backgroundColor = S.surface2;
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "transparent";
+                          }}
+                        >
+                          <span style={{ color: "#ff4d4f" }}>{name}</span>
+                          <span style={{ fontSize: "10px", color: S.textDim, marginLeft: "auto" }}>
+                            {info?.priority ? `${info.priority}위` : ""}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {hasPassive && (
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: S.textDim,
+                          marginBottom: "6px",
+                          paddingBottom: "4px",
+                          borderBottom: `1px solid ${S.border}`,
+                        }}
+                      >
+                        ● 패시브
+                      </div>
+
+                      {passiveSkills.map(({ name, info }) => (
+                        <div
+                          key={name}
+                          onClick={() => {
+                            if (isDisabledSkill(name)) return;
+                            onSelect(name);
+                            setOpen(false);
+                          }}
+                          style={{
+                            padding: "6px 8px",
+                            cursor: isDisabledSkill(name) ? "not-allowed" : "pointer",
+                            opacity: isDisabledSkill(name) ? 0.35 : 1,
+                            fontSize: "12px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            borderBottom: `1px solid ${S.border}`,
+                          }}
+                          onMouseOver={(e) => {
+                            if (!isDisabledSkill(name)) e.currentTarget.style.backgroundColor = S.surface2;
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "transparent";
+                          }}
+                        >
+                          <span style={{ color: "#3b82f6" }}>{name}</span>
+                          <span style={{ fontSize: "10px", color: S.textDim, marginLeft: "auto" }}>
+                            {info?.priority ? `${info.priority}위` : ""}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })()
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {singleList.map(({ name, info }) => (
+                <div
+                  key={name}
+                  onClick={() => {
+                    if (isDisabledSkill(name)) return;
+                    onSelect(name);
+                    setOpen(false);
+                  }}
+                  style={{
+                    padding: "6px 8px",
+                    cursor: isDisabledSkill(name) ? "not-allowed" : "pointer",
+                    opacity: isDisabledSkill(name) ? 0.35 : 1,
+                    fontSize: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    borderBottom: `1px solid ${S.border}`,
+                  }}
+                  onMouseOver={(e) => {
+                    if (!isDisabledSkill(name)) e.currentTarget.style.backgroundColor = S.surface2;
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                >
+                  <span style={{ color: mode === "active" ? "#ff4d4f" : "#3b82f6" }}>
+                    {name}
+                  </span>
+                  <span style={{ fontSize: "10px", color: S.textDim, marginLeft: "auto" }}>
+                    {info?.priority ? `${info.priority}위` : ""}
+                  </span>
+                </div>
+              ))}
+
+              <div
+                onClick={() => {
+                  onSelect("");
+                  setOpen(false);
+                }}
+                style={{
+                  padding: "6px 8px",
+                  cursor: "pointer",
+                  fontSize: "12px",
+                  color: S.textDim,
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = S.surface2)}
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+              >
+                비우기
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function getTopArcanaSkills(job, arcanaName) {
+  const skills = (ARCANA_SKILLS[job]?.[arcanaName] ?? [])
+    .map((s) => (typeof s === "string" ? s : s.name));
+
+  const sorted = [...skills].sort((a, b) => {
+    const aMeta = getSkillMeta(job, a);
+    const bMeta = getSkillMeta(job, b);
+    const aPriority = aMeta?.priority ?? 999;
+    const bPriority = bMeta?.priority ?? 999;
+    return aPriority - bPriority;
+  });
+
+  if (arcanaName === "성배" || arcanaName === "천칭") {
+    return sorted
+      .filter((skill) => getSkillMeta(job, skill)?.type === "active")
+      .slice(0, 4);
+  }
+
+  return sorted.slice(0, 4);
 }
 
 function renderSkillList(arr) {
@@ -694,13 +1035,22 @@ const styles = {
     textAlign: "center", fontWeight: 800, fontSize: 13, zIndex: 1,
   },
   td: {
-    background: "#181818", borderBottom: "1px solid #2f2f2f",
-    borderRight: "1px solid #2a2a2a", padding: "8px 10px",
-    verticalAlign: "top", fontSize: 13, lineHeight: 1.35,
+    background: "#181818",
+    borderBottom: "1px solid #2f2f2f",
+    borderRight: "1px solid #2a2a2a",
+    padding: "2px 6px",
+    verticalAlign: "top",
+    fontSize: 11,
+    lineHeight: 1.1,
+    // height: "1px",
   },
   tdArcana: {
-    borderBottom: "1px solid #2f2f2f", borderRight: "1px solid #2a2a2a",
-    padding: "8px 10px", verticalAlign: "middle", textAlign: "center", background: "#2a2a2a",
+    borderBottom: "1px solid #4b4b4b",
+    borderRight: "1px solid #4b4b4b",
+    padding: "3px 6px",
+    verticalAlign: "middle",
+    textAlign: "center",
+    background: "#2a2a2a",
   },
   note: { marginTop: 6, fontSize: 11, opacity: 0.65 },
   ul: { margin: 0, padding: 0, listStyle: "none" },
