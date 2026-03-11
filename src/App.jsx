@@ -387,6 +387,10 @@ function App() {
       exportObj[`achievements-${g}-v2`] = savedAchv ? JSON.parse(savedAchv) : {};
     });
 
+    const savedExtraOdd = localStorage.getItem("ghw-extra-odd");
+    const savedExtraDungeon = localStorage.getItem("ghw-extra-dungeon");
+    exportObj["extra-odd"] = savedExtraOdd ? JSON.parse(savedExtraOdd) : {};
+    exportObj["extra-dungeon"] = savedExtraDungeon ? JSON.parse(savedExtraDungeon) : {};
     const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -460,10 +464,13 @@ function App() {
         if (data[achvKey]) {
           localStorage.setItem(achvKey, JSON.stringify(data[achvKey]));
           setAchvResetKey(prev => {
-            // console.log("achvResetKey 변경:", prev, "->", prev + 1); // ← 추가
             return prev + 1;
           });
         }
+
+        // ✅ 추가 오드에너지 / 추가 던전티켓 복구
+        if (data["extra-odd"]) localStorage.setItem("ghw-extra-odd", JSON.stringify(data["extra-odd"]));
+        if (data["extra-dungeon"]) localStorage.setItem("ghw-extra-dungeon", JSON.stringify(data["extra-dungeon"]));
 
         alert("데이터를 성공적으로 불러왔습니다.");
         
@@ -516,7 +523,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-11 10:49
+              업데이트 : 2026-03-11 11:27
             </div>
           </div>
 

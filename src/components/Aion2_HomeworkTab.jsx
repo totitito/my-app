@@ -17,6 +17,17 @@ export default function Aion2_HomeworkTab({
   const [editingCell, setEditingCell] = useState(null);
   const [isPortraitCollapsed, setIsPortraitCollapsed] = useState(false);
 
+  // 추가 오드에너지 / 추가 던전티켓 (캐릭터별)
+  const [extraOdd, setExtraOdd] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("ghw-extra-odd") || "{}"); } catch { return {}; }
+  });
+  const [extraDungeon, setExtraDungeon] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("ghw-extra-dungeon") || "{}"); } catch { return {}; }
+  });
+
+  useEffect(() => { localStorage.setItem("ghw-extra-odd", JSON.stringify(extraOdd)); }, [extraOdd]);
+  useEffect(() => { localStorage.setItem("ghw-extra-dungeon", JSON.stringify(extraDungeon)); }, [extraDungeon]);
+
   const updateCount = (id, targetName, delta, e = null) => {
     setHomeworks(prev => prev.map(hw => {
       if (hw.id !== id) return hw;
@@ -851,6 +862,7 @@ export default function Aion2_HomeworkTab({
                               </div>
 
                               {/* 2. Input 창 영역: 버튼을 떼어내고 세로 배치 유도 */}
+                              {hw.max !== 1 && (
                               <div 
                                 style={{ 
                                   marginBottom: isCollapsed ? "3px" : "5px", 
@@ -914,6 +926,45 @@ export default function Aion2_HomeworkTab({
                                   &nbsp;/ {hw.max}
                                 </span>
                               </div>
+                              )}
+
+                              {/* 추가 오드에너지 인풋 */}
+                              {hw.id === "aion2-odd-energy" && (
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "3px", marginTop: "4px" }} onClick={(e) => e.stopPropagation()}>
+                                  <input
+                                    type="number"
+                                    value={extraOdd[targetName] ?? 0}
+                                    min={0}
+                                    max={2000}
+                                    onChange={(e) => {
+                                      const v = Math.max(0, Math.min(2000, Number(e.target.value) || 0));
+                                      setExtraOdd(prev => ({ ...prev, [targetName]: v }));
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onKeyDown={(e) => { if (e.key === "Enter") e.target.blur(); }}
+                                    style={{ width: "30px", textAlign: "center", backgroundColor: isPending ? "#4b4b20" : "#1e1e1e", color: "#39b3ff", border: "1px solid #39b3ff", borderRadius: "2px", fontSize: "12px", padding: "3px 2px" }}                                  />
+                                  {/* <span style={{ fontSize: "11px", color: "#888" }}>/ 2000</span> */}
+                                </div>
+                              )}
+
+                              {/* 추가 던전티켓 인풋 */}
+                              {hw.id === "aion2-weeklydungeon" && (
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "3px", marginTop: "4px" }} onClick={(e) => e.stopPropagation()}>
+                                  <input
+                                    type="number"
+                                    value={extraDungeon[targetName] ?? 0}
+                                    min={0}
+                                    max={30}
+                                    onChange={(e) => {
+                                      const v = Math.max(0, Math.min(30, Number(e.target.value) || 0));
+                                      setExtraDungeon(prev => ({ ...prev, [targetName]: v }));
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onKeyDown={(e) => { if (e.key === "Enter") e.target.blur(); }}
+                                    style={{ width: "30px", textAlign: "center", backgroundColor: isPending ? "#4b4b20" : "#1e1e1e", color: "#39b3ff", border: "1px solid #39b3ff", borderRadius: "2px", fontSize: "12px", padding: "3px 2px" }}                                  />
+                                  {/* <span style={{ fontSize: "11px", color: "#888" }}>/ 30</span> */}
+                                </div>
+                              )}
                               
                               {/* 3. 하단 버튼군: -, 0, + 가로 배치
                               <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>

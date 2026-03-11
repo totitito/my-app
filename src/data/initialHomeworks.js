@@ -22,7 +22,7 @@ export const initialHomeworks = [
 
   // 아이온2 - 계정 - Event
   { id: "aion2-account-event-daily", game: "aion2", name: "일간 이벤트(계정)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-account-event-daily", game: "aion2", name: "주간 이벤트(계정)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-account-event-weekly", game: "aion2", name: "주간 이벤트(계정)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 계정 - Weekly
   { id: "aion2-account-transform-odd", game: "aion2", name: "오드 변환(계정)", max: 8, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-account-buy-odd", game: "aion2", name: "오드 구입(계정)", max: 8, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
@@ -36,10 +36,10 @@ export const initialHomeworks = [
   { id: "aion2-odd-energy", game: "aion2", name: "오드에너지", category: "etc", max: 840, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
   // { id: "aion2-abyss-cloister", game: "aion2", name: "회랑", category: "etc", max: 1, counts: {}, excluded: {}, resetType: "recovery", resetPeriod: "day", recoveryAmount: 15, resetTime: [2, 5, 8, 11, 14, 17, 20, 23], scope: "character", lastResetDate: "", lastResetHour: -1, lastUpdated: {} },
   // 아이온2 - 반복 - Daily (이벤트)
-  { id: "aion2-event-daily", game: "aion2", name: "일간 이벤트", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-character-event-daily", game: "aion2", name: "일간 이벤트", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // { id: "aion2-event-260211-bokpocket-exchange-daily", game: "aion2", name: "복주머니 일일 교환", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // 아이온2 - 반복 - Weekly (이벤트)
-  { id: "aion2-event-weekly", game: "aion2", name: "주간 이벤트", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-character-event-weekly", game: "aion2", name: "주간 이벤트", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // { id: "aion2-event-260211-bokpocket-exchange-weekly", game: "aion2", name: "복주머니 주간 교환", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // { id: "aion2-event-260211-bokpocket-key", game: "aion2", name: "복주머니 열쇠", category: "event", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   // { id: "aion2-event-260211-sweetdessert", game: "aion2", name: "달콤한 디저트", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
