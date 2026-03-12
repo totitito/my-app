@@ -2,7 +2,6 @@ export default async function handler(req, res) {
   try {
     const name = req.query.name;
     const serverid = req.query.serverid ?? "1016";
-    const debug = req.query.debug === "1";
 
     if (!name) {
       return res.status(400).json({ error: "name required" });
@@ -39,29 +38,10 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
 
-    const accessories = char.accessories ?? [];
+    // accessories 배열에 장비 + 아르카나 전부 섞여있음
+    // is_accessory 기준이 아니라 slotPosName으로 구분
+    const items = char.accessories ?? [];
 
-    // 아르카나는 char 안의 별도 키로 존재할 수 있음 — 디버그로 확인
-    if (debug) {
-      const arcanaCandidate = char.arcanas ?? char.arcana ?? char.arcana_list ?? null;
-      return res.status(200).json({
-        charKeys: Object.keys(char),
-        accessorySlots: accessories.map(item => ({
-          name: item.name,
-          category_name: item.category_name,
-          is_accessory: item.is_accessory,
-          slotPosName: item.raw_data?.slotPosName,
-          skillCount: item.sub_skills?.length ?? 0,
-        })),
-        arcanaCandidate: arcanaCandidate
-          ? (Array.isArray(arcanaCandidate)
-              ? arcanaCandidate.map(a => ({ name: a.name, category_name: a.category_name, slotPosName: a.raw_data?.slotPosName, skillCount: a.sub_skills?.length ?? 0 }))
-              : arcanaCandidate)
-          : "없음 — charKeys 확인 필요",
-      });
-    }
-
-    // slotPosName → gear 슬롯 ID 매핑
     const SLOT_MAP = {
       Necklace:  "necklace",
       Earring1:  "earring1",
@@ -76,10 +56,9 @@ export default async function handler(req, res) {
       Pants:     "legs",
       Gloves:    "hands",
       Boots:     "feet",
-      Cloak:     "cloak",
+      Cape:      "cloak",   // "Cloak" 아니고 "Cape"
     };
 
-    // 아르카나: slotPosName Arcana1~6 → 성배/양피지/나침반/종/거울/천칭
     const ARCANA_SLOT_MAP = {
       Arcana1: "성배",
       Arcana2: "양피지",
@@ -99,13 +78,7 @@ export default async function handler(req, res) {
       성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [],
     };
 
-    // accessories 배열에 악세서리 + 아르카나가 함께 있을 수 있음
-    const allItems = [
-      ...accessories,
-      ...(char.arcanas ?? char.arcana ?? char.arcana_list ?? []),
-    ];
-
-    for (const item of allItems) {
+    for (const item of items) {
       const subs = item.sub_skills ?? [];
       if (subs.length === 0) continue;
 
