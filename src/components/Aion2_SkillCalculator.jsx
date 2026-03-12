@@ -1023,7 +1023,7 @@ export default function Aion2_SkillCalculator() {
 
     try{
 
-      const url = `https://aion2tool.com/char/serverid=1016/${encodeURIComponent(importChar)}`;
+      const url = `/api/aion2-char?serverid=1016&name=${encodeURIComponent(importChar)}`;
 
       const res = await fetch(url);
       const html = await res.text();
