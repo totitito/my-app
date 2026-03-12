@@ -2,6 +2,7 @@ export default async function handler(req, res) {
   try {
     const name = req.query.name;
     const serverid = req.query.serverid ?? "1016";
+    const debug = req.query.debug === "1";
 
     if (!name) {
       return res.status(400).json({ error: "name required" });
@@ -38,13 +39,20 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
 
-    // equipment: 일반 장비 + 아르카나
-    // accessories: 귀걸이/반지/목걸이 등 악세서리
-    // 둘 다 합쳐서 처리
     const items = [
       ...(char.equipment ?? []),
       ...(char.accessories ?? []),
     ];
+
+    if (debug) {
+      return res.status(200).json({
+        slots: items.map(e => ({
+          slotPosName: e.raw_data?.slotPosName,
+          name: e.name,
+          skillCount: e.sub_skills?.length ?? 0,
+        }))
+      });
+    }
 
     const SLOT_MAP = {
       Necklace:  "necklace",
@@ -57,6 +65,9 @@ export default async function handler(req, res) {
       Helm:      "head",
       Shoulder:  "shoulder",
       Chest:     "chest",
+      Body:      "chest",
+      Torso:     "chest",
+      Cuirass:   "chest",
       Pants:     "legs",
       Gloves:    "hands",
       Boots:     "feet",
