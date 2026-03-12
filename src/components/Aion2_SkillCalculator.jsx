@@ -1030,6 +1030,7 @@ export default function Aion2_SkillCalculator() {
 
       const parser = new DOMParser();
       const doc = parser.parseFromString(html,"text/html");
+      console.log(html);
 
       const gear = {};
       const arcana = {};
