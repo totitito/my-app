@@ -934,10 +934,25 @@ export default function Aion2_SkillCalculator() {
   const [importChar, setImportChar] = useState("");
   const [editingPresetId, setEditingPresetId] = useState(null);
 
+  // 직업별 공유 관심스킬 (프리셋 공통)
+  const [jobSkills, setJobSkills] = useState(() => {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      return parsed.jobSkills ?? {};
+    } catch {
+      return {};
+    }
+  });
+
   const [showWeaponGauntlet, setShowWeaponGauntlet] = useState(false);
 
   const filteredPresets = presets.filter((p) => p.job === selectedJob);
   const activePreset = filteredPresets.find((p) => p.id === activePresetId) ?? null;
+
+  // 현재 직업의 공유 관심스킬
+  const currentSkills = jobSkills[selectedJob] ?? [];
 
   useEffect(() => {
     if (filteredPresets.length === 0) {
@@ -959,12 +974,13 @@ export default function Aion2_SkillCalculator() {
           presets,
           activePresetId,
           selectedJob,
+          jobSkills,
         })
       );
     } catch {
       // 저장 실패 시 무시
     }
-  }, [presets, activePresetId, selectedJob]);
+  }, [presets, activePresetId, selectedJob, jobSkills]);
 
   function handleJobChange(job) {
     setSelectedJob(job);
@@ -1001,22 +1017,20 @@ export default function Aion2_SkillCalculator() {
   }
 
   function addSkill(skillName) {
-    if (!skillName || !activePreset) return;
-    if (activePreset.skills.some((s) => s.name === skillName)) return;
+    if (!skillName) return;
+    if (currentSkills.some((s) => s.name === skillName)) return;
 
-    const skill = createSkillState(skillName, activePreset.job);
+    const skill = createSkillState(skillName, selectedJob);
 
-    setPresets((prev) => prev.map((p) => {
-      if (p.id !== activePresetId) return p;
-
-      const nextSkills = [...p.skills, skill].sort((a, b) => {
+    setJobSkills((prev) => {
+      const existing = prev[selectedJob] ?? [];
+      const nextSkills = [...existing, skill].sort((a, b) => {
         const pa = a.priority ?? 999;
         const pb = b.priority ?? 999;
         return pa - pb;
       });
-
-      return { ...p, skills: nextSkills };
-    }));
+      return { ...prev, [selectedJob]: nextSkills };
+    });
   }
 
   async function handleImportChar(){
@@ -1075,19 +1089,23 @@ export default function Aion2_SkillCalculator() {
   }
 
   function updateSkill(index, updated) {
-    setPresets((prev) => prev.map((p) =>
-      p.id === activePresetId
-        ? { ...p, skills: p.skills.map((s, i) => i === index ? updated : s) }
-        : p
-    ));
+    setJobSkills((prev) => {
+      const existing = prev[selectedJob] ?? [];
+      return {
+        ...prev,
+        [selectedJob]: existing.map((s, i) => i === index ? updated : s),
+      };
+    });
   }
 
   function removeSkill(index) {
-    setPresets((prev) => prev.map((p) =>
-      p.id === activePresetId
-        ? { ...p, skills: p.skills.filter((_, i) => i !== index) }
-        : p
-    ));
+    setJobSkills((prev) => {
+      const existing = prev[selectedJob] ?? [];
+      return {
+        ...prev,
+        [selectedJob]: existing.filter((_, i) => i !== index),
+      };
+    });
   }
 
   const gearSlotsToShow = [
@@ -1139,7 +1157,6 @@ export default function Aion2_SkillCalculator() {
           }}
             onClick={() => { setActivePresetId(p.id); setEditingPresetId(null); }}>
 
-            {/* 이름: 편집 중이면 input, 아니면 텍스트 */}
             {editingPresetId === p.id ? (
               <input
                 autoFocus
@@ -1161,18 +1178,14 @@ export default function Aion2_SkillCalculator() {
               </span>
             )}
 
-            {/* 연필 버튼 */}
             <button
               onClick={(e) => { e.stopPropagation(); setActivePresetId(p.id); setEditingPresetId(p.id); }}
               title="이름 수정"
               style={{ background: "none", border: "none", color: "#666", cursor: "pointer", fontSize: "11px", padding: "0 1px", lineHeight: 1, opacity: 0.6 }}
               onMouseOver={(e) => e.currentTarget.style.opacity = "1"}
               onMouseOut={(e) => e.currentTarget.style.opacity = "0.6"}
-            >
-              ✏️
-            </button>
+            >✏️</button>
 
-            {/* 삭제 버튼 */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -1182,9 +1195,7 @@ export default function Aion2_SkillCalculator() {
               style={{ background: "none", border: "none", color: "#e57373", cursor: "pointer", fontSize: "15px", padding: "0 1px", lineHeight: 1, fontWeight: "bold", opacity: 0.7 }}
               onMouseOver={(e) => e.currentTarget.style.opacity = "1"}
               onMouseOut={(e) => e.currentTarget.style.opacity = "0.7"}
-            >
-              ×
-            </button>
+            >×</button>
           </div>
         ))}
         <div style={{ marginLeft: "auto", display: "flex", gap: "6px", alignItems: "center" }}>
@@ -1537,24 +1548,24 @@ export default function Aion2_SkillCalculator() {
           <hr style={{ border: "none", borderTop: "1px solid #444", margin: "12px 0" }} />
           <SkillDropdown
             job={activePreset.job}
-            addedSkills={activePreset.skills.map((s) => s.name)}
+            addedSkills={currentSkills.map((s) => s.name)}
             onSelect={addSkill}
           />
 
-          {activePreset.skills.length === 0 && (
+          {currentSkills.length === 0 && (
             <div style={{ color: S.textDim, fontSize: "13px", textAlign: "center", marginTop: "40px" }}>
               트래킹할 스킬을 추가하세요
             </div>
           )}
           {(() => {
-            const actives = activePreset.skills.filter((s) => s.type === "active");
-            const passives = activePreset.skills.filter((s) => s.type === "passive");
+            const actives = currentSkills.filter((s) => s.type === "active");
+            const passives = currentSkills.filter((s) => s.type === "passive");
             return (
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
                 <div>
                   {actives.length > 0 && <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "8px" }}>● 액티브</div>}
                   {actives.map((skill) => {
-                    const originalIndex = activePreset.skills.findIndex((s) => s.name === skill.name);
+                    const originalIndex = currentSkills.findIndex((s) => s.name === skill.name);
                     return (
                       <SkillCard
                         key={skill.name}
@@ -1623,7 +1634,7 @@ export default function Aion2_SkillCalculator() {
                 <div>
                   {passives.length > 0 && <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "8px" }}>● 패시브</div>}
                   {passives.map((skill) => {
-                    const originalIndex = activePreset.skills.findIndex((s) => s.name === skill.name);
+                    const originalIndex = currentSkills.findIndex((s) => s.name === skill.name);
                     return (
                       <SkillCard
                         key={skill.name}
