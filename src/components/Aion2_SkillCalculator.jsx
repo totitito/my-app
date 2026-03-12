@@ -1022,7 +1022,12 @@ export default function Aion2_SkillCalculator() {
     if(!importChar) return alert("캐릭터명을 입력하세요");
 
     try{
-      const url = `/api/aion2-char?serverid=1016&name=${encodeURIComponent(importChar)}`;
+      const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
+      const match = importChar.match(/\[(.+?)\]$/);
+      const tag = match?.[1];
+      const serverId = serverMap[tag] ?? 1016;
+      const charName = match ? importChar.slice(0, match.index).trim() : importChar.trim();
+      const url = `/api/aion2-char?serverid=${serverId}&name=${encodeURIComponent(charName)}`;
       const res = await fetch(url);
       const json = await res.json();
 
