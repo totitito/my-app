@@ -934,16 +934,14 @@ export default function Aion2_SkillCalculator() {
   const [importChar, setImportChar] = useState("");
   const [editingPresetId, setEditingPresetId] = useState(null);
 
-  // 직업별 공유 관심스킬 (프리셋 공통)
+  // 직업별 공유 관심스킬
   const [jobSkills, setJobSkills] = useState(() => {
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (!raw) return {};
       const parsed = JSON.parse(raw);
       return parsed.jobSkills ?? {};
-    } catch {
-      return {};
-    }
+    } catch { return {}; }
   });
 
   const [showWeaponGauntlet, setShowWeaponGauntlet] = useState(false);
@@ -965,6 +963,37 @@ export default function Aion2_SkillCalculator() {
       setActivePresetId(filteredPresets[0].id);
     }
   }, [selectedJob, filteredPresets, activePresetId]);
+
+  // 직업 전환 시 관심스킬이 없으면 디폴트(액티브 상위4 + 패시브 상위4) 자동 세팅
+  useEffect(() => {
+    if (jobSkills[selectedJob] && jobSkills[selectedJob].length > 0) return;
+
+    const allSkills = [...new Set(
+      Object.values(ARCANA_SKILLS[selectedJob] ?? {}).flat()
+        .map((s) => typeof s === "string" ? s : s.name)
+    )];
+
+    const withMeta = allSkills
+      .map((name) => ({ name, info: getSkillMeta(selectedJob, name) }))
+      .filter((s) => s.info);
+
+    const defaultActives = withMeta
+      .filter((s) => s.info.type === "active")
+      .sort((a, b) => (a.info.priority ?? 999) - (b.info.priority ?? 999))
+      .slice(0, 4)
+      .map((s) => createSkillState(s.name, selectedJob));
+
+    const defaultPassives = withMeta
+      .filter((s) => s.info.type === "passive")
+      .sort((a, b) => (a.info.priority ?? 999) - (b.info.priority ?? 999))
+      .slice(0, 4)
+      .map((s) => createSkillState(s.name, selectedJob));
+
+    const defaults = [...defaultActives, ...defaultPassives];
+    if (defaults.length === 0) return;
+
+    setJobSkills((prev) => ({ ...prev, [selectedJob]: defaults }));
+  }, [selectedJob]);
 
   useEffect(() => {
     try {
@@ -1091,20 +1120,14 @@ export default function Aion2_SkillCalculator() {
   function updateSkill(index, updated) {
     setJobSkills((prev) => {
       const existing = prev[selectedJob] ?? [];
-      return {
-        ...prev,
-        [selectedJob]: existing.map((s, i) => i === index ? updated : s),
-      };
+      return { ...prev, [selectedJob]: existing.map((s, i) => i === index ? updated : s) };
     });
   }
 
   function removeSkill(index) {
     setJobSkills((prev) => {
       const existing = prev[selectedJob] ?? [];
-      return {
-        ...prev,
-        [selectedJob]: existing.filter((_, i) => i !== index),
-      };
+      return { ...prev, [selectedJob]: existing.filter((_, i) => i !== index) };
     });
   }
 
@@ -1156,7 +1179,6 @@ export default function Aion2_SkillCalculator() {
             borderRadius: "6px", padding: "4px 8px", cursor: "pointer",
           }}
             onClick={() => { setActivePresetId(p.id); setEditingPresetId(null); }}>
-
             {editingPresetId === p.id ? (
               <input
                 autoFocus
@@ -1165,19 +1187,11 @@ export default function Aion2_SkillCalculator() {
                 onClick={(e) => e.stopPropagation()}
                 onBlur={() => setEditingPresetId(null)}
                 onKeyDown={(e) => { if (e.key === "Enter") setEditingPresetId(null); e.stopPropagation(); }}
-                style={{
-                  background: "none", border: "none",
-                  borderBottom: `1px solid ${S.accent}`,
-                  color: S.text, fontSize: "13px", outline: "none",
-                  width: `${Math.max(p.name.length, 10)}ch`,
-                }}
+                style={{ background: "none", border: "none", borderBottom: `1px solid ${S.accent}`, color: S.text, fontSize: "13px", outline: "none", width: `${Math.max(p.name.length, 10)}ch` }}
               />
             ) : (
-              <span style={{ fontSize: "13px", color: S.text, userSelect: "none", whiteSpace: "nowrap" }}>
-                {p.name}
-              </span>
+              <span style={{ fontSize: "13px", color: S.text, userSelect: "none", whiteSpace: "nowrap" }}>{p.name}</span>
             )}
-
             <button
               onClick={(e) => { e.stopPropagation(); setActivePresetId(p.id); setEditingPresetId(p.id); }}
               title="이름 수정"
@@ -1185,12 +1199,8 @@ export default function Aion2_SkillCalculator() {
               onMouseOver={(e) => e.currentTarget.style.opacity = "1"}
               onMouseOut={(e) => e.currentTarget.style.opacity = "0.6"}
             >✏️</button>
-
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (window.confirm(`'${p.name}' 삭제하시겠습니까?`)) removePreset(p.id);
-              }}
+              onClick={(e) => { e.stopPropagation(); if (window.confirm(`'${p.name}' 삭제하시겠습니까?`)) removePreset(p.id); }}
               title="삭제"
               style={{ background: "none", border: "none", color: "#e57373", cursor: "pointer", fontSize: "15px", padding: "0 1px", lineHeight: 1, fontWeight: "bold", opacity: 0.7 }}
               onMouseOver={(e) => e.currentTarget.style.opacity = "1"}
@@ -1240,471 +1250,291 @@ export default function Aion2_SkillCalculator() {
 
       {activePreset && (
         <>
-          <div style={{ marginBottom: "14px" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "6px",
-              }}
-            >
-              <div style={{
-                fontSize: "13px",
-                color: S.text,
-                fontWeight: "600",
-                letterSpacing: "0.2px",
-              }}>
-                장비
+          {/* ── 3열 메인 레이아웃 ── */}
+          <div style={{ display: "grid", gridTemplateColumns: "auto auto 1fr", gap: "0 20px", alignItems: "start" }}>
+
+            {/* ── 열1: 장비 ── */}
+            <div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
+                <div style={{ fontSize: "13px", color: S.text, fontWeight: "600" }}>장비</div>
+                <button
+                  type="button"
+                  onClick={() => setShowWeaponGauntlet((prev) => !prev)}
+                  style={{ backgroundColor: S.surface2, color: S.textDim, border: `1px solid ${S.border}`, borderRadius: "4px", padding: "3px 8px", fontSize: "11px", cursor: "pointer", marginLeft: "8px" }}
+                >
+                  {showWeaponGauntlet ? "무기/가더 ➖" : "무기/가더 ➕"}
+                </button>
               </div>
-
-              <button
-                type="button"
-                onClick={() => setShowWeaponGauntlet((prev) => !prev)}
-                style={{
-                  backgroundColor: S.surface2,
-                  color: S.textDim,
-                  border: `1px solid ${S.border}`,
-                  borderRadius: "4px",
-                  padding: "3px 8px",
-                  fontSize: "11px",
-                  cursor: "pointer",
-                }}
-              >
-                {showWeaponGauntlet ? "무기/가더 ➖" : "무기/가더 ➕"}
-              </button>
-            </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: `repeat(${gearSlotsToShow.length}, minmax(92px, 1fr))`,
-                gap: "8px",
-                alignItems: "start",
-                marginBottom: "10px",
-              }}
-            >
-              {gearSlotsToShow.map((slot) => {
-                const entries = activePreset.equippedGear?.[slot.id] ?? [];
-
-                return (
-                  <div key={slot.id}>
-                    <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "3px" }}>
-                      {slot.label}
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
-                      {entries.map((entry, idx) => (
-                        <div key={idx} style={{ display: "flex", alignItems: "flex-end", gap: "3px" }}>
-                          <InlineSkillDropdown
-                            job={activePreset.job}
-                            mode={slot.mode}
-                            value={entry.skillName ?? ""}
-                            placeholder="스킬 선택"
-                            excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
-                            allowDelete={true}
-                            disableDelete={false}
-                            onSelect={(value) => {
-                              setPresets((prev) =>
-                                prev.map((p) => {
-                                  if (p.id !== activePresetId) return p;
-
-                                  const list = [...(p.equippedGear?.[slot.id] ?? [])];
-
-                                  if (value === "__DELETE__") {
-                                    if (list.length === 1) {
-                                      list[idx] = { skillName: "", level: 1 };
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", alignItems: "start" }}>
+                {gearSlotsToShow.map((slot) => {
+                  const entries = activePreset.equippedGear?.[slot.id] ?? [];
+                  return (
+                    <div key={slot.id}>
+                      <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "3px" }}>{slot.label}</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                        {entries.map((entry, idx) => (
+                          <div key={idx} style={{ display: "flex", alignItems: "flex-end", gap: "3px" }}>
+                            <InlineSkillDropdown
+                              job={activePreset.job}
+                              mode={slot.mode}
+                              value={entry.skillName ?? ""}
+                              placeholder="스킬 선택"
+                              excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
+                              allowDelete={true}
+                              disableDelete={false}
+                              onSelect={(value) => {
+                                setPresets((prev) =>
+                                  prev.map((p) => {
+                                    if (p.id !== activePresetId) return p;
+                                    const list = [...(p.equippedGear?.[slot.id] ?? [])];
+                                    if (value === "__DELETE__") {
+                                      if (list.length === 1) { list[idx] = { skillName: "", level: 1 }; }
+                                      else { list.splice(idx, 1); }
                                     } else {
-                                      list.splice(idx, 1);
+                                      list[idx] = { skillName: value, level: 1 };
                                     }
-                                  } else {
-                                    list[idx] = { skillName: value, level: 1 };
-                                  }
-                                  return {
-                                    ...p,
-                                    equippedGear: {
-                                      ...p.equippedGear,
-                                      [slot.id]: list,
-                                    },
-                                  };
-                                })
-                              );
-                            }}
-                          />
-                          
-                        </div>
-                      ))}
+                                    return { ...p, equippedGear: { ...p.equippedGear, [slot.id]: list } };
+                                  })
+                                );
+                              }}
+                            />
+                          </div>
+                        ))}
+                        {!entries.some((e) => !e.skillName) && (
+                          <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+                            <InlineSkillDropdown
+                              job={activePreset.job}
+                              mode={slot.mode}
+                              value=""
+                              placeholder="스킬 선택"
+                              excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
+                              onSelect={(value) => {
+                                if (!value) return;
+                                setPresets((prev) =>
+                                  prev.map((p) => {
+                                    if (p.id !== activePresetId) return p;
+                                    return { ...p, equippedGear: { ...p.equippedGear, [slot.id]: [...(p.equippedGear?.[slot.id] ?? []), { skillName: value, level: 1 }] } };
+                                  })
+                                );
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-                      {!entries.some((e) => !e.skillName) && (
-                        <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+            {/* ── 열2: 아르카나 ── */}
+            <div>
+              <div style={{ fontSize: "13px", color: S.text, fontWeight: "600", marginBottom: "6px" }}>아르카나</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                {PRESET_ARCANA_SLOTS.map((slot) => {
+                  const entries = activePreset.equippedArcana?.[slot.id] ?? [];
+                  return (
+                    <div key={slot.id}>
+                      <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "4px" }}>{slot.label}</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                        {entries.map((entry, idx) => (
+                          <div key={idx} style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+                            <InlineSkillDropdown
+                              job={activePreset.job}
+                              mode="all"
+                              value={entry.skillName ?? ""}
+                              placeholder="스킬 선택"
+                              allowedSkills={(ARCANA_SKILLS[activePreset.job]?.[slot.id] ?? []).map(s => typeof s === "string" ? s : s.name)}
+                              excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
+                              onSelect={(value) => {
+                                setPresets((prev) =>
+                                  prev.map((p) => {
+                                    if (p.id !== activePresetId) return p;
+                                    const list = [...(p.equippedArcana?.[slot.id] ?? [])];
+                                    const filtered = list.filter((e, i) => i === idx || e.skillName !== value);
+                                    filtered[idx] = { skillName: value, level: entry.level ?? 1 };
+                                    return { ...p, equippedArcana: { ...p.equippedArcana, [slot.id]: filtered } };
+                                  })
+                                );
+                              }}
+                            />
+                            <input
+                              type="number"
+                              value={entry.level ?? 1}
+                              min={0} max={4}
+                              onChange={(e) => {
+                                const raw = Number(e.target.value);
+                                const level = Number.isNaN(raw) ? 0 : Math.max(0, Math.min(4, raw));
+                                setPresets((prev) =>
+                                  prev.map((p) => {
+                                    if (p.id !== activePresetId) return p;
+                                    const next = [...(p.equippedArcana?.[slot.id] ?? [])];
+                                    next[idx] = { ...next[idx], level };
+                                    return { ...p, equippedArcana: { ...p.equippedArcana, [slot.id]: next } };
+                                  })
+                                );
+                              }}
+                              onFocus={handleInputFocus}
+                              onKeyDown={handleInputKeyDown}
+                              style={{ ...inputStyle, width: "36px", height: "22px", padding: "0 4px", fontSize: "11px", boxSizing: "border-box" }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPresets((prev) =>
+                                  prev.map((p) => {
+                                    if (p.id !== activePresetId) return p;
+                                    const next = (p.equippedArcana?.[slot.id] ?? []).filter((_, i) => i !== idx);
+                                    return { ...p, equippedArcana: { ...p.equippedArcana, [slot.id]: next } };
+                                  })
+                                );
+                              }}
+                              style={{ background: "none", border: "none", color: "#666", cursor: "pointer", fontSize: "14px", lineHeight: 1, padding: "0 2px" }}
+                            >×</button>
+                          </div>
+                        ))}
+                        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                           <InlineSkillDropdown
-                            job={activePreset.job}
-                            mode={slot.mode}
-                            value=""
-                            placeholder="스킬 선택"
-                            excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
-                            onSelect={(value) => {
-                              if (!value) return;
-
-                              setPresets((prev) =>
-                                prev.map((p) => {
-                                  if (p.id !== activePresetId) return p;
-                                  return {
-                                    ...p,
-                                    equippedGear: {
-                                      ...p.equippedGear,
-                                      [slot.id]: [...(p.equippedGear?.[slot.id] ?? []), { skillName: value, level: 1 }],
-                                    },
-                                  };
-                                })
-                              );
-                            }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          
-
-          <hr style={{ border: "none", borderTop: "1px solid #444", margin: "12px 0" }} />
-          <div style={{ marginBottom: "12px" }}>
-            {/* <div style={{ fontSize: "12px", color: S.textDim, marginBottom: "6px" }}> */}
-            <div style={{
-              fontSize: "13px",
-              color: S.text,
-              fontWeight: "600",
-              letterSpacing: "0.2px",
-            }}>
-              아르카나
-            </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(6, minmax(120px, 1fr))",
-                gap: "8px",
-              }}
-            >
-              {PRESET_ARCANA_SLOTS.map((slot) => {
-                const entries = activePreset.equippedArcana?.[slot.id] ?? [];
-
-                return (
-                  <div key={slot.id}>
-                    <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "4px" }}>
-                      {slot.label}
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
-                      {entries.map((entry, idx) => (
-                        <div key={idx} style={{ display: "flex", alignItems: "center", gap: "3px" }}>                          <InlineSkillDropdown
                             job={activePreset.job}
                             mode="all"
-                            value={entry.skillName ?? ""}
+                            value=""
                             placeholder="스킬 선택"
                             allowedSkills={(ARCANA_SKILLS[activePreset.job]?.[slot.id] ?? []).map(s => typeof s === "string" ? s : s.name)}
                             excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
                             onSelect={(value) => {
+                              if (!value) return;
                               setPresets((prev) =>
                                 prev.map((p) => {
                                   if (p.id !== activePresetId) return p;
-
-                                  const list = [...(p.equippedArcana?.[slot.id] ?? [])];
-
-                                  const filtered = list.filter(
-                                    (e, i) => i === idx || e.skillName !== value
-                                  );
-
-                                  filtered[idx] = {
-                                    skillName: value,
-                                    level: entry.level ?? 1,
-                                  };
-
-                                  return {
-                                    ...p,
-                                    equippedArcana: {
-                                      ...p.equippedArcana,
-                                      [slot.id]: filtered,
-                                    },
-                                  };
+                                  return { ...p, equippedArcana: { ...p.equippedArcana, [slot.id]: [...(p.equippedArcana?.[slot.id] ?? []), { skillName: value, level: 1 }] } };
                                 })
                               );
                             }}
                           />
-
-                          <input
-                            type="number"
-                            value={entry.level ?? 1}
-                            min={0}
-                            max={4}
-                            onChange={(e) => {
-                              const raw = Number(e.target.value);
-                              const level = Number.isNaN(raw) ? 0 : Math.max(0, Math.min(4, raw));
-
-                              setPresets((prev) =>
-                                prev.map((p) => {
-                                  if (p.id !== activePresetId) return p;
-
-                                  const next = [...(p.equippedArcana?.[slot.id] ?? [])];
-                                  next[idx] = { ...next[idx], level };
-
-                                  return {
-                                    ...p,
-                                    equippedArcana: {
-                                      ...p.equippedArcana,
-                                      [slot.id]: next,
-                                    },
-                                  };
-                                })
-                              );
-                            }}
-                            onFocus={handleInputFocus}
-                            onKeyDown={handleInputKeyDown}
-                            style={{
-                              ...inputStyle,
-                              width: "36px",
-                              height: "22px",
-                              padding: "0 4px",
-                              fontSize: "11px",
-                              boxSizing: "border-box",
-                              marginBottom: "-3px"
-                            }}
-                          />
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPresets((prev) =>
-                                prev.map((p) => {
-                                  if (p.id !== activePresetId) return p;
-
-                                  const next = (p.equippedArcana?.[slot.id] ?? []).filter((_, i) => i !== idx);
-
-                                  return {
-                                    ...p,
-                                    equippedArcana: {
-                                      ...p.equippedArcana,
-                                      [slot.id]: next,
-                                    },
-                                  };
-                                })
-                              );
-                            }}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              color: "#666",
-                              cursor: "pointer",
-                              fontSize: "14px",
-                              lineHeight: 1,
-                              padding: "0 2px",
-                            }}
-                          >
-                            ×
-                          </button>
                         </div>
-                      ))}
-
-                      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                        <InlineSkillDropdown
-                          job={activePreset.job}
-                          mode="all"
-                          value=""
-                          placeholder="스킬 선택"
-                          allowedSkills={(ARCANA_SKILLS[activePreset.job]?.[slot.id] ?? []).map(s => typeof s === "string" ? s : s.name)}
-                          excludedSkills={entries.map((e) => e.skillName).filter(Boolean)}
-                          onSelect={(value) => {
-                            if (!value) return;
-
-                            setPresets((prev) =>
-                              prev.map((p) => {
-                                if (p.id !== activePresetId) return p;
-                                return {
-                                  ...p,
-                                  equippedArcana: {
-                                    ...p.equippedArcana,
-                                    [slot.id]: [
-                                      ...(p.equippedArcana?.[slot.id] ?? []),
-                                      { skillName: value, level: 1 },
-                                    ],
-                                  },
-                                };
-                              })
-                            );
-                          }}
-                        />
                       </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* ── 열3: 관심 스킬 ── */}
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                <SkillDropdown
+                  job={activePreset.job}
+                  addedSkills={currentSkills.map((s) => s.name)}
+                  onSelect={addSkill}
+                />
+              </div>
+
+              {currentSkills.length === 0 && (
+                <div style={{ color: S.textDim, fontSize: "13px", textAlign: "center", marginTop: "40px" }}>
+                  트래킹할 스킬을 추가하세요
+                </div>
+              )}
+
+              {(() => {
+                const actives = currentSkills.filter((s) => s.type === "active");
+                const passives = currentSkills.filter((s) => s.type === "passive");
+                return (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+                    <div>
+                      {actives.length > 0 && <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "8px" }}>● 액티브</div>}
+                      {actives.map((skill) => {
+                        const originalIndex = currentSkills.findIndex((s) => s.name === skill.name);
+                        return (
+                          <SkillCard
+                            key={skill.name}
+                            skill={skill}
+                            autoGearSlots={getAutoGearSlots(skill, activePreset.equippedGear)}
+                            autoArcanaLevels={getAutoArcanaLevels(skill, activePreset.equippedArcana)}
+                            onToggleGear={(slotId, isOn) => {
+                              setPresets((prev) =>
+                                prev.map((p) => {
+                                  if (p.id !== activePresetId) return p;
+                                  const currentEntries = p.equippedGear?.[slotId] ?? [];
+                                  const alreadyExists = currentEntries.some((entry) => entry.skillName === skill.name);
+                                  const nextEntries = isOn
+                                    ? currentEntries.filter((entry) => entry.skillName !== skill.name)
+                                    : alreadyExists ? currentEntries : [...currentEntries, { skillName: skill.name, level: 1 }];
+                                  return { ...p, equippedGear: { ...p.equippedGear, [slotId]: nextEntries } };
+                                })
+                              );
+                            }}
+                            onSetArcanaLevel={(arcanaId, level) => {
+                              setPresets((prev) =>
+                                prev.map((p) => {
+                                  if (p.id !== activePresetId) return p;
+                                  const currentEntries = p.equippedArcana?.[arcanaId] ?? [];
+                                  const existingIndex = currentEntries.findIndex((entry) => entry.skillName === skill.name);
+                                  let nextEntries;
+                                  if (level <= 0) { nextEntries = currentEntries.filter((entry) => entry.skillName !== skill.name); }
+                                  else if (existingIndex >= 0) { nextEntries = [...currentEntries]; nextEntries[existingIndex] = { ...nextEntries[existingIndex], level }; }
+                                  else { nextEntries = [...currentEntries, { skillName: skill.name, level }]; }
+                                  return { ...p, equippedArcana: { ...p.equippedArcana, [arcanaId]: nextEntries } };
+                                })
+                              );
+                            }}
+                            onChange={(updated) => updateSkill(originalIndex, updated)}
+                            onRemove={() => removeSkill(originalIndex)}
+                          />
+                        );
+                      })}
+                    </div>
+                    <div>
+                      {passives.length > 0 && <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "8px" }}>● 패시브</div>}
+                      {passives.map((skill) => {
+                        const originalIndex = currentSkills.findIndex((s) => s.name === skill.name);
+                        return (
+                          <SkillCard
+                            key={skill.name}
+                            skill={skill}
+                            autoGearSlots={getAutoGearSlots(skill, activePreset.equippedGear)}
+                            autoArcanaLevels={getAutoArcanaLevels(skill, activePreset.equippedArcana)}
+                            onToggleGear={(slotId, isOn) => {
+                              setPresets((prev) =>
+                                prev.map((p) => {
+                                  if (p.id !== activePresetId) return p;
+                                  const currentEntries = p.equippedGear?.[slotId] ?? [];
+                                  const alreadyExists = currentEntries.some((entry) => entry.skillName === skill.name);
+                                  const nextEntries = isOn
+                                    ? currentEntries.filter((entry) => entry.skillName !== skill.name)
+                                    : alreadyExists ? currentEntries : [...currentEntries, { skillName: skill.name, level: 1 }];
+                                  return { ...p, equippedGear: { ...p.equippedGear, [slotId]: nextEntries } };
+                                })
+                              );
+                            }}
+                            onSetArcanaLevel={(arcanaId, level) => {
+                              setPresets((prev) =>
+                                prev.map((p) => {
+                                  if (p.id !== activePresetId) return p;
+                                  const currentEntries = p.equippedArcana?.[arcanaId] ?? [];
+                                  const existingIndex = currentEntries.findIndex((entry) => entry.skillName === skill.name);
+                                  let nextEntries;
+                                  if (level <= 0) { nextEntries = currentEntries.filter((entry) => entry.skillName !== skill.name); }
+                                  else if (existingIndex >= 0) { nextEntries = [...currentEntries]; nextEntries[existingIndex] = { ...nextEntries[existingIndex], level }; }
+                                  else { nextEntries = [...currentEntries, { skillName: skill.name, level }]; }
+                                  return { ...p, equippedArcana: { ...p.equippedArcana, [arcanaId]: nextEntries } };
+                                })
+                              );
+                            }}
+                            onChange={(updated) => updateSkill(originalIndex, updated)}
+                            onRemove={() => removeSkill(originalIndex)}
+                          />
+                        );
+                      })}
                     </div>
                   </div>
                 );
-              })}
+              })()}
             </div>
+
           </div>
-
-          <hr style={{ border: "none", borderTop: "1px solid #444", margin: "12px 0" }} />
-          <SkillDropdown
-            job={activePreset.job}
-            addedSkills={currentSkills.map((s) => s.name)}
-            onSelect={addSkill}
-          />
-
-          {currentSkills.length === 0 && (
-            <div style={{ color: S.textDim, fontSize: "13px", textAlign: "center", marginTop: "40px" }}>
-              트래킹할 스킬을 추가하세요
-            </div>
-          )}
-          {(() => {
-            const actives = currentSkills.filter((s) => s.type === "active");
-            const passives = currentSkills.filter((s) => s.type === "passive");
-            return (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-                <div>
-                  {actives.length > 0 && <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "8px" }}>● 액티브</div>}
-                  {actives.map((skill) => {
-                    const originalIndex = currentSkills.findIndex((s) => s.name === skill.name);
-                    return (
-                      <SkillCard
-                        key={skill.name}
-                        skill={skill}
-                        autoGearSlots={getAutoGearSlots(skill, activePreset.equippedGear)}
-                        autoArcanaLevels={getAutoArcanaLevels(skill, activePreset.equippedArcana)}
-                        onToggleGear={(slotId, isOn) => {
-                          setPresets((prev) =>
-                            prev.map((p) => {
-                              if (p.id !== activePresetId) return p;
-
-                              const currentEntries = p.equippedGear?.[slotId] ?? [];
-                              const alreadyExists = currentEntries.some((entry) => entry.skillName === skill.name);
-
-                              const nextEntries = isOn
-                                ? currentEntries.filter((entry) => entry.skillName !== skill.name)
-                                : alreadyExists
-                                  ? currentEntries
-                                  : [...currentEntries, { skillName: skill.name, level: 1 }];
-
-                              return {
-                                ...p,
-                                equippedGear: {
-                                  ...p.equippedGear,
-                                  [slotId]: nextEntries,
-                                },
-                              };
-                            })
-                          );
-                        }}
-                        onSetArcanaLevel={(arcanaId, level) => {
-                          setPresets((prev) =>
-                            prev.map((p) => {
-                              if (p.id !== activePresetId) return p;
-
-                              const currentEntries = p.equippedArcana?.[arcanaId] ?? [];
-                              const existingIndex = currentEntries.findIndex((entry) => entry.skillName === skill.name);
-
-                              let nextEntries;
-
-                              if (level <= 0) {
-                                nextEntries = currentEntries.filter((entry) => entry.skillName !== skill.name);
-                              } else if (existingIndex >= 0) {
-                                nextEntries = [...currentEntries];
-                                nextEntries[existingIndex] = { ...nextEntries[existingIndex], level };
-                              } else {
-                                nextEntries = [...currentEntries, { skillName: skill.name, level }];
-                              }
-
-                              return {
-                                ...p,
-                                equippedArcana: {
-                                  ...p.equippedArcana,
-                                  [arcanaId]: nextEntries,
-                                },
-                              };
-                            })
-                          );
-                        }}
-                        onChange={(updated) => updateSkill(originalIndex, updated)}
-                        onRemove={() => removeSkill(originalIndex)}
-                      />
-                    );
-                  })}
-                </div>
-                <div>
-                  {passives.length > 0 && <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "8px" }}>● 패시브</div>}
-                  {passives.map((skill) => {
-                    const originalIndex = currentSkills.findIndex((s) => s.name === skill.name);
-                    return (
-                      <SkillCard
-                        key={skill.name}
-                        skill={skill}
-                        autoGearSlots={getAutoGearSlots(skill, activePreset.equippedGear)}
-                        autoArcanaLevels={getAutoArcanaLevels(skill, activePreset.equippedArcana)}
-                        onToggleGear={(slotId, isOn) => {
-                          setPresets((prev) =>
-                            prev.map((p) => {
-                              if (p.id !== activePresetId) return p;
-
-                              const currentEntries = p.equippedGear?.[slotId] ?? [];
-                              const alreadyExists = currentEntries.some((entry) => entry.skillName === skill.name);
-
-                              const nextEntries = isOn
-                                ? currentEntries.filter((entry) => entry.skillName !== skill.name)
-                                : alreadyExists
-                                  ? currentEntries
-                                  : [...currentEntries, { skillName: skill.name, level: 1 }];
-
-                              return {
-                                ...p,
-                                equippedGear: {
-                                  ...p.equippedGear,
-                                  [slotId]: nextEntries,
-                                },
-                              };
-                            })
-                          );
-                        }}
-                        onSetArcanaLevel={(arcanaId, level) => {
-                          setPresets((prev) =>
-                            prev.map((p) => {
-                              if (p.id !== activePresetId) return p;
-
-                              const currentEntries = p.equippedArcana?.[arcanaId] ?? [];
-                              const existingIndex = currentEntries.findIndex((entry) => entry.skillName === skill.name);
-
-                              let nextEntries;
-
-                              if (level <= 0) {
-                                nextEntries = currentEntries.filter((entry) => entry.skillName !== skill.name);
-                              } else if (existingIndex >= 0) {
-                                nextEntries = [...currentEntries];
-                                nextEntries[existingIndex] = { ...nextEntries[existingIndex], level };
-                              } else {
-                                nextEntries = [...currentEntries, { skillName: skill.name, level }];
-                              }
-
-                              return {
-                                ...p,
-                                equippedArcana: {
-                                  ...p.equippedArcana,
-                                  [arcanaId]: nextEntries,
-                                },
-                              };
-                            })
-                          );
-                        }}
-                        onChange={(updated) => updateSkill(originalIndex, updated)}
-                        onRemove={() => removeSkill(originalIndex)}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })()}
         </>
       )}
     </div>
   );
 }
+
