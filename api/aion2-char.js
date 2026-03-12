@@ -14,6 +14,7 @@ export default async function handler(req, res) {
         "content-type": "application/json;charset=UTF-8",
         "origin": "https://aion2tool.com",
         "referer": "https://aion2tool.com/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
       },
       body: JSON.stringify({
         keyword: name,
@@ -26,17 +27,27 @@ export default async function handler(req, res) {
       }),
     });
 
-    const data = await r.json();
+    // r.json() 대신 text()로 먼저 받아서 HTML 여부 확인
+    const text = await r.text();
+
+    if (!text.trimStart().startsWith("{") && !text.trimStart().startsWith("[")) {
+      return res.status(502).json({
+        error: "외부 API가 JSON을 반환하지 않음",
+        httpStatus: r.status,
+        preview: text.slice(0, 300),
+      });
+    }
+
+    const data = JSON.parse(text);
 
     // 검색 결과 첫 번째 캐릭터
     const char = data?.data?.[0];
     if (!char) {
-      return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
+      return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다", dataKeys: Object.keys(data ?? {}) });
     }
 
     const items = char.accessories ?? [];
 
-    // slotPosName → 스킬계산기 슬롯 ID 매핑
     const SLOT_MAP = {
       Weapon:    "weapon",
       Gauntlet:  "gauntlet",
@@ -48,33 +59,25 @@ export default async function handler(req, res) {
       Boots:     "feet",
       Cloak:     "cloak",
       Necklace:  "necklace",
-      Earring:   "earring1",   // 귀걸이는 아래에서 1/2 구분
-      Ring:      "ring1",      // 반지도 아래에서 1/2 구분
+      Earring:   "earring1",
+      Ring:      "ring1",
     };
 
-    // 아르카나 슬롯 매핑 (category_name 기준)
     const ARCANA_MAP = {
-      "성배":  "성배",
-      "양피지": "양피지",
-      "나침반": "나침반",
-      "종":   "종",
-      "거울":  "거울",
-      "천칭":  "천칭",
+      "성배": "성배", "양피지": "양피지", "나침반": "나침반",
+      "종": "종", "거울": "거울", "천칭": "천칭",
     };
 
     const gear = {
       weapon: [], gauntlet: [],
       head: [], shoulder: [], chest: [], legs: [], hands: [], feet: [], cloak: [],
-      necklace: [],
-      earring1: [], earring2: [],
-      ring1: [], ring2: [],
+      necklace: [], earring1: [], earring2: [], ring1: [], ring2: [],
     };
 
     const arcana = {
       성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [],
     };
 
-    // 귀걸이/반지 중복 처리용
     const earringFilled = { earring1: false, earring2: false };
     const ringFilled    = { ring1: false, ring2: false };
 
@@ -86,16 +89,12 @@ export default async function handler(req, res) {
         .filter(s => s?.name)
         .map(s => ({ skillName: s.name, level: Number(s.level ?? 1) }));
 
-      // 아르카나 여부 (is_accessory: false)
       if (!item.is_accessory) {
         const arcanaKey = ARCANA_MAP[item.category_name];
-        if (arcanaKey) {
-          arcana[arcanaKey].push(...skills);
-        }
+        if (arcanaKey) arcana[arcanaKey].push(...skills);
         continue;
       }
 
-      // 악세서리 — slotPosName으로 슬롯 구분
       const posName = item.raw_data?.slotPosName ?? "";
 
       if (posName === "Earring") {
@@ -108,9 +107,7 @@ export default async function handler(req, res) {
         gear[slot].push(...skills);
       } else {
         const slotId = SLOT_MAP[posName];
-        if (slotId && gear[slotId]) {
-          gear[slotId].push(...skills);
-        }
+        if (slotId && gear[slotId]) gear[slotId].push(...skills);
       }
     }
 
