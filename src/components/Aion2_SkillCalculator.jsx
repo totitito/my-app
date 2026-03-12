@@ -1140,12 +1140,13 @@ export default function Aion2_SkillCalculator() {
     { id: "chest", label: "가슴", mode: "passive" },
     { id: "legs", label: "다리", mode: "passive" },
     { id: "hands", label: "손", mode: "passive" },
-    { id: "cloak", label: "망토", mode: "passive" },
     { id: "feet", label: "발", mode: "passive" },
 
+    { id: "cloak", label: "망토", mode: "passive" },
+    { id: "necklace", label: "목걸이", mode: "passive" },
+    
     { id: "earring1", label: "귀걸이1", mode: "passive" },
     { id: "earring2", label: "귀걸이2", mode: "passive" },
-    { id: "necklace", label: "목걸이", mode: "passive" },
 
     { id: "ring1", label: "반지1", mode: "active" },
     { id: "ring2", label: "반지2", mode: "active" },
@@ -1330,7 +1331,7 @@ export default function Aion2_SkillCalculator() {
             {/* ── 열2: 아르카나 ── */}
             <div>
               <div style={{ fontSize: "13px", color: S.text, fontWeight: "600", marginBottom: "6px" }}>아르카나</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "8px" }}>
                 {PRESET_ARCANA_SLOTS.map((slot) => {
                   const entries = activePreset.equippedArcana?.[slot.id] ?? [];
                   return (
