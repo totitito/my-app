@@ -469,8 +469,15 @@ function App() {
         }
 
         // ✅ 추가 오드에너지 / 추가 던전티켓 복구
-        if (data["extra-odd"]) localStorage.setItem("ghw-extra-odd", JSON.stringify(data["extra-odd"]));
-        if (data["extra-dungeon"]) localStorage.setItem("ghw-extra-dungeon", JSON.stringify(data["extra-dungeon"]));
+        if (data["extra-odd"]) {
+          localStorage.setItem("ghw-extra-odd", JSON.stringify(data["extra-odd"]));
+        }
+        if (data["extra-dungeon"]) {
+          localStorage.setItem("ghw-extra-dungeon", JSON.stringify(data["extra-dungeon"]));
+        }
+
+        // ✅ Aion2_HomeworkTab에 "방금 load 끝났음" 신호 보내기
+        window.dispatchEvent(new Event("ghw-extra-data-loaded"));
 
         alert("데이터를 성공적으로 불러왔습니다.");
         
@@ -523,7 +530,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-11 15:10
+              업데이트 : 2026-03-12 13:09
             </div>
           </div>
 

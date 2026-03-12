@@ -28,6 +28,28 @@ export default function Aion2_HomeworkTab({
   useEffect(() => { localStorage.setItem("ghw-extra-odd", JSON.stringify(extraOdd)); }, [extraOdd]);
   useEffect(() => { localStorage.setItem("ghw-extra-dungeon", JSON.stringify(extraDungeon)); }, [extraDungeon]);
 
+  useEffect(() => { localStorage.setItem("ghw-extra-odd", JSON.stringify(extraOdd)); }, [extraOdd]);
+  useEffect(() => { localStorage.setItem("ghw-extra-dungeon", JSON.stringify(extraDungeon)); }, [extraDungeon]);
+
+  useEffect(() => {
+    const syncExtraData = () => {
+      try {
+        setExtraOdd(JSON.parse(localStorage.getItem("ghw-extra-odd") || "{}"));
+      } catch {
+        setExtraOdd({});
+      }
+
+      try {
+        setExtraDungeon(JSON.parse(localStorage.getItem("ghw-extra-dungeon") || "{}"));
+      } catch {
+        setExtraDungeon({});
+      }
+    };
+
+    window.addEventListener("ghw-extra-data-loaded", syncExtraData);
+    return () => window.removeEventListener("ghw-extra-data-loaded", syncExtraData);
+  }, []);
+
   const updateCount = (id, targetName, delta, e = null) => {
     setHomeworks(prev => prev.map(hw => {
       if (hw.id !== id) return hw;

@@ -931,6 +931,8 @@ export default function Aion2_SkillCalculator() {
     }
   });
 
+  const [importChar, setImportChar] = useState("");
+
   const [showWeaponGauntlet, setShowWeaponGauntlet] = useState(false);
 
   const filteredPresets = presets.filter((p) => p.job === selectedJob);
@@ -1016,6 +1018,93 @@ export default function Aion2_SkillCalculator() {
     }));
   }
 
+  async function handleImportChar(){
+    if(!importChar) return alert("캐릭터명을 입력하세요");
+
+    try{
+
+      const url = `https://aion2tool.com/char/serverid=1016/${encodeURIComponent(importChar)}`;
+
+      const res = await fetch(url);
+      const html = await res.text();
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html,"text/html");
+
+      const gear = {};
+      const arcana = {};
+
+      PRESET_GEAR_SLOTS.forEach(s=> gear[s.id]=[]);
+      PRESET_ARCANA_SLOTS.forEach(s=> arcana[s.id]=[]);
+
+      const gearBlocks = doc.querySelectorAll(".item");
+
+      gearBlocks.forEach(item=>{
+        const slot = item.dataset.slot;
+        if(!gear[slot]) return;
+
+        const skillNodes = item.querySelectorAll(".skill");
+
+        skillNodes.forEach(node=>{
+          const name = node.querySelector(".skill-name")?.innerText?.trim();
+          const levelText = node.querySelector(".skill-level")?.innerText;
+
+          const level = levelText
+            ? Number(levelText.replace("Lv.",""))
+            : 1;
+
+          if(name){
+            gear[slot].push({
+              skillName:name,
+              level:level
+            });
+          }
+        });
+      });
+
+      const arcanaBlocks = doc.querySelectorAll(".arcana");
+
+      arcanaBlocks.forEach(block=>{
+        const arcanaName = block.dataset.arcana;
+        if(!arcana[arcanaName]) return;
+
+        const skills = block.querySelectorAll(".skill");
+
+        skills.forEach(node=>{
+          const name = node.querySelector(".skill-name")?.innerText?.trim();
+          const levelText = node.querySelector(".skill-level")?.innerText;
+
+          const level = levelText
+            ? Number(levelText.replace("Lv.",""))
+            : 1;
+
+          if(name){
+            arcana[arcanaName].push({
+              skillName:name,
+              level:level
+            });
+          }
+        });
+      });
+
+      setPresets(prev =>
+        prev.map(p=>{
+          if(p.id !== activePresetId) return p;
+
+          return {
+            ...p,
+            equippedGear: gear,
+            equippedArcana: arcana
+          };
+        })
+      );
+
+    }catch(e){
+      console.error(e);
+      alert("캐릭터 불러오기 실패");
+    }
+  }
+
   function updateSkill(index, updated) {
     setPresets((prev) => prev.map((p) =>
       p.id === activePresetId
@@ -1059,6 +1148,40 @@ export default function Aion2_SkillCalculator() {
     <div style={{ backgroundColor: S.bg, minHeight: "100%", padding: "16px", color: S.text, fontFamily: "inherit" }}>
 
       {/* 상단: 직업선택 > +프리셋 > 프리셋1,2,3... */}
+      
+      {/* 캐릭터 불러오기 */}
+      <div style={{ display:"flex", gap:"6px", marginBottom:"14px", alignItems:"center" }}>
+        <input
+          value={importChar}
+          onChange={(e)=>setImportChar(e.target.value)}
+          placeholder="캐릭명 입력 (예: 카니쵸니)"
+          style={{
+            backgroundColor:S.surface2,
+            color:S.text,
+            border:`1px solid ${S.border}`,
+            borderRadius:"4px",
+            padding:"5px 8px",
+            fontSize:"12px",
+            width:"180px"
+          }}
+        />
+
+        <button
+          onClick={handleImportChar}
+          style={{
+            background:"#1e3a52",
+            color:"#7ec8f0",
+            border:"1px solid #2e6a9e",
+            borderRadius:"4px",
+            padding:"5px 10px",
+            fontSize:"12px",
+            cursor:"pointer"
+          }}
+        >
+          캐릭터 불러오기
+        </button>
+      </div>
+
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
         <select value={selectedJob} onChange={(e) => handleJobChange(e.target.value)}
           style={{ backgroundColor: S.surface2, color: S.text, border: `1px solid ${S.border}`, borderRadius: "4px", padding: "5px 8px", fontSize: "13px", flexShrink: 0 }}>
