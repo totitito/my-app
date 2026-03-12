@@ -1,10 +1,12 @@
 export const AION2_ACHIEVEMENTS = [
 
+  // 아이온2 - 데바 패스
+  { id: "aion2-devapass-260225-arcana-present", game: "aion2", name: "아르카나 선물 꾸러미", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  { id: "aion2-devapass-260225-arcana-present-premium", game: "aion2", name: "아르카나 선물 꾸러미(프리미엄)", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  { id: "aion2-devapass-260311-blessing-odd", game: "aion2", name: "오드의 은총", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  { id: "aion2-devapass-260311-blessing-odd-premium", game: "aion2", name: "오드의 은총(프리미엄)", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+
   // 아이온2 - 업적 - 기본
-  { id: "aion2-basic-devapass-260225-arcana-present", game: "aion2", name: "아르카나 선물 꾸러미", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
-  { id: "aion2-basic-devapass-260225-arcana-present-premium", game: "aion2", name: "아르카나 선물 꾸러미(프리미엄)", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
-  { id: "aion2-basic-devapass-260311-blessing-odd", game: "aion2", name: "오드의 은총", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
-  { id: "aion2-basic-devapass-260311-blessing-odd-premium", game: "aion2", name: "오드의 은총(프리미엄)", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
   { id: "aion2-basic-foundation-quests", game: "aion2", name: "지역퀘, 봉던, 주둔지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
   { id: "aion2-achievement-add-friends", game: "aion2", name: "친추업적", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
   { id: "aion2-achievement-draup-twenty", game: "aion2", name: "드라웁니르 20회 클리어", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
