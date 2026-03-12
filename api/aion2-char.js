@@ -2,6 +2,7 @@ export default async function handler(req, res) {
   try {
     const name = req.query.name;
     const serverid = req.query.serverid ?? "1016";
+    const debug = req.query.debug === "1";
 
     if (!name) {
       return res.status(400).json({ error: "name required" });
@@ -28,24 +29,32 @@ export default async function handler(req, res) {
     });
 
     const text = await r.text();
-
     if (!text.trimStart().startsWith("{") && !text.trimStart().startsWith("[")) {
-      return res.status(502).json({
-        error: "외부 API가 JSON을 반환하지 않음",
-        httpStatus: r.status,
-        preview: text.slice(0, 300),
-      });
+      return res.status(502).json({ error: "외부 API가 JSON을 반환하지 않음", httpStatus: r.status, preview: text.slice(0, 300) });
     }
 
     const parsed = JSON.parse(text);
-
-    // data가 객체 (캐릭터 직접)
     const char = parsed?.data;
     if (!char || typeof char !== "object" || Array.isArray(char)) {
       return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
 
     const items = char.accessories ?? [];
+
+    // 디버그 모드: 각 아이템의 슬롯 정보만 추출
+    if (debug) {
+      return res.status(200).json({
+        total: items.length,
+        slots: items.map(item => ({
+          name: item.name,
+          category_name: item.category_name,
+          is_accessory: item.is_accessory,
+          slotPosName: item.raw_data?.slotPosName,
+          slotPos: item.slot_pos,
+          skillCount: item.sub_skills?.length ?? 0,
+        }))
+      });
+    }
 
     const SLOT_MAP = {
       Weapon:    "weapon",
