@@ -38,9 +38,13 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
 
-    // accessories: 악세서리 10개
-    // equipment: 악세서리 + 아르카나 16개 (전체)
-    const items = char.equipment ?? [];
+    // equipment: 일반 장비 + 아르카나
+    // accessories: 귀걸이/반지/목걸이 등 악세서리
+    // 둘 다 합쳐서 처리
+    const items = [
+      ...(char.equipment ?? []),
+      ...(char.accessories ?? []),
+    ];
 
     const SLOT_MAP = {
       Necklace:  "necklace",
