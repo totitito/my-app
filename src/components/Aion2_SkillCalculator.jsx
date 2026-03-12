@@ -1087,6 +1087,8 @@ export default function Aion2_SkillCalculator() {
         });
       });
 
+      alert(`gear=${Object.values(gear).flat().length}, arcana=${Object.values(arcana).flat().length}`);
+
       setPresets(prev =>
         prev.map(p=>{
           if(p.id !== activePresetId) return p;
