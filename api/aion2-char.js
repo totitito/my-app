@@ -38,9 +38,9 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
 
-    // accessories 배열에 장비 + 아르카나 전부 섞여있음
-    // is_accessory 기준이 아니라 slotPosName으로 구분
-    const items = char.accessories ?? [];
+    // accessories: 악세서리 10개
+    // equipment: 악세서리 + 아르카나 16개 (전체)
+    const items = char.equipment ?? [];
 
     const SLOT_MAP = {
       Necklace:  "necklace",
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
       Pants:     "legs",
       Gloves:    "hands",
       Boots:     "feet",
-      Cape:      "cloak",   // "Cloak" 아니고 "Cape"
+      Cape:      "cloak",
     };
 
     const ARCANA_SLOT_MAP = {
@@ -88,13 +88,11 @@ export default async function handler(req, res) {
 
       const posName = item.raw_data?.slotPosName ?? "";
 
-      // 아르카나 슬롯
       if (ARCANA_SLOT_MAP[posName]) {
         arcana[ARCANA_SLOT_MAP[posName]].push(...skills);
         continue;
       }
 
-      // 일반 장비 슬롯
       const slotId = SLOT_MAP[posName];
       if (slotId && gear[slotId]) {
         gear[slotId].push(...skills);
