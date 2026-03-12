@@ -11,6 +11,7 @@ import Aion2_SkillCalculator from "./components/Aion2_SkillCalculator";
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
 import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
 import Aion2_RaidPartyBuilder from "./components/Aion2_RaidPartyBuilder";
+import Aion2_MemoTab from "./components/Aion2_MemoTab";
 
 import aion2Icon from "./assets/gameicons/aion2.png";
 import lostarkIcon from "./assets/gameicons/lostark.png";
@@ -530,7 +531,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-12 17:37
+              업데이트 : 2026-03-12 17:39
             </div>
           </div>
 
