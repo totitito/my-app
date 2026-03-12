@@ -1039,21 +1039,33 @@ export default function Aion2_SkillCalculator() {
       const gear   = json.gear   ?? {};
       const arcana = json.arcana ?? {};
 
-      // 누락된 슬롯은 빈 배열로 채워줌
       PRESET_GEAR_SLOTS.forEach(s => { if(!gear[s.id])   gear[s.id]   = []; });
       PRESET_ARCANA_SLOTS.forEach(s => { if(!arcana[s.id]) arcana[s.id] = []; });
 
-      const gearCount   = Object.values(gear).flat().length;
-      const arcanaCount = Object.values(arcana).flat().length;
+      // API에서 받은 직업으로 자동 전환
+      const job = JOBS.includes(json.job) ? json.job : selectedJob;
 
-      setPresets(prev =>
-        prev.map(p => {
-          if(p.id !== activePresetId) return p;
-          return { ...p, equippedGear: gear, equippedArcana: arcana };
-        })
-      );
+      // 프리셋 이름 중복 처리
+      const baseName = importChar.trim();
+      const existingNames = presets.map(p => p.name);
+      let presetName = baseName;
+      let suffix = 2;
+      while (existingNames.includes(presetName)) {
+        presetName = `${baseName} ${suffix}`;
+        suffix++;
+      }
 
-      alert(`✅ ${json.name ?? importChar} 불러오기 완료\n장비 스킬 ${gearCount}개 · 아르카나 스킬 ${arcanaCount}개`);
+      // 새 프리셋 생성 (직업 자동 설정)
+      const newPreset = {
+        ...createPreset(job),
+        name: presetName,
+        equippedGear: gear,
+        equippedArcana: arcana,
+      };
+
+      setSelectedJob(job);
+      setPresets(prev => [...prev, newPreset]);
+      setActivePresetId(newPreset.id);
 
     }catch(e){
       console.error(e);
@@ -1105,39 +1117,6 @@ export default function Aion2_SkillCalculator() {
 
       {/* 상단: 직업선택 > +프리셋 > 프리셋1,2,3... */}
       
-      {/* 캐릭터 불러오기 */}
-      <div style={{ display:"flex", gap:"6px", marginBottom:"14px", alignItems:"center" }}>
-        <input
-          value={importChar}
-          onChange={(e)=>setImportChar(e.target.value)}
-          placeholder="캐릭명 입력 (예: 카니쵸니[바카])"
-          style={{
-            backgroundColor:S.surface2,
-            color:S.text,
-            border:`1px solid ${S.border}`,
-            borderRadius:"4px",
-            padding:"5px 8px",
-            fontSize:"12px",
-            width:"180px"
-          }}
-        />
-
-        <button
-          onClick={handleImportChar}
-          style={{
-            background:"#1e3a52",
-            color:"#7ec8f0",
-            border:"1px solid #2e6a9e",
-            borderRadius:"4px",
-            padding:"5px 10px",
-            fontSize:"12px",
-            cursor:"pointer"
-          }}
-        >
-          캐릭터 불러오기
-        </button>
-      </div>
-
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
         <select value={selectedJob} onChange={(e) => handleJobChange(e.target.value)}
           style={{ backgroundColor: S.surface2, color: S.text, border: `1px solid ${S.border}`, borderRadius: "4px", padding: "5px 8px", fontSize: "13px", flexShrink: 0 }}>
@@ -1170,6 +1149,38 @@ export default function Aion2_SkillCalculator() {
             </button>
           </div>
         ))}
+        <div style={{ marginLeft: "auto", display: "flex", gap: "6px", alignItems: "center" }}>
+          <input
+            value={importChar}
+            onChange={(e) => setImportChar(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") handleImportChar(); }}
+            placeholder="캐릭명 입력 (예: 카니쵸니[바카])"
+            style={{
+              backgroundColor: S.surface2,
+              color: S.text,
+              border: `1px solid ${S.border}`,
+              borderRadius: "4px",
+              padding: "5px 8px",
+              fontSize: "12px",
+              width: "180px",
+            }}
+          />
+          <button
+            onClick={handleImportChar}
+            style={{
+              background: "#1e3a52",
+              color: "#7ec8f0",
+              border: "1px solid #2e6a9e",
+              borderRadius: "4px",
+              padding: "5px 10px",
+              fontSize: "12px",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            캐릭터 불러오기
+          </button>
+        </div>
       </div>
 
       {!activePreset && (
