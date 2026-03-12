@@ -39,25 +39,83 @@ export default async function handler(req, res) {
 
     const parsed = JSON.parse(text);
 
-    // data 구조 디버그용 — 확인 후 제거 예정
-    const topLevelKeys = Object.keys(parsed ?? {});
-    const dataVal = parsed?.data;
-    const dataType = Array.isArray(dataVal) ? "array" : typeof dataVal;
-    const dataKeys = dataType === "object" && dataVal ? Object.keys(dataVal) : null;
-    const dataLen  = dataType === "array" ? dataVal.length : null;
+    // data가 객체 (캐릭터 직접)
+    const char = parsed?.data;
+    if (!char || typeof char !== "object" || Array.isArray(char)) {
+      return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
+    }
+
+    const items = char.accessories ?? [];
+
+    const SLOT_MAP = {
+      Weapon:    "weapon",
+      Gauntlet:  "gauntlet",
+      Helm:      "head",
+      Shoulder:  "shoulder",
+      Chest:     "chest",
+      Pants:     "legs",
+      Gloves:    "hands",
+      Boots:     "feet",
+      Cloak:     "cloak",
+      Necklace:  "necklace",
+      Earring:   "earring1",
+      Ring:      "ring1",
+    };
+
+    const ARCANA_MAP = {
+      "성배": "성배", "양피지": "양피지", "나침반": "나침반",
+      "종": "종", "거울": "거울", "천칭": "천칭",
+    };
+
+    const gear = {
+      weapon: [], gauntlet: [],
+      head: [], shoulder: [], chest: [], legs: [], hands: [], feet: [], cloak: [],
+      necklace: [], earring1: [], earring2: [], ring1: [], ring2: [],
+    };
+
+    const arcana = {
+      성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [],
+    };
+
+    const earringFilled = { earring1: false, earring2: false };
+    const ringFilled    = { ring1: false, ring2: false };
+
+    for (const item of items) {
+      const subs = item.sub_skills ?? [];
+      if (subs.length === 0) continue;
+
+      const skills = subs
+        .filter(s => s?.name)
+        .map(s => ({ skillName: s.name, level: Number(s.level ?? 1) }));
+
+      if (!item.is_accessory) {
+        const arcanaKey = ARCANA_MAP[item.category_name];
+        if (arcanaKey) arcana[arcanaKey].push(...skills);
+        continue;
+      }
+
+      const posName = item.raw_data?.slotPosName ?? "";
+
+      if (posName === "Earring") {
+        const slot = !earringFilled.earring1 ? "earring1" : "earring2";
+        earringFilled[slot] = true;
+        gear[slot].push(...skills);
+      } else if (posName === "Ring") {
+        const slot = !ringFilled.ring1 ? "ring1" : "ring2";
+        ringFilled[slot] = true;
+        gear[slot].push(...skills);
+      } else {
+        const slotId = SLOT_MAP[posName];
+        if (slotId && gear[slotId]) gear[slotId].push(...skills);
+      }
+    }
 
     return res.status(200).json({
-      _debug: true,
-      topLevelKeys,
-      dataType,
-      dataKeys,
-      dataLen,
-      // data 안에 result가 있으면 그 첫 번째 항목 키도 확인
-      resultKeys: Array.isArray(dataVal?.result) && dataVal.result[0]
-        ? Object.keys(dataVal.result[0])
-        : Array.isArray(dataVal) && dataVal[0]
-          ? Object.keys(dataVal[0])
-          : null,
+      name: char.nickname ?? char.name ?? name,
+      job: char.job ?? null,
+      level: char.level ?? null,
+      gear,
+      arcana,
     });
 
   } catch (e) {
