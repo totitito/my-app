@@ -28,7 +28,8 @@ export default async function handler(req, res) {
       }),
     });
 
-    const data = await r.json();
+    const text = await r.text();
+    return res.status(200).send(text.slice(0, 2000));
 
     const accessories = data?.data?.[0]?.accessories ?? [];
 
