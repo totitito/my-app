@@ -7,14 +7,30 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "name required" });
     }
 
-    const url =
-      `https://aion2tool.com/api/character/search-all-servers?name=` +
-      encodeURIComponent(name);
+    const url = "https://aion2tool.com/api/character/search";
 
-    const r = await fetch(url);
+    const r = await fetch(url, {
+      method: "POST",
+      headers: {
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json;charset=UTF-8",
+        "origin": "https://aion2tool.com",
+        "referer": "https://aion2tool.com/",
+      },
+      body: JSON.stringify({
+        keyword: name,
+        server_id: Number(serverid),
+        serverId: Number(serverid),
+        race: 1,
+        raceId: 1,
+        page: 1,
+        limit: 20,
+      }),
+    });
+
     const data = await r.json();
 
-    const accessories = data?.data?.accessories ?? [];
+    const accessories = data?.data?.[0]?.accessories ?? [];
 
     const skills = [];
 
