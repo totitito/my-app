@@ -1110,7 +1110,7 @@ export default function Aion2_SkillCalculator() {
         <input
           value={importChar}
           onChange={(e)=>setImportChar(e.target.value)}
-          placeholder="캐릭명 입력 (예: 카니쵸니)"
+          placeholder="캐릭명 입력 (예: 카니쵸니[바카])"
           style={{
             backgroundColor:S.surface2,
             color:S.text,
