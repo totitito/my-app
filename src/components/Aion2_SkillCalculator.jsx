@@ -1022,85 +1022,33 @@ export default function Aion2_SkillCalculator() {
     if(!importChar) return alert("캐릭터명을 입력하세요");
 
     try{
-
       const url = `/api/aion2-char?serverid=1016&name=${encodeURIComponent(importChar)}`;
-
       const res = await fetch(url);
-      const html = await res.text();
+      const json = await res.json();
 
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html,"text/html");
-      console.log(html);
+      if(json.error) {
+        alert(`불러오기 실패: ${json.error}`);
+        return;
+      }
 
-      const gear = {};
-      const arcana = {};
+      const gear   = json.gear   ?? {};
+      const arcana = json.arcana ?? {};
 
-      PRESET_GEAR_SLOTS.forEach(s=> gear[s.id]=[]);
-      PRESET_ARCANA_SLOTS.forEach(s=> arcana[s.id]=[]);
+      // 누락된 슬롯은 빈 배열로 채워줌
+      PRESET_GEAR_SLOTS.forEach(s => { if(!gear[s.id])   gear[s.id]   = []; });
+      PRESET_ARCANA_SLOTS.forEach(s => { if(!arcana[s.id]) arcana[s.id] = []; });
 
-      const gearBlocks = doc.querySelectorAll(".item");
-
-      gearBlocks.forEach(item=>{
-        const slot = item.dataset.slot;
-        if(!gear[slot]) return;
-
-        const skillNodes = item.querySelectorAll(".skill");
-
-        skillNodes.forEach(node=>{
-          const name = node.querySelector(".skill-name")?.innerText?.trim();
-          const levelText = node.querySelector(".skill-level")?.innerText;
-
-          const level = levelText
-            ? Number(levelText.replace("Lv.",""))
-            : 1;
-
-          if(name){
-            gear[slot].push({
-              skillName:name,
-              level:level
-            });
-          }
-        });
-      });
-
-      const arcanaBlocks = doc.querySelectorAll(".arcana");
-
-      arcanaBlocks.forEach(block=>{
-        const arcanaName = block.dataset.arcana;
-        if(!arcana[arcanaName]) return;
-
-        const skills = block.querySelectorAll(".skill");
-
-        skills.forEach(node=>{
-          const name = node.querySelector(".skill-name")?.innerText?.trim();
-          const levelText = node.querySelector(".skill-level")?.innerText;
-
-          const level = levelText
-            ? Number(levelText.replace("Lv.",""))
-            : 1;
-
-          if(name){
-            arcana[arcanaName].push({
-              skillName:name,
-              level:level
-            });
-          }
-        });
-      });
-
-      alert(`gear=${Object.values(gear).flat().length}, arcana=${Object.values(arcana).flat().length}`);
+      const gearCount   = Object.values(gear).flat().length;
+      const arcanaCount = Object.values(arcana).flat().length;
 
       setPresets(prev =>
-        prev.map(p=>{
+        prev.map(p => {
           if(p.id !== activePresetId) return p;
-
-          return {
-            ...p,
-            equippedGear: gear,
-            equippedArcana: arcana
-          };
+          return { ...p, equippedGear: gear, equippedArcana: arcana };
         })
       );
+
+      alert(`✅ ${json.name ?? importChar} 불러오기 완료\n장비 스킬 ${gearCount}개 · 아르카나 스킬 ${arcanaCount}개`);
 
     }catch(e){
       console.error(e);
