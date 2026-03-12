@@ -932,6 +932,7 @@ export default function Aion2_SkillCalculator() {
   });
 
   const [importChar, setImportChar] = useState("");
+  const [editingPresetId, setEditingPresetId] = useState(null);
 
   const [showWeaponGauntlet, setShowWeaponGauntlet] = useState(false);
 
@@ -1039,33 +1040,21 @@ export default function Aion2_SkillCalculator() {
       const gear   = json.gear   ?? {};
       const arcana = json.arcana ?? {};
 
+      // 누락된 슬롯은 빈 배열로 채워줌
       PRESET_GEAR_SLOTS.forEach(s => { if(!gear[s.id])   gear[s.id]   = []; });
       PRESET_ARCANA_SLOTS.forEach(s => { if(!arcana[s.id]) arcana[s.id] = []; });
 
-      // API에서 받은 직업으로 자동 전환
-      const job = JOBS.includes(json.job) ? json.job : selectedJob;
+      const gearCount   = Object.values(gear).flat().length;
+      const arcanaCount = Object.values(arcana).flat().length;
 
-      // 프리셋 이름 중복 처리
-      const baseName = importChar.trim();
-      const existingNames = presets.map(p => p.name);
-      let presetName = baseName;
-      let suffix = 2;
-      while (existingNames.includes(presetName)) {
-        presetName = `${baseName} ${suffix}`;
-        suffix++;
-      }
+      setPresets(prev =>
+        prev.map(p => {
+          if(p.id !== activePresetId) return p;
+          return { ...p, equippedGear: gear, equippedArcana: arcana };
+        })
+      );
 
-      // 새 프리셋 생성 (직업 자동 설정)
-      const newPreset = {
-        ...createPreset(job),
-        name: presetName,
-        equippedGear: gear,
-        equippedArcana: arcana,
-      };
-
-      setSelectedJob(job);
-      setPresets(prev => [...prev, newPreset]);
-      setActivePresetId(newPreset.id);
+      alert(`✅ ${json.name ?? importChar} 불러오기 완료\n장비 스킬 ${gearCount}개 · 아르카나 스킬 ${arcanaCount}개`);
 
     }catch(e){
       console.error(e);
@@ -1117,6 +1106,39 @@ export default function Aion2_SkillCalculator() {
 
       {/* 상단: 직업선택 > +프리셋 > 프리셋1,2,3... */}
       
+      {/* 캐릭터 불러오기 */}
+      <div style={{ display:"flex", gap:"6px", marginBottom:"14px", alignItems:"center" }}>
+        <input
+          value={importChar}
+          onChange={(e)=>setImportChar(e.target.value)}
+          placeholder="캐릭명 입력 (예: 카니쵸니[바카])"
+          style={{
+            backgroundColor:S.surface2,
+            color:S.text,
+            border:`1px solid ${S.border}`,
+            borderRadius:"4px",
+            padding:"5px 8px",
+            fontSize:"12px",
+            width:"180px"
+          }}
+        />
+
+        <button
+          onClick={handleImportChar}
+          style={{
+            background:"#1e3a52",
+            color:"#7ec8f0",
+            border:"1px solid #2e6a9e",
+            borderRadius:"4px",
+            padding:"5px 10px",
+            fontSize:"12px",
+            cursor:"pointer"
+          }}
+        >
+          캐릭터 불러오기
+        </button>
+      </div>
+
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
         <select value={selectedJob} onChange={(e) => handleJobChange(e.target.value)}
           style={{ backgroundColor: S.surface2, color: S.text, border: `1px solid ${S.border}`, borderRadius: "4px", padding: "5px 8px", fontSize: "13px", flexShrink: 0 }}>
@@ -1136,51 +1158,51 @@ export default function Aion2_SkillCalculator() {
             border: `1px solid ${activePresetId === p.id ? S.accent : S.border}`,
             borderRadius: "6px", padding: "4px 8px", cursor: "pointer",
           }}
-            onClick={() => setActivePresetId(p.id)}>
-            <input
-              value={p.name}
-              onChange={(e) => { e.stopPropagation(); renamePreset(p.id, e.target.value); }}
-              onClick={(e) => e.stopPropagation()}
-              style={{ background: "none", border: "none", color: S.text, fontSize: "13px", cursor: "text", width: `${Math.max(p.name.length, 10)}ch` }}
-            />
-            <button onClick={(e) => { e.stopPropagation(); removePreset(p.id); }}
-              style={{ background: "none", border: "none", color: "#666", cursor: "pointer", fontSize: "14px", padding: 0 }}>
+            onClick={() => { setActivePresetId(p.id); setEditingPresetId(null); }}>
+
+            {/* 이름: 편집 중이면 input, 아니면 텍스트 */}
+            {editingPresetId === p.id ? (
+              <input
+                autoFocus
+                value={p.name}
+                onChange={(e) => { e.stopPropagation(); renamePreset(p.id, e.target.value); }}
+                onClick={(e) => e.stopPropagation()}
+                onBlur={() => setEditingPresetId(null)}
+                onKeyDown={(e) => { if (e.key === "Enter") setEditingPresetId(null); e.stopPropagation(); }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  borderBottom: `1px solid ${S.accent}`,
+                  color: S.text,
+                  fontSize: "13px",
+                  outline: "none",
+                  width: `${Math.max(p.name.length, 10)}ch`,
+                }}
+              />
+            ) : (
+              <span style={{ fontSize: "13px", color: S.text, userSelect: "none" }}>
+                {p.name}
+              </span>
+            )}
+
+            {/* 연필 아이콘 */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setActivePresetId(p.id); setEditingPresetId(p.id); }}
+              title="이름 수정"
+              style={{ background: "none", border: "none", color: "#666", cursor: "pointer", fontSize: "11px", padding: "0 1px", lineHeight: 1 }}
+            >
+              ✏️
+            </button>
+
+            {/* 삭제 */}
+            <button
+              onClick={(e) => { e.stopPropagation(); removePreset(p.id); }}
+              style={{ background: "none", border: "none", color: "#666", cursor: "pointer", fontSize: "14px", padding: 0, lineHeight: 1 }}
+            >
               ×
             </button>
           </div>
         ))}
-        <div style={{ marginLeft: "auto", display: "flex", gap: "6px", alignItems: "center" }}>
-          <input
-            value={importChar}
-            onChange={(e) => setImportChar(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") handleImportChar(); }}
-            placeholder="캐릭명 입력 (예: 카니쵸니[바카])"
-            style={{
-              backgroundColor: S.surface2,
-              color: S.text,
-              border: `1px solid ${S.border}`,
-              borderRadius: "4px",
-              padding: "5px 8px",
-              fontSize: "12px",
-              width: "180px",
-            }}
-          />
-          <button
-            onClick={handleImportChar}
-            style={{
-              background: "#1e3a52",
-              color: "#7ec8f0",
-              border: "1px solid #2e6a9e",
-              borderRadius: "4px",
-              padding: "5px 10px",
-              fontSize: "12px",
-              cursor: "pointer",
-              flexShrink: 0,
-            }}
-          >
-            캐릭터 불러오기
-          </button>
-        </div>
       </div>
 
       {!activePreset && (
