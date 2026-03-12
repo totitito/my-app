@@ -530,7 +530,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-12 17:33
+              업데이트 : 2026-03-12 17:37
             </div>
           </div>
 
@@ -664,6 +664,18 @@ function App() {
                   >
                     파티/레이드
                   </button>
+
+                  <button
+                    onClick={() => setViewMode("aion2_memo")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_memo" ? "#333" : "#1e1e1e",
+                      border: viewMode === "aion2_memo" ? "1px solid #777" : "1px solid #444",
+                      fontWeight: viewMode === "aion2_memo" ? "bold" : "normal",
+                    }}
+                  >
+                    메모
+                  </button>
               
                 </>
               )}
@@ -736,7 +748,13 @@ function App() {
         <div style={{ marginTop: 20, paddingTop: 12 }}>
           <Aion2_RaidPartyBuilder />
         </div>
-      )}      
+      )}
+
+      {game === "aion2" && viewMode === "aion2_memo" && (
+        <div style={{ marginTop: 20, paddingTop: 12 }}>
+          <Aion2_MemoTab />
+        </div>
+      )}
 
     </div>
   );  
