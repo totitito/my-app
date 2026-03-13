@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ARCANA_SKILLS } from "../data/aion2-ArcanaSkillList";
+import { CLASS_SKILLS } from "../data/aion2-SkillList";
 import { getSkillMeta } from "../data/aion2-SkillMetaUtils";
 
 const RECOMMENDED_COLORS = {
@@ -593,7 +593,7 @@ export default function Aion2_ArcanaTable() {
                           key={`${arc.name}-${idx}`}
                           job={selectedClass}
                           value={skill ?? ""}
-                          allowedSkills={ARCANA_SKILLS[selectedClass]?.[arc.name] ?? []}
+                          allowedSkills={CLASS_SKILLS[selectedClass]?.[arc.name] ?? []}
                           onSelect={(value) => handleSkillChange(arc.name, idx, value)}
                         />
                       ))}
@@ -692,7 +692,7 @@ function InlineSkillDropdown({
   const ref = useRef(null);
 
   const baseSkills = [...new Set(
-    Object.values(ARCANA_SKILLS[job] ?? {}).flat()
+    Object.values(CLASS_SKILLS[job] ?? {}).flat()
       .map((s) => typeof s === "string" ? s : s.name)
   )];
 
@@ -962,7 +962,7 @@ function InlineSkillDropdown({
 }
 
 function getTopArcanaSkills(job, arcanaName) {
-  const skills = (ARCANA_SKILLS[job]?.[arcanaName] ?? [])
+  const skills = (CLASS_SKILLS[job]?.[arcanaName] ?? [])
     .map((s) => (typeof s === "string" ? s : s.name));
 
   const sorted = [...skills].sort((a, b) => {

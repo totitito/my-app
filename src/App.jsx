@@ -7,7 +7,8 @@ import Aion2_ArcanaTable from "./components/Aion2_ArcanaTable";
 import Aion2_HomeworkTab from "./components/Aion2_HomeworkTab";
 import { initialHomeworks } from "./data/initialHomeworks";
 import { getCategory, fmtKST, getNowMs, getDisplayVal } from "./data/homeworkUtils";
-import Aion2_SkillCalculator from "./components/Aion2_SkillCalculator";
+// import Aion2_SkillCalculator from "./components/Aion2_SkillCalculator";
+import Aion2_SkillCombinedTab from "./components/Aion2_SkillCombinedTab";
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
 import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
 import Aion2_RaidPartyBuilder from "./components/Aion2_RaidPartyBuilder";
@@ -531,7 +532,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-13 12:58
+              업데이트 : 2026-03-13 17:36
             </div>
           </div>
 
@@ -639,10 +640,10 @@ function App() {
                       fontWeight: viewMode === "aion2_skillcalc" ? "bold" : "normal",
                     }}
                   >
-                    스킬 계산기
+                    스킬 계산
                   </button>
 
-                  <button
+                  {/* <button
                     onClick={() => setViewMode("aion2_skill")}
                     style={{
                       ...btnStyle,
@@ -652,7 +653,7 @@ function App() {
                     }}
                   >
                     스킬 채택률
-                  </button>
+                  </button> */}
 
                   <button
                     onClick={() => setViewMode("aion2_party")}
@@ -663,7 +664,7 @@ function App() {
                       fontWeight: viewMode === "aion2_party" ? "bold" : "normal",
                     }}
                   >
-                    파티/레이드
+                    성역 멤버
                   </button>
 
                   <button
@@ -733,15 +734,16 @@ function App() {
         </div>
       )}
 
-      {game === "aion2" && viewMode === "aion2_skill" && (
+      {/* {game === "aion2" && viewMode === "aion2_skill" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
           <Aion2_SkillPriorityTable />
         </div>
-      )}
+      )} */}
 
       {game === "aion2" && viewMode === "aion2_skillcalc" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
-          <Aion2_SkillCalculator />
+          {/* <Aion2_SkillCalculator /> */}
+          <Aion2_SkillCombinedTab />
         </div>
       )}
 

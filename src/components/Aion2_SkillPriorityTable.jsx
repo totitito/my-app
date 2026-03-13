@@ -1,15 +1,18 @@
+import { CLASS_SKILLS } from "../data/aion2-SkillList";
 import { useMemo, useState, useEffect } from "react";
 import AION2_SKILL_DB from "../data/aion2-skillpriority.json";
 
-export default function Aion2_SkillTable() {
+export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob }) {
   const jobs = useMemo(
     () => ["수호성", "검성", "살성", "궁성", "마도성", "정령성", "호법성", "치유성"],
     []
   );
 
-  const [job, setJob] = useState(() => {
+  const [internalJob, setInternalJob] = useState(() => {
     return localStorage.getItem("aion2-skill-job") || jobs[0];
   });
+
+  const job = externalJob ?? internalJob;
 
   useEffect(() => {
     localStorage.setItem("aion2-skill-job", job);
@@ -18,7 +21,22 @@ export default function Aion2_SkillTable() {
   // ✅ 정적 JSON에서 선택 직업 데이터 읽기
   const payload = AION2_SKILL_DB.jobs?.[job] ?? null;
 
-  const rowsByType = (type) => payload?.data?.[type] ?? [];
+  const rowsByType = (type) => {
+    const allowed = new Set(
+      Object.entries(CLASS_SKILLS[job] ?? {})
+        .filter(([k]) => k !== "stigma")
+        .flatMap(([, v]) => v)
+    );
+
+    return (payload?.data?.[type] ?? []).filter((x) =>
+      allowed.has(x.skill_name)
+    );
+  };
+
+  const rowsStigma = () => {
+    const allowed = new Set(CLASS_SKILLS[job]?.stigma ?? []);
+    return (payload?.data?.stigma ?? []).filter((x) => allowed.has(x.skill_name));
+  };
 
   const SimpleTable = ({ title, rows }) => (
     <div style={{ marginTop: 10 }}>
@@ -67,17 +85,13 @@ export default function Aion2_SkillTable() {
   return (
     <div style={{ padding: 12, border: "1px solid #444", borderRadius: 12 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-        <div style={{ fontWeight: "bold" }}>AION2 스킬 우선순위(통계)</div>
+        <div style={{ fontWeight: "bold" }}>스킬 채택률</div>
 
         <select
           value={job}
-          onChange={(e) => setJob(e.target.value)}
-          style={{
-            background: "#1e1e1e",
-            color: "#fff",
-            border: "1px solid #444",
-            borderRadius: 8,
-            padding: "6px 10px",
+          onChange={(e) => {
+            if (onChangeJob) onChangeJob(e.target.value);
+            else setInternalJob(e.target.value);
           }}
         >
           {jobs.map((j) => (
@@ -104,7 +118,7 @@ export default function Aion2_SkillTable() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginTop: 10 }}>
           <SimpleTable title="액티브" rows={rowsByType("active")} />
           <SimpleTable title="패시브" rows={rowsByType("passive")} />
-          <SimpleTable title="스티그마" rows={rowsByType("stigma")} />
+          <SimpleTable title="스티그마" rows={rowsStigma()} />
         </div>
       )}
     </div>

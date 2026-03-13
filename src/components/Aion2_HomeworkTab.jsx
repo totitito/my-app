@@ -600,7 +600,13 @@ export default function Aion2_HomeworkTab({
                           // textOverflow: "ellipsis"
                           whiteSpace: "normal",
                           overflow: "break-word",
-                          textOverflow: "anywhere"
+                          textOverflow: "anywhere",
+                          color:
+                            hw.name === "루드라"
+                              ? "#b060ff"
+                              : hw.name === "침식"
+                              ? "#ff4444"
+                              : undefined,
                         }}
                         title={hw.name} // ⭐ 마우스 올리면 전체 이름이 툴팁으로 떠
                       >
@@ -866,7 +872,15 @@ export default function Aion2_HomeworkTab({
                           style={{ 
                             textAlign: "center", 
                             padding: "10px", 
-                            backgroundColor: isPending ? "#4b4b20" : "transparent",
+                            backgroundColor: isPending
+                              ? hw.name === "루드라"
+                                // ? "#3a2a55"
+                                ? "#3b2c63"
+                                : hw.name === "침식"
+                                // ? "#552a2a"
+                                ? "#5a2c2c"
+                                : "#4b4b20"
+                              : "transparent",
                             position: "relative",
                             verticalAlign: "middle",
                             cursor: "pointer"

@@ -1,13 +1,13 @@
 // src/components/Aion2_SkillCalculator.jsx
 import { useState, useRef, useEffect } from "react";
-import { ARCANA_SKILLS } from "../data/aion2-ArcanaSkillList";
+import { CLASS_SKILLS } from "../data/aion2-SkillList";
 import { getSkillMeta } from "../data/aion2-SkillMetaUtils";
 
 const JOBS = ["수호성", "검성", "살성", "궁성", "마도성", "정령성", "호법성", "치유성"];
 const ARCANAS = ["성배", "양피지", "나침반", "종", "거울", "천칭"];
 
 const ARCANA_SKILL_INDEX = ARCANAS.reduce((acc, arcana) => {
-  acc[arcana] = Object.values(ARCANA_SKILLS)
+  acc[arcana] = Object.values(CLASS_SKILLS)
     .flatMap((job) => job[arcana] ?? [])
     .map((s) => (typeof s === "string" ? s : s.name));
   return acc;
@@ -182,7 +182,9 @@ function SkillDropdown({ job, addedSkills, onSelect }) {
   const ref = useRef(null);
 
     const allSkills = [...new Set(
-      Object.values(ARCANA_SKILLS[job] ?? {}).flat()
+      Object.entries(CLASS_SKILLS[job] ?? {})
+        .filter(([k]) => k !== "stigma")
+        .flatMap(([, v]) => v)
         .map((s) => typeof s === "string" ? s : s.name)
     )].filter((s) => !addedSkills.includes(s));
 
@@ -355,7 +357,9 @@ function InlineSkillDropdown({
   const ref = useRef(null);
 
   const baseSkills = [...new Set(
-    Object.values(ARCANA_SKILLS[job] ?? {}).flat()
+    Object.entries(CLASS_SKILLS[job] ?? {})
+      .filter(([k]) => k !== "stigma")
+      .flatMap(([, v]) => v)
       .map((s) => typeof s === "string" ? s : s.name)
   )];
 
@@ -870,7 +874,7 @@ function SkillCard({
 // ─────────────────────────────────────────
 // 메인 컴포넌트
 // ─────────────────────────────────────────
-export default function Aion2_SkillCalculator() {
+export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChangeJob }) {
   const [presets, setPresets] = useState(() => {
     try {
       const raw = localStorage.getItem(LS_KEY);
@@ -930,7 +934,7 @@ export default function Aion2_SkillCalculator() {
     }
   });
 
-  const [selectedJob, setSelectedJob] = useState(() => {
+  const [internalJob, setInternalJob] = useState(() => {
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (!raw) return "수호성";
@@ -940,6 +944,8 @@ export default function Aion2_SkillCalculator() {
       return "수호성";
     }
   });
+
+  const selectedJob = externalJob ?? internalJob;
 
   const [importChar, setImportChar] = useState("");
   const [editingPresetId, setEditingPresetId] = useState(null);
@@ -977,7 +983,9 @@ export default function Aion2_SkillCalculator() {
     if (jobSkills[selectedJob] && jobSkills[selectedJob].length > 0) return;
 
     const allSkills = [...new Set(
-      Object.values(ARCANA_SKILLS[selectedJob] ?? {}).flat()
+      Object.entries(CLASS_SKILLS[selectedJob] ?? {})
+        .filter(([k]) => k !== "stigma")
+        .flatMap(([, v]) => v)
         .map((s) => typeof s === "string" ? s : s.name)
     )];
 
@@ -1020,7 +1028,8 @@ export default function Aion2_SkillCalculator() {
   }, [presets, activePresetId, selectedJob, jobSkills]);
 
   function handleJobChange(job) {
-    setSelectedJob(job);
+    if (onChangeJob) onChangeJob(job);
+    else setInternalJob(job);
 
     const jobPresets = presets.filter((p) => p.job === job);
 
@@ -1117,7 +1126,8 @@ export default function Aion2_SkillCalculator() {
         reserveArcana,
       };
 
-      setSelectedJob(job);
+      if (onChangeJob) onChangeJob(job);
+      else setInternalJob(job);
       setPresets(prev => [...prev, newPreset]);
       setActivePresetId(newPreset.id);
 
@@ -1344,7 +1354,7 @@ export default function Aion2_SkillCalculator() {
                   // 착용/예비 슬롯 렌더 공통 함수
                   const renderArcanaCol = (dataKey) => PRESET_ARCANA_SLOTS.map((slot) => {
                     const entries = activePreset[dataKey]?.[slot.id] ?? [];
-                    const allowedSkills = (ARCANA_SKILLS[activePreset.job]?.[slot.id] ?? []).map(s => typeof s === "string" ? s : s.name);
+                    const allowedSkills = (CLASS_SKILLS[activePreset.job]?.[slot.id] ?? []).map(s => typeof s === "string" ? s : s.name);
                     return (
                       <div key={slot.id}>
                         <div style={{ fontSize: "11px", color: dataKey === "equippedArcana" ? S.textDim : "#666", marginBottom: "3px", display: "flex", alignItems: "center", gap: "4px" }}>
