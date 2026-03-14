@@ -1009,6 +1009,12 @@ export default function Aion2_HomeworkTab({
                                 ? "#5a2c2c"
                                 : hw.id.startsWith("aion2-corridor-")
                                 ? "#5a3a1a"
+                                : hw.id === "aion2-nightmare" && val <= 12
+                                ? "#1d271d"
+                                : hw.id === "aion2-odd-energy"
+                                ? val <= 720
+                                  ? "#0b232d"
+                                  : "#0c4b69"
                                 : "#4b4b20"
                               : "transparent",
                             position: "relative",
