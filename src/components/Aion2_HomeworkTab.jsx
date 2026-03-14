@@ -1004,11 +1004,11 @@ export default function Aion2_HomeworkTab({
                             padding: "10px", 
                             backgroundColor: isPending
                               ? hw.name === "루드라"
-                                // ? "#3a2a55"
                                 ? "#3b2c63"
                                 : hw.name === "침식"
-                                // ? "#552a2a"
                                 ? "#5a2c2c"
+                                : hw.id.startsWith("aion2-corridor-")
+                                ? "#5a3a1a"
                                 : "#4b4b20"
                               : "transparent",
                             position: "relative",
