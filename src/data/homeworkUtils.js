@@ -35,15 +35,33 @@ const dailyBoundaryIndex = (ms, resetHourKST) => {
 
 const nextWeeklyResetAfterKST = (lastMs, resetDay, resetHour) => {
   const lastKst = new Date(lastMs + KST_OFFSET_MS);
-  const candKst = new Date(lastKst);
-  candKst.setUTCHours(resetHour ?? 0, 0, 0, 0);
-  const curDow = candKst.getUTCDay();
-  const targetDow = resetDay ?? 0;
-  let diff = (targetDow - curDow + 7) % 7;
-  candKst.setUTCDate(candKst.getUTCDate() + diff);
-  const candMs = candKst.getTime() - KST_OFFSET_MS;
-  if (candMs <= lastMs) candKst.setUTCDate(candKst.getUTCDate() + 7);
-  return candKst.getTime() - KST_OFFSET_MS;
+
+  const days = Array.isArray(resetDay) ? resetDay : [resetDay ?? 0];
+
+  let bestMs = null;
+
+  for (const day of days) {
+    const candKst = new Date(lastKst);
+    candKst.setUTCHours(resetHour ?? 0, 0, 0, 0);
+
+    const curDow = candKst.getUTCDay();
+    const targetDow = day ?? 0;
+    let diff = (targetDow - curDow + 7) % 7;
+
+    candKst.setUTCDate(candKst.getUTCDate() + diff);
+    let candMs = candKst.getTime() - KST_OFFSET_MS;
+
+    if (candMs <= lastMs) {
+      candKst.setUTCDate(candKst.getUTCDate() + 7);
+      candMs = candKst.getTime() - KST_OFFSET_MS;
+    }
+
+    if (bestMs === null || candMs < bestMs) {
+      bestMs = candMs;
+    }
+  }
+
+  return bestMs;
 };
 
 const countTicksBetween = (lastMs, nowMs, resetHoursKST) => {
@@ -75,10 +93,23 @@ export const passedCycles = (lastMs, nowMs, hw) => {
     const resetHour = hw.resetTime ?? 0;
     return dailyBoundaryIndex(nowMs, resetHour) - dailyBoundaryIndex(lastMs, resetHour);
   }
+
   if (hw.resetPeriod === "week") {
     const resetHour = Array.isArray(hw.resetTime) ? hw.resetTime[0] : (hw.resetTime ?? 0);
     const next = nextWeeklyResetAfterKST(lastMs, hw.resetDay ?? 0, resetHour);
     if (nowMs < next) return 0;
+
+    if (Array.isArray(hw.resetDay)) {
+      let count = 0;
+      let cursor = lastMs;
+      while (true) {
+        const nextTick = nextWeeklyResetAfterKST(cursor, hw.resetDay, resetHour);
+        if (nextTick > nowMs) break;
+        count++;
+        cursor = nextTick;
+      }
+      return count;
+    }    
     return 1 + Math.floor((nowMs - next) / WEEK_MS);
   }
   return 0;

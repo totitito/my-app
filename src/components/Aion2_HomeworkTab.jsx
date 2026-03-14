@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCategory, fmtKST, getNowMs, getDisplayVal } from "../data/homeworkUtils";
+import { CORRIDOR_LOW, CORRIDOR_MID } from "../data/initialHomeworks";
 
 export default function Aion2_HomeworkTab({ 
   game, viewMode,
@@ -15,6 +16,30 @@ export default function Aion2_HomeworkTab({
   const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
 
   const [editingCell, setEditingCell] = useState(null);
+
+  const [showCorridorLow, setShowCorridorLow] = useState(false);
+  const [showCorridorMid, setShowCorridorMid] = useState(false);
+
+  const [corridorLow, setCorridorLow] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("ghw-corridor-low") || "[]");
+    } catch {
+      return [];
+    }
+  });
+
+  const [corridorMid, setCorridorMid] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("ghw-corridor-mid") || "[]");
+    } catch {
+      return [];
+    }
+  });
+
+  const corridorAllChecked =
+    corridorLow.length === CORRIDOR_LOW.length &&
+    corridorMid.length === CORRIDOR_MID.length;
+
   const [isPortraitCollapsed, setIsPortraitCollapsed] = useState(false);
 
   // 추가 오드에너지 / 추가 던전티켓 (캐릭터별)
@@ -28,8 +53,13 @@ export default function Aion2_HomeworkTab({
   useEffect(() => { localStorage.setItem("ghw-extra-odd", JSON.stringify(extraOdd)); }, [extraOdd]);
   useEffect(() => { localStorage.setItem("ghw-extra-dungeon", JSON.stringify(extraDungeon)); }, [extraDungeon]);
 
-  useEffect(() => { localStorage.setItem("ghw-extra-odd", JSON.stringify(extraOdd)); }, [extraOdd]);
-  useEffect(() => { localStorage.setItem("ghw-extra-dungeon", JSON.stringify(extraDungeon)); }, [extraDungeon]);
+  useEffect(() => {
+    localStorage.setItem("ghw-corridor-low", JSON.stringify(corridorLow));
+  }, [corridorLow]);
+
+  useEffect(() => {
+    localStorage.setItem("ghw-corridor-mid", JSON.stringify(corridorMid));
+  }, [corridorMid]);
 
   useEffect(() => {
     const syncExtraData = () => {
@@ -357,11 +387,24 @@ export default function Aion2_HomeworkTab({
 
   const renderTable = (title, scope, dataList, setData, options = {}) => {
     const { headerRight = null, hideBody = false, hideHiddenButtons = false } = options;
+
+    const corridorVisible = (hw) => {
+      if (CORRIDOR_LOW.includes(hw.name)) {
+        return corridorLow.includes(hw.name);
+      }
+      if (CORRIDOR_MID.includes(hw.name)) {
+        return corridorMid.includes(hw.name);
+      }
+      return true;
+    };
+
     const filteredHws = homeworks.filter(hw =>
       hw.game === game &&
       hw.scope === scope &&
-      hw.resetPeriod !== "once"
-    );
+      hw.resetPeriod !== "once" &&
+      corridorVisible(hw)
+    );    
+
     const onceBasic = filteredHws.filter(hw => hw.category === "기본");
     const onceStory = filteredHws.filter(hw => hw.category === "스토리");
     const onceBossElyos = filteredHws.filter(hw => hw.category === "필드보스(천족)");
@@ -369,7 +412,7 @@ export default function Aion2_HomeworkTab({
     const onceWing = filteredHws.filter(hw => hw.category === "날개");
     const onceArt = filteredHws.filter(hw => hw.category === "명화");
     const onceEtc = filteredHws.filter(hw => !["기본", "스토리", "필드보스(천족)", "필드보스(마족)", "날개", "명화"].includes(hw.category));
-    const categoryOrder = ["daily", "etc", "event", "weekly"];
+    const categoryOrder = ["daily", "회랑", "etc", "event", "weekly"];
     const groupedByCategory = Object.fromEntries(
       categoryOrder.map(cat => [cat, []])
     );
@@ -377,6 +420,11 @@ export default function Aion2_HomeworkTab({
     if (viewMode === "repeat") {
       const repeatHws = filteredHws.filter(hw => hw.resetPeriod !== "once");
       repeatHws.forEach(hw => {
+        if (hw.id.startsWith("aion2-corridor")) {
+          groupedByCategory["회랑"].push(hw);
+          return;
+        }
+
         const cat = getCategory(hw);
         if (!groupedByCategory[cat]) groupedByCategory[cat] = [];
         groupedByCategory[cat].push(hw);
@@ -441,6 +489,86 @@ export default function Aion2_HomeworkTab({
           {/* (3) 숨김 복구 버튼들: 표 전체가 접힌 상태면 아예 안 보이게 */}
           {!hideBody && !hideHiddenButtons && hiddenHomeworks.length > 0 && (
             <div style={{ display: "inline-flex", alignItems: "center", gap: "5px", flexWrap: "wrap" }}>
+
+              {scope === "character" && (
+                <>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "54px 36px 1fr 1fr 1fr",
+                      alignItems: "center",
+                      gap: "2px 6px",
+                      padding: "4px 8px",
+                      border: "1px solid #444",
+                      borderRadius: "4px",
+                      backgroundColor: "#250a0a",
+                      marginRight: "8px",
+                    }}
+                  >
+
+                    <label
+                      style={{
+                        gridRow: "1 / span 2",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        fontSize: "15px",
+                        fontWeight: "600"
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={corridorAllChecked}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setCorridorLow([...CORRIDOR_LOW]);
+                            setCorridorMid([...CORRIDOR_MID]);
+                          } else {
+                            setCorridorLow([]);
+                            setCorridorMid([]);
+                          }
+                        }}
+                      />
+                      회랑
+                    </label>
+
+                    <div style={{ fontSize: "13px" }}>(중층)</div>
+
+                    {CORRIDOR_MID.map((name) => (
+                      <label key={name} style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "13px" }}>
+                        <input
+                          type="checkbox"
+                          checked={corridorMid.includes(name)}
+                          onChange={() => {
+                            setCorridorMid(prev =>
+                              prev.includes(name) ? prev.filter(v => v !== name) : [...prev, name]
+                            );
+                          }}
+                        />
+                        {name}
+                      </label>
+                    ))}
+
+                    <div style={{ fontSize: "13px" }}>(하층)</div>
+
+                    {CORRIDOR_LOW.map((name) => (
+                      <label key={name} style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "13px" }}>
+                        <input
+                          type="checkbox"
+                          checked={corridorLow.includes(name)}
+                          onChange={() => {
+                            setCorridorLow(prev =>
+                              prev.includes(name) ? prev.filter(v => v !== name) : [...prev, name]
+                            );
+                          }}
+                        />
+                        {name}
+                      </label>
+                    ))}
+                  </div>
+                </>
+              )}
+
               {hiddenHomeworks.map((name) => {
                 const hw = homeworks.find((h) => h.name === name && h.game === game);
                 if (!hw || hw.scope !== scope) return null;
@@ -653,7 +781,9 @@ export default function Aion2_HomeworkTab({
                         <div style={{ fontSize: "10px", color: "#bbb", marginTop: "2px" }}>
                           {hw.id === "aion2-odd-energy" ? "3n-1시마다 +15" :
                           (hw.resetType === 'recovery' ? `매일 05시 +${hw.recoveryAmount}` :
-                          `${hw.resetPeriod === 'week' ? dayMap[hw.resetDay] : '매일'} ${String(Array.isArray(hw.resetTime)?hw.resetTime[0]:hw.resetTime).padStart(2,'0')}시`)}
+                          (Array.isArray(hw.resetDay)
+                            ? `${hw.resetDay.map(d => dayMap[d]).join(",")} ${String(Array.isArray(hw.resetTime) ? hw.resetTime[0] : hw.resetTime).padStart(2,'0')}시`
+                            : `${hw.resetPeriod === 'week' ? dayMap[hw.resetDay] : '매일'} ${String(Array.isArray(hw.resetTime)?hw.resetTime[0]:hw.resetTime).padStart(2,'0')}시`))}
                         </div>
                       )}
 
