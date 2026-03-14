@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { CLASS_SKILLS } from "../data/aion2-SkillList";
 import { getSkillMeta } from "../data/aion2-SkillMetaUtils";
+import { AION2_SERVERS } from "../data/aion2-serverList";
 
 const JOBS = ["수호성", "검성", "살성", "궁성", "마도성", "정령성", "호법성", "치유성"];
 const ARCANAS = ["성배", "양피지", "나침반", "종", "거울", "천칭"];
@@ -171,6 +172,7 @@ function createPreset(job) {
       거울: [],
       천칭: [],
     },
+    lastImportedChar: "",
   };
 }
 
@@ -927,6 +929,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
           거울: Array.isArray(p.reserveArcana?.거울) ? p.reserveArcana.거울 : [],
           천칭: Array.isArray(p.reserveArcana?.천칭) ? p.reserveArcana.천칭 : [],
         },
+        lastImportedChar: p.lastImportedChar ?? "",
       }));
     } catch {
       return [];
@@ -959,6 +962,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
 
   const [importChar, setImportChar] = useState("");
   const [editingPresetId, setEditingPresetId] = useState(null);
+  const [editingRefreshChar, setEditingRefreshChar] = useState(false);
 
   // 직업별 공유 관심스킬
   const [jobSkills, setJobSkills] = useState(() => {
@@ -1093,10 +1097,11 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
     if(!importChar) return alert("캐릭터명을 입력하세요");
 
     try{
-      const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
       const match = importChar.match(/\[(.+?)\]$/);
       const tag = match?.[1];
-      const serverId = serverMap[tag] ?? 1016;
+      if (!tag) return alert("캐릭터명 뒤에 [서버약칭 2글자]를 입력해야 합니다. 예: 카니쵸니[바카] / ※[이스할겐]은 풀 서버명 입력");
+      const serverId = AION2_SERVERS.find(s => s.short === tag)?.id;
+      if (!serverId) return alert(`알 수 없는 서버 약칭입니다: [${tag}]`);
       const charName = match ? importChar.slice(0, match.index).trim() : importChar.trim();
       const url = `/api/aion2-char?serverid=${serverId}&name=${encodeURIComponent(charName)}`;
       const res = await fetch(url);
@@ -1134,6 +1139,76 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
         equippedGear: gear,
         equippedArcana: arcana,
         reserveArcana,
+        lastImportedChar: importChar.trim(),
+      };
+
+      if (onChangeJob) onChangeJob(job);
+      else setInternalJob(job);
+      setPresets(prev => prev.map(p => p.id === activePresetId ? {
+        ...p,
+        job,
+        equippedGear: gear,
+        equippedArcana: arcana,
+        reserveArcana,
+        lastImportedChar: importChar.trim(),
+      } : p));
+      setActivePresetId(newPreset.id);
+
+    }catch(e){
+      console.error(e);
+      alert("캐릭터 불러오기 실패");
+    }
+  }
+
+  async function handleImportCharNew(){
+    if(!importChar) return alert("캐릭터명을 입력하세요");
+
+    try{
+      const match = importChar.match(/\[(.+?)\]$/);
+      const tag = match?.[1];
+      if (!tag) return alert("캐릭터명 뒤에 [서버약칭 2글자]를 입력해야 합니다. 예: 카니쵸니[바카] / ※[이스할겐]은 풀 서버명 입력");
+
+      const serverId = AION2_SERVERS.find(s => s.short === tag)?.id;
+      if (!serverId) return alert(`알 수 없는 서버 약칭입니다: [${tag}]`);
+
+      const charName = match ? importChar.slice(0, match.index).trim() : importChar.trim();
+      const url = `/api/aion2-char?serverid=${serverId}&name=${encodeURIComponent(charName)}`;
+      const res = await fetch(url);
+      const json = await res.json();
+
+      if(json.error) {
+        alert(`불러오기 실패: ${json.error}`);
+        return;
+      }
+
+      const gear   = json.gear   ?? {};
+      const arcana = json.arcana ?? {};
+
+      PRESET_GEAR_SLOTS.forEach(s => { if(!gear[s.id])   gear[s.id]   = []; });
+      PRESET_ARCANA_SLOTS.forEach(s => { if(!arcana[s.id]) arcana[s.id] = []; });
+      const reserveArcana = { 성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [] };
+
+      // API에서 받은 직업으로 자동 전환
+      const job = JOBS.includes(json.job) ? json.job : selectedJob;
+
+      // 프리셋 이름 중복 처리
+      const baseName = importChar.trim();
+      const existingNames = presets.map(p => p.name);
+      let presetName = baseName;
+      let suffix = 2;
+      while (existingNames.includes(presetName)) {
+        presetName = `${baseName} ${suffix}`;
+        suffix++;
+      }
+
+      // 새 프리셋 생성 (직업 자동 설정)
+      const newPreset = {
+        ...createPreset(job),
+        name: presetName,
+        equippedGear: gear,
+        equippedArcana: arcana,
+        reserveArcana,
+        lastImportedChar: importChar.trim(),
       };
 
       if (onChangeJob) onChangeJob(job);
@@ -1202,7 +1277,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
           backgroundColor: "#1e3a52", color: "#7ec8f0",
           border: `1px solid #2e6a9e`, borderRadius: "4px",
           padding: "5px 10px", fontSize: "12px", cursor: "pointer", flexShrink: 0,
-        }}>+ 프리셋</button>
+        }}>➕ 프리셋 추가</button>
 
         {filteredPresets.map((p) => (
           <div key={p.id} style={{
@@ -1270,9 +1345,121 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
               flexShrink: 0,
             }}
           >
-            캐릭터 불러오기
+            현재 프리셋에 불러오기
+          </button>
+          <button
+            onClick={handleImportCharNew}
+            style={{
+              background: "#1e3a52",
+              color: "#7ec8f0",
+              border: "1px solid #2e6a9e",
+              borderRadius: "4px",
+              padding: "5px 10px",
+              fontSize: "12px",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            새 프리셋에 불러오기
+          </button>
+          <button
+            onClick={async () => {
+              const p = presets.find(p => p.id === activePresetId);
+              if (!p?.lastImportedChar) return alert("이 프리셋은 새로고침할 캐릭터 정보가 없습니다.");
+              const prev = importChar;
+              setImportChar(p.lastImportedChar);
+              try {
+                await (async () => {
+                  const forcedChar = p.lastImportedChar;
+                  const match = forcedChar.match(/\[(.+?)\]$/);
+                  const tag = match?.[1];
+                  if (!tag) return alert("캐릭터명 뒤에 [서버약칭 2글자]를 입력해야 합니다. 예: 카니쵸니[바카] / ※[이스할겐]은 풀 서버명 입력");
+                  const serverId = AION2_SERVERS.find(s => s.short === tag)?.id;
+                  if (!serverId) return alert(`알 수 없는 서버 약칭입니다: [${tag}]`);
+                  const charName = match ? forcedChar.slice(0, match.index).trim() : forcedChar.trim();
+                  const url = `/api/aion2-char?serverid=${serverId}&name=${encodeURIComponent(charName)}`;
+                  const res = await fetch(url);
+                  const json = await res.json();
+                  if (json.error) return alert(`불러오기 실패: ${json.error}`);
+
+                  const gear = json.gear ?? {};
+                  const arcana = json.arcana ?? {};
+                  PRESET_GEAR_SLOTS.forEach(s => { if (!gear[s.id]) gear[s.id] = []; });
+                  PRESET_ARCANA_SLOTS.forEach(s => { if (!arcana[s.id]) arcana[s.id] = []; });
+                  const reserveArcana = { 성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [] };
+                  const job = JOBS.includes(json.job) ? json.job : selectedJob;
+
+                  if (onChangeJob) onChangeJob(job);
+                  else setInternalJob(job);
+
+                  setPresets(prev => prev.map(x => x.id === activePresetId ? {
+                    ...x,
+                    job,
+                    equippedGear: gear,
+                    equippedArcana: arcana,
+                    reserveArcana,
+                    lastImportedChar: forcedChar,
+                  } : x));
+                })();
+              } finally {
+                setImportChar(prev);
+              }
+            }}
+            style={{
+              background: "#3a3a3a",
+              color: "#ddd",
+              border: "1px solid #555",
+              borderRadius: "4px",
+              padding: "5px 10px",
+              fontSize: "12px",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            새로고침
           </button>
         </div>
+
+        <div style={{ width: "100%", textAlign: "right", fontSize: "13px", color: S.textDim, marginTop: "0px" }}>
+          ※ 새로고침 시 불러오는 캐릭터 :{" "}
+          {editingRefreshChar ? (
+            <input
+              autoFocus
+              value={presets.find(p => p.id === activePresetId)?.lastImportedChar || ""}
+              onFocus={(e) => e.target.select()}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPresets(prev => prev.map(p => p.id === activePresetId ? { ...p, lastImportedChar: value } : p));
+              }}
+              onBlur={() => setEditingRefreshChar(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === "Escape") {
+                  setEditingRefreshChar(false);
+                }
+              }}
+              style={{
+                marginLeft: "4px",
+                width: "150px",
+                backgroundColor: S.surface2,
+                color: S.text,
+                border: `1px solid ${S.border}`,
+                borderRadius: "4px",
+                padding: "2px 6px",
+                fontSize: "13px",
+                height: "22px",
+                boxSizing: "border-box",
+              }}
+            />
+          ) : (
+            <span
+              onClick={() => setEditingRefreshChar(true)}
+              style={{ color: S.text, cursor: "pointer" }}
+            >
+              {presets.find(p => p.id === activePresetId)?.lastImportedChar || "-"}
+            </span>
+          )}
+        </div>
+
       </div>
 
       {!activePreset && (
