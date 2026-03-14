@@ -385,7 +385,7 @@ function InlineSkillDropdown({
     .sort((a, b) => (a.info?.priority ?? 999) - (b.info?.priority ?? 999));
 
   function isDisabledSkill(name) {
-    return name !== value && excludedSkills.includes(name);
+    return excludedSkills.includes(name);
   }
 
   const singleList =
