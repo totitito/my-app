@@ -765,7 +765,15 @@ function SkillCard({
         <div style={{ fontSize: "10px", color: S.textDim, marginBottom: "5px" }}>
           장비 (+{Object.values(mergedGearSlots).filter(Boolean).length})
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "nowrap",
+            gap: "5px",
+            overflow: "hidden",
+          }}
+        >
           {gearSlots.map((slot) => {
             const on = mergedGearSlots[slot.id];
             return (
@@ -782,6 +790,8 @@ function SkillCard({
                   color: on ? "#7ec8f0" : S.textDim,
                   border: `1px solid ${on ? "#2e6a9e" : S.border}`,
                   opacity: on ? 1 : 0.85,
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
                 }}
               >
                 {slot.label}
