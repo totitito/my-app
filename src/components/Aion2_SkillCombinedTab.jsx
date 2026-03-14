@@ -13,7 +13,8 @@ export default function Aion2_SkillCombinedTab() {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "minmax(0, 1fr) 1000px",
+        // gridTemplateColumns: "minmax(0, 1fr) 1000px",
+        gridTemplateColumns: "minmax(0, 1420px) 1000px",
         gap: "16px",
         alignItems: "start",
       }}
