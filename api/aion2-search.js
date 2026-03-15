@@ -12,23 +12,18 @@ export default async function handler(req, res) {
 
     const url = "https://aion2tool.com/api/character/search";
 
+    const race = sid >= 2000 ? 2 : 1;
+
     const r = await fetch(url, {
       method: "POST",
-      headers: {
-        "accept": "application/json, text/plain, */*",
-        "content-type": "application/json;charset=UTF-8",
-        "origin": "https://aion2tool.com",
-        "referer": "https://aion2tool.com/",
-        // UA는 꼭 필요하진 않지만 유지
-        "user-agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
-      },
+      headers: { ... },
+
       body: JSON.stringify({
         keyword: kw,
         server_id: sid,
         serverId: sid,
-        race: 1,
-        raceId: 1,
+        race: race,
+        raceId: race,
         page: 1,
         limit: 20,
       }),

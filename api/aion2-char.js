@@ -7,24 +7,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "name required" });
     }
 
+    const race = Number(serverid) >= 2000 ? 2 : 1;
+
     const r = await fetch("https://aion2tool.com/api/character/search", {
       method: "POST",
-      headers: {
-        "accept": "application/json, text/plain, */*",
-        "content-type": "application/json;charset=UTF-8",
-        "origin": "https://aion2tool.com",
-        "referer": "https://aion2tool.com/",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
-      },
+      headers: { ... },
+
       body: JSON.stringify({
         keyword: name,
         server_id: Number(serverid),
         serverId: Number(serverid),
-        race: 1,
-        raceId: 1,
+        race: race,
+        raceId: race,
         page: 1,
         limit: 20,
-      }),
+      })
     });
 
     const text = await r.text();
