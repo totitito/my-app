@@ -127,6 +127,7 @@ export default function Aion2_RaidPartyBuilder() {
 
   const [editingPresetId, setEditingPresetId] = useState(null);
   const [editingPresetName, setEditingPresetName] = useState("");
+  const [isRefreshingAll, setIsRefreshingAll] = useState(false);
 
   // 프리셋 슬롯 조작 헬퍼
   const updatePresetSlots = (type, presetId, updater) => {
@@ -243,7 +244,7 @@ export default function Aion2_RaidPartyBuilder() {
     });
   };
 
-  const fetchScoreAndApply = async (fullName, candidateId) => {
+  const fetchScoreAndApply = async (fullName, candidateId, showError = true) => {
     try {
       const rawFull = (fullName || "").trim();
       const match = rawFull.match(/^(.+?)\[(.+?)\]$/);
@@ -287,7 +288,30 @@ export default function Aion2_RaidPartyBuilder() {
       }));
     } catch (e) {
       console.error("전투력 갱신 실패:", e);
-      alert("전투력 갱신 실패: " + e.message);
+      if (showError) alert("전투력 갱신 실패: " + e.message);
+    }
+  };
+
+  const refreshAllCandidates = async () => {
+    if (isRefreshingAll) return;
+
+    setIsRefreshingAll(true);
+    try {
+      const list = [...state.candidates];
+
+      for (let i = 0; i < list.length; i++) {
+        const c = list[i];
+
+        try {
+          await fetchScoreAndApply(c.name, c.id, false);
+        } catch (e) {
+          console.error("전체 갱신 실패:", c.name, e);
+        }
+
+        await new Promise((r) => setTimeout(r, 500));
+      }
+    } finally {
+      setIsRefreshingAll(false);
     }
   };
 
@@ -669,6 +693,23 @@ export default function Aion2_RaidPartyBuilder() {
           onDragOver={allowDrop} onDrop={onDropToGroup}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <div style={{ fontWeight: "bold", color: "#ddd" }}>후보</div>
+            <button
+              onClick={refreshAllCandidates}
+              disabled={isRefreshingAll}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 8,
+                border: "1px solid #555",
+                background: "#1f1f1f",
+                color: "#ddd",
+                cursor: isRefreshingAll ? "default" : "pointer",
+                fontSize: 12,
+                opacity: isRefreshingAll ? 0.6 : 1,
+              }}
+              title="후보 전체 전투력/아툴 점수 갱신"
+            >
+              {isRefreshingAll ? "갱신중..." : "전체 갱신"}
+            </button>
           </div>
 
           {/* 직업별 그룹 */}
