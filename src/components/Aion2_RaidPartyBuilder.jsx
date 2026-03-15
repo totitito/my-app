@@ -308,7 +308,7 @@ export default function Aion2_RaidPartyBuilder() {
           console.error("전체 갱신 실패:", c.name, e);
         }
 
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((r) => setTimeout(r, 300));
       }
     } finally {
       setIsRefreshingAll(false);
