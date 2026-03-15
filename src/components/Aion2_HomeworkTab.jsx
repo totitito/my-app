@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getCategory, fmtKST, getNowMs, getDisplayVal } from "../data/homeworkUtils";
 import { CORRIDOR_LOW, CORRIDOR_MID } from "../data/initialHomeworks";
+import { AION2_SERVERS } from "../data/aion2-serverList";
 
 export default function Aion2_HomeworkTab({ 
   game, viewMode,
@@ -311,8 +312,8 @@ export default function Aion2_HomeworkTab({
       if (match) {
         charName = match[1].trim();
         const serverAbbr = match[2].trim();
-        const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
-        server_id = serverMap[serverAbbr] || 1016;
+        const server = AION2_SERVERS.find(s => s.short === serverAbbr);
+        server_id = server ? server.id : 1016;
       }
 
       const r = await fetch("/api/aion2-search", {
