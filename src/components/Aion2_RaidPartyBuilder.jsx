@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { AION2_SERVERS } from "../data/aion2-serverList";
 
 const LS_KEY = "aion2-raid-party-builder-v2";
 
@@ -97,6 +98,8 @@ const clsBadgeStyle = (cls) => {
   if (cls === "치유성") return { ...base, background: "rgb(0, 255, 0)" };
   return base;
 };
+
+const SERVER_SHORT_SET = new Set(AION2_SERVERS.map(s => s.short));
 
 export default function Aion2_RaidPartyBuilder() {
   const [state, setState] = useState(() => {
@@ -251,8 +254,8 @@ export default function Aion2_RaidPartyBuilder() {
       if (match) {
         charName = match[1].trim();
         const serverAbbr = match[2].trim();
-        const serverMap = { "아리": 1006, "바카": 1016, "코치": 1018 };
-        server_id = serverMap[serverAbbr] || 1016;
+        const server = AION2_SERVERS.find(s => s.short === serverAbbr);
+        server_id = server ? server.id : 1016;
       }
 
       const r = await fetch("/api/aion2-search", {
