@@ -16,7 +16,15 @@ export default async function handler(req, res) {
 
     const r = await fetch(url, {
       method: "POST",
-      headers: { ... },
+      headers: {
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json;charset=UTF-8",
+        "origin": "https://aion2tool.com",
+        "referer": "https://aion2tool.com/",
+        // UA는 꼭 필요하진 않지만 유지
+        "user-agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
+      },
 
       body: JSON.stringify({
         keyword: kw,
