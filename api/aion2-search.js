@@ -38,8 +38,20 @@ export default async function handler(req, res) {
     });
 
     const text = await r.text();
+
     if (!r.ok) {
-      return res.status(r.status).json({ error: `HTTP ${r.status}`, body: text });
+      return res.status(r.status).json({
+        error: `HTTP ${r.status}`,
+        preview: text.slice(0, 200),
+      });
+    }
+
+    if (!text.trimStart().startsWith("{") && !text.trimStart().startsWith("[")) {
+      return res.status(502).json({
+        error: "외부 API가 JSON을 반환하지 않음",
+        httpStatus: r.status,
+        preview: text.slice(0, 200),
+      });
     }
 
     const obj = JSON.parse(text);
