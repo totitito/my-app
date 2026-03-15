@@ -298,17 +298,24 @@ export default function Aion2_RaidPartyBuilder() {
     setIsRefreshingAll(true);
     try {
       const list = [...state.candidates];
+      const batchSize = 3;
 
-      for (let i = 0; i < list.length; i++) {
-        const c = list[i];
+      for (let i = 0; i < list.length; i += batchSize) {
+        const batch = list.slice(i, i + batchSize);
 
-        try {
-          await fetchScoreAndApply(c.name, c.id, false);
-        } catch (e) {
-          console.error("전체 갱신 실패:", c.name, e);
+        await Promise.all(
+          batch.map(async (c) => {
+            try {
+              await fetchScoreAndApply(c.name, c.id, false);
+            } catch (e) {
+              console.error("전체 갱신 실패:", c.name, e);
+            }
+          })
+        );
+
+        if (i + batchSize < list.length) {
+          await new Promise((r) => setTimeout(r, 300));
         }
-
-        await new Promise((r) => setTimeout(r, 300));
       }
     } finally {
       setIsRefreshingAll(false);
