@@ -2,8 +2,14 @@
 (async () => {
   const jobs = ["검성","수호성","살성","궁성","마도성","정령성","치유성","호법성"];
 
+  const sourceUpdatedAt = document
+    .querySelector("#skill-stats-last-update")
+    ?.textContent.replace("마지막 업데이트:", "")
+    .trim();
+
   const out = {
-    updatedAt: new Date().toISOString(),
+    fetchedAt: new Date().toISOString(),
+    sourceUpdatedAt,
     jobs: {}
   };
 

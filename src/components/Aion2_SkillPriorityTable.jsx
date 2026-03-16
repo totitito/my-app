@@ -185,7 +185,7 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
         </select>
 
         <div style={{ marginLeft: "auto", color: "#aaa", fontSize: 12 }}>
-          업데이트: {formatKST(AION2_SKILL_DB.updatedAt)}
+          마지막 업데이트: {AION2_SKILL_DB.sourceUpdatedAt}
         </div>
       </div>
 
