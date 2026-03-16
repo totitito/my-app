@@ -10,17 +10,19 @@ export default function Aion2_SkillCombinedTab() {
   }, [job]);
 
   return (
-    <div
-      style={{
-        display: "grid",
-        // gridTemplateColumns: "minmax(0, 1fr) 1000px",
-        gridTemplateColumns: "minmax(0, 1800px) 1000px",
-        gap: "16px",
-        alignItems: "start",
-      }}
-    >
-      <Aion2_SkillCalculator selectedJob={job} onChangeJob={setJob} />
-      <Aion2_SkillPriorityTable selectedJob={job} onChangeJob={setJob} />
+    <div style={{ overflowY: "visible" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1600px 900px",
+          gap: "16px",
+          alignItems: "start",
+          minWidth: "2200px",
+        }}
+      >
+        <Aion2_SkillCalculator selectedJob={job} onChangeJob={setJob} />
+        <Aion2_SkillPriorityTable selectedJob={job} onChangeJob={setJob} />
+      </div>
     </div>
   );
 }

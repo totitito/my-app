@@ -1,0 +1,3565 @@
+{
+  "updatedAt": "2026-03-16T06:09:33.781Z",
+  "jobs": {
+    "검성": {
+      "data": {
+        "active": [
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 21.0851,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_017.png",
+            "skill_name": "내려찍기",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 20.0266,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_010.png",
+            "skill_name": "파멸의 맹타",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 19.9255,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_005.png",
+            "skill_name": "분쇄 파동",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 19.6968,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_001.png",
+            "skill_name": "절단의 맹타",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 16.4628,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_019.png",
+            "skill_name": "도약 찍기",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 15.7287,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_036.png",
+            "skill_name": "돌진 일격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 15.1968,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_002.png",
+            "skill_name": "예리한 일격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 14.484,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_028.png",
+            "skill_name": "유린의 검",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 13.8989,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_020.png",
+            "skill_name": "발목 베기",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 12.1474,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_002.png",
+            "skill_name": "충격 해제",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 11.1489,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_034.png",
+            "skill_name": "검기 난무",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 9.81915,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_015.png",
+            "skill_name": "공중 결박",
+            "skill_type": "active",
+            "usage_rates": null
+          }
+        ],
+        "passive": [
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 25.5479,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_005.png",
+            "skill_name": "공격 준비",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4737,
+            "average_level": 23.9418,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_006.png",
+            "skill_name": "충격 적중",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 19.9309,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_008.png",
+            "skill_name": "노련한 반격",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 18.6862,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_004.png",
+            "skill_name": "약점 파악",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 17.5106,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_010.png",
+            "skill_name": "살기 파열",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 16.0319,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_001.png",
+            "skill_name": "생존 자세",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 15.0053,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_003.png",
+            "skill_name": "피의 흡수",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4737,
+            "average_level": 13.7778,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_009.png",
+            "skill_name": "생존 의지",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 11.3723,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_007.png",
+            "skill_name": "파괴 충동",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 7.07447,
+            "average_shards": null,
+            "job": "검성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_002.png",
+            "skill_name": "보호의 갑옷",
+            "skill_type": "passive",
+            "usage_rates": null
+          }
+        ],
+        "stigma": [
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 20,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_040.png",
+            "skill_name": "돌격 자세",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9895,
+              0.9895,
+              0.9895,
+              0.9895
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 18.633,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_024.png",
+            "skill_name": "지켈의 축복",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9421,
+              0.9263,
+              0.9105,
+              0.8947
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 18.4468,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_011.png",
+            "skill_name": "집중 막기",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9684,
+              0.9632,
+              0.9263,
+              0.7632
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 17.5266,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_038.png",
+            "skill_name": "근성",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9421,
+              0.8842,
+              0.8421,
+              0.7684
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 15.9894,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_039.png",
+            "skill_name": "격노 폭발",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9684,
+              0.8632,
+              0.7263,
+              0.5263
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 1.98404,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_007.png",
+            "skill_name": "분노의 파동",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.1211,
+              0.0947,
+              0.0789,
+              0.0632
+            ]
+          },
+          {
+            "adoption_rate": 99.4737,
+            "average_level": 0.968254,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_013.png",
+            "skill_name": "균형의 갑옷",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0632,
+              0.0421,
+              0.0368,
+              0.0316
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 0.914894,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_041.png",
+            "skill_name": "파동의 갑주",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0632,
+              0.0474,
+              0.0421,
+              0.0211
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 0.62234,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_008.png",
+            "skill_name": "칼날 날리기",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0526,
+              0.0263,
+              0.0158,
+              0.0105
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 0.356383,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_003.png",
+            "skill_name": "강습 일격",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0211,
+              0.0211,
+              0.0158,
+              0.0105
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 0.0159574,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_043.png",
+            "skill_name": "강제 결박",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "adoption_rate": 98.9474,
+            "average_level": 0.00531915,
+            "average_shards": 335.92,
+            "job": "검성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_034.png",
+            "skill_name": "흡혈의 검",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "수호성": {
+      "data": {
+        "active": [
+          {
+            "adoption_rate": 100,
+            "average_level": 20.7447,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_004.png",
+            "skill_name": "심판",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 20.3883,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_006.png",
+            "skill_name": "연속 난타",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 20.2074,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_001.png",
+            "skill_name": "맹렬한 일격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 18.5,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_009.png",
+            "skill_name": "징벌",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 17.7234,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_035.png",
+            "skill_name": "비호의 일격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.3883,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_025.png",
+            "skill_name": "쇠약의 맹타",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.0904,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_010.png",
+            "skill_name": "방패 강타",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 14.5957,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_015.png",
+            "skill_name": "방패 돌격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 14.3245,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_013.png",
+            "skill_name": "포획",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 13.0638,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_028.png",
+            "skill_name": "섬멸",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 12.2819,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_002.png",
+            "skill_name": "충격 해제",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 10.7447,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_027.png",
+            "skill_name": "섬광 난무",
+            "skill_type": "active",
+            "usage_rates": null
+          }
+        ],
+        "passive": [
+          {
+            "adoption_rate": 100,
+            "average_level": 25.0691,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_Passive_008.png",
+            "skill_name": "격앙",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 23.2979,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_006.png",
+            "skill_name": "충격 적중",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 19.8351,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_Passive_004.png",
+            "skill_name": "철벽 방어",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 17.5532,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_Passive_001.png",
+            "skill_name": "체력 강화",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 16.9628,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_Passive_003.png",
+            "skill_name": "단죄의 가호",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.5372,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_Passive_010.png",
+            "skill_name": "고통 차단",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 14.0638,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_009.png",
+            "skill_name": "생존 의지",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.2447,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_Passive_005.png",
+            "skill_name": "수호의 인장",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 9.28191,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_Passive_007.png",
+            "skill_name": "모욕의 포효",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 8.67553,
+            "average_shards": null,
+            "job": "수호성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_Passive_002.png",
+            "skill_name": "비호의 방패",
+            "skill_type": "passive",
+            "usage_rates": null
+          }
+        ],
+        "stigma": [
+          {
+            "adoption_rate": 100,
+            "average_level": 19.133,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_011.png",
+            "skill_name": "보호의 방패",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.984,
+              0.9681,
+              0.9681,
+              0.9043
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 18.6383,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_012.png",
+            "skill_name": "도발",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9628,
+              0.9468,
+              0.9202,
+              0.8883
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 17.1809,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_029.png",
+            "skill_name": "주신의 징벌",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9149,
+              0.8936,
+              0.8723,
+              0.7287
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.8883,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_024.png",
+            "skill_name": "전우 보호",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.6649,
+              0.5957,
+              0.5691,
+              0.5213
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 10,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_021.png",
+            "skill_name": "나포",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.7021,
+              0.5372,
+              0.4521,
+              0.2553
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 7.05319,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_018.png",
+            "skill_name": "이중 갑옷",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.4255,
+              0.3617,
+              0.3298,
+              0.2819
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 6.17021,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_030.png",
+            "skill_name": "네자칸의 방패",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.3298,
+              0.3085,
+              0.2979,
+              0.2926
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 3.25,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_022.png",
+            "skill_name": "고결의 갑주",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.1862,
+              0.1596,
+              0.1489,
+              0.1489
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.914894,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_041.png",
+            "skill_name": "처형의 검",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0585,
+              0.0426,
+              0.0426,
+              0.0266
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.632979,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_013.png",
+            "skill_name": "균형의 갑옷",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0426,
+              0.0372,
+              0.0266,
+              0.016
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.265957,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_003.png",
+            "skill_name": "강습 맹격",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0319,
+              0.0053,
+              0.0053,
+              0.0053
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.0106383,
+            "average_shards": 333.235,
+            "job": "수호성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_TE_SKILL_007.png",
+            "skill_name": "파멸의 방패",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "살성": {
+      "data": {
+        "active": [
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 20.9672,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_035.png",
+            "skill_name": "심장 찌르기",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 19.9344,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_001.png",
+            "skill_name": "빠른 베기",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 19.3989,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_006.png",
+            "skill_name": "기습",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 19.3989,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_013.png",
+            "skill_name": "문양 폭발",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 18.7978,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_009.png",
+            "skill_name": "맹수의 포효",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 15.4918,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_034.png",
+            "skill_name": "폭풍 난무",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 14.8579,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_007.png",
+            "skill_name": "암습",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 14.541,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_019.png",
+            "skill_name": "회오리 베기",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 13.8525,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_005.png",
+            "skill_name": "섬광 베기",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 12.6612,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_036.png",
+            "skill_name": "침투",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.0217,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_002.png",
+            "skill_name": "충격 해제",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 10.694,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_020.png",
+            "skill_name": "그림자 낙하",
+            "skill_type": "active",
+            "usage_rates": null
+          }
+        ],
+        "passive": [
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 25.1202,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_006.png",
+            "skill_name": "강습 자세",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 24.4863,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_004.png",
+            "skill_name": "배후 강타",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 21.2065,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_011.png",
+            "skill_name": "충격 적중",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 20.0164,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_002.png",
+            "skill_name": "빈틈 노리기",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 15.4918,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_008.png",
+            "skill_name": "방어 균열",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 15.2514,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_001.png",
+            "skill_name": "육감 극대화",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 13.9016,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_010.png",
+            "skill_name": "각오",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 13.1639,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_009.png",
+            "skill_name": "회생의 계약",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 11.3279,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_007.png",
+            "skill_name": "기습 자세",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 8.71585,
+            "average_shards": null,
+            "job": "살성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_003.png",
+            "skill_name": "독 바르기",
+            "skill_type": "passive",
+            "usage_rates": null
+          }
+        ],
+        "stigma": [
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 19.8415,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_029.png",
+            "skill_name": "환영 분신",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9891,
+              0.9891,
+              0.9837,
+              0.9837
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 19.6995,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_028.png",
+            "skill_name": "트리니엘의 비수",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9891,
+              0.9891,
+              0.9783,
+              0.962
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 18.4536,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_037.png",
+            "skill_name": "신속의 계약",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9348,
+              0.9348,
+              0.9185,
+              0.875
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 15.4044,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_031.png",
+            "skill_name": "암검 투척",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.8533,
+              0.837,
+              0.7228,
+              0.6304
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 12.3607,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_016.png",
+            "skill_name": "그림자 보행",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.6957,
+              0.663,
+              0.6196,
+              0.4348
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 11.9836,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_024.png",
+            "skill_name": "회피 자세",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.8478,
+              0.7065,
+              0.5217,
+              0.2554
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 3.81421,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_025.png",
+            "skill_name": "맹수의 송곳니",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.212,
+              0.2011,
+              0.1902,
+              0.125
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 1.10383,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_022.png",
+            "skill_name": "나선 베기",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0815,
+              0.0489,
+              0.0489,
+              0.0326
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 0.125683,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_023.png",
+            "skill_name": "연막탄",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0109,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 0.10929,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_003.png",
+            "skill_name": "강습 습격",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0054,
+              0.0054,
+              0.0054,
+              0.0054
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 0,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_026.png",
+            "skill_name": "공중 포박",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "adoption_rate": 99.4565,
+            "average_level": 0,
+            "average_shards": 357.745,
+            "job": "살성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_039.png",
+            "skill_name": "회피의 계약",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "궁성": {
+      "data": {
+        "active": [
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 20.4787,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_001.png",
+            "skill_name": "저격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 20.3351,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_034.png",
+            "skill_name": "속사",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 20.1862,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_002.png",
+            "skill_name": "조준 화살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 18.9947,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_005.png",
+            "skill_name": "송곳 화살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 18.7819,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_011.png",
+            "skill_name": "광풍 화살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 15.6277,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_031.png",
+            "skill_name": "표적 화살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 14.8298,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_008.png",
+            "skill_name": "파열 화살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 14.484,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_007.png",
+            "skill_name": "제압 화살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 14.1436,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_013.png",
+            "skill_name": "올가미 화살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 12.3511,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_017.png",
+            "skill_name": "폭발의 덫",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.6085,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_002.png",
+            "skill_name": "충격 해제",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 9.29787,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_033.png",
+            "skill_name": "화살 난사",
+            "skill_type": "active",
+            "usage_rates": null
+          }
+        ],
+        "passive": [
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 28.2021,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_001.png",
+            "skill_name": "집중의 눈",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 24.8564,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_011.png",
+            "skill_name": "사냥꾼의 결의",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 18.1011,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_007.png",
+            "skill_name": "사냥꾼의 혼",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 15.1596,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_003.png",
+            "skill_name": "집중 포화",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 14.7606,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_008.png",
+            "skill_name": "속박의 눈",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 14.484,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_004.png",
+            "skill_name": "경계의 눈",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 14.1277,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_013.png",
+            "skill_name": "근접 사격",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 12.0585,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_009.png",
+            "skill_name": "회생의 계약",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 11.5372,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_006.png",
+            "skill_name": "바람의 활력",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 10.2074,
+            "average_shards": null,
+            "job": "궁성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_Passive_012.png",
+            "skill_name": "저항의 결의",
+            "skill_type": "passive",
+            "usage_rates": null
+          }
+        ],
+        "stigma": [
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 20,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_030.png",
+            "skill_name": "축복의 활",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9947,
+              0.9947,
+              0.9947,
+              0.9947
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 18.2553,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_023.png",
+            "skill_name": "폭발 화살",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9259,
+              0.9206,
+              0.8942,
+              0.8836
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 18.1277,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_022.png",
+            "skill_name": "바이젤의 권능",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9101,
+              0.9101,
+              0.8942,
+              0.8889
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 13.3723,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_012.png",
+            "skill_name": "기습 차기",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.7884,
+              0.709,
+              0.6032,
+              0.5238
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 11.8404,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_026.png",
+            "skill_name": "화살 폭풍",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.709,
+              0.6402,
+              0.5132,
+              0.4497
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 8.24468,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_019.png",
+            "skill_name": "은신",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.5079,
+              0.4603,
+              0.3757,
+              0.2328
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 4.76064,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_035.png",
+            "skill_name": "대자연의 숨결",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.2751,
+              0.2434,
+              0.2169,
+              0.1958
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 0.962766,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_006.png",
+            "skill_name": "그리폰 화살",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0582,
+              0.0476,
+              0.037,
+              0.037
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 0.319149,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_016.png",
+            "skill_name": "봉인 화살",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0159,
+              0.0159,
+              0.0106,
+              0.0053
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 0.111702,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_018.png",
+            "skill_name": "결박의 덫",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0106,
+              0.0053,
+              0,
+              0
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 0.0638298,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_003.png",
+            "skill_name": "강습 강타",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0053,
+              0.0053,
+              0,
+              0
+            ]
+          },
+          {
+            "adoption_rate": 99.4709,
+            "average_level": 0.0106383,
+            "average_shards": 340.07,
+            "job": "궁성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_RA_SKILL_015.png",
+            "skill_name": "수면 화살",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "마도성": {
+      "data": {
+        "active": [
+          {
+            "adoption_rate": 100,
+            "average_level": 20.5661,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_020.png",
+            "skill_name": "불꽃 화살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 20.4709,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_025.png",
+            "skill_name": "혹한의 바람",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 20.4603,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_005.png",
+            "skill_name": "불꽃 폭발",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 19.3915,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_009.png",
+            "skill_name": "얼음 사슬",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 18.5132,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_028.png",
+            "skill_name": "집중의 기원",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 17.9471,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_011.png",
+            "skill_name": "겨울의 속박",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.5238,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_006.png",
+            "skill_name": "지옥의 화염",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 14.5291,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_004.png",
+            "skill_name": "불꽃 작살",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 14.1693,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_015.png",
+            "skill_name": "빙결",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 14.0476,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_022.png",
+            "skill_name": "빙결 폭발",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.3915,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_001.png",
+            "skill_name": "화염 난사",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.0741,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_002.png",
+            "skill_name": "충격 해제",
+            "skill_type": "active",
+            "usage_rates": null
+          }
+        ],
+        "passive": [
+          {
+            "adoption_rate": 100,
+            "average_level": 27.3333,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_Passive_004.png",
+            "skill_name": "불꽃의 로브",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 18.7354,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_Passive_002.png",
+            "skill_name": "불의 표식",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 16.7302,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_Passive_003.png",
+            "skill_name": "냉기 소환",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 16.545,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_Passive_008.png",
+            "skill_name": "생기 증발",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.2328,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_Passive_005.png",
+            "skill_name": "냉기의 로브",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 14.5026,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_Passive_007.png",
+            "skill_name": "강화의 은혜",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 13.2116,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_Passive_001.png",
+            "skill_name": "정기 흡수",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 12.8889,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_009.png",
+            "skill_name": "회생의 계약",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.1323,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_038.png",
+            "skill_name": "저항의 은혜",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 7.20106,
+            "average_shards": null,
+            "job": "마도성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_Passive_006.png",
+            "skill_name": "대지의 로브",
+            "skill_type": "passive",
+            "usage_rates": null
+          }
+        ],
+        "stigma": [
+          {
+            "adoption_rate": 100,
+            "average_level": 20,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_040.png",
+            "skill_name": "원소 강화",
+            "skill_type": "stigma",
+            "usage_rates": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 19.6825,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_039.png",
+            "skill_name": "불의 장벽",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9841,
+              0.9841,
+              0.9841,
+              0.9841
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 19.4497,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_032.png",
+            "skill_name": "지연 폭발",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9735,
+              0.9735,
+              0.9735,
+              0.9683
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 16.5079,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_016.png",
+            "skill_name": "강철 보호막",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9048,
+              0.8571,
+              0.7989,
+              0.6878
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 13.0688,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_019.png",
+            "skill_name": "냉기 폭풍",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.6772,
+              0.6667,
+              0.6455,
+              0.6138
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 7.12698,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_021.png",
+            "skill_name": "빙설의 갑주",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.5291,
+              0.4021,
+              0.2751,
+              0.1587
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 1.87831,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_003.png",
+            "skill_name": "강습 폭격",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.1587,
+              0.0899,
+              0.0741,
+              0.0212
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 1.24339,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_036.png",
+            "skill_name": "신성 폭발",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0952,
+              0.0423,
+              0.037,
+              0.0317
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.333333,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_013.png",
+            "skill_name": "영혼 동결",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0265,
+              0.0106,
+              0.0106,
+              0.0106
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.312169,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_014.png",
+            "skill_name": "저주: 나무",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.037,
+              0.0053,
+              0,
+              0
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.216931,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_012.png",
+            "skill_name": "빙하 강타",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0159,
+              0.0106,
+              0.0053,
+              0.0053
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.10582,
+            "average_shards": 355.925,
+            "job": "마도성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_SO_SKILL_027.png",
+            "skill_name": "루미엘의 공간",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0106,
+              0.0053,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "정령성": {
+      "data": {
+        "active": [
+          {
+            "adoption_rate": 100,
+            "average_level": 21.4433,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_004.png",
+            "skill_name": "화염 전소",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 20.7113,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_001.png",
+            "skill_name": "냉기 충격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 20.3814,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_030.png",
+            "skill_name": "원소 융합",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 18.7062,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_014.png",
+            "skill_name": "협공: 저주",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 16.0773,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_011.png",
+            "skill_name": "소환: 물의 정령",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.4278,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_033.png",
+            "skill_name": "공간 지배",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.2216,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_007.png",
+            "skill_name": "영혼의 절규",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 13.2371,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_012.png",
+            "skill_name": "소환: 바람의 정령",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 12.7371,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_034.png",
+            "skill_name": "연속 난사",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.4021,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_002.png",
+            "skill_name": "충격 해제",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.3041,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_010.png",
+            "skill_name": "소환: 불의 정령",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 9.07732,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_013.png",
+            "skill_name": "소환: 땅의 정령",
+            "skill_type": "active",
+            "usage_rates": null
+          }
+        ],
+        "passive": [
+          {
+            "adoption_rate": 100,
+            "average_level": 25.5258,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_004.png",
+            "skill_name": "정령 타격",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 23.9381,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_006.png",
+            "skill_name": "정신 집중",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 20.5309,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_012.png",
+            "skill_name": "침식",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 16.0722,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_002.png",
+            "skill_name": "정령 보호",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.5722,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_011.png",
+            "skill_name": "정령 회생",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.4897,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_003.png",
+            "skill_name": "정령 강림",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 15.3557,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_008.png",
+            "skill_name": "원소 결집",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 14.4742,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_013.png",
+            "skill_name": "연속 역류",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.4691,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_AS_SKILL_Passive_009.png",
+            "skill_name": "회생의 계약",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 10.4072,
+            "average_shards": null,
+            "job": "정령성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_Passive_007.png",
+            "skill_name": "정령 교감",
+            "skill_type": "passive",
+            "usage_rates": null
+          }
+        ],
+        "stigma": [
+          {
+            "adoption_rate": 100,
+            "average_level": 20,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_019.png",
+            "skill_name": "강화: 정령의 가호",
+            "skill_type": "stigma",
+            "usage_rates": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 20,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_025.png",
+            "skill_name": "소환: 고대의 정령",
+            "skill_type": "stigma",
+            "usage_rates": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 18.3093,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_015.png",
+            "skill_name": "협공: 부식",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9381,
+              0.9227,
+              0.8969,
+              0.8969
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 17.4072,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_037.png",
+            "skill_name": "불길의 축복",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.8814,
+              0.8814,
+              0.8608,
+              0.8454
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.7938,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_006.png",
+            "skill_name": "흡인",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.701,
+              0.6495,
+              0.6031,
+              0.3608
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 8.4433,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_023.png",
+            "skill_name": "마법 강탈",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.5722,
+              0.4845,
+              0.3814,
+              0.1907
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.798969,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_024.png",
+            "skill_name": "협공: 파멸의 공세",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0412,
+              0.0258,
+              0.0258,
+              0.0258
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.757732,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_026.png",
+            "skill_name": "마법 차단",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0619,
+              0.0309,
+              0.0258,
+              0.0155
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.304124,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_036.png",
+            "skill_name": "카이시넬의 권능",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0258,
+              0.0155,
+              0.0103,
+              0.0052
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.273196,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_003.png",
+            "skill_name": "강습 공포",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0155,
+              0.0155,
+              0.0103,
+              0.0052
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.268041,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_022.png",
+            "skill_name": "저주의 구름",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0155,
+              0.0155,
+              0.0155,
+              0.0052
+            ]
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 0.00515464,
+            "average_shards": 349.44,
+            "job": "정령성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_EL_SKILL_008.png",
+            "skill_name": "공포의 절규",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "치유성": {
+      "data": {
+        "active": [
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 20.8717,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_004.png",
+            "skill_name": "심판의 번개",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 20.4866,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_012.png",
+            "skill_name": "쾌유의 광휘",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 18.6845,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_009.png",
+            "skill_name": "재생의 빛",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 18.4278,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_010.png",
+            "skill_name": "치유의 빛",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 18.3743,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_035.png",
+            "skill_name": "단죄",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 17.0588,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_001.png",
+            "skill_name": "대지의 응보",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 16.861,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_015.png",
+            "skill_name": "신성한 기운",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 15.5027,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_007.png",
+            "skill_name": "고통의 연쇄",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 15.1979,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_037.png",
+            "skill_name": "벼락 난사",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 15.0428,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_008.png",
+            "skill_name": "약화의 낙인",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 13.2888,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_006.png",
+            "skill_name": "벽력",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.3368,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_002.png",
+            "skill_name": "충격 해제",
+            "skill_type": "active",
+            "usage_rates": null
+          }
+        ],
+        "passive": [
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 22.738,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_008.png",
+            "skill_name": "대지의 은총",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 20.754,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_003.png",
+            "skill_name": "치유력 강화",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 18.861,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_012.png",
+            "skill_name": "주신의 은총",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 18.4492,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_011.png",
+            "skill_name": "불사의 장막",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 16.7968,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_001.png",
+            "skill_name": "따뜻한 가호",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 99.4737,
+            "average_level": 14.3386,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_009.png",
+            "skill_name": "생존 의지",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 10.7219,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_007.png",
+            "skill_name": "찬란한 가호",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 10.0214,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_006.png",
+            "skill_name": "집중의 기도",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 7.49198,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_002.png",
+            "skill_name": "주신의 가호",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 7.18717,
+            "average_shards": null,
+            "job": "치유성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_Passive_005.png",
+            "skill_name": "회복 차단",
+            "skill_type": "passive",
+            "usage_rates": null
+          }
+        ],
+        "stigma": [
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 19.7594,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_041.png",
+            "skill_name": "보호의 빛",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9789,
+              0.9789,
+              0.9789,
+              0.9526
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 17.6738,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_026.png",
+            "skill_name": "구원",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9158,
+              0.9053,
+              0.8842,
+              0.7316
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 13.4652,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_040.png",
+            "skill_name": "대지의 징벌",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.6737,
+              0.6632,
+              0.6579,
+              0.6474
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 13.016,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_042.png",
+            "skill_name": "유스티엘의 권능",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.6684,
+              0.6474,
+              0.6263,
+              0.6053
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 11.5294,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_039.png",
+            "skill_name": "소환 부활",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.8684,
+              0.7105,
+              0.3579,
+              0.2842
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 10.8824,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_028.png",
+            "skill_name": "면죄",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.5632,
+              0.5526,
+              0.5368,
+              0.4684
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 6.88235,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_044.png",
+            "skill_name": "증폭의 기도",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.3789,
+              0.3737,
+              0.3526,
+              0.2368
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 5.95722,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_029.png",
+            "skill_name": "파멸의 목소리",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.3053,
+              0.3,
+              0.2842,
+              0.2632
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 2.37433,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_019.png",
+            "skill_name": "속박",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.1263,
+              0.1158,
+              0.1105,
+              0.1053
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 2.07487,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_016.png",
+            "skill_name": "치유의 기운",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.1105,
+              0.1053,
+              0.1,
+              0.0895
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 0.631016,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CL_SKILL_027.png",
+            "skill_name": "권능 폭발",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0737,
+              0.0105,
+              0.0105,
+              0.0053
+            ]
+          },
+          {
+            "adoption_rate": 98.4211,
+            "average_level": 0.0695187,
+            "average_shards": 365.04,
+            "job": "치유성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_003.png",
+            "skill_name": "강습 낙인",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0105,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "호법성": {
+      "data": {
+        "active": [
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 20.9895,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_010.png",
+            "skill_name": "암격쇄",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 20.4712,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_001.png",
+            "skill_name": "격파쇄",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 19.267,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_004.png",
+            "skill_name": "백열격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 18.4974,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_013.png",
+            "skill_name": "쾌유의 주문",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 17.1937,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_029.png",
+            "skill_name": "회전격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 16.8168,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_006.png",
+            "skill_name": "타격쇄",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 16.6335,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_009.png",
+            "skill_name": "돌진 격파",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 13.2984,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_008.png",
+            "skill_name": "파동격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 13.2827,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_021.png",
+            "skill_name": "진동쇄",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 13.0471,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_015.png",
+            "skill_name": "열파격",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 100,
+            "average_level": 11.8256,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_002.png",
+            "skill_name": "충격 해제",
+            "skill_type": "active",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 11.4503,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_030.png",
+            "skill_name": "질풍 난무",
+            "skill_type": "active",
+            "usage_rates": null
+          }
+        ],
+        "passive": [
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 24.9529,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_005.png",
+            "skill_name": "공격 준비",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9744,
+            "average_level": 22.8756,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_006.png",
+            "skill_name": "충격 적중",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 18.6859,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_Passive_011.png",
+            "skill_name": "고취의 주문",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 17.5026,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_Passive_012.png",
+            "skill_name": "생명의 축복",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 17.3717,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_Passive_010.png",
+            "skill_name": "대지의 약속",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 15.6649,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_Passive_008.png",
+            "skill_name": "바람의 약속",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 98.9744,
+            "average_level": 13.1399,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_GL_SKILL_Passive_009.png",
+            "skill_name": "생존 의지",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 12.6702,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_Passive_001.png",
+            "skill_name": "보호진",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 11.3665,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_Passive_007.png",
+            "skill_name": "격노의 주문",
+            "skill_type": "passive",
+            "usage_rates": null
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 7.24084,
+            "average_shards": null,
+            "job": "호법성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_Passive_002.png",
+            "skill_name": "십자 방어",
+            "skill_type": "passive",
+            "usage_rates": null
+          }
+        ],
+        "stigma": [
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 19.9581,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 1,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_019.png",
+            "skill_name": "불패의 진언",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9795,
+              0.9795,
+              0.9744,
+              0.9744
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 17.8377,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 2,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_025.png",
+            "skill_name": "질풍의 권능",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.8974,
+              0.8821,
+              0.8718,
+              0.8359
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 17.089,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 3,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_016.png",
+            "skill_name": "질주의 진언",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.8974,
+              0.8872,
+              0.8205,
+              0.7231
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 16.9948,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 4,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_033.png",
+            "skill_name": "마르쿠탄의 분노",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.9128,
+              0.8564,
+              0.8051,
+              0.7077
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 8.22513,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 5,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_042.png",
+            "skill_name": "수호의 축복",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.4359,
+              0.4154,
+              0.4,
+              0.3487
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 8.1623,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 6,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_017.png",
+            "skill_name": "쾌유의 손길",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.4256,
+              0.4,
+              0.3846,
+              0.3692
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 4.82723,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 7,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_043.png",
+            "skill_name": "분쇄격",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.2923,
+              0.2513,
+              0.2,
+              0.159
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 4.42408,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 8,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_014.png",
+            "skill_name": "집중 방어",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.3385,
+              0.2308,
+              0.1897,
+              0.0872
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 2.28796,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 9,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_024.png",
+            "skill_name": "차단의 권능",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.1282,
+              0.1179,
+              0.1026,
+              0.0872
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 0.251309,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 10,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_022.png",
+            "skill_name": "멸화",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0154,
+              0.0103,
+              0.0051,
+              0.0051
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 0.0314136,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 11,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CH_SKILL_023.png",
+            "skill_name": "결박의 낙인",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0.0051,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "adoption_rate": 97.9487,
+            "average_level": 0,
+            "average_shards": 353.635,
+            "job": "호법성",
+            "priority": 12,
+            "skill_icon": "https://assets.playnccdn.com/static-aion2-gamedata/resources/ICON_CO_SKILL_003.png",
+            "skill_name": "강습 충격",
+            "skill_type": "stigma",
+            "usage_rates": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      "success": true
+    }
+  }
+}

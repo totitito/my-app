@@ -17,7 +17,15 @@
       continue;
     }
 
-    out.jobs[job] = await r.json();
+    const data = await r.json();
+
+    const allowed = new Set(
+      (window.CLASS_SKILLS?.[job]?.stigma ?? [])
+    );
+
+    data.rows = data.rows?.filter(s => allowed.has(s.skill_name));
+
+    out.jobs[job] = data;
     console.log("[OK]", job);
   }
 

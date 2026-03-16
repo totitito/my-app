@@ -38,7 +38,31 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
     return (payload?.data?.stigma ?? []).filter((x) => allowed.has(x.skill_name));
   };
 
-  const SimpleTable = ({ title, rows }) => (
+  const getRateNum = (value) => (typeof value === "number" ? value : 0);
+
+  const getTooltipText = (x) => {
+    const total = getRateNum(x.total_users);
+    const high = total > 0 ? (getRateNum(x.high_tier_count) / total) * 100 : 0;
+    const mid = total > 0 ? (getRateNum(x.mid_tier_count) / total) * 100 : 0;
+    const low = total > 0 ? (getRateNum(x.low_tier_count) / total) * 100 : 0;
+    return `고투자율 ${high.toFixed(1)}%, 중투자율 ${mid.toFixed(1)}%, 저투자율 ${low.toFixed(1)}%`;
+  };
+
+  const getGaugeCellData = (x) => {
+    const total = getRateNum(x.total_users);
+    const high = total > 0 ? (getRateNum(x.high_tier_count) / total) * 100 : 0;
+    const mid = total > 0 ? (getRateNum(x.mid_tier_count) / total) * 100 : 0;
+    const low = total > 0 ? (getRateNum(x.low_tier_count) / total) * 100 : 0;
+
+    return {
+      high,
+      mid,
+      low,
+      tooltip: getTooltipText(x),
+    };
+  };
+
+  const SimpleTable = ({ title, rows, type }) => (
     <div style={{ marginTop: 10 }}>
       <div style={{ fontWeight: "bold", marginBottom: 6 }}>{title}</div>
       <div style={{ overflowX: "auto" }}>
@@ -47,13 +71,15 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
             <tr>
               <th style={th}>우선</th>
               <th style={th}>스킬명</th>
-              <th style={th}>채택률</th>
+              <th style={th}>{type === "stigma" ? "채택률" : ""}</th>
               <th style={th}>평균레벨</th>
             </tr>
           </thead>
           <tbody>
-            {rows.slice(0, 30).map((x, idx) => (
-              <tr key={`${x.skill_name}-${idx}`}>
+            {rows.slice(0, 30).map((x, idx) => {
+
+              return (
+                <tr key={`${x.skill_name}-${idx}`}>
                 <td style={tdCenter}>{x.priority}</td>
                 <td style={td}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -64,13 +90,16 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
                   </div>
                 </td>
                 <td style={tdCenter}>
-                  {typeof x.adoption_rate === "number" ? `${x.adoption_rate.toFixed(2)}%` : "-"}
+                  {type === "stigma"
+                    ? (typeof x.adoption_rate === "number" ? `${x.adoption_rate.toFixed(2)}%` : "-")
+                    : ""}
                 </td>
                 <td style={tdCenter}>
                   {typeof x.average_level === "number" ? x.average_level.toFixed(2) : "-"}
                 </td>
               </tr>
-            ))}
+            );
+            })}
             {rows.length === 0 ? (
               <tr>
                 <td style={td} colSpan={4}>데이터 없음</td>
@@ -115,10 +144,10 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
           데이터가 없습니다. (네가 aion2-skillpriority.json 갱신 후 배포해야 함)
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginTop: 10 }}>
-          <SimpleTable title="액티브" rows={rowsByType("active")} />
-          <SimpleTable title="패시브" rows={rowsByType("passive")} />
-          <SimpleTable title="스티그마" rows={rowsStigma()} />
+        <div style={{ display: "grid", gridTemplateColumns: "0.8fr 0.8fr 1.0fr", gap: 12, marginTop: 10, minWidth: 900 }}>
+          <SimpleTable title="액티브" rows={rowsByType("active")} type="active" />
+          <SimpleTable title="패시브" rows={rowsByType("passive")} type="passive" />
+          <SimpleTable title="스티그마" rows={rowsStigma()} type="stigma" />
         </div>
       )}
     </div>
