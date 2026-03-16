@@ -17,7 +17,7 @@ export default function Aion2_SkillCombinedTab() {
           gridTemplateColumns: "1600px 900px",
           gap: "16px",
           alignItems: "start",
-          minWidth: "2200px",
+          minWidth: "800px",
         }}
       >
         <Aion2_SkillCalculator selectedJob={job} onChangeJob={setJob} />

@@ -12,6 +12,8 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
     return localStorage.getItem("aion2-skill-job") || jobs[0];
   });
 
+  const [sortKey, setSortKey] = useState("priority");
+
   const job = externalJob ?? internalJob;
 
   useEffect(() => {
@@ -21,6 +23,20 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
   // ✅ 정적 JSON에서 선택 직업 데이터 읽기
   const payload = AION2_SKILL_DB.jobs?.[job] ?? null;
 
+  const sortRows = (rows) => {
+    const arr = [...rows];
+
+    if (sortKey === "priority") {
+      arr.sort((a, b) => a.priority - b.priority);
+    }
+
+    if (sortKey === "level") {
+      arr.sort((a, b) => (b.average_level ?? 0) - (a.average_level ?? 0));
+    }
+
+    return arr;
+  };
+
   const rowsByType = (type) => {
     const allowed = new Set(
       Object.entries(CLASS_SKILLS[job] ?? {})
@@ -28,8 +44,10 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
         .flatMap(([, v]) => v)
     );
 
-    return (payload?.data?.[type] ?? []).filter((x) =>
-      allowed.has(x.skill_name)
+    return sortRows(
+      (payload?.data?.[type] ?? []).filter((x) =>
+        allowed.has(x.skill_name)
+      )
     );
   };
 
@@ -90,9 +108,45 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
                   </div>
                 </td>
                 <td style={tdCenter}>
-                  {type === "stigma"
-                    ? (typeof x.adoption_rate === "number" ? `${x.adoption_rate.toFixed(2)}%` : "-")
-                    : ""}
+                  {type === "stigma" && Array.isArray(x.usage_rates) ? (() => {
+
+                    const lowRate = (x.usage_rates[1] ?? 0) * 100;
+                    const midRate = (x.usage_rates[2] ?? 0) * 100;
+                    const highRate = (x.usage_rates[3] ?? 0) * 100;
+
+                    const high = highRate;
+                    const mid = Math.max(0, midRate - highRate);
+                    const low = Math.max(0, lowRate - midRate);
+
+                    return (
+                      <div style={{ width: "100%", margin: "0 auto" }}>
+                        <div style={{
+                          display: "flex",
+                          height: "8px",
+                          background: "#222",
+                          borderRadius: "4px",
+                          overflow: "hidden"
+                        }}>
+                          <div style={{ width: `${high}%`, background: "#ef4444" }} />
+                          <div style={{ width: `${mid}%`, background: "#facc15" }} />
+                          <div style={{ width: `${low}%`, background: "#3b82f6" }} />
+                        </div>
+
+                        <div style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: "11px",
+                          color: "#aaa",
+                          marginTop: 2
+                        }}>
+                          <span>고 {formatPct(high)}</span>
+                          <span>중 {formatPct(mid)}</span>
+                          <span>저 {formatPct(low)}</span>
+                        </div>
+                      </div>
+                    );
+
+                  })() : ""}
                 </td>
                 <td style={tdCenter}>
                   {typeof x.average_level === "number" ? x.average_level.toFixed(2) : "-"}
@@ -112,7 +166,7 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
   );
 
   return (
-    <div style={{ padding: 12, border: "1px solid #444", borderRadius: 12 }}>
+    <div style={{ width: "710px", padding: 12, border: "1px solid #444", borderRadius: 12 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
         <div style={{ fontWeight: "bold" }}>스킬 채택률</div>
 
@@ -135,19 +189,22 @@ export default function Aion2_SkillTable({ selectedJob: externalJob, onChangeJob
         </div>
       </div>
 
-      {/* <div style={{ color: "#aaa", fontSize: 13 }}>
-        현재 선택: <b style={{ color: "#fff" }}>{job}</b>
-      </div> */}
-
       {!payload ? (
         <div style={{ marginTop: 10, color: "#ff8080", fontSize: 12, whiteSpace: "pre-wrap" }}>
           데이터가 없습니다. (네가 aion2-skillpriority.json 갱신 후 배포해야 함)
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "0.8fr 0.8fr 1.0fr", gap: 12, marginTop: 10, minWidth: 900 }}>
-          <SimpleTable title="액티브" rows={rowsByType("active")} type="active" />
-          <SimpleTable title="패시브" rows={rowsByType("passive")} type="passive" />
-          <SimpleTable title="스티그마" rows={rowsStigma()} type="stigma" />
+        <div style={{ display: "grid", gridTemplateColumns: "0.5fr 1fr", gap: 12, marginTop: 10, minWidth: 800 }}>
+
+          <div style={{ width: "260px" }}>
+            <SimpleTable title="액티브" rows={rowsByType("active")} type="active" />
+            <SimpleTable title="패시브" rows={rowsByType("passive")} type="passive" />
+          </div>
+
+          <div style={{ width: "440px" }}>
+            <SimpleTable title="스티그마" rows={rowsStigma()} type="stigma" />
+          </div>
+
         </div>
       )}
     </div>
@@ -172,6 +229,12 @@ const tdCenter = {
   ...td,
   textAlign: "center",
 };
+
+function formatPct(v) {
+  const n = Number(v ?? 0);
+  const rounded = Math.round(n * 10) / 10;
+  return Number.isInteger(rounded) ? `${rounded}%` : `${rounded.toFixed(1)}%`;
+}
 
 function formatKST(iso) {
   if (!iso) return "없음";
