@@ -11,14 +11,26 @@ export default async function handler(req, res) {
 
     const searchUrl = `https://aion2.plaync.com/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
 
-    const searchRes = await fetch(searchUrl);
+    const searchRes = await fetch(searchUrl, {
+      headers: {
+        "user-agent": "Mozilla/5.0",
+        "accept": "application/json",
+        "referer": "https://aion2.plaync.com/",
+      },
+    });
     const searchJson = await searchRes.json();
 
     const characterId = searchJson?.list?.[0]?.characterId;
 
     const infoUrl = `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(characterId)}&serverId=${serverid}`;
 
-    const infoRes = await fetch(infoUrl);
+    const infoRes = await fetch(infoUrl, {
+      headers: {
+        "user-agent": "Mozilla/5.0",
+        "accept": "application/json",
+        "referer": "https://aion2.plaync.com/",
+      },
+    });
     const data = await infoRes.json();
 
     const combatPower = data.profile?.combatPower ?? null;
