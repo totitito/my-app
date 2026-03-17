@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
     const race = Number(serverid) >= 2000 ? 2 : 1;
 
-    const searchUrl = `https://aion2.plaync.com/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
+    const searchUrl = `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
 
     const searchRes = await fetch(searchUrl, {
       headers: {
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "캐릭터 못찾음" });
     }
 
-    const infoUrl = `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(characterId)}&serverId=${serverid}`;
+    const infoUrl = `https://aion2.plaync.com/ko-kr/api/character/info?lang=ko&characterId=${encodeURIComponent(characterId)}&serverId=${serverid}`;
 
     const infoRes = await fetch(infoUrl, {
       headers: {
