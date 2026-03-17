@@ -19,6 +19,7 @@ export default async function handler(req, res) {
       },
     });
     const searchJson = await searchRes.json();
+    return res.status(200).json(searchJson);
 
     const characterId = searchJson?.data?.list?.[0]?.characterId;
     if (!characterId) {
