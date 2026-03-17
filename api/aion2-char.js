@@ -19,14 +19,15 @@ export default async function handler(req, res) {
       },
     });
     const searchJson = await searchRes.json();
-    return res.status(200).json(searchJson);
 
-    const characterId = searchJson?.data?.list?.[0]?.characterId;
+    const characterId = searchJson?.list?.[0]?.characterId;
+    const decodedId = decodeURIComponent(characterId);
+    
     if (!characterId) {
       return res.status(404).json({ error: "캐릭터 못찾음" });
     }
 
-    const infoUrl = `https://aion2.plaync.com/ko-kr/api/character/info?lang=ko&characterId=${encodeURIComponent(characterId)}&serverId=${serverid}`;
+    const infoUrl = `https://aion2.plaync.com/ko-kr/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
     const infoRes = await fetch(infoUrl, {
       headers: {
