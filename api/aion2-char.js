@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "캐릭터 못찾음" });
     }
 
-    const infoUrl = `https://aion2.plaync.com/ko-kr/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
+    const infoUrl = `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
     const infoRes = await fetch(infoUrl, {
       headers: {
