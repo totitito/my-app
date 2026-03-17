@@ -911,7 +911,12 @@ export default function Aion2_HomeworkTab({
                                   cursor: "pointer", userSelect: "none",
                                 }}
                               >
-                                {targetName}
+                                <>
+                                  {targetName}
+                                  <div style={{ fontSize: "11px", color: "#aaa" }}>
+                                    iLv {scores[targetName]?.itemLevel ?? "-"} / CP {scores[targetName]?.combatPower ?? "-"}
+                                  </div>
+                                </>
                               </span>
                             )}
                           </div>
