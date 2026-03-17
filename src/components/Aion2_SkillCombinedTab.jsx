@@ -10,14 +10,20 @@ export default function Aion2_SkillCombinedTab() {
   }, [job]);
 
   return (
-    <div style={{ overflowY: "visible" }}>
+    <div
+      style={{
+        overflowX: "auto",
+        overflowY: "hidden",
+        width: "100%",
+      }}
+    >
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "auto auto",
-          gap: "16px",
+          gridTemplateColumns: "1750px 750px",
+          gap: "0px",
           alignItems: "start",
-          minWidth: "800px",
+          width: "2500px",
         }}
       >
         <Aion2_SkillCalculator selectedJob={job} onChangeJob={setJob} />

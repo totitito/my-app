@@ -218,7 +218,7 @@ function SkillDropdown({ job, addedSkills, onSelect }) {
   }, []);
 
   return (
-    <div ref={ref} style={{ position: "relative", display: "inline-block", marginBottom: "14px" }}>
+    <div ref={ref} style={{ position: "relative", display: "inline-block", marginBottom: "10px" }}>
       <button
         onClick={() => setOpen((v) => !v)}
         style={{
@@ -676,8 +676,9 @@ function SkillCard({
   return (
     <div style={{
       backgroundColor: S.surface, border: `1px solid ${borderColor}`,
-      borderLeft: `3px solid ${borderColor}`, borderRadius: "6px",
-      padding: "8px 12px", marginBottom: "10px",
+      borderLeft: `1px solid ${borderColor}`, borderRadius: "6px",
+      padding: "8px 12px", marginBottom: "1px",
+      width: "440px", flexShrink: 0,
     }}>
       {/* 헤더 */}
       <div
@@ -688,10 +689,9 @@ function SkillCard({
           flexWrap: "wrap",
           rowGap: "6px",
           columnGap: "10px",
-          marginBottom: "10px",
+          marginBottom: "0px",
         }}
-      >        
-
+      >
         {/* 가운데: 이름 / 타입 / 우선순위 */}
         <div
           style={{
@@ -1872,7 +1872,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
 
             {/* ── 열3: 관심 스킬 ── */}
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "0px" }}>
                 <SkillDropdown
                   job={activePreset.job}
                   addedSkills={currentSkills.map((s) => s.name)}
@@ -1890,7 +1890,12 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
                 const actives = currentSkills.filter((s) => s.type === "active");
                 const passives = currentSkills.filter((s) => s.type === "passive");
                 return (
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "467px 467px",
+                    gap: "0 0px",
+                    // minWidth: "1000px",
+                  }}>
                     <div>
                       {actives.length > 0 && <div style={{ fontSize: "11px", color: S.textDim, marginBottom: "8px" }}>● 액티브</div>}
                       {actives.map((skill) => {
