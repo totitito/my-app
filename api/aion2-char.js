@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     });
     const searchJson = await searchRes.json();
 
-    const characterId = searchJson?.list?.[0]?.characterId;
+    const characterId = searchJson?.data?.list?.[0]?.characterId;
     if (!characterId) {
       return res.status(404).json({ error: "캐릭터 못찾음" });
     }
