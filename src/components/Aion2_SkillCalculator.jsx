@@ -1130,6 +1130,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
       const url = `/api/aion2-char?serverid=${serverId}&name=${encodeURIComponent(charName)}`;
       const res = await fetch(url);
       const json = await res.json();
+      console.log("SKILL_IMPORT_JSON", json);
 
       if(json.error) {
         alert(`불러오기 실패: ${json.error}`);
