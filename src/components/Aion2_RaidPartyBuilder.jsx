@@ -13,29 +13,29 @@ const makePreset = (name) => ({
 
 const defaultState = {
   candidates: [
-    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성", power: 3486, atool: 93213, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성", power: 3261, atool: 43786, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "탱아저씨[바카]", cls: "수호성", power: 3009, atool: 18023, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "엄마손[바카]", cls: "치유성", power: 2860, atool: 10928, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "마법맨[바카]", cls: "마도성", power: 1961, atool: 648, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성", itemLevel: 3486, power: 0, atool: 93213, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성", itemLevel: 3261, power: 0, atool: 43786, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "탱아저씨[바카]", cls: "수호성", itemLevel: 3009, power: 0, atool: 18023, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "엄마손[바카]", cls: "치유성", itemLevel: 2860, power: 0, atool: 10928, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "마법맨[바카]", cls: "마도성", itemLevel: 1961, power: 0, atool: 648, updatedAt: 0 },
 
-    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성", power: 3715, atool: 160102, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성", power: 2812, atool: 16152, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "은도[아리]", cls: "호법성", power: 2406, atool: 6947, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성", itemLevel: 3715, power: 0, atool: 160102, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성", itemLevel: 2812, power: 0, atool: 16152, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "은도[아리]", cls: "호법성", itemLevel: 2406, power: 0, atool: 6947, updatedAt: 0 },
 
-    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성", power: 3260, atool: 48434, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성", power: 3286, atool: 42634, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "델이[아리]", cls: "궁성", power: 2618, atool: 7088, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "앳피[아리]", cls: "정령성", power: 2218, atool: 4527, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성", itemLevel: 3260, power: 0, atool: 48434, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성", itemLevel: 3286, power: 0, atool: 42634, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "델이[아리]", cls: "궁성", itemLevel: 2618, power: 0, atool: 7088, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "앳피[아리]", cls: "정령성", itemLevel: 2218, power: 0, atool: 4527, updatedAt: 0 },
     
-    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성", power: 3431, atool: 85563, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "히푸[아리]", cls: "치유성", power: 2737, atool: 6749, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "뱐[아리]", cls: "궁성", power: 2626, atool: 7134, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성", itemLevel: 3431, power: 0, atool: 85563, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "히푸[아리]", cls: "치유성", itemLevel: 2737, power: 0, atool: 6749, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "뱐[아리]", cls: "궁성", itemLevel: 2626, power: 0, atool: 7134, updatedAt: 0 },
         
-    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성", power: 3630, atool: 144797, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성", power: 3342, atool: 67587, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울살성[바카]", cls: "살성", power: 2785, atool: 10400, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울정령[바카]", cls: "정령성", power: 2218, atool: 4527, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성", itemLevel: 3630, power: 0, atool: 144797, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성", itemLevel: 3342, power: 0, atool: 67587, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "겨울살성[바카]", cls: "살성", itemLevel: 2785, power: 0, atool: 10400, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "겨울정령[바카]", cls: "정령성", itemLevel: 2218, power: 0, atool: 4527, updatedAt: 0 },
   ],
   rudraPresets: [makePreset("루드라 1")],
   erosionPresets: [makePreset("침식 1")],
@@ -250,45 +250,54 @@ export default function Aion2_RaidPartyBuilder() {
       const match = rawFull.match(/^(.+?)\[(.+?)\]$/);
 
       let charName = rawFull;
-      let server_id = 1016; // 바카르마 기본값
+      let server_id = 1016; // 바카 기본값
 
       if (match) {
         charName = match[1].trim();
         const serverAbbr = match[2].trim();
 
-        const server = AION2_SERVERS.find(s => s.short === serverAbbr);
+        const server = AION2_SERVERS.find((s) => s.short === serverAbbr);
         server_id = server ? server.id : 1016;
       }
 
-      const r = await fetch("/api/aion2-search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ keyword: charName, server_id }),
-      });
+      const [officialRes, atoolRes] = await Promise.all([
+        fetch(`/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`),
+        fetch("/api/aion2-search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keyword: charName, server_id }),
+        }),
+      ]);
 
-      if (!r.ok) {
-        const text = await r.text().catch(() => "");
-        throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
+      if (!officialRes.ok) {
+        const text = await officialRes.text().catch(() => "");
+        throw new Error(`공홈 API ${officialRes.status} ${officialRes.statusText} / ${text.slice(0, 200)}`);
       }
 
-      const j = await r.json();
+      if (!atoolRes.ok) {
+        const text = await atoolRes.text().catch(() => "");
+        throw new Error(`아툴 API ${atoolRes.status} ${atoolRes.statusText} / ${text.slice(0, 200)}`);
+      }
 
-      // ✅ 너는 통합 state 구조라서 setState로 candidates만 갱신해야 함
+      const officialJson = await officialRes.json();
+      const atoolJson = await atoolRes.json();
+
       setState((prev) => ({
         ...prev,
         candidates: prev.candidates.map((c) => {
           if (c.id !== candidateId) return c;
           return {
             ...c,
-            power: j.combat_power ?? 0,
-            atool: j.combat_score ?? 0,
+            itemLevel: officialJson.item_level ?? 0,
+            power: officialJson.combat_power ?? 0,
+            atool: atoolJson.combat_score ?? 0,
             updatedAt: Date.now(),
           };
         }),
       }));
     } catch (e) {
-      console.error("전투력 갱신 실패:", e);
-      if (showError) alert("전투력 갱신 실패: " + e.message);
+      console.error("후보 정보 갱신 실패:", e);
+      if (showError) alert("후보 정보 갱신 실패: " + e.message);
     }
   };
 
@@ -419,6 +428,7 @@ export default function Aion2_RaidPartyBuilder() {
           id: newId,
           name,
           cls: newCls,
+          itemLevel: null,
           power: null,
           atool: null,
           updatedAt: 0,
@@ -535,7 +545,7 @@ export default function Aion2_RaidPartyBuilder() {
       const newId = crypto.randomUUID();
       return {
         ...prev,
-        candidates: [...prev.candidates, { id: newId, name: `(임시멤버${maxN + 1})`, cls: cls || "수호성", power: 0, atool: 0, updatedAt: Date.now() }],
+        candidates: [...prev.candidates, { id: newId, name: `(임시멤버${maxN + 1})`, cls: cls || "수호성", itemLevel: 0, power: 0, atool: 0, updatedAt: Date.now() }],
       };
     });
   };
@@ -636,7 +646,7 @@ export default function Aion2_RaidPartyBuilder() {
                             </select>
                           </div>
                           <div style={{ marginTop: 3, fontSize: 11, color: "#111" }}>
-                            전투력 {(c.power ?? 0).toLocaleString()} · 아툴 {(c.atool ?? 0).toLocaleString()}
+                            iLvl {(c.itemLevel ?? 0).toLocaleString()} · CP {(c.power ?? 0).toLocaleString()} · AT {(c.atool ?? 0).toLocaleString()}
                           </div>
                         </div>
                       ) : (
@@ -887,9 +897,12 @@ function CandidateCard(props) {
         </div>
 
         <div style={{ marginTop: 3, fontSize: 11, display: "flex", gap: 8, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
+          <span style={{ color: "#111", fontWeight: "bold" }}>
+            iLvl : {(c.itemLevel ?? 0).toLocaleString()}
+          </span>
           {/* 전투력 */}
-          <span style={{ color: "rgb(0, 0, 0)" }}>
-            전투력 :{" "}
+          <span style={{ color: "#fcff9d", fontWeight: "Bold" }}>
+            CP :{" "}
             {editingFieldId === c.id && editingField === "power" ? (
               <input
                 autoFocus
@@ -946,8 +959,8 @@ function CandidateCard(props) {
           </span>
 
           {/* 아툴 */}
-          <span style={{ color: "#ffffff" }}>
-            아툴 :{" "}
+          <span style={{ color: "#16269e", fontWeight: "Bold" }}>
+            AT :{" "}
             {editingFieldId === c.id && editingField === "atool" ? (
               <input
                 autoFocus
@@ -1021,7 +1034,7 @@ function CandidateCard(props) {
             whiteSpace: "nowrap",
             fontSize: 12,
           }}
-          title="아툴에서 전투력/아툴 점수 다시 가져오기"
+          title="아이템레벨(공홈), 전투력(공홈), 아툴점수(아툴) 갱신"
         >
           갱신
         </button>
