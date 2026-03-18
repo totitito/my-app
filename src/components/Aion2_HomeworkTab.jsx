@@ -954,11 +954,11 @@ export default function Aion2_HomeworkTab({
                                 const config = gameConfig[game];
                                 if (!config) return null;
                                 const scoreData = scores[targetName];
-                                if (game === "aion2" && scoreData) {
-                                  if (scoreData.itemLevel === 0 && scoreData.combatPower === 0 && scoreData.atoolScore === 0) {
-                                    return null;
-                                  }
-                                }
+                                // if (game === "aion2" && scoreData) {
+                                //   if (scoreData.itemLevel === 0 && scoreData.combatPower === 0 && scoreData.atoolScore === 0) {
+                                //     return null;
+                                //   }
+                                // }
                                 return (
                                   <div>
                                     {scoreData ? (
