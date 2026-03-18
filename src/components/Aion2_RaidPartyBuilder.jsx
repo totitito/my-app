@@ -129,6 +129,8 @@ export default function Aion2_RaidPartyBuilder() {
   const [editingPresetName, setEditingPresetName] = useState("");
   const [isRefreshingAll, setIsRefreshingAll] = useState(false);
 
+  const [candidateSortMode, setCandidateSortMode] = useState("class");
+
   // 프리셋 슬롯 조작 헬퍼
   const updatePresetSlots = (type, presetId, updater) => {
     const key = type === "rudra" ? "rudraPresets" : "erosionPresets";
@@ -441,6 +443,13 @@ export default function Aion2_RaidPartyBuilder() {
     fetchScoreAndApply(name, newId);
   };
 
+  const sortedCandidates = [...state.candidates].sort((a, b) => {
+    if (candidateSortMode === "itemLevel") return (b.itemLevel ?? 0) - (a.itemLevel ?? 0);
+    if (candidateSortMode === "power") return (b.power ?? 0) - (a.power ?? 0);
+    if (candidateSortMode === "atool") return (b.atool ?? 0) - (a.atool ?? 0);
+    return 0;
+  });
+
   const moveCandidateTo = (id, toIndex) => {
     setState((prev) => {
       const idx = prev.candidates.findIndex((c) => c.id === id);
@@ -568,6 +577,16 @@ export default function Aion2_RaidPartyBuilder() {
       });
       return cnt ? sum / cnt : 0;
     };
+    const avgPower = (idxs, noCleric) => {
+      let sum = 0, cnt = 0;
+      idxs.forEach(i => {
+        const cid = slots[i]; if (!cid) return;
+        const c = candMap.get(cid); if (!c) return;
+        if (noCleric && c.cls === "치유성") return;
+        sum += toNum(c.power); cnt++;
+      });
+      return cnt ? sum / cnt : 0;
+    };
 
     const isEditing = editingPresetId === preset.id;
 
@@ -667,10 +686,66 @@ export default function Aion2_RaidPartyBuilder() {
           ))}
         </div>
 
-        {/* 아툴 통계 */}
-        <div style={{ marginTop: 8, padding: "6px 10px", borderRadius: 8, background: "#121212", color: "#aaa", fontSize: 11, lineHeight: 1.7 }}>
-          <span>P1 아툴 평균: {Math.round(avgAtool([0,1,2,3], false)).toLocaleString()} (치유성 제외: {Math.round(avgAtool([0,1,2,3], true)).toLocaleString()})</span>
-          <span style={{ marginLeft: 16 }}>P2 아툴 평균: {Math.round(avgAtool([4,5,6,7], false)).toLocaleString()} (치유성 제외: {Math.round(avgAtool([4,5,6,7], true)).toLocaleString()})</span>
+        {/* CP / AT 통계 */}
+        <div style={{ marginBottom: -4, padding: "0px 0px", background: "#121212", color: "#aaa", fontSize: 11, textAlign: "center" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.2fr 1fr 1fr 1fr",
+              // gridTemplateColumns: "140px 120px 120px 120px",
+              // gap: "0px 0px",
+              // alignItems: "center",
+            }}
+          >
+            <div></div>
+            <div style={{ fontWeight: "bold", color: "#888" }}>P1</div>
+            <div style={{ fontWeight: "bold", color: "#888" }}>P2</div>
+            <div style={{ fontWeight: "bold", color: "#888" }}>P1 + P2</div>
+
+            <div style={{ color: "#888" }}>
+              <span style={{ fontWeight: "bold" }}>CP</span> 평균 (전체 / <span style={{ color: "#4caf50" }}>치유 제외</span>)
+            </div>
+            <div>{Math.round(avgPower([0,1,2,3], false)).toLocaleString()}
+              {" / "}
+              <span style={{ color: "#4caf50" }}>
+                {Math.round(avgPower([0,1,2,3], true)).toLocaleString()}
+              </span>
+            </div>
+            <div>{Math.round(avgPower([4,5,6,7], false)).toLocaleString()}
+              {" / "}
+              <span style={{ color: "#4caf50" }}>
+                {Math.round(avgPower([4,5,6,7], true)).toLocaleString()}
+              </span>
+            </div>
+            <div>{Math.round(avgPower([0,1,2,3,4,5,6,7], false)).toLocaleString()}
+              {" / "}
+              <span style={{ color: "#4caf50" }}>
+                {Math.round(avgPower([0,1,2,3,4,5,6,7], true)).toLocaleString()}
+              </span>
+            </div>
+
+            <div style={{ color: "#888" }}>
+              <span style={{ fontWeight: "bold" }}>AT</span> 평균 (전체 / <span style={{ color: "#4caf50" }}>치유 제외</span>)
+            </div>
+            <div>{Math.round(avgAtool([0,1,2,3], false)).toLocaleString()}
+              {" / "}
+              <span style={{ color: "#4caf50" }}>
+                {Math.round(avgAtool([0,1,2,3], true)).toLocaleString()}
+              </span>
+            </div>
+            <div>{Math.round(avgAtool([4,5,6,7], false)).toLocaleString()}
+              {" / "}
+              <span style={{ color: "#4caf50" }}>
+                {Math.round(avgAtool([4,5,6,7], true)).toLocaleString()}
+              </span>
+            </div>
+            <div>{Math.round(avgAtool([0,1,2,3,4,5,6,7], false)).toLocaleString()}
+              {" / "}
+              <span style={{ color: "#4caf50" }}>
+                {Math.round(avgAtool([0,1,2,3,4,5,6,7], true)).toLocaleString()}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -681,7 +756,7 @@ export default function Aion2_RaidPartyBuilder() {
       <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
         {/* 좌: 루드라 + 침식 */}
-        <div style={{ flex: "1 1 0", minWidth: 0 }}>
+        <div style={{ flex: "1 1 0", minWidth: "1300px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "flex-start" }}>
 
             {/* 루드라 */}
@@ -702,10 +777,31 @@ export default function Aion2_RaidPartyBuilder() {
         </div>
 
         {/* 우: 후보 패널 (직업별) */}
-        <div style={{ ...panelStyle, width: 980, flex: "0 0 980px" }}
+        <div style={{ ...panelStyle }}
           onDragOver={allowDrop} onDrop={onDropToGroup}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-            <div style={{ fontWeight: "bold", color: "#ddd" }}>후보</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+              <div style={{ fontWeight: "bold", color: "#ddd" }}>후보</div>
+                <select
+                  value={candidateSortMode}
+                  onChange={(e) => setCandidateSortMode(e.target.value)}
+                  style={{
+                    padding: "4px 8px",
+                    fontSize: 12,
+                    borderRadius: 6,
+                    border: "1px solid #555",
+                    background: "#2a2a2a",
+                    color: "#fff",
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="class">정렬: 직업</option>
+                  <option value="itemLevel">정렬: 아이템레벨</option>
+                  <option value="power">정렬: 전투력</option>
+                  <option value="atool">정렬: 아툴점수</option>
+                </select>
+            </div>
+
             <button
               onClick={refreshAllCandidates}
               disabled={isRefreshingAll}
@@ -719,14 +815,14 @@ export default function Aion2_RaidPartyBuilder() {
                 fontSize: 12,
                 opacity: isRefreshingAll ? 0.6 : 1,
               }}
-              title="후보 전체 전투력/아툴 점수 갱신"
+              title="아이템레벨(공홈), 전투력(공홈), 아툴점수(아툴) 갱신"
             >
               {isRefreshingAll ? "갱신중..." : "전체 갱신"}
             </button>
           </div>
 
           {/* 직업별 그룹 */}
-          {AION2_CLASSES.map(cls => {
+          {candidateSortMode === "class" && AION2_CLASSES.map(cls => {
             const clsCands = candidates
               .filter(c => c.cls === cls)
               .slice()
@@ -779,6 +875,71 @@ export default function Aion2_RaidPartyBuilder() {
               </div>
             );
           })}
+
+          {candidateSortMode !== "class" && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(${Math.ceil(sortedCandidates.length / 10)}, max-content)`,
+                justifyContent: "start",
+                gap: 6,
+                alignItems: "start",
+              }}
+            >
+              {Array.from({ length: Math.ceil(sortedCandidates.length / 10) }, (_, col) => {
+                const sliced = sortedCandidates.slice(col * 10, col * 10 + 10);
+
+                return (
+                  <div key={col} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {sliced.map((c, idx) => (
+                      <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div
+                          style={{
+                            width: 32,
+                            fontSize: 12,
+                            color: "#888",
+                            textAlign: "right",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {col * 10 + idx + 1}등
+                        </div>
+
+                        <CandidateCard
+                          c={c}
+                          onDragStartCandidate={onDragStartCandidate}
+                          updateCandidateCls={updateCandidateCls}
+                          editingNameId={editingNameId}
+                          setEditingNameId={setEditingNameId}
+                          editingName={editingName}
+                          setEditingName={setEditingName}
+                          commitCandidateName={commitCandidateName}
+                          cancelEditName={cancelEditName}
+                          editingFieldId={editingFieldId}
+                          setEditingFieldId={setEditingFieldId}
+                          editingField={editingField}
+                          setEditingField={setEditingField}
+                          editingPower={editingPower}
+                          setEditingPower={setEditingPower}
+                          editingAtool={editingAtool}
+                          setEditingAtool={setEditingAtool}
+                          commitCandidatePower={commitCandidatePower}
+                          commitCandidateAtool={commitCandidateAtool}
+                          stopDrag={stopDrag}
+                          fetchScoreAndApply={fetchScoreAndApply}
+                          removeCandidate={removeCandidate}
+                          clsBackground={clsBackground}
+                          AION2_CLASSES={AION2_CLASSES}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          
         </div>
 
       </div>
