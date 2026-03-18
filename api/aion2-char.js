@@ -116,29 +116,37 @@ export default async function handler(req, res) {
 
       const itemDetails = await Promise.all(
         equippedItems.map(async (eq) => {
-          const itemUrl =
-            `https://aion2.plaync.com/api/character/equipment/item` +
-            `?id=${eq.id}` +
-            `&enchantLevel=${eq.enchantLevel ?? 0}` +
-            `&characterId=${encodeURIComponent(decodedId)}` +
-            `&serverId=${serverid}` +
-            `&slotPos=${eq.slotPos}` +
-            `&lang=ko`;
+          try {
+            const itemUrl =
+              `https://aion2.plaync.com/api/character/equipment/item` +
+              `?id=${eq.id}` +
+              `&enchantLevel=${eq.enchantLevel ?? 0}` +
+              `&characterId=${encodeURIComponent(decodedId)}` +
+              `&serverId=${serverid}` +
+              `&slotPos=${eq.slotPos}` +
+              `&lang=ko`;
 
-          const itemRes = await fetch(itemUrl, {
-            headers: {
-              "user-agent": "Mozilla/5.0",
-              "accept": "application/json",
-              "referer": "https://aion2.plaync.com/",
-            },
-          });
+            const itemRes = await fetch(itemUrl, {
+              headers: {
+                "user-agent": "Mozilla/5.0",
+                "accept": "application/json",
+                "referer": "https://aion2.plaync.com/",
+              },
+            });
 
-          const itemJson = await itemRes.json();
-          return { eq, itemJson };
+            if (!itemRes.ok) return null;
+
+            const itemJson = await itemRes.json();
+            return { eq, itemJson };
+          } catch (_) {
+            return null;
+          }
         })
       );
 
-      for (const { eq, itemJson } of itemDetails) {
+      for (const item of itemDetails) {
+        if (!item) continue;
+        const { eq, itemJson } = item;
         const skills = (itemJson?.subSkills ?? [])
           .filter((s) => s?.name)
           .map((s) => ({
