@@ -122,10 +122,71 @@ export default async function handler(req, res) {
       });
 
       const equipmentJson = await equipmentRes.json();
-      console.log("EQUIPMENT_URL", equipmentUrl);
-      console.log("EQUIPMENT_KEYS", Object.keys(equipmentJson ?? {}));
-      console.log("EQUIPMENT_KEYS_2", Object.keys(equipmentJson?.equipment ?? {}));
-      console.log("EQUIPMENT_JSON", JSON.stringify(equipmentJson?.equipment ?? null, null, 2));
+      const equippedItems = equipmentJson?.equipment?.equipmentList ?? [];
+
+      const officialSlotMap = {
+        MainHand: "weapon",
+        SubHand: "gauntlet",
+        Helmet: "head",
+        Shoulder: "shoulder",
+        Torso: "chest",
+        Pants: "legs",
+        Gloves: "hands",
+        Boots: "feet",
+        Cape: "cloak",
+        Necklace: "necklace",
+        Earring1: "earring1",
+        Earring2: "earring2",
+        Ring1: "ring1",
+        Ring2: "ring2",
+      };
+
+      const itemDetails = await Promise.all(
+        equippedItems.map(async (eq) => {
+          const itemUrl =
+            `https://aion2.plaync.com/api/character/equipment/item` +
+            `?id=${eq.id}` +
+            `&enchantLevel=${eq.enchantLevel ?? 0}` +
+            `&characterId=${encodeURIComponent(decodedId)}` +
+            `&serverId=${serverid}` +
+            `&slotPos=${eq.slotPos}` +
+            `&lang=ko`;
+
+          const itemRes = await fetch(itemUrl, {
+            headers: {
+              "user-agent": "Mozilla/5.0",
+              "accept": "application/json",
+              "referer": "https://aion2.plaync.com/",
+            },
+          });
+
+          const itemJson = await itemRes.json();
+          return { eq, itemJson };
+        })
+      );
+
+      for (const { eq, itemJson } of itemDetails) {
+        const skills = (itemJson?.subSkills ?? [])
+          .filter((s) => s?.name)
+          .map((s) => ({
+            skillName: s.name,
+            level: Number(s.level ?? 1),
+          }));
+
+        if (skills.length === 0) continue;
+
+        const posName = eq?.slotPosName ?? "";
+
+        if (ARCANA_SLOT_MAP[posName]) {
+          arcana[ARCANA_SLOT_MAP[posName]].push(...skills);
+          continue;
+        }
+
+        const slotId = officialSlotMap[posName];
+        if (slotId && gear[slotId]) {
+          gear[slotId].push(...skills);
+        }
+      }
 
       const profile = infoJson?.profile ?? {};
       const stats = infoJson?.stat?.statList ?? [];
