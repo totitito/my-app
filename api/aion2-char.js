@@ -139,7 +139,9 @@ export default async function handler(req, res) {
       });
 
       const infoJson = await infoRes.json();
-      console.log("OFFICIAL_INFO", JSON.stringify(infoJson, null, 2));
+      console.log("OFFICIAL_KEYS", Object.keys(infoJson ?? {}));
+      console.log("OFFICIAL_PROFILE_KEYS", Object.keys(infoJson?.profile ?? {}));
+      console.log("OFFICIAL_EQUIP_CANDIDATES", Object.keys(infoJson ?? {}).filter(k => /equip|item|gear|arcana|artifact|inventory|slot/i.test(k)));
       const profile = infoJson?.profile ?? {};
       const stats = infoJson?.stat?.statList ?? [];
 
