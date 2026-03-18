@@ -55,8 +55,8 @@ export default async function handler(req, res) {
         }
       );
       const atoolJson = await atoolRes.json();
-      const atoolChar = atoolJson?.data?.[0];
-      atoolScore = atoolChar?.combat_score ?? null;
+      atoolScore = atoolJson?.data?.combat_score ?? null;
+      
     } catch (e) {
       console.error("아툴 fetch 실패:", e);
     }
