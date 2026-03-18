@@ -316,12 +316,11 @@ export default function Aion2_HomeworkTab({
         server_id = server ? server.id : 1016;
       }
 
-      const r = await fetch(`/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`);
-
-      if (!r.ok) {
-        const text = await r.text().catch(() => "");
-        throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
-      }
+      const r = await fetch("/api/aion2-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyword: charName, server_id }),
+      });
 
       // ✅ 실패면 왜 실패인지 확인 가능하게
       if (!r.ok) {
@@ -335,13 +334,12 @@ export default function Aion2_HomeworkTab({
         ...prev,
         [rawFull]: { // ✅ 저장 키를 rawFull로 통일 (UI의 scores[targetName]과 동일)
           combatPower: j.combat_power ?? 0,
-          atoolScore: j.atool_score ?? null,
-          itemLevel: j.item_level ?? 0,
+          combatScore: j.combat_score ?? 0,
           // updatedAt: Date.now(),
           updatedAt: getNowMs(),
           portrait: j?.raw?.avatar_url ?? null,
-          job: j.job ?? null,
-          level: j.level ?? null,
+          job: j?.raw?.job ?? null,
+          level: j?.raw?.level ?? null,
         }
       }));
     } catch (e) {
@@ -913,9 +911,7 @@ export default function Aion2_HomeworkTab({
                                   cursor: "pointer", userSelect: "none",
                                 }}
                               >
-                                <>
-                                  {targetName}
-                                </>
+                                {targetName}
                               </span>
                             )}
                           </div>
@@ -945,7 +941,7 @@ export default function Aion2_HomeworkTab({
                               {["aion2", "lostark"].includes(game) && scope === "character" && (() => {
                                 const gameConfig = {
                                   "lostark": { labels: ["템렙", "전투력"], keys: ["itemLevel", "combatPower"], fetchFn: () => fetchLoaScore(targetName) },
-                                  "aion2": { labels: ["iLv", "CP", "AT"], keys: ["itemLevel", "combatPower", "atoolScore"], fetchFn: () => fetchScore(targetName) }
+                                  "aion2": { labels: ["전투력", "아툴"], keys: ["combatPower", "combatScore"], fetchFn: () => fetchScore(targetName) }
                                 };
                                 const config = gameConfig[game];
                                 if (!config) return null;
@@ -953,13 +949,13 @@ export default function Aion2_HomeworkTab({
                                 return (
                                   <div>
                                     {scoreData ? (
-                                      <div style={{ marginTop: "-2px", marginBottom: "2px" }}>
-                                        <div style={{ fontSize: "10px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
-                                          iLv {scoreData.itemLevel?.toLocaleString?.() ?? "?"} / CP {scoreData.combatPower?.toLocaleString?.() ?? "?"}
-                                        </div>
-                                        <div style={{ fontSize: "10px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginTop: "-4px" }}>
-                                          AT {scoreData.atoolScore?.toLocaleString?.() ?? "?"}
-                                        </div>
+                                      <div style={{ marginTop: "-8px", marginBottom: "2px" }}>
+                                        <span style={{ fontSize: "10px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
+                                          {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString?.() ?? "?"}
+                                        </span>
+                                        <span style={{ fontSize: "10px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
+                                          {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString?.() ?? "?"}
+                                        </span>
                                       </div>
                                     ) : (
                                       <div style={{ fontSize: "10px", color: "#888", marginTop: "-4px", marginBottom: "2px", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>
