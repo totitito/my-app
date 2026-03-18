@@ -340,8 +340,8 @@ export default function Aion2_HomeworkTab({
           // updatedAt: Date.now(),
           updatedAt: getNowMs(),
           portrait: j?.raw?.avatar_url ?? null,
-          job: j?.raw?.job ?? null,
-          level: j?.raw?.level ?? null,
+          job: j.job ?? null,
+          level: j.level ?? null,
         }
       }));
     } catch (e) {
