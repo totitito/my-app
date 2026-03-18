@@ -7,51 +7,25 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "name required" });
     }
 
-    const race = Number(serverid) >= 2000 ? 2 : 1;
+    const searchUrl = `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
 
-    const r = await fetch("https://aion2tool.com/api/character/search", {
-      method: "POST",
+    const searchRes = await fetch(searchUrl, {
       headers: {
-        "accept": "application/json, text/plain, */*",
-        "content-type": "application/json;charset=UTF-8",
-        "origin": "https://aion2tool.com",
-        "referer": "https://aion2tool.com/",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
+        "user-agent": "Mozilla/5.0",
+        "accept": "application/json",
+        "referer": "https://aion2.plaync.com/",
       },
-
-      body: JSON.stringify({
-        keyword: name,
-        server_id: Number(serverid),
-        serverId: Number(serverid),
-        race: race,
-        raceId: race,
-        page: 1,
-        limit: 20,
-      })
     });
 
-    const text = await r.text();
-    if (!text.trimStart().startsWith("{") && !text.trimStart().startsWith("[")) {
-      return res.status(502).json({ error: "외부 API가 JSON을 반환하지 않음", httpStatus: r.status, preview: text.slice(0, 300) });
+    const searchJson = await searchRes.json();
+    const found = (searchJson?.list ?? []).find((x) => x?.characterName === name) ?? searchJson?.list?.[0] ?? null;
+    const characterId = found?.characterId;
+
+    if (!characterId) {
+      return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
 
-    const parsed = JSON.parse(text);
-    console.log("ATOOL_PARSED_KEYS", Object.keys(parsed ?? {}));
-    console.log("ATOOL_FULL_PREVIEW", JSON.stringify(parsed ?? null).slice(0, 2000));
-
-    const char =
-      parsed?.data ??
-      parsed?.character ??
-      parsed?.result ??
-      parsed?.resultData ??
-      parsed?.results?.[0] ??
-      parsed?.characters?.[0] ??
-      parsed?.list?.[0] ??
-      null;
-
-    if (!char || typeof char !== "object" || Array.isArray(char)) {
-      return res.status(404).json({ error: parsed?.error || "캐릭터를 찾을 수 없습니다" });
-    }
+    const decodedId = decodeURIComponent(characterId);    
 
     const SLOT_MAP = {
       Necklace:  "necklace",
@@ -88,19 +62,6 @@ export default async function handler(req, res) {
     const arcana = {
       성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [],
     };
-
-    const searchUrl = `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
-
-    const searchRes = await fetch(searchUrl, {
-      headers: {
-        "user-agent": "Mozilla/5.0",
-        "accept": "application/json",
-        "referer": "https://aion2.plaync.com/",
-      },
-    });
-
-    const searchJson = await searchRes.json();
-    const characterId = searchJson?.list?.[0]?.characterId;
 
     let officialJob = null;
     let officialLevel = null;
