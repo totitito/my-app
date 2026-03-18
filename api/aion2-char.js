@@ -45,9 +45,9 @@ export default async function handler(req, res) {
     const combatPower = profile.combatPower ?? null;
 
     return res.status(200).json({
-      name,
-      job,
-      level,
+      name: profile.characterName ?? name,
+      job: profile.className ?? null,
+      level: profile.characterLevel ?? null,
       combat_power: combatPower,
       item_level: itemLevel,
       gear: {},
