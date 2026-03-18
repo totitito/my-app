@@ -335,7 +335,7 @@ export default function Aion2_HomeworkTab({
         ...prev,
         [rawFull]: { // ✅ 저장 키를 rawFull로 통일 (UI의 scores[targetName]과 동일)
           combatPower: j.combat_power ?? 0,
-          combatScore: j.combat_score ?? 0,
+          atoolScore: j.atool_score ?? null,
           itemLevel: j.item_level ?? 0,
           // updatedAt: Date.now(),
           updatedAt: getNowMs(),
@@ -915,9 +915,6 @@ export default function Aion2_HomeworkTab({
                               >
                                 <>
                                   {targetName}
-                                  <div style={{ fontSize: "11px", color: "#aaa" }}>
-                                    iLv {scores[targetName]?.itemLevel ?? "-"} / CP {scores[targetName]?.combatPower?.toLocaleString?.() ?? "-"}
-                                  </div>
                                 </>
                               </span>
                             )}
@@ -948,7 +945,7 @@ export default function Aion2_HomeworkTab({
                               {["aion2", "lostark"].includes(game) && scope === "character" && (() => {
                                 const gameConfig = {
                                   "lostark": { labels: ["템렙", "전투력"], keys: ["itemLevel", "combatPower"], fetchFn: () => fetchLoaScore(targetName) },
-                                  "aion2": { labels: ["전투력", "아툴"], keys: ["combatPower", "combatScore"], fetchFn: () => fetchScore(targetName) }
+                                  "aion2": { labels: ["iLv", "CP", "AT"], keys: ["itemLevel", "combatPower", "atoolScore"], fetchFn: () => fetchScore(targetName) }
                                 };
                                 const config = gameConfig[game];
                                 if (!config) return null;
@@ -956,13 +953,13 @@ export default function Aion2_HomeworkTab({
                                 return (
                                   <div>
                                     {scoreData ? (
-                                      <div style={{ marginTop: "-8px", marginBottom: "2px" }}>
-                                        <span style={{ fontSize: "10px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
-                                          {config.labels[0]}: {scoreData[config.keys[0]]?.toLocaleString?.() ?? "?"}
-                                        </span>
-                                        <span style={{ fontSize: "10px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginLeft: "6px" }}>
-                                          {config.labels[1]}: {scoreData[config.keys[1]]?.toLocaleString?.() ?? "?"}
-                                        </span>
+                                      <div style={{ marginTop: "-2px", marginBottom: "2px" }}>
+                                        <div style={{ fontSize: "10px", color: "#ffffff", textShadow: "1px 1px 3px rgba(0,0,0,1)" }}>
+                                          iLv {scoreData.itemLevel?.toLocaleString?.() ?? "?"} / CP {scoreData.combatPower?.toLocaleString?.() ?? "?"}
+                                        </div>
+                                        <div style={{ fontSize: "10px", color: "#69b7ee", textShadow: "1px 1px 3px rgba(0,0,0,1)", marginTop: "-4px" }}>
+                                          AT {scoreData.atoolScore?.toLocaleString?.() ?? "?"}
+                                        </div>
                                       </div>
                                     ) : (
                                       <div style={{ fontSize: "10px", color: "#888", marginTop: "-4px", marginBottom: "2px", textShadow: "1px 1px 2px rgba(0,0,0,0.8)" }}>
