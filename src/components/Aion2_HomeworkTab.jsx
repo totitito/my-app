@@ -332,6 +332,11 @@ export default function Aion2_HomeworkTab({
       const official = await fetch(`/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`);
       const officialJson = await official.json();
 
+      if (!official.ok) {
+        const text = JSON.stringify(officialJson).slice(0, 200);
+        throw new Error(`공홈 캐릭 API ${official.status} / ${text}`);
+      }
+
       setScores(prev => ({
         ...prev,
         [rawFull]: {
