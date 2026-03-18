@@ -10,66 +10,60 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "keyword/server_id invalid" });
     }
 
-    const url = "https://aion2tool.com/api/character/search";
+    const searchUrl =
+      `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character` +
+      `?keyword=${encodeURIComponent(kw)}` +
+      `&serverId=${sid}&page=1&size=30`;
 
-    const race = sid >= 2000 ? 2 : 1;
-
-    const r = await fetch(url, {
-      method: "POST",
+    const searchRes = await fetch(searchUrl, {
       headers: {
-        "accept": "application/json, text/plain, */*",
-        "content-type": "application/json;charset=UTF-8",
-        "origin": "https://aion2tool.com",
-        "referer": "https://aion2tool.com/",
-        // UA는 꼭 필요하진 않지만 유지
-        "user-agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
+        "user-agent": "Mozilla/5.0",
+        "accept": "application/json",
+        "referer": "https://aion2.plaync.com/",
       },
-
-      body: JSON.stringify({
-        keyword: kw,
-        server_id: sid,
-        serverId: sid,
-        race: race,
-        raceId: race,
-        page: 1,
-        limit: 20,
-      }),
     });
 
-    const text = await r.text();
+    const searchJson = await searchRes.json();
+    const found =
+      (searchJson?.list ?? []).find((x) => x?.characterName === kw) ??
+      searchJson?.list?.[0] ??
+      null;
 
-    if (!r.ok) {
-      return res.status(r.status).json({
-        error: `HTTP ${r.status}`,
-        preview: text.slice(0, 200),
-      });
+    if (!found?.characterId) {
+      return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
 
-    if (!text.trimStart().startsWith("{") && !text.trimStart().startsWith("[")) {
-      return res.status(502).json({
-        error: "외부 API가 JSON을 반환하지 않음",
-        httpStatus: r.status,
-        preview: text.slice(0, 200),
-      });
-    }
+    const characterId = decodeURIComponent(found.characterId);
 
-    const obj = JSON.parse(text);
-    const data = obj?.data?.result ?? obj?.data ?? obj?.result ?? obj;
+    const infoUrl =
+      `https://aion2.plaync.com/api/character/info` +
+      `?lang=ko&characterId=${encodeURIComponent(characterId)}&serverId=${sid}`;
+
+    const infoRes = await fetch(infoUrl, {
+      headers: {
+        "user-agent": "Mozilla/5.0",
+        "accept": "application/json",
+        "referer": "https://aion2.plaync.com/",
+      },
+    });
+
+    const infoJson = await infoRes.json();
+    const profile = infoJson?.profile ?? {};
+    const stats = infoJson?.stat?.statList ?? [];
+    const itemLevel =
+      stats.find((s) => s?.type === "ItemLevel" || s?.name === "아이템레벨")?.value ?? null;
 
     return res.status(200).json({
-      combat_power: data?.combat_power ?? null,
-      combat_score: data?.combat_score ?? null,
-      combat_score_max: data?.combat_score_max ?? null,
-      character_id: data?.character_id ?? null,
-      level: data?.level ?? null,
-      job: data?.job ?? null,
-      avatar_url: data?.avatar_url ?? null,
-
-      // 디버그용 (지워도됨)
-      raw: data ?? null,
+      combat_power: profile?.combatPower ?? null,
+      combat_score: null,
+      combat_score_max: null,
+      character_id: characterId,
+      level: profile?.characterLevel ?? null,
+      job: profile?.className ?? null,
+      avatar_url: profile?.profileImage ?? null,
+      item_level: itemLevel,
+      raw: found,
     });
-
   } catch (e) {
     return res.status(500).json({ error: String(e?.message ?? e) });
   }
