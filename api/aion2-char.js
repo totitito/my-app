@@ -57,8 +57,8 @@ export default async function handler(req, res) {
       const atoolJson = await atoolRes.json();
       const atoolChar = atoolJson?.data?.[0];
       atoolScore = atoolChar?.combat_score ?? null;
-    } catch {
-      // 아툴 실패해도 공홈 데이터는 정상 반환
+    } catch (e) {
+      console.error("아툴 fetch 실패:", e);
     }
 
     return res.status(200).json({
