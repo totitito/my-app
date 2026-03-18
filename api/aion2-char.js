@@ -7,8 +7,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "name required" });
     }
 
-    const race = Number(serverid) >= 2000 ? 2 : 1;
-
     // 1. 공홈 API — iLv, CP, level, job
     const searchUrl = `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
     const searchRes = await fetch(searchUrl, {
@@ -33,12 +31,32 @@ export default async function handler(req, res) {
     // 2. 아툴 API — atoolScore만
     let atoolScore = null;
     try {
+      const race = Number(serverid) >= 2000 ? 2 : 1;
       const atoolRes = await fetch(
-        `https://www.aion2tool.com/api/character?serverid=${serverid}&name=${encodeURIComponent(name)}`,
-        { headers: { "user-agent": "Mozilla/5.0", "accept": "application/json" } }
+        `https://aion2tool.com/api/character/search`,
+        {
+          method: "POST",
+          headers: {
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/json;charset=UTF-8",
+            "origin": "https://aion2tool.com",
+            "referer": "https://aion2tool.com/",
+            "user-agent": "Mozilla/5.0",
+          },
+          body: JSON.stringify({
+            keyword: name,
+            server_id: Number(serverid),
+            serverId: Number(serverid),
+            race,
+            raceId: race,
+            page: 1,
+            limit: 20,
+          }),
+        }
       );
       const atoolJson = await atoolRes.json();
-      atoolScore = atoolJson?.combat_score ?? null;
+      const atoolChar = atoolJson?.data?.[0];
+      atoolScore = atoolChar?.combat_score ?? null;
     } catch {
       // 아툴 실패해도 공홈 데이터는 정상 반환
     }
