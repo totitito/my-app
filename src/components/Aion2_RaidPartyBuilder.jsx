@@ -262,27 +262,29 @@ export default function Aion2_RaidPartyBuilder() {
         server_id = server ? server.id : 1016;
       }
 
-      const [officialRes, atoolRes] = await Promise.all([
-        fetch(`/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`),
-        fetch("/api/aion2-search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ keyword: charName, server_id }),
-        }),
-      ]);
+      const officialRes = await fetch(
+        `/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`
+      );
 
       if (!officialRes.ok) {
         const text = await officialRes.text().catch(() => "");
         throw new Error(`공홈 API ${officialRes.status} ${officialRes.statusText} / ${text.slice(0, 200)}`);
       }
 
-      if (!atoolRes.ok) {
-        const text = await atoolRes.text().catch(() => "");
-        throw new Error(`아툴 API ${atoolRes.status} ${atoolRes.statusText} / ${text.slice(0, 200)}`);
-      }
-
       const officialJson = await officialRes.json();
-      const atoolJson = await atoolRes.json();
+
+      let atoolJson = null;
+      try {
+        const atoolRes = await fetch("/api/aion2-search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keyword: charName, server_id }),
+        });
+
+        if (atoolRes.ok) {
+          atoolJson = await atoolRes.json();
+        }
+      } catch (_) {}
 
       setState((prev) => ({
         ...prev,
@@ -290,9 +292,9 @@ export default function Aion2_RaidPartyBuilder() {
           if (c.id !== candidateId) return c;
           return {
             ...c,
-            itemLevel: officialJson.item_level ?? 0,
-            power: officialJson.combat_power ?? 0,
-            atool: atoolJson.combat_score ?? 0,
+            itemLevel: officialJson.item_level ?? c.itemLevel ?? 0,
+            power: officialJson.combat_power ?? c.power ?? 0,
+            atool: atoolJson?.combat_score ?? c.atool ?? 0,
             updatedAt: Date.now(),
           };
         }),
