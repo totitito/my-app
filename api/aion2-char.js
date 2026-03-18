@@ -106,10 +106,57 @@ export default async function handler(req, res) {
       }
     }
 
+    const searchUrl = `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
+
+    const searchRes = await fetch(searchUrl, {
+      headers: {
+        "user-agent": "Mozilla/5.0",
+        "accept": "application/json",
+        "referer": "https://aion2.plaync.com/",
+      },
+    });
+
+    const searchJson = await searchRes.json();
+    const characterId = searchJson?.list?.[0]?.characterId;
+
+    let officialJob = null;
+    let officialLevel = null;
+    let officialItemLevel = null;
+    let officialCombatPower = null;
+    let officialAvatarUrl = null;
+
+    if (characterId) {
+      const decodedId = decodeURIComponent(characterId);
+
+      const infoUrl = `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
+
+      const infoRes = await fetch(infoUrl, {
+        headers: {
+          "user-agent": "Mozilla/5.0",
+          "accept": "application/json",
+          "referer": "https://aion2.plaync.com/",
+        },
+      });
+
+      const infoJson = await infoRes.json();
+      const profile = infoJson?.profile ?? {};
+      const stats = infoJson?.stat?.statList ?? [];
+
+      officialJob = profile?.className ?? null;
+      officialLevel = profile?.characterLevel ?? null;
+      officialCombatPower = profile?.combatPower ?? null;
+      officialAvatarUrl = profile?.profileImage ?? null;
+      officialItemLevel =
+        stats.find((s) => s?.type === "ItemLevel" || s?.name === "아이템레벨")?.value ?? null;
+    }
+
     return res.status(200).json({
       name: char.nickname ?? char.name ?? name,
-      job: char.job ?? null,
-      level: char.level ?? null,
+      job: officialJob ?? char.job ?? null,
+      level: officialLevel ?? char.level ?? null,
+      item_level: officialItemLevel,
+      combat_power: officialCombatPower,
+      avatar_url: officialAvatarUrl,
       gear,
       arcana,
     });
