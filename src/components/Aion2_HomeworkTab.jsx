@@ -317,10 +317,11 @@ export default function Aion2_HomeworkTab({
       }
 
       const r = await fetch(`/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`);
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ keyword: charName, server_id }),
-      });
+
+      if (!r.ok) {
+        const text = await r.text().catch(() => "");
+        throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
+      }
 
       // ✅ 실패면 왜 실패인지 확인 가능하게
       if (!r.ok) {
