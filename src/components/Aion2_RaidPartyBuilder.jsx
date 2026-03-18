@@ -1008,7 +1008,7 @@ function CandidateCard(props) {
         alignItems: "center",
         gap: 6,
       }}
-      title="드래그해서 슬롯에 넣기 / 1군↔2군 이동"
+      title="드래그해서 슬롯에 넣기"
     >
       {/* 가운데: 정보 */}
       <div style={{ flex: 1, minWidth: 0 }}>
