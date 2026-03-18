@@ -41,14 +41,6 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
 
-    // equipment: 일반 장비 + 아르카나
-    // accessories: 귀걸이/반지/목걸이 등 악세서리
-    // 둘 다 합쳐서 처리
-    const items = [
-      ...(char.equipment ?? []),
-      ...(char.accessories ?? []),
-    ];
-
     const SLOT_MAP = {
       Necklace:  "necklace",
       Earring1:  "earring1",
@@ -85,27 +77,6 @@ export default async function handler(req, res) {
       성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [],
     };
 
-    for (const item of items) {
-      const subs = item.sub_skills ?? [];
-      if (subs.length === 0) continue;
-
-      const skills = subs
-        .filter(s => s?.name)
-        .map(s => ({ skillName: s.name, level: Number(s.level ?? 1) }));
-
-      const posName = item.raw_data?.slotPosName ?? "";
-
-      if (ARCANA_SLOT_MAP[posName]) {
-        arcana[ARCANA_SLOT_MAP[posName]].push(...skills);
-        continue;
-      }
-
-      const slotId = SLOT_MAP[posName];
-      if (slotId && gear[slotId]) {
-        gear[slotId].push(...skills);
-      }
-    }
-
     const searchUrl = `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
 
     const searchRes = await fetch(searchUrl, {
@@ -139,9 +110,23 @@ export default async function handler(req, res) {
       });
 
       const infoJson = await infoRes.json();
-      console.log("OFFICIAL_KEYS", Object.keys(infoJson ?? {}));
-      console.log("OFFICIAL_PROFILE_KEYS", Object.keys(infoJson?.profile ?? {}));
-      console.log("OFFICIAL_EQUIP_CANDIDATES", Object.keys(infoJson ?? {}).filter(k => /equip|item|gear|arcana|artifact|inventory|slot/i.test(k)));
+
+      const equipmentUrl = `https://aion2.plaync.com/api/character/equipment?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
+
+      const equipmentRes = await fetch(equipmentUrl, {
+        headers: {
+          "user-agent": "Mozilla/5.0",
+          "accept": "application/json",
+          "referer": "https://aion2.plaync.com/",
+        },
+      });
+
+      const equipmentJson = await equipmentRes.json();
+      console.log("EQUIPMENT_URL", equipmentUrl);
+      console.log("EQUIPMENT_KEYS", Object.keys(equipmentJson ?? {}));
+      console.log("EQUIPMENT_COUNT", equipmentJson?.equipmentList?.length ?? 0);
+      console.log("EQUIPMENT_FIRST", JSON.stringify(equipmentJson?.equipmentList?.[0] ?? null, null, 2));
+      
       const profile = infoJson?.profile ?? {};
       const stats = infoJson?.stat?.statList ?? [];
 
