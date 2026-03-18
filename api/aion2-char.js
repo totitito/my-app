@@ -37,6 +37,8 @@ export default async function handler(req, res) {
 
     const parsed = JSON.parse(text);
     const char = parsed?.data;
+    console.log("ATOOL_PARSED_KEYS", Object.keys(parsed ?? {}));
+    console.log("ATOOL_DATA_PREVIEW", JSON.stringify(parsed?.data ?? null).slice(0, 1000));
     if (!char || typeof char !== "object" || Array.isArray(char)) {
       return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
     }
