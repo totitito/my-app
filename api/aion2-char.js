@@ -139,6 +139,7 @@ export default async function handler(req, res) {
       });
 
       const infoJson = await infoRes.json();
+      console.log("OFFICIAL_INFO", JSON.stringify(infoJson, null, 2));
       const profile = infoJson?.profile ?? {};
       const stats = infoJson?.stat?.statList ?? [];
 
