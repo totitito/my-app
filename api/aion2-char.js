@@ -40,6 +40,7 @@ export default async function handler(req, res) {
 
     const profile = data?.profile ?? {};
     const stats = data?.statList ?? [];
+    console.log("statList:", stats);
 
     const itemLevel = stats.find(s => s.name === "아이템레벨")?.value ?? null;
     const combatPower = profile.combatPower ?? null;
