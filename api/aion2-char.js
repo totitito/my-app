@@ -124,9 +124,9 @@ export default async function handler(req, res) {
       const equipmentJson = await equipmentRes.json();
       console.log("EQUIPMENT_URL", equipmentUrl);
       console.log("EQUIPMENT_KEYS", Object.keys(equipmentJson ?? {}));
-      console.log("EQUIPMENT_COUNT", equipmentJson?.equipmentList?.length ?? 0);
-      console.log("EQUIPMENT_FIRST", JSON.stringify(equipmentJson?.equipmentList?.[0] ?? null, null, 2));
-      
+      console.log("EQUIPMENT_KEYS_2", Object.keys(equipmentJson?.equipment ?? {}));
+      console.log("EQUIPMENT_JSON", JSON.stringify(equipmentJson?.equipment ?? null, null, 2));
+
       const profile = infoJson?.profile ?? {};
       const stats = infoJson?.stat?.statList ?? [];
 
