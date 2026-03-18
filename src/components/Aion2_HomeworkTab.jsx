@@ -316,19 +316,6 @@ export default function Aion2_HomeworkTab({
         server_id = server ? server.id : 1016;
       }
 
-      const r = await fetch("/api/aion2-search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ keyword: charName, server_id }),
-      });
-
-      // ✅ 실패면 왜 실패인지 확인 가능하게
-      if (!r.ok) {
-        const text = await r.text().catch(() => "");
-        throw new Error(`AION2 API ${r.status} ${r.statusText} / ${text.slice(0, 200)}`);
-      }
-
-      const j = await r.json();
       const official = await fetch(`/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`);
       const officialJson = await official.json();
 
@@ -337,16 +324,30 @@ export default function Aion2_HomeworkTab({
         throw new Error(`공홈 캐릭 API ${official.status} / ${text}`);
       }
 
+      let atoolJson = null;
+
+      try {
+        const r = await fetch("/api/aion2-search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keyword: charName, server_id }),
+        });
+
+        if (r.ok) {
+          atoolJson = await r.json();
+        }
+      } catch (_) {}
+
       setScores(prev => ({
         ...prev,
         [rawFull]: {
-          itemLevel: officialJson.item_level ?? 0,
-          combatPower: officialJson.combat_power ?? 0,
-          atoolScore: j.combat_score ?? 0,
+          itemLevel: officialJson.item_level ?? prev?.[rawFull]?.itemLevel ?? 0,
+          combatPower: officialJson.combat_power ?? prev?.[rawFull]?.combatPower ?? 0,
+          atoolScore: atoolJson?.combat_score ?? prev?.[rawFull]?.atoolScore ?? 0,
           updatedAt: getNowMs(),
-          portrait: officialJson.avatar_url ?? j?.raw?.avatar_url ?? null,
-          job: officialJson.job ?? null,
-          level: officialJson.level ?? null,
+          portrait: officialJson.avatar_url ?? atoolJson?.raw?.avatar_url ?? prev?.[rawFull]?.portrait ?? null,
+          job: officialJson.job ?? prev?.[rawFull]?.job ?? null,
+          level: officialJson.level ?? prev?.[rawFull]?.level ?? null,
         }
       }));
     } catch (e) {
