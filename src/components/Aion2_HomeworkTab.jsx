@@ -316,7 +316,7 @@ export default function Aion2_HomeworkTab({
         server_id = server ? server.id : 1016;
       }
 
-      const r = await fetch("/api/aion2-search", {
+      const r = await fetch(`/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`);
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ keyword: charName, server_id }),
