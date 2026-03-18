@@ -1130,7 +1130,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
       const url = `/api/aion2-char?serverid=${serverId}&name=${encodeURIComponent(charName)}`;
       const res = await fetch(url);
       const json = await res.json();
-      console.log("SKILL_IMPORT_JSON", json);
+      // console.log("SKILL_IMPORT_JSON", json);
 
       if(json.error) {
         alert(`불러오기 실패: ${json.error}`);
@@ -1525,6 +1525,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
                   const url = `/api/aion2-char?serverid=${serverId}&name=${encodeURIComponent(charName)}`;
                   const res = await fetch(url);
                   const json = await res.json();
+                  console.log("SKILL_REFRESH_JSON", json);
                   if (json.error) return alert(`불러오기 실패: ${json.error}`);
 
                   const gear = json.gear ?? p.equippedGear ?? {};
