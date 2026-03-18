@@ -173,9 +173,9 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({
-      name: char.nickname ?? char.name ?? name,
-      job: officialJob ?? char.job ?? null,
-      level: officialLevel ?? char.level ?? null,
+      name,
+      job: officialJob ?? null,
+      level: officialLevel ?? null,
       item_level: officialItemLevel,
       combat_power: officialCombatPower,
       avatar_url: officialAvatarUrl,
