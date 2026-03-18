@@ -646,7 +646,7 @@ export default function Aion2_RaidPartyBuilder() {
                             </select>
                           </div>
                           <div style={{ marginTop: 3, fontSize: 11, color: "#111" }}>
-                            iLvl {(c.itemLevel ?? 0).toLocaleString()} · CP {(c.power ?? 0).toLocaleString()} · AT {(c.atool ?? 0).toLocaleString()}
+                            iLvl {formatKoreanMan(c.itemLevel)} · CP {formatKoreanMan(c.power)} · AT {formatKoreanMan(c.atool)}
                           </div>
                         </div>
                       ) : (
@@ -786,6 +786,22 @@ export default function Aion2_RaidPartyBuilder() {
   );
 }
 
+function formatKoreanMan(value) {
+  const num = Number(value ?? 0);
+  if (!Number.isFinite(num)) return "0";
+
+  if (num < 10000) return num.toLocaleString();
+
+  const man = num / 10000;
+
+  if (man >= 100) {
+    return `${Math.floor(man).toLocaleString()}만`;
+  }
+
+  const rounded = Math.round(man * 10) / 10;
+  return Number.isInteger(rounded) ? `${rounded.toLocaleString()}만` : `${rounded.toFixed(1)}만`;
+}
+
 function CandidateCard(props) {
   const {
     c,
@@ -897,11 +913,11 @@ function CandidateCard(props) {
         </div>
 
         <div style={{ marginTop: 3, fontSize: 11, display: "flex", gap: 8, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
-          <span style={{ color: "#111", fontWeight: "bold" }}>
-            iLvl : {(c.itemLevel ?? 0).toLocaleString()}
+          <span style={{ color: "#111" }}>
+            iLvl : <span style={{ fontWeight: "bold" }}>{formatKoreanMan(c.itemLevel)}</span>
           </span>
           {/* 전투력 */}
-          <span style={{ color: "#fcff9d", fontWeight: "Bold" }}>
+          <span style={{ color: "#000000" }}>
             CP :{" "}
             {editingFieldId === c.id && editingField === "power" ? (
               <input
@@ -953,13 +969,13 @@ function CandidateCard(props) {
                 style={{ cursor: "text", userSelect: "none", fontWeight: "bold" }}
                 title="클릭해서 전투력 수정"
               >
-                {(c.power ?? 0).toLocaleString()}
+                {formatKoreanMan(c.power)}
               </span>
             )}
           </span>
 
           {/* 아툴 */}
-          <span style={{ color: "#16269e", fontWeight: "Bold" }}>
+          <span style={{ color: "#000000" }}>
             AT :{" "}
             {editingFieldId === c.id && editingField === "atool" ? (
               <input
@@ -1011,7 +1027,7 @@ function CandidateCard(props) {
                 style={{ cursor: "text", userSelect: "none", fontWeight: "bold" }}
                 title="클릭해서 아툴 수정"
               >
-                {(c.atool ?? 0).toLocaleString()}
+                {formatKoreanMan(c.atool)}
               </span>
             )}
           </span>
