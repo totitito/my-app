@@ -1526,8 +1526,8 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
                   const json = await res.json();
                   if (json.error) return alert(`불러오기 실패: ${json.error}`);
 
-                  const gear = json.gear ?? {};
-                  const arcana = json.arcana ?? {};
+                  const gear = json.gear ?? p.equippedGear ?? {};
+                  const arcana = json.arcana ?? p.equippedArcana ?? {};
                   PRESET_GEAR_SLOTS.forEach(s => { if (!gear[s.id]) gear[s.id] = []; });
                   PRESET_ARCANA_SLOTS.forEach(s => { if (!arcana[s.id]) arcana[s.id] = []; });
                   const reserveArcana = { 성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [] };

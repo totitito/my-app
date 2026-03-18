@@ -943,7 +943,6 @@ export default function Aion2_HomeworkTab({
                               )}
 
                               {["aion2", "lostark"].includes(game) && scope === "character" && (() => {
-                                if (game === "aion2" && !scores[targetName]) return null;
                                 const gameConfig = {
                                   "lostark": { labels: ["템렙", "전투력"], keys: ["itemLevel", "combatPower"], fetchFn: () => fetchLoaScore(targetName) },
                                   "aion2": { 
