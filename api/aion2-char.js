@@ -54,9 +54,11 @@ export default async function handler(req, res) {
           }),
         }
       );
-      const atoolJson = await atoolRes.json();
+      const atoolText = await atoolRes.text();
+      console.log("아툴 raw 응답:", atoolText.slice(0, 500));
+      const atoolJson = JSON.parse(atoolText);
       atoolScore = atoolJson?.data?.combat_score ?? null;
-      
+      console.log("atoolScore:", atoolScore);
     } catch (e) {
       console.error("아툴 fetch 실패:", e);
     }
