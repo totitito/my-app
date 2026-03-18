@@ -335,6 +335,7 @@ export default function Aion2_HomeworkTab({
         [rawFull]: { // ✅ 저장 키를 rawFull로 통일 (UI의 scores[targetName]과 동일)
           combatPower: j.combat_power ?? 0,
           combatScore: j.combat_score ?? 0,
+          itemLevel: j.item_level ?? 0,
           // updatedAt: Date.now(),
           updatedAt: getNowMs(),
           portrait: j?.raw?.avatar_url ?? null,
@@ -914,7 +915,7 @@ export default function Aion2_HomeworkTab({
                                 <>
                                   {targetName}
                                   <div style={{ fontSize: "11px", color: "#aaa" }}>
-                                    iLv {scores[targetName]?.itemLevel ?? "-"} / CP {scores[targetName]?.combatPower ?? "-"}
+                                    iLv {scores[targetName]?.itemLevel ?? "-"} / CP {scores[targetName]?.combatPower?.toLocaleString?.() ?? "-"}
                                   </div>
                                 </>
                               </span>
