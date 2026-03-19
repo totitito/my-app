@@ -303,7 +303,7 @@ export default function Aion2_HomeworkTab({
   // AION 2 fetchScore
   const fetchScore = async (fullName) => {
     try {
-      const rawFull = (fullName || "").trim();  // ✅ 원본 입력값(표시/조회와 동일)
+      const rawFull = (fullName || "").trim();
       const match = rawFull.match(/^(.+?)\[(.+?)\]$/);
 
       let charName = rawFull;
@@ -324,35 +324,20 @@ export default function Aion2_HomeworkTab({
         throw new Error(`공홈 캐릭 API ${official.status} / ${text}`);
       }
 
-      let atoolJson = null;
-
-      try {
-        const r = await fetch("/api/aion2-search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ keyword: charName, server_id }),
-        });
-
-        if (r.ok) {
-          atoolJson = await r.json();
-        }
-      } catch (_) {}
-
       setScores(prev => ({
         ...prev,
         [rawFull]: {
           itemLevel: officialJson.item_level ?? prev?.[rawFull]?.itemLevel ?? 0,
           combatPower: officialJson.combat_power ?? prev?.[rawFull]?.combatPower ?? 0,
-          atoolScore: atoolJson?.combat_score ?? prev?.[rawFull]?.atoolScore ?? 0,
           updatedAt: getNowMs(),
-          portrait: officialJson.avatar_url ?? atoolJson?.raw?.avatar_url ?? prev?.[rawFull]?.portrait ?? null,
+          portrait: officialJson.avatar_url ?? prev?.[rawFull]?.portrait ?? null,
           job: officialJson.job ?? prev?.[rawFull]?.job ?? null,
           level: officialJson.level ?? prev?.[rawFull]?.level ?? null,
         }
       }));
     } catch (e) {
       console.error("캐릭터 정보 갱신 실패:", e);
-      alert("캐릭터 정보 갱신 실패: " + e.message); // ✅ 탱아저씨 케이스 원인 바로 뜸
+      alert("캐릭터 정보 갱신 실패: " + e.message);
     }
   };
 
@@ -952,19 +937,14 @@ export default function Aion2_HomeworkTab({
                                 const gameConfig = {
                                   "lostark": { labels: ["템렙", "전투력"], keys: ["itemLevel", "combatPower"], fetchFn: () => fetchLoaScore(targetName) },
                                   "aion2": { 
-                                    labels: ["iLv", "CP", "AT"], 
-                                    keys: ["itemLevel", "combatPower", "atoolScore"], 
+                                    labels: ["iLvl", "CP"], 
+                                    keys: ["itemLevel", "combatPower"], 
                                     fetchFn: () => fetchScore(targetName, true) 
                                   }
                                 };
                                 const config = gameConfig[game];
                                 if (!config) return null;
                                 const scoreData = scores[targetName];
-                                // if (game === "aion2" && scoreData) {
-                                //   if (scoreData.itemLevel === 0 && scoreData.combatPower === 0 && scoreData.atoolScore === 0) {
-                                //     return null;
-                                //   }
-                                // }
                                 return (
                                   <div>
                                     {scoreData ? (
