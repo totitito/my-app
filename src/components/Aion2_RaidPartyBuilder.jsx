@@ -13,47 +13,48 @@ const makePreset = (name) => ({
 
 const defaultState = {
   candidates: [
-    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성", itemLevel: 3486, power: 0, atool: 93213, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성", itemLevel: 3261, power: 0, atool: 43786, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "탱아저씨[바카]", cls: "수호성", itemLevel: 3009, power: 0, atool: 18023, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "엄마손[바카]", cls: "치유성", itemLevel: 2860, power: 0, atool: 10928, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "마법맨[바카]", cls: "마도성", itemLevel: 1961, power: 0, atool: 648, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성", itemLevel: 3533, power: 331200, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성", itemLevel: 3266, power: 249800, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "탱아저씨[바카]", cls: "수호성", itemLevel: 3046, power: 185800, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "엄마손[바카]", cls: "치유성", itemLevel: 2891, power: 144300, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "마법맨[바카]", cls: "마도성", itemLevel: 2322, power: 110600, updatedAt: 0 },
 
-    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성", itemLevel: 3715, power: 0, atool: 160102, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성", itemLevel: 2812, power: 0, atool: 16152, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "은도[아리]", cls: "호법성", itemLevel: 2406, power: 0, atool: 6947, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성", itemLevel: 3750, power: 365600, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성", itemLevel: 2850, power: 171000, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "은도[아리]", cls: "호법성", itemLevel: 2553, power: 127600, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "하만[아리]", cls: "궁성", itemLevel: 1641, power: 74150, updatedAt: 0 },
 
-    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성", itemLevel: 3260, power: 0, atool: 48434, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성", itemLevel: 3286, power: 0, atool: 42634, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "델이[아리]", cls: "궁성", itemLevel: 2618, power: 0, atool: 7088, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "앳피[아리]", cls: "정령성", itemLevel: 2218, power: 0, atool: 4527, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성", itemLevel: 3382, power: 249100, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성", itemLevel: 3264, power: 245700, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "델이[아리]", cls: "궁성", itemLevel: 2618, power: 122000, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "앳피[아리]", cls: "정령성", itemLevel: 2329, power: 115800, updatedAt: 0 },
     
-    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성", itemLevel: 3431, power: 0, atool: 85563, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "히푸[아리]", cls: "치유성", itemLevel: 2737, power: 0, atool: 6749, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "뱐[아리]", cls: "궁성", itemLevel: 2626, power: 0, atool: 7134, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성", itemLevel: 3449, power: 287500, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "히푸[아리]", cls: "치유성", itemLevel: 2902, power: 141400, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "뱐[아리]", cls: "궁성", itemLevel: 2734, power: 133000, updatedAt: 0 },
         
-    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성", itemLevel: 3630, power: 0, atool: 144797, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성", itemLevel: 3342, power: 0, atool: 67587, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울살성[바카]", cls: "살성", itemLevel: 2785, power: 0, atool: 10400, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울정령[바카]", cls: "정령성", itemLevel: 2218, power: 0, atool: 4527, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성", itemLevel: 3732, power: 387700, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성", itemLevel: 3375, power: 289700, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "겨울살성[바카]", cls: "살성", itemLevel: 2797, power: 144800, updatedAt: 0 },
+    { id: crypto.randomUUID(), name: "겨울정령[바카]", cls: "정령성", itemLevel: 2218, power: 118800, updatedAt: 0 },
   ],
   rudraPresets: [makePreset("루드라 1")],
   erosionPresets: [makePreset("침식 1")],
 };
 
-const classToRole = (cls) => {
-  switch (cls) {
-    case "수호성": return "탱";
-    case "검성":
-    case "살성": return "근딜";
-    case "궁성":
-    case "마도성":
-    case "정령성": return "원딜";
-    case "호법성":
-    case "치유성": return "힐";
-    default: return "기타";
-  }
-};
+// const classToRole = (cls) => {
+//   switch (cls) {
+//     case "수호성": return "탱";
+//     case "검성":
+//     case "살성": return "근딜";
+//     case "궁성":
+//     case "마도성":
+//     case "정령성": return "원딜";
+//     case "호법성":
+//     case "치유성": return "힐";
+//     default: return "기타";
+//   }
+// };
 
 const clsBackground = (cls) => {
   switch (cls) {
@@ -77,27 +78,27 @@ const slotLabel = (i) => {
   return `P${p}-${pos}`;
 };
 
-const clsBadgeStyle = (cls) => {
-  const base = {
-    display: "inline-block",
-    padding: "2px 8px",
-    borderRadius: 0,
-    fontSize: 13,
-    fontWeight: "bold",
-    border: "1px solid #000000",
-    background: "#ffffff",
-    color: "#000000",
-  };
-  if (cls === "수호성") return { ...base, background: "rgb(23, 19, 244)", color: "rgb(255, 255, 255)" };
-  if (cls === "검성") return { ...base, background: "rgb(128, 0, 255)", color: "rgb(255, 255, 255)" };
-  if (cls === "살성") return { ...base, background: "rgb(255, 0, 0)", color: "rgb(255, 255, 255)" };
-  if (cls === "궁성") return { ...base, background: "rgb(255, 128, 0)" };
-  if (cls === "마도성") return { ...base, background: "rgb(255, 0, 255)" };
-  if (cls === "정령성") return { ...base, background: "rgb(0, 255, 255)" };
-  if (cls === "호법성") return { ...base, background: "rgb(255, 255, 0)" };
-  if (cls === "치유성") return { ...base, background: "rgb(0, 255, 0)" };
-  return base;
-};
+// const clsBadgeStyle = (cls) => {
+//   const base = {
+//     display: "inline-block",
+//     padding: "2px 8px",
+//     borderRadius: 0,
+//     fontSize: 13,
+//     fontWeight: "bold",
+//     border: "1px solid #000000",
+//     background: "#ffffff",
+//     color: "#000000",
+//   };
+//   if (cls === "수호성") return { ...base, background: "rgb(23, 19, 244)", color: "rgb(255, 255, 255)" };
+//   if (cls === "검성") return { ...base, background: "rgb(128, 0, 255)", color: "rgb(255, 255, 255)" };
+//   if (cls === "살성") return { ...base, background: "rgb(255, 0, 0)", color: "rgb(255, 255, 255)" };
+//   if (cls === "궁성") return { ...base, background: "rgb(255, 128, 0)" };
+//   if (cls === "마도성") return { ...base, background: "rgb(255, 0, 255)" };
+//   if (cls === "정령성") return { ...base, background: "rgb(0, 255, 255)" };
+//   if (cls === "호법성") return { ...base, background: "rgb(255, 255, 0)" };
+//   if (cls === "치유성") return { ...base, background: "rgb(0, 255, 0)" };
+//   return base;
+// };
 
 const SERVER_SHORT_SET = new Set(AION2_SERVERS.map(s => s.short));
 
@@ -112,7 +113,6 @@ export default function Aion2_RaidPartyBuilder() {
         parsed.rudraPresets = [makePreset("루드라 1")];
       if (!Array.isArray(parsed.erosionPresets) || parsed.erosionPresets.length === 0)
         parsed.erosionPresets = [makePreset("침식 1")];
-      // 구버전 호환: slots 있으면 첫 루드라 프리셋으로 이관
       if (Array.isArray(parsed.slots)) {
         parsed.rudraPresets[0].slots = parsed.slots;
         delete parsed.slots;
@@ -176,7 +176,7 @@ export default function Aion2_RaidPartyBuilder() {
   const assignToSlot = (type, presetId, slotIndex, candId) => {
     updatePresetSlots(type, presetId, s => {
       const alreadyAt = s.findIndex(x => x === candId);
-      if (alreadyAt !== -1) return s; // 같은 프리셋 내 중복 차단
+      if (alreadyAt !== -1) return s;
       s[slotIndex] = candId;
       return s;
     });
@@ -198,7 +198,6 @@ export default function Aion2_RaidPartyBuilder() {
       const [, pType, pId, idx] = data.split(":");
       if (pType === type && pId === presetId) swapSlots(type, presetId, Number(idx), slotIndex);
       else {
-        // cross-preset: move candidate
         const fromSlots = (pType === "rudra" ? rudraPresets : erosionPresets).find(p => p.id === pId)?.slots;
         const candId = fromSlots?.[Number(idx)];
         if (candId) {
@@ -237,7 +236,7 @@ export default function Aion2_RaidPartyBuilder() {
       const key = type === "rudra" ? "rudraPresets" : "erosionPresets";
       return {
         ...prev,
-        candidates: [...prev.candidates, { id: newId, name: `(임시멤버${maxN + 1})`, cls: "수호성", power: 0, atool: 0, updatedAt: Date.now() }],
+        candidates: [...prev.candidates, { id: newId, name: `(임시멤버${maxN + 1})`, cls: "수호성", itemLevel: 0, power: 0, updatedAt: Date.now() }],
         [key]: prev[key].map(p => {
           if (p.id !== presetId) return p;
           const s = [...p.slots]; s[slotIndex] = newId; return { ...p, slots: s };
@@ -252,7 +251,7 @@ export default function Aion2_RaidPartyBuilder() {
       const match = rawFull.match(/^(.+?)\[(.+?)\]$/);
 
       let charName = rawFull;
-      let server_id = 1016; // 바카 기본값
+      let server_id = 1016;
 
       if (match) {
         charName = match[1].trim();
@@ -273,19 +272,6 @@ export default function Aion2_RaidPartyBuilder() {
 
       const officialJson = await officialRes.json();
 
-      let atoolJson = null;
-      try {
-        const atoolRes = await fetch("/api/aion2-search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ keyword: charName, server_id }),
-        });
-
-        if (atoolRes.ok) {
-          atoolJson = await atoolRes.json();
-        }
-      } catch (_) {}
-
       setState((prev) => ({
         ...prev,
         candidates: prev.candidates.map((c) => {
@@ -294,7 +280,6 @@ export default function Aion2_RaidPartyBuilder() {
             ...c,
             itemLevel: officialJson.item_level ?? c.itemLevel ?? 0,
             power: officialJson.combat_power ?? c.power ?? 0,
-            atool: atoolJson?.combat_score ?? c.atool ?? 0,
             updatedAt: Date.now(),
           };
         }),
@@ -343,15 +328,13 @@ export default function Aion2_RaidPartyBuilder() {
       candidates: prev.candidates.map((c) => ({
         ...c,
         power: c.power ?? 0,
-        atool: c.atool ?? 0,
       })),
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const commitCandidateName = (candidateId, nextName) => {
     const trimmed = (nextName || "").trim();
-    if (!trimmed) return; // 빈값 저장 방지
+    if (!trimmed) return;
 
     setState((prev) => ({
       ...prev,
@@ -371,7 +354,7 @@ export default function Aion2_RaidPartyBuilder() {
 
   const commitCandidatePower = (candidateId, nextValue) => {
     const n = Number(String(nextValue ?? "").replace(/,/g, "").trim());
-    if (!Number.isFinite(n) || n < 0) return; // 이상값 방지
+    if (!Number.isFinite(n) || n < 0) return;
 
     setState((prev) => ({
       ...prev,
@@ -381,19 +364,6 @@ export default function Aion2_RaidPartyBuilder() {
     }));
   };
 
-  const commitCandidateAtool = (candidateId, nextValue) => {
-    const n = Number(String(nextValue ?? "").replace(/,/g, "").trim());
-    if (!Number.isFinite(n) || n < 0) return;
-
-    setState((prev) => ({
-      ...prev,
-      candidates: prev.candidates.map((c) =>
-        c.id === candidateId ? { ...c, atool: n } : c
-      ),
-    }));
-  };
-
-  // --- 드래그 데이터 포맷
   const onDragStartCandidate = (e, candId) => {
     e.dataTransfer.setData("text/plain", `CAND:${candId}`);
     e.dataTransfer.effectAllowed = "move";
@@ -411,62 +381,58 @@ export default function Aion2_RaidPartyBuilder() {
   const [editingNameId, setEditingNameId] = useState(null);
   const [editingName, setEditingName] = useState("");
 
-  const [editingField, setEditingField] = useState(null); // "power" | "atool" | null
+  const [editingField, setEditingField] = useState(null);
   const [editingFieldId, setEditingFieldId] = useState(null);
   const [editingPower, setEditingPower] = useState("");
-  const [editingAtool, setEditingAtool] = useState("");
 
-  // const [candSort, setCandSort] = useState("atool"); // "default" | "atool"
-  
-  const addCandidate = async () => {
-    const name = (newName || "").trim();
-    if (!name) return;
+  // const addCandidate = async () => {
+  //   const name = (newName || "").trim();
+  //   if (!name) return;
 
-    // 1) 먼저 후보를 기본값으로 추가(바로 UI에 보이게)
-    const newId = crypto.randomUUID();
-    setState((prev) => ({
-      ...prev,
-      candidates: [
-        ...prev.candidates,
-        {
-          id: newId,
-          name,
-          cls: newCls,
-          itemLevel: null,
-          power: null,
-          atool: null,
-          updatedAt: 0,
-        },
-      ],
-    }));
-    setNewName("");
+  //   // 1) 먼저 후보를 기본값으로 추가(바로 UI에 보이게)
+  //   const newId = crypto.randomUUID();
+  //   setState((prev) => ({
+  //     ...prev,
+  //     candidates: [
+  //       ...prev.candidates,
+  //       {
+  //         id: newId,
+  //         name,
+  //         cls: newCls,
+  //         itemLevel: null,
+  //         power: null,
+  //         atool: null,
+  //         updatedAt: 0,
+  //       },
+  //     ],
+  //   }));
+  //   setNewName("");
 
-    // 2) 추가된 후보의 전투력/아툴을 아툴에서 가져와서 업데이트
-    fetchScoreAndApply(name, newId);
-  };
+  //   // 2) 추가된 후보의 전투력/아툴을 아툴에서 가져와서 업데이트
+  //   fetchScoreAndApply(name, newId);
+  // };
 
   const sortedCandidates = [...state.candidates].sort((a, b) => {
     if (candidateSortMode === "itemLevel") return (b.itemLevel ?? 0) - (a.itemLevel ?? 0);
     if (candidateSortMode === "power") return (b.power ?? 0) - (a.power ?? 0);
-    if (candidateSortMode === "atool") return (b.atool ?? 0) - (a.atool ?? 0);
     return 0;
   });
 
-  const moveCandidateTo = (id, toIndex) => {
-    setState((prev) => {
-      const idx = prev.candidates.findIndex((c) => c.id === id);
-      if (idx === -1) return prev;
-      if (toIndex < 0) toIndex = 0;
-      if (toIndex >= prev.candidates.length) toIndex = prev.candidates.length - 1;
-      if (idx === toIndex) return prev;
+  // const moveCandidateTo = (id, toIndex) => {
+  //   setState((prev) => {
+  //     const idx = prev.candidates.findIndex((c) => c.id === id);
+  //     if (idx === -1) return prev;
+  //     if (toIndex < 0) toIndex = 0;
+  //     if (toIndex >= prev.candidates.length) toIndex = prev.candidates.length - 1;
+  //     if (idx === toIndex) return prev;
 
-      const next = [...prev.candidates];
-      const [item] = next.splice(idx, 1);
-      next.splice(toIndex, 0, item);
+  //     const next = [...prev.candidates];
+  //     const [item] = next.splice(idx, 1);
+  //     next.splice(toIndex, 0, item);
 
-      return { ...prev, candidates: next };
-    });
-  };
+  //     return { ...prev, candidates: next };
+  //   });
+  // };
 
   const removeCandidate = (id) => {
     setState((prev) => ({
@@ -556,7 +522,7 @@ export default function Aion2_RaidPartyBuilder() {
       const newId = crypto.randomUUID();
       return {
         ...prev,
-        candidates: [...prev.candidates, { id: newId, name: `(임시멤버${maxN + 1})`, cls: cls || "수호성", itemLevel: 0, power: 0, atool: 0, updatedAt: Date.now() }],
+        candidates: [...prev.candidates, { id: newId, name: `(임시멤버${maxN + 1})`, cls: cls || "수호성", itemLevel: 0, power: 0, updatedAt: Date.now() }],
       };
     });
   };
@@ -569,16 +535,6 @@ export default function Aion2_RaidPartyBuilder() {
     ].filter(Boolean));
 
     const toNum = (v) => { const n = Number(String(v ?? 0).replace(/,/g, "")); return Number.isFinite(n) ? n : 0; };
-    const avgAtool = (idxs, noCleric) => {
-      let sum = 0, cnt = 0;
-      idxs.forEach(i => {
-        const cid = slots[i]; if (!cid) return;
-        const c = candMap.get(cid); if (!c) return;
-        if (noCleric && c.cls === "치유성") return;
-        sum += toNum(c.atool); cnt++;
-      });
-      return cnt ? sum / cnt : 0;
-    };
     const avgPower = (idxs, noCleric) => {
       let sum = 0, cnt = 0;
       idxs.forEach(i => {
@@ -667,7 +623,7 @@ export default function Aion2_RaidPartyBuilder() {
                             </select>
                           </div>
                           <div style={{ marginTop: 3, fontSize: 11, color: "#111" }}>
-                            iLvl {formatKoreanMan(c.itemLevel)} · CP {formatKoreanMan(c.power)} · AT {formatKoreanMan(c.atool)}
+                            iLvl {formatKoreanMan(c.itemLevel)} · CP {formatKoreanMan(c.power)}
                           </div>
                         </div>
                       ) : (
@@ -726,27 +682,9 @@ export default function Aion2_RaidPartyBuilder() {
               </span>
             </div>
 
-            <div style={{ color: "#888" }}>
+            {/* <div style={{ color: "#888" }}>
               <span style={{ fontWeight: "bold" }}>AT</span> 평균 (전체 / <span style={{ color: "#4caf50" }}>치유 제외</span>)
-            </div>
-            <div>{Math.round(avgAtool([0,1,2,3], false)).toLocaleString()}
-              {" / "}
-              <span style={{ color: "#4caf50" }}>
-                {Math.round(avgAtool([0,1,2,3], true)).toLocaleString()}
-              </span>
-            </div>
-            <div>{Math.round(avgAtool([4,5,6,7], false)).toLocaleString()}
-              {" / "}
-              <span style={{ color: "#4caf50" }}>
-                {Math.round(avgAtool([4,5,6,7], true)).toLocaleString()}
-              </span>
-            </div>
-            <div>{Math.round(avgAtool([0,1,2,3,4,5,6,7], false)).toLocaleString()}
-              {" / "}
-              <span style={{ color: "#4caf50" }}>
-                {Math.round(avgAtool([0,1,2,3,4,5,6,7], true)).toLocaleString()}
-              </span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -782,8 +720,26 @@ export default function Aion2_RaidPartyBuilder() {
         <div style={{ ...panelStyle }}
           onDragOver={allowDrop} onDrop={onDropToGroup}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+
             <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
               <div style={{ fontWeight: "bold", color: "#ddd" }}>후보</div>
+
+              <div style={{ align: "left" }}>
+                <button
+                  onClick={resetAll}
+                  style={{
+                    padding: "6px 10px",
+                    background: "#5a1a1a",
+                    color: "#fff",
+                    border: "1px solid #aa4444",
+                    borderRadius: "6px",
+                    cursor: "pointer"
+                  }}
+                >
+                  초기화
+                </button>
+              </div>
+
                 <select
                   value={candidateSortMode}
                   onChange={(e) => setCandidateSortMode(e.target.value)}
@@ -800,7 +756,6 @@ export default function Aion2_RaidPartyBuilder() {
                   <option value="class">정렬: 직업</option>
                   <option value="itemLevel">정렬: 아이템레벨</option>
                   <option value="power">정렬: 전투력</option>
-                  <option value="atool">정렬: 아툴점수</option>
                 </select>
             </div>
 
@@ -817,7 +772,7 @@ export default function Aion2_RaidPartyBuilder() {
                 fontSize: 12,
                 opacity: isRefreshingAll ? 0.6 : 1,
               }}
-              title="아이템레벨(공홈), 전투력(공홈), 아툴점수(아툴) 갱신"
+              title="아이템레벨, 전투력 갱신"
             >
               {isRefreshingAll ? "갱신중..." : "전체 갱신"}
             </button>
@@ -829,8 +784,6 @@ export default function Aion2_RaidPartyBuilder() {
               .filter(c => c.cls === cls)
               .slice()
               .sort((a, b) => {
-                const diff = toNum(b.atool) - toNum(a.atool);
-                if (diff !== 0) return diff;
                 return toNum(b.power) - toNum(a.power);
               });
             const allSlottedIds = new Set([
@@ -864,8 +817,7 @@ export default function Aion2_RaidPartyBuilder() {
                         editingFieldId={editingFieldId} setEditingFieldId={setEditingFieldId}
                         editingField={editingField} setEditingField={setEditingField}
                         editingPower={editingPower} setEditingPower={setEditingPower}
-                        editingAtool={editingAtool} setEditingAtool={setEditingAtool}
-                        commitCandidatePower={commitCandidatePower} commitCandidateAtool={commitCandidateAtool}
+                        commitCandidatePower={commitCandidatePower}
                         stopDrag={stopDrag} fetchScoreAndApply={fetchScoreAndApply}
                         removeCandidate={removeCandidate} clsBackground={clsBackground}
                         AION2_CLASSES={AION2_CLASSES}
@@ -923,10 +875,7 @@ export default function Aion2_RaidPartyBuilder() {
                           setEditingField={setEditingField}
                           editingPower={editingPower}
                           setEditingPower={setEditingPower}
-                          editingAtool={editingAtool}
-                          setEditingAtool={setEditingAtool}
                           commitCandidatePower={commitCandidatePower}
-                          commitCandidateAtool={commitCandidateAtool}
                           stopDrag={stopDrag}
                           fetchScoreAndApply={fetchScoreAndApply}
                           removeCandidate={removeCandidate}
@@ -982,10 +931,7 @@ function CandidateCard(props) {
     setEditingField,
     editingPower,
     setEditingPower,
-    editingAtool,
-    setEditingAtool,
     commitCandidatePower,
-    commitCandidateAtool,
     stopDrag,
     fetchScoreAndApply,
     removeCandidate,
@@ -1136,64 +1082,7 @@ function CandidateCard(props) {
               </span>
             )}
           </span>
-
-          {/* 아툴 */}
-          <span style={{ color: "#000000" }}>
-            AT :{" "}
-            {editingFieldId === c.id && editingField === "atool" ? (
-              <input
-                autoFocus
-                value={editingAtool}
-                onChange={(e) => setEditingAtool(e.target.value)}
-                onMouseDown={stopDrag}
-                onDragStart={stopDrag}
-                onClick={(e) => e.stopPropagation()}
-                onFocus={(e) => e.target.select()}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    commitCandidateAtool(c.id, editingAtool);
-                    setEditingField(null);
-                    setEditingFieldId(null);
-                  }
-                  if (e.key === "Escape") {
-                    setEditingField(null);
-                    setEditingFieldId(null);
-                  }
-                }}
-                onBlur={() => {
-                  commitCandidateAtool(c.id, editingAtool);
-                  setEditingField(null);
-                  setEditingFieldId(null);
-                }}
-                style={{
-                  width: 50,
-                  padding: "2px 6px",
-                  borderRadius: 8,
-                  border: "1px solid rgba(0,0,0,0.35)",
-                  background: "rgba(0,0,0,0.25)",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  outline: "none",
-                }}
-                title="Enter: 저장 / Esc: 취소"
-              />
-            ) : (
-              <span
-                onMouseDown={stopDrag}
-                onDragStart={stopDrag}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setEditingFieldId(c.id);
-                  setEditingField("atool");
-                  setEditingAtool(String(c.atool ?? 0));
-                }}
-                style={{ cursor: "text", userSelect: "none", fontWeight: "bold" }}
-                title="클릭해서 아툴 수정"
-              >
-                {formatKoreanMan(c.atool)}
-              </span>
-            )}
-          </span>
+          
         </div>
       </div>
 
@@ -1213,7 +1102,7 @@ function CandidateCard(props) {
             whiteSpace: "nowrap",
             fontSize: 12,
           }}
-          title="아이템레벨(공홈), 전투력(공홈), 아툴점수(아툴) 갱신"
+          title="아이템레벨, 전투력 갱신"
         >
           갱신
         </button>

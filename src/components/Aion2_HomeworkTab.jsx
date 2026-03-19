@@ -951,19 +951,12 @@ export default function Aion2_HomeworkTab({
                                       <div style={{ marginTop: "-2px", marginBottom: "2px" }}>
 
                                         <div style={{ fontSize: "10px", textShadow: "1px 1px 3px rgba(0,0,0,1)", textAlign: "center" }}>
-  
                                           <div style={{ color: "#b5b5b5" }}>
                                             {config.labels[0]} {scoreData[config.keys[0]]?.toLocaleString?.() ?? "?"}
                                           </div>
-
                                           <div style={{ color: "#e6d38a", marginTop: "-1px" }}>
                                             {config.labels[1]} {scoreData[config.keys[1]]?.toLocaleString?.() ?? "?"}
                                           </div>
-
-                                          <div style={{ color: "#69b7ee", marginTop: "-1px" }}>
-                                            {config.labels[2]} {scoreData[config.keys[2]]?.toLocaleString?.() ?? "?"}
-                                          </div>
-
                                         </div>
 
                                       </div>
