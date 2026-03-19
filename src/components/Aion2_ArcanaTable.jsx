@@ -229,11 +229,11 @@ function renderColoredDetailStats(detailStats) {
   ));
 }
 
-function ArcanaStatCell({ arcName, selectedType, locked = false, onChange }) {
+function ArcanaStatCell({ arcName, selectedType, locked = false, onChange, isPreset = false }) {
   const result = ARCANA_SIM_RESULT[arcName]?.[selectedType] ?? { godStats: [], detailStats: [] };
 
   return (
-    <td style={{ ...styles.td, background: "#181818", verticalAlign: "middle", textAlign: "center", padding: "4px" }}>
+    <td style={{ ...styles.td, background: isPreset ? "#242424" : "#181818", verticalAlign: "middle", textAlign: "center", padding: "4px" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
         <div style={{ display: "flex", gap: 4 }}>
           {["활력", "마력", "광분", "순수"].map((opt) => {
@@ -521,6 +521,7 @@ export default function Aion2_ArcanaTable() {
                       selectedType={p.selections?.[arc.name] ?? "활력"}
                       locked={false}
                       onChange={(opt) => handleSimChange(p.id, arc.name, opt)}
+                      isPreset={true}
                     />
                   ))}
 

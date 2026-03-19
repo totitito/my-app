@@ -7,7 +7,6 @@ import Aion2_ArcanaTable from "./components/Aion2_ArcanaTable";
 import Aion2_HomeworkTab from "./components/Aion2_HomeworkTab";
 import { initialHomeworks } from "./data/initialHomeworks";
 import { getCategory, fmtKST, getNowMs, getDisplayVal } from "./data/homeworkUtils";
-// import Aion2_SkillCalculator from "./components/Aion2_SkillCalculator";
 import Aion2_SkillCombinedTab from "./components/Aion2_SkillCombinedTab";
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
 import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
@@ -45,8 +44,8 @@ const KST_OFFSET_MS = 9 * HOUR_MS;
 
 const formatScoreUpdatedAt = (ts) => {
   if (!ts) return "";
-  const d = new Date(ts + KST_OFFSET_MS); // ✅ KST로 이동(숫자연산)
-  const m = d.getUTCMonth() + 1;          // ✅ UTC getter로 읽기(환경 영향 제거)
+  const d = new Date(ts + KST_OFFSET_MS);
+  const m = d.getUTCMonth() + 1;
   const day = d.getUTCDate();
   const hh = String(d.getUTCHours()).padStart(2, "0");
   const mm = String(d.getUTCMinutes()).padStart(2, "0");
@@ -55,24 +54,21 @@ const formatScoreUpdatedAt = (ts) => {
 
 const normalizeRepeatCategory = (hw) => {
   if (hw.resetPeriod === "once") return hw;
-  // 오드에너지는 무조건 etc
   if (hw.id === "aion2-odd-energy") {
     if (hw.category === "etc") return hw;
     return { ...hw, category: "etc" };
   }
-  // 이벤트 표기면 event로 강제
   if (typeof hw.name === "string" && hw.name.startsWith("[이벤트]")) {
     if (hw.category === "event") return hw;
     return { ...hw, category: "event" };
   }
-  // 나머지는 기존 category가 있으면 존중, 없으면 resetPeriod로 기본값
   if (hw.category) return hw;
   if (hw.resetPeriod === "day") return { ...hw, category: "daily" };
   if (hw.resetPeriod === "week") return { ...hw, category: "weekly" };
   return { ...hw, category: "etc" };
 };
 
-const ACHV_LS_KEY = (game) => `achievements-${game}`; // aion2만 쓸거면 achievements-aion2 고정도 OK
+const ACHV_LS_KEY = (game) => `achievements-${game}`;
 
 function App() {
   useEffect(() => {
@@ -113,11 +109,9 @@ function App() {
 
   const normalizeGameId = (g) => LEGACY_GAME_KEY_MAP[g] ?? g;
 
-  // ✅ game state 초기화 부분을 교체
   const [game, setGame] = useState(() => {
     const saved = localStorage.getItem("lastSelectedGame");
     const normalized = normalizeGameId(saved || "wow");
-    // 혹시 saved가 옛 값이면, 여기서 바로 저장값도 정리
     if (saved && saved !== normalized) localStorage.setItem("lastSelectedGame", normalized);
     return normalized;
   });
@@ -126,16 +120,13 @@ function App() {
     () => localStorage.getItem(`viewMode-${game}`) || "repeat"
   );
 
-  // const [achvKey, setAchvKey] = useState(0);
   const [achvResetKey, setAchvResetKey] = useState(0);
 
-  // game이 바뀌면, 그 게임의 마지막 viewMode로 복원
   useEffect(() => {
     const saved = localStorage.getItem(`viewMode-${game}`);
     setViewMode(saved || "repeat");
   }, [game]);
 
-  // viewMode가 바뀌면, 현재 game 키로 저장
   useEffect(() => {
     localStorage.setItem(`viewMode-${game}`, viewMode);
   }, [game, viewMode]);
@@ -147,7 +138,6 @@ function App() {
     const perGame = localStorage.getItem(`homeworks-${game}`);
     if (perGame) return JSON.parse(perGame);
 
-    // 예전에 쓰던 all-homeworks가 있으면 1회 가져오기
     const legacy = localStorage.getItem(`all-homeworks`);
     if (legacy) return JSON.parse(legacy);
 
@@ -157,38 +147,32 @@ function App() {
   useEffect(() => {
     setHomeworks(prev => {
       const next = prev.map(hw => {
-        // once는 건드리지 않음(기존 업적 category 유지)
         if (hw.resetPeriod === "once") return hw;
 
         const cat = getCategory(hw);
-        // category 없거나 틀렸으면 교정
         if (String(hw.category || "").toLowerCase() !== cat) {
           return { ...hw, category: cat };
         }
         return hw;
       });
 
-      // 바뀐게 있을 때만 저장
       if (JSON.stringify(prev) !== JSON.stringify(next)) {
         localStorage.setItem(`homeworks-${game}`, JSON.stringify(next));
       }
       return next;
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setHomeworks(prev => {
       const next = prev.map(normalizeRepeatCategory);
 
-      // 🔧 바뀐 게 있을 때만 저장/반영
       const changed = JSON.stringify(prev) !== JSON.stringify(next);
       if (changed) {
         localStorage.setItem(`homeworks-${game}`, JSON.stringify(next));
       }
       return next;
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   const [characters, setCharacters] = useState(() => {
@@ -215,7 +199,6 @@ function App() {
   const [editingKey, setEditingKey] = useState(null); // `${scope}:${idx}` 같은 고유키
   const [editingValue, setEditingValue] = useState("");
 
-  // ✅ Aion2Tool: 스킬 우선순위 불러오기(테스트)
   const fetchSkillPriorities = async (jobKorean) => {
     const url = `https://www.aion2tool.com/api/skill-priorities?job=${encodeURIComponent(jobKorean)}`;
     const r = await fetch(url, { credentials: "include" });
@@ -274,7 +257,6 @@ function App() {
       });
     }
 
-    // ✅ parse는 터질 수 있으니 안전하게
     const safeParse = (v, fallback) => {
       if (!v) return fallback;
       try {
@@ -295,7 +277,6 @@ function App() {
   useEffect(() => {
     if (!isLoaded) return;
 
-    // ✅ 숙제 화면에서만 저장 (영혼각인/아르카나에서는 덮어쓰기 방지)
     const isHomeworkView = viewMode === "repeat" || viewMode === "once";
     if (!isHomeworkView) return;
 
@@ -332,7 +313,6 @@ function App() {
         const updatedCurrentGame = latestInitial.map(latest => {
           const existing = prev.find(h => h.id === latest.id);
           if (existing) {
-            // [수정 포인트] lastUpdated를 명시적으로 추가해서 기존 기록을 보존함
             return { 
               ...latest, 
               counts: existing.counts, 
@@ -532,7 +512,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-19 13:37
+              업데이트 : 2026-03-19 14:04
             </div>
           </div>
 
@@ -547,7 +527,7 @@ function App() {
                     setGame(g.id);
                     localStorage.setItem("lastSelectedGame", g.id);
                   }}
-                  title={g.label} // 마우스 올리면 이름 나오게 툴팁 추가
+                  title={g.label}
                   style={{
                     ...btnStyle,
                     width: "44px",
@@ -568,7 +548,7 @@ function App() {
                     src={g.icon}
                     alt={g.label}
                     style={{
-                      width: "40px",  // 아이콘 크기 확대
+                      width: "40px",
                       height: "40px",
                       objectFit: "contain",
                       filter: game === g.id ? "drop-shadow(0px 0px 4px rgba(0,0,0,0.5))" : "none"
@@ -642,18 +622,6 @@ function App() {
                   >
                     스킬 계산
                   </button>
-
-                  {/* <button
-                    onClick={() => setViewMode("aion2_skill")}
-                    style={{
-                      ...btnStyle,
-                      backgroundColor: viewMode === "aion2_skill" ? "#333" : "#1e1e1e",
-                      border: viewMode === "aion2_skill" ? "1px solid #777" : "1px solid #444",
-                      fontWeight: viewMode === "aion2_skill" ? "bold" : "normal",
-                    }}
-                  >
-                    스킬 채택률
-                  </button> */}
 
                   <button
                     onClick={() => setViewMode("aion2_party")}
@@ -734,15 +702,8 @@ function App() {
         </div>
       )}
 
-      {/* {game === "aion2" && viewMode === "aion2_skill" && (
-        <div style={{ marginTop: 20, paddingTop: 12 }}>
-          <Aion2_SkillPriorityTable />
-        </div>
-      )} */}
-
       {game === "aion2" && viewMode === "aion2_skillcalc" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
-          {/* <Aion2_SkillCalculator /> */}
           <Aion2_SkillCombinedTab />
         </div>
       )}
