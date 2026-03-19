@@ -110,7 +110,7 @@ function handleInputFocus(e) {
 }
 
 function handleInputKeyDown(e) {
-  if (e.key === "Enter") {
+  if (e.key === "Enter" || e.key === "Escape") {
     e.preventDefault();
     e.target.blur();
   }
@@ -668,6 +668,7 @@ function SkillCard({
 }) {
   const level = calcSkillLevel(skill, autoGearSlots, autoArcanaLevels);
   const diff = skill.targetLevel - level;
+  const targetLevel = skill.targetLevel ?? 20;
   const gearSlots = skill.type === "active" ? ACTIVE_GEAR_SLOTS : PASSIVE_GEAR_SLOTS;
   const mergedGearSlots = autoGearSlots ?? {};
   const mergedArcanaLevels = autoArcanaLevels ?? {};
@@ -745,11 +746,34 @@ function SkillCard({
             style={{
               fontSize: "20px",
               fontWeight: "bold",
-              color: diff <= 0 ? S.ok : diff <= 3 ? S.warn : "#e57373",
+              color: level >= targetLevel ? "#4caf50" : "#ff4d4d",
             }}
           >
             Lv.{level}
           </span>
+
+          <span
+            style={{fontSize: "11px"}}
+          >
+            /
+          </span>
+
+          <input
+            type="number"
+            value={skill.targetLevel}
+            onChange={(e) => onChange({ ...skill, targetLevel: Number(e.target.value) })}
+            onKeyDown={handleInputKeyDown}
+            onFocus={handleInputFocus}
+            style={{
+              width: "40px",
+              background: "#222",
+              border: "1px solid #444",
+              color: "#fff",
+              fontSize: "11px",
+              textAlign: "center",
+              borderRadius: "4px",
+            }}
+          />
 
           <button
             onClick={onRemove}
