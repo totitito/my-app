@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 import Aion2_AchievementsTab from "./components/Aion2_AchievementsTab";
-import { AION2_ACHIEVEMENTS } from "./data/aion2-Achievement";
+// import { AION2_ACHIEVEMENTS } from "./data/aion2-Achievement";
 import Aion2_ArcanaTable from "./components/Aion2_ArcanaTable";
 import Aion2_HomeworkTab from "./components/Aion2_HomeworkTab";
 import { initialHomeworks } from "./data/initialHomeworks";
 import { getCategory, fmtKST, getNowMs, getDisplayVal } from "./data/homeworkUtils";
 import Aion2_SkillCombinedTab from "./components/Aion2_SkillCombinedTab";
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
-import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
+import Aion2_CpTab from "./Aion2_CpTab";
+// import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
 import Aion2_RaidPartyBuilder from "./components/Aion2_RaidPartyBuilder";
 import Aion2_MemoTab from "./components/Aion2_MemoTab";
 
@@ -512,7 +513,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-19 14:24
+              업데이트 : 2026-03-20 15:43
             </div>
           </div>
 
@@ -588,6 +589,16 @@ function App() {
                   </button>
 
                   <button
+                    onClick={() => setViewMode("aion2_cp")}
+                    style={{
+                      ...btnStyle,
+                      backgroundColor: viewMode === "aion2_cp" ? "#444" : btnStyle.backgroundColor,
+                    }}
+                  >
+                    전투력
+                  </button>
+
+                  <button
                     onClick={() => setViewMode("aion2_soul")}
                     style={{
                       ...btnStyle,
@@ -620,7 +631,7 @@ function App() {
                       fontWeight: viewMode === "aion2_skillcalc" ? "bold" : "normal",
                     }}
                   >
-                    스킬 계산
+                    스킬
                   </button>
 
                   <button
@@ -632,7 +643,7 @@ function App() {
                       fontWeight: viewMode === "aion2_party" ? "bold" : "normal",
                     }}
                   >
-                    성역 멤버
+                    파티
                   </button>
 
                   <button
@@ -693,6 +704,12 @@ function App() {
       {game === "aion2" && viewMode === "aion2_arcana" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
           <Aion2_ArcanaTable />
+        </div>
+      )}
+
+      {game === "aion2" && viewMode === "aion2_cp" && (
+        <div style={{ marginTop: 20, paddingTop: 12 }}>
+          <Aion2_CpTab />
         </div>
       )}
 
