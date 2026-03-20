@@ -9,7 +9,7 @@ import { initialHomeworks } from "./data/initialHomeworks";
 import { getCategory, fmtKST, getNowMs, getDisplayVal } from "./data/homeworkUtils";
 import Aion2_SkillCombinedTab from "./components/Aion2_SkillCombinedTab";
 import Aion2_SoulEngravingTable from "./components/Aion2_SoulEngravingTable";
-import Aion2_CpTab from "./Aion2_CpTab";
+import Aion2_CpTab from "./components/Aion2_CpTab";
 // import Aion2_SkillPriorityTable from "./components/Aion2_SkillPriorityTable";
 import Aion2_RaidPartyBuilder from "./components/Aion2_RaidPartyBuilder";
 import Aion2_MemoTab from "./components/Aion2_MemoTab";
@@ -513,7 +513,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-20 16:08
+              업데이트 : 2026-03-20 16:10
             </div>
           </div>
 
