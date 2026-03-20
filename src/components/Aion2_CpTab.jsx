@@ -1,6 +1,14 @@
 import { useMemo, useState } from "react";
-// import { CP_SOURCES, CP_STATS, CP_WEIGHTS } from "../data/aion2-cpData";
 import { CP_STATS, CP_WEIGHTS } from "../data/aion2-cpData";
+
+const STAT_PLACEHOLDER = "스탯 선택";
+
+const SORTED_CP_STATS = [...CP_STATS].sort((a, b) => {
+  const aEng = /^[A-Za-z]/.test(a);
+  const bEng = /^[A-Za-z]/.test(b);
+  if (aEng !== bEng) return aEng ? 1 : -1;
+  return a.localeCompare(b, "ko");
+});
 
 const S = {
   wrap: {
@@ -11,14 +19,13 @@ const S = {
     borderRadius: "10px",
   },
   title: {
-    fontSize: "18px",
+    fontSize: "20px",
     fontWeight: "700",
     marginBottom: "12px",
   },
   row: {
     display: "grid",
-    // gridTemplateColumns: "220px 180px 120px 120px 72px",
-    gridTemplateColumns: "260px 120px 120px 72px",
+    gridTemplateColumns: "240px 140px 180px 60px",
     gap: "8px",
     alignItems: "center",
     marginBottom: "8px",
@@ -27,7 +34,7 @@ const S = {
     color: "#aaa",
     fontSize: "12px",
     fontWeight: "700",
-    marginBottom: "8px",
+    marginBottom: "10px",
   },
   input: {
     width: "100%",
@@ -50,7 +57,7 @@ const S = {
     background: "#181818",
     border: "1px solid #333",
     borderRadius: "6px",
-    color: "#ffd66b",
+    color: "#fff",
     fontWeight: "700",
     fontVariantNumeric: "tabular-nums",
   },
@@ -77,18 +84,9 @@ const S = {
 
 const makeRow = () => ({
   id: `${Date.now()}-${Math.random()}`,
-  stat: CP_STATS[0] || "",
-  // source: CP_SOURCES[0] || "",
+  stat: "스탯 선택",
   value: "",
 });
-
-// function getWeight(stat, source) {
-//   const statWeights = CP_WEIGHTS?.[stat];
-//   if (!statWeights) return CP_WEIGHTS?.default ?? 0;
-//   if (statWeights[source] != null) return statWeights[source];
-//   if (statWeights.default != null) return statWeights.default;
-//   return CP_WEIGHTS?.default ?? 0;
-// }
 
 function getWeight(stat) {
   const statWeights = CP_WEIGHTS?.[stat];
@@ -102,21 +100,37 @@ export default function Aion2_CpTab() {
   const [rows, setRows] = useState([makeRow()]);
 
   const updateRow = (id, patch) => {
-    setRows((prev) => prev.map((row) => (row.id === id ? { ...row, ...patch } : row)));
-  };
+    setRows((prev) => {
+      const next = prev.map((row) =>
+        row.id === id ? { ...row, ...patch } : row
+      );
 
-  const addRow = () => {
-    setRows((prev) => [...prev, makeRow()]);
+      const last = next[next.length - 1];
+      if (last.stat !== "스탯 선택" || String(last.value || "") !== "") {
+        next.push({
+          id: `${Date.now()}-${Math.random()}`,
+          stat: "스탯 선택",
+          value: "",
+        });
+      }
+
+      return next;
+    });
   };
 
   const removeRow = (id) => {
-    setRows((prev) => (prev.length === 1 ? prev : prev.filter((row) => row.id !== id)));
+    setRows((prev) => {
+      const next = prev.filter((row) => row.id !== id);
+      return next.length === 0
+        ? [{ id: `${Date.now()}-${Math.random()}`, stat: "스탯 선택", value: "" }]
+        : next;
+    });
   };
 
   const rowCps = useMemo(() => {
     return rows.map((row) => {
+      if (row.stat === "스탯 선택") return 0;   // ← 추가
       const value = Number(row.value || 0);
-      // const weight = getWeight(row.stat, row.source);
       const weight = getWeight(row.stat);
       return value * weight;
     });
@@ -128,14 +142,17 @@ export default function Aion2_CpTab() {
 
   return (
     <div style={S.wrap}>
-      <div style={S.title}>전투력</div>
+      <div style={S.title}>
+        <span>전투력 계산기  </span>
+        <span style={{ color: "#7e7e7e", fontSize: "14px", fontWeight: "700" }}>
+          (※ 스탯값이 같아도 캐릭 스펙에 따라 전투력 환산값이 다르므로 참고만 할 것)
+        </span>
+      </div>
 
-      <div style={{ ...S.row, ...S.head }}>
+      <div style={{ ...S.row, ...S.head, fontSize: "14px" }}>
         <div>스탯</div>
-        {/* <div>출처</div> */}
         <div>값</div>
-        <div style={{ textAlign: "right" }}>전투력</div>
-        <div></div>
+        <div style={{ whiteSpace: "nowrap" }}>전투력</div>
       </div>
 
       {rows.map((row, idx) => (
@@ -145,24 +162,13 @@ export default function Aion2_CpTab() {
             onChange={(e) => updateRow(row.id, { stat: e.target.value })}
             style={S.input}
           >
+            <option value="스탯 선택">스탯 선택</option>
             {CP_STATS.map((stat) => (
               <option key={stat} value={stat}>
                 {stat}
               </option>
             ))}
           </select>
-
-          {/* <select
-            value={row.source}
-            onChange={(e) => updateRow(row.id, { source: e.target.value })}
-            style={S.input}
-          >
-            {CP_SOURCES.map((source) => (
-              <option key={source} value={source}>
-                {source}
-              </option>
-            ))}
-          </select> */}
 
           <input
             type="number"
@@ -172,24 +178,31 @@ export default function Aion2_CpTab() {
             style={S.input}
           />
 
-          <div style={S.cpBox}>{Math.round(rowCps[idx] || 0).toLocaleString()}</div>
+          <div style={{ position: "relative" }}>
+            {idx === 0 && (
+              <div style={{
+                position: "absolute",
+                top: "-36px",
+                left: 0,
+                right: 0,
+                textAlign: "right",
+                fontSize: "22px",
+                color: "#ffd66b",
+                fontWeight: "700",
+                paddingRight: "10px",
+                fontVariantNumeric: "tabular-nums",
+              }}>
+                {Math.round(totalCp).toLocaleString()}
+              </div>
+            )}
+            <div style={S.cpBox}>{Math.round(rowCps[idx] || 0).toLocaleString()}</div>
+          </div>
 
           <button type="button" onClick={() => removeRow(row.id)} style={S.btn}>
             삭제
           </button>
         </div>
       ))}
-
-      <div style={{ marginTop: "10px" }}>
-        <button type="button" onClick={addRow} style={S.btn}>
-          + 스탯 추가
-        </button>
-      </div>
-
-      <div style={S.total}>
-        <div>총 합계 전투력</div>
-        <div style={{ color: "#ffd66b" }}>{Math.round(totalCp).toLocaleString()}</div>
-      </div>
     </div>
   );
 }
