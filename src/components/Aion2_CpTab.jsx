@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CP_STATS, CP_WEIGHTS, MAIN_STAT_WEIGHTS } from "../data/aion2-cpData";
 
 const STAT_PLACEHOLDER = "스탯 선택";
@@ -100,8 +100,14 @@ function getWeight(stat) {
 }
 
 export default function Aion2_CpTab() {
-  const [rows, setRows] = useState([makeRow()]);
-
+  const [rows, setRows] = useState(() => {
+    try {
+      const saved = localStorage.getItem("ghw-cptab-rows");
+      return saved ? JSON.parse(saved) : [makeRow()];
+    } catch {
+      return [makeRow()];
+    }
+  });
   const updateRow = (id, patch) => {
     setRows((prev) => {
       const next = prev.map((row) =>
@@ -142,6 +148,10 @@ export default function Aion2_CpTab() {
   const totalCp = useMemo(() => {
     return rowCps.reduce((sum, cp) => sum + cp, 0);
   }, [rowCps]);
+
+  useEffect(() => {
+    localStorage.setItem("ghw-cptab-rows", JSON.stringify(rows));
+  }, [rows]);
 
   return (
     <div style={S.wrap}>
