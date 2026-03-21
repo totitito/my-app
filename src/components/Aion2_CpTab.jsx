@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { CP_STATS, CP_WEIGHTS } from "../data/aion2-cpData";
+import { CP_STATS, CP_WEIGHTS, MAIN_STAT_WEIGHTS } from "../data/aion2-cpData";
 
 const STAT_PLACEHOLDER = "스탯 선택";
 
@@ -89,6 +89,9 @@ const makeRow = () => ({
 });
 
 function getWeight(stat) {
+  const mainW = MAIN_STAT_WEIGHTS?.[stat];
+  if (mainW != null) return mainW;
+
   const statWeights = CP_WEIGHTS?.[stat];
   if (statWeights == null) return CP_WEIGHTS?.default ?? 0;
   if (typeof statWeights === "number") return statWeights;
