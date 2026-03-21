@@ -136,6 +136,10 @@ export default function Aion2_CpTab() {
     });
   };
 
+  const resetRows = () => {
+    setRows([makeRow()]);
+  };
+
   const rowCps = useMemo(() => {
     return rows.map((row) => {
       if (row.stat === "스탯 선택") return 0;   // ← 추가
@@ -161,6 +165,10 @@ export default function Aion2_CpTab() {
           (※ 스탯값이 같아도 캐릭 스펙에 따라 전투력 환산값이 다르므로 참고만 할 것)
         </span>
       </div>
+
+      <button type="button" onClick={resetRows} style={{ ...S.btn, marginBottom: "12px" }}>
+        초기화
+      </button>
 
       <div style={{ ...S.row, ...S.head, fontSize: "14px" }}>
         <div>스탯</div>
