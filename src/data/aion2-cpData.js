@@ -34,6 +34,8 @@ export const CP_STATS = [
 
   "상태이상 저항",
   "상태이상 적중",
+
+  "위력", "민첩", "정확", "의지", "지식", "체력",
 ];
 
 // 아르카나 특수 규칙
@@ -120,7 +122,11 @@ export const CP_WEIGHTS = {
 export const MAIN_STAT_WEIGHTS = {
   default: 0,
   "위력": 97.7,
+  "민첩": 0,
   "정확": 13.192,
+  "의지": 0,
+  "지식": 0,
+  "체력": 0,
 };
 
 export const GOD_STAT_WEIGHTS = {

@@ -163,7 +163,7 @@ export default function Aion2_CpTab() {
             style={S.input}
           >
             <option value="스탯 선택">스탯 선택</option>
-            {CP_STATS.map((stat) => (
+            {SORTED_CP_STATS.map((stat) => (
               <option key={stat} value={stat}>
                 {stat}
               </option>
