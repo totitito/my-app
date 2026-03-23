@@ -12,7 +12,8 @@ export const AION2_ACHIEVEMENTS = [
   { id: "aion2-achievement-draup-twenty", game: "aion2", name: "드라웁니르 20회 클리어", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
 
   // 아이온2 - 업적 - 칭호
-  { id: "aion2-title-fashionista-700", game: "aion2", name: "아이고, 입을 옷이 없네", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },
+  { id: "aion2-title-break-free-from-shackles-of-race", game: "aion2", name: "종족의 굴레를 벗다", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "칭호", scope: "character", lastUpdated: {} },
+  { id: "aion2-title-fashionista-700", game: "aion2", name: "아이고, 입을 옷이 없네", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "칭호", scope: "character", lastUpdated: {} },
   
   // 아이온2 - 업적 - 필드보스(천족)
   { id: "aion2-sentry-knash", game: "aion2", name: "감시병기 크나쉬", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(천족)", scope: "character", lastUpdated: {} },
