@@ -1164,7 +1164,8 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
 
       PRESET_GEAR_SLOTS.forEach(s => { if(!gear[s.id])   gear[s.id]   = []; });
       PRESET_ARCANA_SLOTS.forEach(s => { if(!arcana[s.id]) arcana[s.id] = []; });
-      const reserveArcana = { 성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [] };
+      const currentPreset = presets.find((p) => p.id === activePresetId);
+      const reserveArcana = currentPreset?.reserveArcana ?? { 성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [] };
 
       // API에서 받은 직업으로 자동 전환
       const job = JOBS.includes(json.job) ? json.job : selectedJob;
@@ -1195,6 +1196,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
         ...p,
         job,
         equippedGear: gear,
+        reserveGear: p.reserveGear ?? structuredClone(EMPTY_GEAR_SLOTS),
         equippedArcana: arcana,
         reserveArcana,
         lastImportedChar: importChar.trim(),
@@ -1233,7 +1235,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
 
       PRESET_GEAR_SLOTS.forEach(s => { if(!gear[s.id])   gear[s.id]   = []; });
       PRESET_ARCANA_SLOTS.forEach(s => { if(!arcana[s.id]) arcana[s.id] = []; });
-      const reserveArcana = { 성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [] };
+      const reserveArcana = structuredClone(EMPTY_ARCANA_SLOTS);
 
       // API에서 받은 직업으로 자동 전환
       const job = JOBS.includes(json.job) ? json.job : selectedJob;
@@ -1553,7 +1555,7 @@ export default function Aion2_SkillCalculator({ selectedJob: externalJob, onChan
                   const arcana = json.arcana ?? p.equippedArcana ?? {};
                   PRESET_GEAR_SLOTS.forEach(s => { if (!gear[s.id]) gear[s.id] = []; });
                   PRESET_ARCANA_SLOTS.forEach(s => { if (!arcana[s.id]) arcana[s.id] = []; });
-                  const reserveArcana = { 성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [] };
+                  const reserveArcana = p?.reserveArcana ?? structuredClone(EMPTY_ARCANA_SLOTS);
                   const job = JOBS.includes(json.job) ? json.job : selectedJob;
 
                   if (onChangeJob) onChangeJob(job);

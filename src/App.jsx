@@ -513,7 +513,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-03-30 10:47
+              업데이트 : 2026-03-31 09:05
             </div>
           </div>
 
@@ -588,7 +588,7 @@ function App() {
                     업적
                   </button>
 
-                  <button
+                  {/* <button
                     onClick={() => setViewMode("aion2_cp")}
                     style={{
                       ...btnStyle,
@@ -596,7 +596,7 @@ function App() {
                     }}
                   >
                     전투력
-                  </button>
+                  </button> */}
 
                   <button
                     onClick={() => setViewMode("aion2_soul")}
@@ -657,18 +657,23 @@ function App() {
                   >
                     메모
                   </button>
-              
                 </>
               )}
 
+              {/* 공통 저장/불러오기 버튼 */}
               <button onClick={exportData} style={{ ...btnStyle, backgroundColor: "#004080", marginLeft: "10px" }}>Save</button>
               <label style={{ ...btnStyle, backgroundColor: "#1a5e20", cursor: "pointer", textAlign: "center", display: "inline-block" }}>
                 Load<input type="file" accept=".json" onChange={importData} style={{ display: "none" }} />
               </label>
-              <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a" }}>숙제 최신화</button>
-              <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button>
-              <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
-              
+
+              {/* ✅ 숙제 탭일 때만 노출되는 관리 버튼들 */}
+              {game === "aion2" && viewMode === "repeat" && (
+                <>
+                  <button onClick={updateSettings} style={{ ...btnStyle, backgroundColor: "#6a1b9a", marginLeft: "10px" }}>숙제 최신화</button>
+                  {/* <button onClick={resetProgress} style={{ ...btnStyle, backgroundColor: "#5d4037" }}>진행도 초기화</button> */}
+                  <button onClick={resetGameData} style={{ ...btnStyle, backgroundColor: "#b71c1c" }}>공장 초기화</button>
+                </>
+              )}
             </div>
           </div>
         </div>
