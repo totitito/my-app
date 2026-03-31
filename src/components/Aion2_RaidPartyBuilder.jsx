@@ -623,7 +623,7 @@ export default function Aion2_RaidPartyBuilder() {
                             </select>
                           </div>
                           <div style={{ marginTop: 3, fontSize: 11, color: "#111" }}>
-                            iLvl {formatKoreanMan(c.itemLevel)} · CP {formatKoreanMan(c.power)}
+                            iLvl {c.itemLevel?.toLocaleString()} · CP {formatK(c.power)}
                           </div>
                         </div>
                       ) : (
@@ -898,20 +898,19 @@ export default function Aion2_RaidPartyBuilder() {
   );
 }
 
-function formatKoreanMan(value) {
+function formatK(value) {
   const num = Number(value ?? 0);
   if (!Number.isFinite(num)) return "0";
 
-  if (num < 10000) return num.toLocaleString();
+  if (num < 1000) return num.toString();
 
-  const man = num / 10000;
-
-  if (man >= 100) {
-    return `${Math.floor(man).toLocaleString()}만`;
+  if (num < 1000000) {
+    const k = Math.floor(num / 100) / 10; // 소수점 1자리 내림
+    return `${k}k`;
   }
 
-  const rounded = Math.round(man * 10) / 10;
-  return Number.isInteger(rounded) ? `${rounded.toLocaleString()}만` : `${rounded.toFixed(1)}만`;
+  const m = Math.floor(num / 100000) / 10; // 소수점 1자리 내림
+  return `${m}m`;
 }
 
 function CandidateCard(props) {
@@ -1023,7 +1022,7 @@ function CandidateCard(props) {
 
         <div style={{ marginTop: 3, fontSize: 11, display: "flex", gap: 8, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
           <span style={{ color: "#111" }}>
-            iLvl : <span style={{ fontWeight: "bold" }}>{formatKoreanMan(c.itemLevel)}</span>
+            iLvl : <span style={{ fontWeight: "bold" }}>{c.itemLevel?.toLocaleString()}</span>
           </span>
           {/* 전투력 */}
           <span style={{ color: "#000000" }}>
@@ -1054,7 +1053,7 @@ function CandidateCard(props) {
                   setEditingFieldId(null);
                 }}
                 style={{
-                  width: 36,
+                  width: 50,
                   padding: "2px 6px",
                   borderRadius: 8,
                   border: "1px solid rgba(0,0,0,0.35)",
@@ -1078,7 +1077,7 @@ function CandidateCard(props) {
                 style={{ cursor: "text", userSelect: "none", fontWeight: "bold" }}
                 title="클릭해서 전투력 수정"
               >
-                {formatKoreanMan(c.power)}
+                {formatK(c.power)}
               </span>
             )}
           </span>
