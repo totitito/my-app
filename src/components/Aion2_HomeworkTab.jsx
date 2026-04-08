@@ -724,9 +724,9 @@ export default function Aion2_HomeworkTab({
                           overflow: "break-word",
                           textOverflow: "anywhere",
                           color:
-                            hw.name === "루드라"
+                            hw.name === "성역1"
                               ? "#b060ff"
-                              : hw.name === "침식"
+                              : hw.name === "성역2"
                               ? "#ff4444"
                               : undefined,
                         }}
@@ -1007,9 +1007,9 @@ export default function Aion2_HomeworkTab({
                             textAlign: "center", 
                             padding: "10px", 
                             backgroundColor: isPending
-                              ? hw.name === "루드라"
+                              ? hw.name === "성역1"
                                 ? "#3b2c63"
-                                : hw.name === "침식"
+                                : hw.name === "성역2"
                                 ? "#5a2c2c"
                                 : hw.id.startsWith("aion2-corridor-")
                                 ? "#5a3a1a"
