@@ -43,7 +43,7 @@ export default function Aion2_HomeworkTab({
 
   const [isPortraitCollapsed, setIsPortraitCollapsed] = useState(false);
 
-  // 추가 오드에너지 / 추가 던전티켓 (캐릭터별)
+  // 추가 오드에너지(캐릭터별) / 추가 던전티켓(계정별 일던)
   const [extraOdd, setExtraOdd] = useState(() => {
     try { return JSON.parse(localStorage.getItem("ghw-extra-odd") || "{}"); } catch { return {}; }
   });
@@ -1124,16 +1124,20 @@ export default function Aion2_HomeworkTab({
                               )}
 
                               {/* 추가 던전티켓 인풋 */}
-                              {hw.id === "aion2-weeklydungeon" && (
+                              {hw.id === "aion2-account-weeklydungeon" && (
                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "3px", marginTop: "4px" }} onClick={(e) => e.stopPropagation()}>
                                   <input
                                     type="number"
-                                    value={extraDungeon[targetName] ?? 0}
+                                    value={
+                                      extraDungeon[`account:${targetName}`] ??
+                                      extraDungeon[targetName] ??
+                                      0
+                                    }
                                     min={0}
                                     max={30}
                                     onChange={(e) => {
                                       const v = Math.max(0, Math.min(30, Number(e.target.value) || 0));
-                                      setExtraDungeon(prev => ({ ...prev, [targetName]: v }));
+                                      setExtraDungeon(prev => ({ ...prev, [`account:${targetName}`]: v }));
                                     }}
                                     onFocus={(e) => e.target.select()}
                                     onKeyDown={(e) => { if (e.key === "Enter") e.target.blur(); }}
