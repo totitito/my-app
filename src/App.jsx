@@ -235,6 +235,11 @@ function App() {
   useEffect(() => {
     setIsLoaded(false);
 
+    setCharacters([]);
+    setAccounts([]);
+    setScores({});
+    setHiddenHomeworks([]);
+
     const LEGACY_LABEL = {
       wow: "World of Warcraft",
       lostark: "Lost Ark",
@@ -442,13 +447,17 @@ function App() {
           }
         }
 
-        // ✅ 업적 복구
-        const achvKey = `achievements-${game}-v2`;
-        if (data[achvKey]) {
-          localStorage.setItem(achvKey, JSON.stringify(data[achvKey]));
-          setAchvResetKey(prev => {
-            return prev + 1;
-          });
+        // ✅ 업적 복구 (모든 게임)
+        GAME_IDS.forEach(g => {
+          const achvKey = `achievements-${g}-v2`;
+          if (data[achvKey]) {
+            localStorage.setItem(achvKey, JSON.stringify(data[achvKey]));
+          }
+        });
+
+        // 현재 아이온2 업적 탭 새로고침
+        if (game === "aion2") {
+          setAchvResetKey(prev => prev + 1);
         }
 
         // ✅ 추가 오드에너지 / 추가 던전티켓 복구
@@ -513,7 +522,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-04-08 13:52
+              업데이트 : 2026-04-09 11:35
             </div>
           </div>
 
@@ -700,9 +709,13 @@ function App() {
         />
       )}
 
-      {game === "aion2" && viewMode === "aion2_achievements" && (
+      {isLoaded && game === "aion2" && viewMode === "aion2_achievements" && (
         <div style={{ marginTop: 20, paddingTop: 12 }}>
-          <Aion2_AchievementsTab key={achvResetKey} characters={characters} />
+          <Aion2_AchievementsTab 
+            key={achvResetKey} 
+            characters={characters} 
+            accounts={accounts} // ✅ 이 줄을 추가하세요!
+          />
         </div>
       )}
 

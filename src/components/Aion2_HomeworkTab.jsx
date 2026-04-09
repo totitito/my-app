@@ -264,6 +264,32 @@ export default function Aion2_HomeworkTab({
       return { ...hw, counts: newCounts, excluded: newExcluded, lastUpdated: newLastUpdated };
     }));
 
+    try {
+      const achvKey = "achievements-aion2-v2";
+      const raw = localStorage.getItem(achvKey);
+
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const groupKey = scope === "character" ? "byCharacter" : "byAccount";
+        const group = { ...(parsed[groupKey] || {}) };
+
+        if (Object.prototype.hasOwnProperty.call(group, oldName)) {
+          group[trimmed] = group[oldName];
+          delete group[oldName];
+
+          localStorage.setItem(
+            achvKey,
+            JSON.stringify({
+              ...parsed,
+              [groupKey]: group,
+            })
+          );
+        }
+      }
+    } catch (e) {
+      console.error("업적 이름 이동 실패:", e);
+    }
+
     setEditingKey(null);
     setEditingValue("");
   };
@@ -1143,6 +1169,24 @@ export default function Aion2_HomeworkTab({
                                     onKeyDown={(e) => { if (e.key === "Enter") e.target.blur(); }}
                                     style={{ width: "30px", textAlign: "center", backgroundColor: isPending ? "#4b4b20" : "#1e1e1e", color: "#39b3ff", border: "1px solid #39b3ff", borderRadius: "2px", fontSize: "12px", padding: "3px 2px" }}                                  />
                                   {/* <span style={{ fontSize: "11px", color: "#888" }}>/ 30</span> */}
+                                </div>
+                              )}
+
+                              {hw.name === "슈고페스타" && (
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "3px", marginTop: "4px" }} onClick={(e) => e.stopPropagation()}>
+                                  <input
+                                    type="number"
+                                    value={extraDungeon[`shugo:${targetName}`] ?? 0}
+                                    min={0}
+                                    max={30}
+                                    onChange={(e) => {
+                                      const v = Math.max(0, Math.min(30, Number(e.target.value) || 0));
+                                      setExtraDungeon(prev => ({ ...prev, [`shugo:${targetName}`]: v }));
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onKeyDown={(e) => { if (e.key === "Enter") e.target.blur(); }}
+                                    style={{ width: "30px", textAlign: "center", backgroundColor: isPending ? "#4b4b20" : "#1e1e1e", color: "#39b3ff", border: "1px solid #39b3ff", borderRadius: "2px", fontSize: "12px", padding: "3px 2px" }}
+                                  />
                                 </div>
                               )}
                               

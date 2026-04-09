@@ -1,10 +1,18 @@
 export const AION2_ACHIEVEMENTS = [
 
   // 아이온2 - 데바 패스
-  { id: "aion2-devapass-260225-arcana-present", game: "aion2", name: "아르카나 선물 꾸러미", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
-  { id: "aion2-devapass-260225-arcana-present-premium", game: "aion2", name: "아르카나 선물 꾸러미(프리미엄)", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
-  { id: "aion2-devapass-260311-blessing-odd", game: "aion2", name: "오드의 은총", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
-  { id: "aion2-devapass-260311-blessing-odd-premium", game: "aion2", name: "오드의 은총(프리미엄)", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  // { id: "aion2-devapass-260225-arcana-present", game: "aion2", name: "아르카나 선물 꾸러미", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  // { id: "aion2-devapass-260225-arcana-present-premium", game: "aion2", name: "아르카나 선물 꾸러미(프리미엄)", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  // { id: "aion2-devapass-260311-blessing-odd", game: "aion2", name: "오드의 은총", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  // { id: "aion2-devapass-260311-blessing-odd-premium", game: "aion2", name: "오드의 은총(프리미엄)", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  { id: "aion2-devapass-260408-starguidance", game: "aion2", name: "별의 인도", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
+  { id: "aion2-devapass-260408-rich-journey", game: "aion2", name: "풍요로운 여정", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "account", lastUpdated: {} },
+  { id: "aion2-devapass-260408-hero-invitation", game: "aion2", name: "영웅의 초대장", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "account", lastUpdated: {} },
+
+  // 아이온2 - 업적 - 시즌
+  { id: "aion2-season-season2-reward-chest", game: "aion2", name: "시즌2 랭킹 보상 상자", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "시즌", scope: "character", lastUpdated: {} },
+  { id: "aion2-season-coin-of-oath", game: "aion2", name: "맹세의 주화", max: 4, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "시즌", scope: "account", lastUpdated: {} },
+  { id: "aion2-season-shugo-growth-boosting", game: "aion2", name: "슈고의 성장 부스팅", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "시즌", scope: "account", lastUpdated: {} },
 
   // 아이온2 - 업적 - 기본
   { id: "aion2-basic-foundation-quests", game: "aion2", name: "지역퀘, 봉던, 주둔지", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "기본", scope: "character", lastUpdated: {} },

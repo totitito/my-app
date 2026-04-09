@@ -5,11 +5,32 @@ import { AION2_ACHIEVEMENTS } from "../data/aion2-Achievement";
 
 const ACHV_LS_KEY = (game) => `achievements-${game}-v2`;
 
-// 1) 카테고리 목록(기존 하드코딩 대체)
-const CATS = ["데바 패스","기본","칭호","필드보스(천족)","필드보스(마족)","날개","조각상","명화(던전)","명화(슈고)","명화(기타)"];
-console.log("데바패스 항목수:", AION2_ACHIEVEMENTS.filter(a => a.category === "데바 패스").length)
+const CATS = ["데바 패스", "시즌", "기본", "칭호", "필드보스(천족)", "필드보스(마족)", "날개", "조각상", "명화(던전)", "명화(슈고)", "명화(기타)"];
 
-export default function Aion2_AchievementsTab({ characters = [] }) {
+export default function Aion2_AchievementsTab({ characters = [], accounts = [] }) {
+  const [achievementsState, setAchievementsState] = useState(() => {
+    const saved = localStorage.getItem(ACHV_LS_KEY("aion2"));
+    return saved
+      ? { collapsed: {}, ...JSON.parse(saved) }
+      : {
+          byCharacter: {},
+          byAccount: {},
+          ui: { search: "", onlyIncomplete: false, sort: "default" },
+          collapsed: {},
+        };
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      ACHV_LS_KEY("aion2"),
+      JSON.stringify({
+        byCharacter: achievementsState.byCharacter,
+        byAccount: achievementsState.byAccount,
+        collapsed: achievementsState.collapsed,
+        ui: achievementsState.ui,
+      })
+    );
+  }, [achievementsState.byCharacter, achievementsState.byAccount, achievementsState.collapsed, achievementsState.ui]);
 
   const toggleCat = (cat) => {
     setAchievementsState((prev) => ({
@@ -18,181 +39,136 @@ export default function Aion2_AchievementsTab({ characters = [] }) {
     }));
   };
 
-  // console.log("characters:", characters);
+  // ✅ 캐릭터명/계정명 추출 함수 (객체일 경우 name을, 문자열일 경우 그대로 반환)
+  const getName = (item) => {
+    if (!item) return "";
+    if (typeof item === "object") return (item.name || item.id || "").trim();
+    return String(item).trim();
+  };
 
-  const [achievementsState, setAchievementsState] = useState(() => {
-    const saved = localStorage.getItem(ACHV_LS_KEY("aion2"));
-    return saved
-      ? { collapsed: {}, ...JSON.parse(saved) }
-      : {
-          byCharacter: {},
-          ui: { search: "", onlyIncomplete: false, sort: "default" },
-          collapsed: {},
-        };
-  });
+  // 테이블 렌더링 공통 함수
+  const renderTable = (type, list = [], achvs = []) => {
+    const isChar = type === "character";
+    
+    if (!list || list.length === 0) {
+      return <div style={{ padding: 10, color: "#888", fontSize: 13 }}>등록된 {isChar ? "캐릭터" : "계정"}이 없습니다.</div>;
+    }
 
-  // useEffect(() => console.log("ACHV loaded:", achievementsState), []);
+    return (
+      <table style={{ width: "850px", borderCollapse: "collapse", tableLayout: "fixed", marginBottom: 20 }}>
+        <thead>
+          <tr style={{ background: "#363636" }}>
+            <th style={{ textAlign: "left", padding: "6px", border: "1px solid #333" }}>
+                {isChar ? "캐릭터 업적명" : "계정 업적명"}
+            </th>
+            {list.map((item, idx) => {
+              const label = getName(item); // 수정된 이름 추출 로직
+              return (
+                <th key={`${type}-head-${idx}`}
+                  style={{
+                    width: 64, padding: "6px 2px", border: "1px solid #333",
+                    wordBreak: "break-all", whiteSpace: "normal", lineHeight: 1.1,
+                    fontSize: 14
+                  }}>
+                  {label}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {achvs.filter(a => a.scope === type).map((a) => (
+            <tr key={a.id}>
+              <td style={{ padding: "6px", border: "1px solid #333" }}>
+                <span style={{ color: a.color || "inherit" }}>{a.name}</span>
+              </td>
+              {list.map((item, idx) => {
+                const targetKey = getName(item); // 저장 키값도 동일하게 추출
+                const stateGroup = isChar ? achievementsState.byCharacter : achievementsState.byAccount;
+                const count = stateGroup?.[targetKey]?.[a.id] || 0;
+                const max = a.max || 1;
 
-  useEffect(() => {
-    localStorage.setItem(
-      ACHV_LS_KEY("aion2"),
-      JSON.stringify({
-        byCharacter: achievementsState.byCharacter,
-        collapsed: achievementsState.collapsed,
-        ui: achievementsState.ui,
-      })
+                return (
+                  <td
+                    key={`${type}-cell-${idx}-${a.id}`}
+                    onClick={() => {
+                      if (!targetKey) return; // 이름이 없는 경우 무시
+                      setAchievementsState(prev => {
+                        const newGroup = { ...(isChar ? prev.byCharacter : prev.byAccount) };
+                        const targetData = { ...(newGroup[targetKey] || {}) };
+                        targetData[a.id] = (count + 1) % (max + 1);
+                        newGroup[targetKey] = targetData;
+                        return isChar ? { ...prev, byCharacter: newGroup } : { ...prev, byAccount: newGroup };
+                      });
+                    }}
+                    style={{
+                      border: "1px solid #333",
+                      cursor: "pointer",
+                      background: count > 0 ? (count === max ? "#222" : "#3d3d3d") : "#5a4f2a",
+                      textAlign: "center",
+                      fontSize: 11,
+                      color: count > 0 ? "#fff" : "#666",
+                      userSelect: "none",
+                      fontWeight: count > 0 ? "bold" : "normal",
+                    }}
+                  >
+                    {max > 1 ? `${count}/${max}` : (count > 0 ? "완료" : "미완료")}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
-  }, [achievementsState.byCharacter, achievementsState.collapsed]);
-
-  const [currentChar, setCurrentChar] = useState(
-    characters?.[0]?.name || characters?.[0] || ""
-  );
-
-  useEffect(() => {
-    if (!characters || characters.length === 0) return;
-
-    const first =
-      typeof characters[0] === "object"
-        ? characters[0].name
-        : characters[0];
-
-    setCurrentChar(prev => prev || first);
-  }, [characters]);
-
-  const charLabel = (c) => String(typeof c === "object" ? (c?.name ?? "") : (c ?? "")).trim();
+  };
 
   return (
     <div style={{ padding: 12 }}>
+      {/* 닫혀있는 카테고리 필터 */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+        {CATS.filter(cat => achievementsState.collapsed?.[cat]).map(cat => (
+          <button key={cat} onClick={() => toggleCat(cat)} style={{ background: "#2a2a2a", border: "1px solid #666", color: "#fff", padding: "6px 14px", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: "bold", display: "flex", alignItems: "center", gap: 6 }}>
+            <span>{cat}</span><span>➕</span>
+          </button>
+        ))}
+      </div>
 
-      {/* <pre style={{ fontSize: 12, color: "#aaa", marginBottom: 10 }}>
-        {JSON.stringify(achievementsState.byCharacter, null, 2)}
-      </pre> */}
+      {/* 업적 리스트 */}
+      {CATS.filter(cat => !achievementsState.collapsed?.[cat]).map(cat => {
+        const achvsInCat = AION2_ACHIEVEMENTS.filter(a => a.category === cat);
+        const hasCharScope = achvsInCat.some(a => a.scope === "character");
+        const hasAcctScope = achvsInCat.some(a => a.scope === "account");
 
-      {CATS.filter(cat => achievementsState.collapsed?.[cat]).length > 0 && (
-        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-          {CATS
-            .filter(cat => achievementsState.collapsed?.[cat])
-            .map(cat => (
-              <button
-                key={cat}
-                onClick={() => toggleCat(cat)}
-                style={{
-                  background: "#2a2a2a",
-                  border: "1px solid #666",
-                  color: "#fff",
-                  padding: "6px 14px",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  fontSize: 14,
-                  fontWeight: "bold",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
-              >
-                <span>{cat}</span>
-                <span>➕</span>
-              </button>
-            ))}
-        </div>
-      )}
+        return (
+          <div key={cat} style={{ marginBottom: 32, borderBottom: "1px solid #333", paddingBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <span style={{ fontWeight: "bold", fontSize: 18, color: "#ffd400" }}>{cat}</span>
+              <button onClick={() => toggleCat(cat)} style={{ background: "#1e1e1e", border: "1px solid #444", color: "#ccc", padding: "2px 10px", borderRadius: 6, cursor: "pointer" }}>➖ 접기</button>
+            </div>
 
-      {/* ✅ 여기부터가 업적 탭 UI 자리 (다음 단계에서 App.jsx에서 복사해 옮길 거임) */}
-      {CATS.filter(cat => !achievementsState.collapsed?.[cat]).map(cat => (
-        <div key={cat} style={{ marginBottom: 16 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              marginBottom: 4,
-            }}
-          >
-            <span style={{ fontWeight: "bold" }}>{cat}</span>
+            {/* 계정별 업적 (위쪽) */}
+            {hasAcctScope && (
+              <div style={{ marginBottom: hasCharScope ? 20 : 0 }}>
+                <div style={{ fontSize: 13, color: "#aaa", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+                    <span style={{ background: "#444", padding: "2px 6px", borderRadius: 4 }}>계정 공통</span>
+                </div>
+                {renderTable("account", accounts, achvsInCat)}
+              </div>
+            )}
 
-            <button
-              onClick={() => toggleCat(cat)}
-              style={{
-                background: "#1e1e1e",
-                border: "1px solid #444",
-                color: "#ccc",
-                padding: "2px 10px",
-                borderRadius: 6,
-                cursor: "pointer",
-              }}
-            >
-              {achievementsState.collapsed?.[cat] ? "➕" : "➖"}
-            </button>
+            {/* 캐릭터별 업적 (아래쪽) */}
+            {hasCharScope && (
+              <div>
+                <div style={{ fontSize: 13, color: "#aaa", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+                    <span style={{ background: "#444", padding: "2px 6px", borderRadius: 4 }}>캐릭터 개별</span>
+                </div>
+                {renderTable("character", characters, achvsInCat)}
+              </div>
+            )}
           </div>
-
-          {!achievementsState.collapsed?.[cat] && (
-            <table style={{ width: "850px", borderCollapse:"collapse", tableLayout:"fixed" }}>
-              <thead>
-                <tr style={{ background: "#363636" }}>
-                  <th style={{ textAlign:"left", padding:"6px", border:"1px solid #333" }}>업적명</th>
-                  {characters.map((c) => (
-                    <th key={charLabel(c)}
-                        style={{ width:64, padding:"6px 2px", border:"1px solid #333",
-                                wordBreak:"break-all", whiteSpace:"normal", lineHeight:1.1,
-                                fontSize: 14 }}>
-                      {charLabel(c)}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody>
-                {AION2_ACHIEVEMENTS
-                  .filter(a => a.category === cat)
-                  .map((a) => (
-                    <tr key={a.id}>
-                      <td style={{ padding:"6px", border:"1px solid #333" }}>
-                        <span style={{ color: a.color || "inherit" }}>
-                          {a.name}
-                        </span>
-                      </td>
-
-                      {characters.map((c) => {
-                        const ch = charLabel(c);
-                        const checked =
-                          achievementsState.byCharacter &&
-                          achievementsState.byCharacter[ch] &&
-                          achievementsState.byCharacter[ch][a.id] === true;
-                        return (
-                          <td
-                            key={ch}
-                            onClick={() => {
-                              setAchievementsState(prev => {
-                                const byChar = { ...(prev.byCharacter || {}) };
-                                const charData = { ...(byChar[ch] || {}) };
-                                charData[a.id] = !charData[a.id];
-                                byChar[ch] = charData;
-                                return { ...prev, byCharacter: byChar };
-                              });
-                            }}
-                            style={{
-                              border: "1px solid #333",
-                              cursor: "pointer",
-                              background: checked ? "#222" : "#5a4f2a",
-                              textAlign: "center",
-                              fontSize: 11,
-                              color: checked ? "#555" : "#22221b",
-                              userSelect: "none",
-                            }}
-                          >
-                            {checked ? "(완료)" : "(미완료)"}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      ))}
-
+        );
+      })}
     </div>
   );
-
 }
