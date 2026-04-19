@@ -12,6 +12,8 @@ const makePreset = (name) => ({
 });
 
 const defaultState = {
+  candidateSortMode: "operator",
+  players: ["강력공격맨", "네오", "수사불패", "재미니맨", "Adele", "Pdoll"],
   candidates: [
     { id: crypto.randomUUID(), operator: "강력공격맨", name: "카니쵸니[바카]", cls: "궁성", itemLevel: 3533, power: 331200, updatedAt: 0 },
     { id: crypto.randomUUID(), operator: "강력공격맨", name: "까니쵸니[바카]", cls: "호법성", itemLevel: 3266, power: 249800, updatedAt: 0 },
@@ -81,6 +83,10 @@ export default function Aion2_RaidPartyBuilder() {
         parsed.rudraPresets = [makePreset("루드라 1")];
       if (!Array.isArray(parsed.erosionPresets) || parsed.erosionPresets.length === 0)
         parsed.erosionPresets = [makePreset("침식 1")];
+      if (!Array.isArray(parsed.players) || parsed.players.length === 0)
+        parsed.players = defaultState.players;
+      if (!parsed.candidateSortMode)
+        parsed.candidateSortMode = "operator";
       if (Array.isArray(parsed.slots)) {
         parsed.rudraPresets[0].slots = parsed.slots;
         delete parsed.slots;
@@ -91,13 +97,13 @@ export default function Aion2_RaidPartyBuilder() {
     }
   });
 
-  const { candidates, rudraPresets, erosionPresets } = state;
+  const { candidates, rudraPresets, erosionPresets, players, candidateSortMode } = state;
+
+  const setCandidateSortMode = (mode) => setState(prev => ({ ...prev, candidateSortMode: mode }));
 
   const [editingPresetId, setEditingPresetId] = useState(null);
   const [editingPresetName, setEditingPresetName] = useState("");
   const [isRefreshingAll, setIsRefreshingAll] = useState(false);
-
-  const [candidateSortMode, setCandidateSortMode] = useState("class");
 
   // 프리셋 슬롯 조작 헬퍼
   const updatePresetSlots = (type, presetId, updater) => {
@@ -385,6 +391,40 @@ export default function Aion2_RaidPartyBuilder() {
     }));
   };
 
+  const addPlayer = (name) => {
+    const trimmed = (name || "").trim();
+    if (!trimmed) return;
+    setState(prev => {
+      if (prev.players.includes(trimmed)) return prev;
+      const next = [...prev.players, trimmed];
+      next.sort((a, b) => a.localeCompare(b, ["ko", "en"], { sensitivity: "base" }));
+      return { ...prev, players: next };
+    });
+  };
+
+  const removePlayer = (name) => {
+    setState(prev => ({
+      ...prev,
+      players: prev.players.filter(p => p !== name),
+    }));
+  };
+
+  const renamePlayer = (oldName, newName) => {
+    const trimmed = (newName || "").trim();
+    if (!trimmed || trimmed === oldName) return;
+    setState(prev => {
+      const next = prev.players.map(p => p === oldName ? trimmed : p);
+      next.sort((a, b) => a.localeCompare(b, ["ko", "en"], { sensitivity: "base" }));
+      return {
+        ...prev,
+        players: next,
+        candidates: prev.candidates.map(c =>
+          c.operator === oldName ? { ...c, operator: trimmed } : c
+        ),
+      };
+    });
+  };
+
   const resetAll = () => {
     setState(defaultState);
   };
@@ -458,6 +498,22 @@ export default function Aion2_RaidPartyBuilder() {
       return {
         ...prev,
         candidates: [...prev.candidates, { id: newId, operator: "", name: `(임시멤버${maxN + 1})`, cls: cls || "수호성", itemLevel: 0, power: 0, updatedAt: Date.now() }],
+      };
+    });
+  };
+
+  const addTempMemberToGroup_operator = (operator) => {
+    setState((prev) => {
+      const maxN = prev.candidates.reduce((acc, c) => {
+        const m = String(c.name || "").match(/^\(임시멤버(\d+)\)$/);
+        if (!m) return acc;
+        const n = Number(m[1]);
+        return Number.isFinite(n) ? Math.max(acc, n) : acc;
+      }, 0);
+      const newId = crypto.randomUUID();
+      return {
+        ...prev,
+        candidates: [...prev.candidates, { id: newId, operator: operator === "(미지정)" ? "" : operator, name: `(임시멤버${maxN + 1})`, cls: "수호성", itemLevel: 0, power: 0, updatedAt: Date.now() }],
       };
     });
   };
@@ -735,60 +791,72 @@ export default function Aion2_RaidPartyBuilder() {
           </div>
 
           {/* 직업별 그룹 */}
-          {(candidateSortMode === "class" || candidateSortMode === "operator") && (candidateSortMode === "class" ? AION2_CLASSES : [...new Set(sortedCandidates.map(c => (c.operator || "").trim() || "(미지정)"))].sort((a, b) => a.localeCompare(b, "ko"))).map(cls => {
-            const clsCands = candidates
-              .filter(c => candidateSortMode === "class"
-                ? c.cls === cls
-                : ((c.operator || "").trim() || "(미지정)") === cls
-              )
-              .slice()
-              .sort((a, b) => {
-                return toNum(b.power) - toNum(a.power);
-              });
-            const allSlottedIds = new Set([
-              ...rudraPresets.flatMap(p => p.slots),
-              ...erosionPresets.flatMap(p => p.slots),
-            ].filter(Boolean));
-            const visible = clsCands;
-            return (
-              <div key={cls} style={{ marginBottom: 6 }}>
-                <div style={{ fontSize: 11, fontWeight: "bold", color: "#888", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
-                  <span>{cls}</span>
-                  <span style={{ cursor: "pointer", color: "#4175df", fontSize: 11 }} onClick={() => addTempMemberToGroup(cls)} title="신규 등록">+ 추가</span>
-                </div>
-                {visible.length === 0 ? (
-                  <div style={{ fontSize: 11, color: "#444", paddingLeft: 4 }}>—</div>
-                ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "nowrap",
-                      gap: 6,
-                    }}
-                  >
-                    {visible.map(c => (
-                      <CandidateCard key={c.id} c={c}
-                        onDragStartCandidate={onDragStartCandidate}
-                        updateCandidateCls={updateCandidateCls}
-                        updateCandidateOperator={updateCandidateOperator}
-                        editingNameId={editingNameId} setEditingNameId={setEditingNameId}
-                        editingName={editingName} setEditingName={setEditingName}
-                        commitCandidateName={commitCandidateName} cancelEditName={cancelEditName}
-                        editingFieldId={editingFieldId} setEditingFieldId={setEditingFieldId}
-                        editingField={editingField} setEditingField={setEditingField}
-                        editingPower={editingPower} setEditingPower={setEditingPower}
-                        commitCandidatePower={commitCandidatePower}
-                        stopDrag={stopDrag} fetchScoreAndApply={fetchScoreAndApply}
-                        removeCandidate={removeCandidate} clsBackground={clsBackground}
-                        AION2_CLASSES={AION2_CLASSES}
-                      />
-                    ))}
+          {(candidateSortMode === "class" || candidateSortMode === "operator") && (() => {
+            const groups = candidateSortMode === "class"
+              ? AION2_CLASSES
+              : [
+                  ...players,
+                  ...[...new Set(candidates.map(c => (c.operator || "").trim()).filter(op => op && !players.includes(op)))],
+                  ...( candidates.some(c => !(c.operator || "").trim()) ? ["(미지정)"] : [] ),
+                ];
+            return groups.map(grp => {
+              const isPlayerMode = candidateSortMode === "operator";
+              const grpCands = candidates
+                .filter(c => isPlayerMode
+                  ? (grp === "(미지정)" ? !(c.operator || "").trim() : (c.operator || "").trim() === grp)
+                  : c.cls === grp
+                )
+                .slice()
+                .sort((a, b) => toNum(b.power) - toNum(a.power));
+              return (
+                <div key={grp} style={{ marginBottom: 6 }}>
+                  <div style={{ fontSize: 11, fontWeight: "bold", color: "#888", marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                    <PlayerGroupHeader
+                      grp={grp}
+                      isPlayerMode={isPlayerMode}
+                      players={players}
+                      onAddChar={() => isPlayerMode
+                        ? addTempMemberToGroup_operator(grp)
+                        : addTempMemberToGroup(grp)
+                      }
+                      onAddPlayer={addPlayer}
+                      onRemovePlayer={removePlayer}
+                      onRenamePlayer={renamePlayer}
+                    />
                   </div>
+                  {grpCands.length === 0 ? (
+                    <div style={{ fontSize: 11, color: "#444", paddingLeft: 4 }}>—</div>
+                  ) : (
+                    <div style={{ display: "flex", flexWrap: "nowrap", gap: 6 }}>
+                      {grpCands.map(c => (
+                        <CandidateCard key={c.id} c={c}
+                          onDragStartCandidate={onDragStartCandidate}
+                          updateCandidateCls={updateCandidateCls}
+                          updateCandidateOperator={updateCandidateOperator}
+                          players={players}
+                          editingNameId={editingNameId} setEditingNameId={setEditingNameId}
+                          editingName={editingName} setEditingName={setEditingName}
+                          commitCandidateName={commitCandidateName} cancelEditName={cancelEditName}
+                          editingFieldId={editingFieldId} setEditingFieldId={setEditingFieldId}
+                          editingField={editingField} setEditingField={setEditingField}
+                          editingPower={editingPower} setEditingPower={setEditingPower}
+                          commitCandidatePower={commitCandidatePower}
+                          stopDrag={stopDrag} fetchScoreAndApply={fetchScoreAndApply}
+                          removeCandidate={removeCandidate} clsBackground={clsBackground}
+                          AION2_CLASSES={AION2_CLASSES}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            });
+          })()}
 
-                )}
-              </div>
-            );
-          })}
+          {/* Player 그룹 추가 버튼 — operator 모드일 때 목록 하단 고정 */}
+          {candidateSortMode === "operator" && (
+            <AddPlayerButton onAddPlayer={addPlayer} />
+          )}
 
           {candidateSortMode !== "class" && candidateSortMode !== "operator" && (
             <div
@@ -824,6 +892,7 @@ export default function Aion2_RaidPartyBuilder() {
                           onDragStartCandidate={onDragStartCandidate}
                           updateCandidateCls={updateCandidateCls}
                           updateCandidateOperator={updateCandidateOperator}
+                          players={players}
                           editingNameId={editingNameId}
                           setEditingNameId={setEditingNameId}
                           editingName={editingName}
@@ -880,6 +949,7 @@ function CandidateCard(props) {
     onDragStartCandidate,
     updateCandidateCls,
     updateCandidateOperator,
+    players,
     editingNameId,
     setEditingNameId,
     editingName,
@@ -980,26 +1050,6 @@ function CandidateCard(props) {
               </option>
             ))}
           </select>
-          {/* <input
-            value={c.operator || ""}
-            onChange={(e) => {
-              e.stopPropagation();
-              updateCandidateOperator(c.id, e.target.value);
-            }}
-            onClick={(e) => e.stopPropagation()}
-            placeholder="조종자"
-            style={{
-              width: 62,
-              padding: "4px 6px",
-              borderRadius: 6,
-              border: "1px solid #333",
-              background: "rgba(0,0,0,0.35)",
-              color: "#fff",
-              fontWeight: "bold",
-              marginLeft: "4px",
-            }}
-            title="조종자 입력"
-          /> */}
         </div>
 
         <div style={{ marginTop: 3, fontSize: 11, display: "flex", gap: 8, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
@@ -1088,25 +1138,138 @@ function CandidateCard(props) {
           갱신
         </button>
 
-        <button
-          onClick={(e) => { e.stopPropagation(); removeCandidate(c.id); }}
-          style={{
-            padding: "0px 0px",
-            borderRadius: 6,
-            border: "1px solid #553",
-            background: "#201010",
-            color: "#f0b0b0",
-            cursor: "pointer",
-            width: 40,
-            height: 26,
-            whiteSpace: "nowrap",
-            fontSize: 12,
-          }}
-          title="후보 삭제"
-        >
-          삭제
-        </button>
+        <div style={{ display: "flex", gap: 4 }}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const next = prompt(`Player 입력\n(기존: ${(players||[]).join(", ")})`, c.operator || "");
+              if (next === null) return;
+              updateCandidateOperator(c.id, next.trim());
+            }}
+            style={{
+              padding: "0px 0px",
+              borderRadius: 6,
+              border: "1px solid #333",
+              background: "#1f1f1f",
+              color: "#ddd",
+              cursor: "pointer",
+              width: 26,
+              height: 26,
+              fontSize: 12,
+              fontWeight: "bold",
+            }}
+            title="클릭하여 다른 플레이어로 변경 가능"
+          >
+            P
+          </button>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); removeCandidate(c.id); }}
+            style={{
+              padding: "0px 0px",
+              borderRadius: 6,
+              border: "1px solid #553",
+              background: "#201010",
+              color: "#f0b0b0",
+              cursor: "pointer",
+              width: 40,
+              height: 26,
+              whiteSpace: "nowrap",
+              fontSize: 12,
+            }}
+            title="후보 삭제"
+          >
+            삭제
+          </button>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function AddPlayerButton({ onAddPlayer }) {
+  const [adding, setAdding] = useState(false);
+  const [val, setVal] = useState("");
+
+  if (!adding) {
+    return (
+      <div style={{ marginTop: 8 }}>
+        <span
+          style={{ cursor: "pointer", color: "#3a8a3a", fontSize: 12 }}
+          onClick={() => setAdding(true)}
+          title="Player 그룹 추가"
+        >＋ Player 추가</span>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6 }}>
+      <input
+        autoFocus
+        value={val}
+        onChange={e => setVal(e.target.value)}
+        placeholder="Player 이름 입력"
+        onKeyDown={e => {
+          if (e.key === "Enter") { onAddPlayer(val); setVal(""); setAdding(false); }
+          if (e.key === "Escape") { setVal(""); setAdding(false); }
+        }}
+        onBlur={() => { if (val.trim()) onAddPlayer(val); setVal(""); setAdding(false); }}
+        style={{ width: 120, padding: "3px 7px", borderRadius: 5, border: "1px solid #555", background: "#2a2a2a", color: "#fff", fontSize: 12 }}
+      />
+      <span style={{ fontSize: 11, color: "#666" }}>Enter 저장 / Esc 취소</span>
+    </div>
+  );
+}
+
+function PlayerGroupHeader({ grp, isPlayerMode, players, onAddChar, onRemovePlayer, onRenamePlayer }) {
+  const [editingName, setEditingName] = useState(false);
+  const [nameVal, setNameVal] = useState(grp);
+
+  const isManagedPlayer = isPlayerMode && players.includes(grp);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
+      {editingName && isManagedPlayer ? (
+        <input
+          autoFocus
+          value={nameVal}
+          onChange={e => setNameVal(e.target.value)}
+          onFocus={e => e.target.select()}
+          onBlur={() => { onRenamePlayer(grp, nameVal); setEditingName(false); }}
+          onKeyDown={e => {
+            if (e.key === "Enter") { onRenamePlayer(grp, nameVal); setEditingName(false); }
+            if (e.key === "Escape") { setNameVal(grp); setEditingName(false); }
+          }}
+          style={{ width: 90, padding: "1px 5px", borderRadius: 5, border: "1px solid #555", background: "#2a2a2a", color: "#fff", fontSize: 11, fontWeight: "bold" }}
+        />
+      ) : (
+        <span
+          onClick={() => { if (isManagedPlayer) { setNameVal(grp); setEditingName(true); } }}
+          style={{ cursor: isManagedPlayer ? "text" : "default", color: isManagedPlayer ? "#ccc" : "#666" }}
+          title={isManagedPlayer ? "클릭해서 Player 이름 변경" : undefined}
+        >
+          {grp}
+        </span>
+      )}
+
+      <span
+        style={{ cursor: "pointer", color: "#4175df", fontSize: 11 }}
+        onClick={onAddChar}
+        title="캐릭터 추가"
+      >+ 캐릭터 추가</span>
+
+      {isManagedPlayer && (
+        <span
+          style={{ cursor: "pointer", color: "#c04040", fontSize: 11 }}
+          onClick={() => {
+            if (window.confirm(`"${grp}" 그룹을 삭제할까요?\n소속 캐릭터의 Player는 비워집니다.`)) {
+              onRemovePlayer(grp);
+            }
+          }}
+          title="Player 그룹 삭제"
+        >- Player 삭제</span>
+      )}
     </div>
   );
 }
