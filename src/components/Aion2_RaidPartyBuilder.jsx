@@ -13,58 +13,48 @@ const makePreset = (name) => ({
 
 const defaultState = {
   candidates: [
-    { id: crypto.randomUUID(), name: "카니쵸니[바카]", cls: "궁성", itemLevel: 3533, power: 331200, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "까니쵸니[바카]", cls: "호법성", itemLevel: 3266, power: 249800, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "탱아저씨[바카]", cls: "수호성", itemLevel: 3046, power: 185800, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "엄마손[바카]", cls: "치유성", itemLevel: 2891, power: 144300, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "마법맨[바카]", cls: "마도성", itemLevel: 2322, power: 110600, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "강력공격맨", name: "카니쵸니[바카]", cls: "궁성", itemLevel: 3533, power: 331200, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "강력공격맨", name: "까니쵸니[바카]", cls: "호법성", itemLevel: 3266, power: 249800, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "강력공격맨", name: "탱아저씨[바카]", cls: "수호성", itemLevel: 3046, power: 185800, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "강력공격맨", name: "엄마손[바카]", cls: "치유성", itemLevel: 2891, power: 144300, updatedAt: 0 },
+    // { id: crypto.randomUUID(), operator: "강력공격맨", name: "마법맨[바카]", cls: "마도성", itemLevel: 2322, power: 110600, updatedAt: 0 },
 
-    { id: crypto.randomUUID(), name: "김규[아리]", cls: "수호성", itemLevel: 3750, power: 365600, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "김구[아리]", cls: "검성", itemLevel: 2850, power: 171000, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "은도[아리]", cls: "호법성", itemLevel: 2553, power: 127600, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "하만[아리]", cls: "궁성", itemLevel: 1641, power: 74150, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "Pdoll", name: "김규[아리]", cls: "수호성", itemLevel: 3750, power: 365600, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "Pdoll", name: "김구[아리]", cls: "검성", itemLevel: 2850, power: 171000, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "Pdoll", name: "은도[아리]", cls: "호법성", itemLevel: 2553, power: 127600, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "Pdoll", name: "하만[아리]", cls: "궁성", itemLevel: 1641, power: 74150, updatedAt: 0 },
 
-    { id: crypto.randomUUID(), name: "엣피[아리]", cls: "치유성", itemLevel: 3382, power: 249100, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "아델[아리]", cls: "살성", itemLevel: 3264, power: 245700, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "델이[아리]", cls: "궁성", itemLevel: 2618, power: 122000, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "앳피[아리]", cls: "정령성", itemLevel: 2329, power: 115800, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "Adele", name: "엣피[아리]", cls: "치유성", itemLevel: 3382, power: 249100, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "Adele", name: "아델[아리]", cls: "살성", itemLevel: 3264, power: 245700, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "Adele", name: "델이[아리]", cls: "궁성", itemLevel: 2618, power: 122000, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "Adele", name: "앳피[아리]", cls: "정령성", itemLevel: 2329, power: 115800, updatedAt: 0 },
     
-    { id: crypto.randomUUID(), name: "델[아리]", cls: "정령성", itemLevel: 3449, power: 287500, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "히푸[아리]", cls: "치유성", itemLevel: 2902, power: 141400, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "뱐[아리]", cls: "궁성", itemLevel: 2734, power: 133000, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "재미니맨", name: "델[아리]", cls: "정령성", itemLevel: 3449, power: 287500, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "재미니맨", name: "히푸[아리]", cls: "치유성", itemLevel: 2902, power: 141400, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "재미니맨", name: "뱐[아리]", cls: "궁성", itemLevel: 2734, power: 133000, updatedAt: 0 },
         
-    { id: crypto.randomUUID(), name: "갱e[바카]", cls: "궁성", itemLevel: 3732, power: 387700, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울마도[바카]", cls: "마도성", itemLevel: 3375, power: 289700, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울살성[바카]", cls: "살성", itemLevel: 2797, power: 144800, updatedAt: 0 },
-    { id: crypto.randomUUID(), name: "겨울정령[바카]", cls: "정령성", itemLevel: 2218, power: 118800, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "네오", name: "갱e[바카]", cls: "궁성", itemLevel: 3732, power: 387700, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "네오", name: "겨울마도[바카]", cls: "마도성", itemLevel: 3375, power: 289700, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "네오", name: "겨울살성[바카]", cls: "살성", itemLevel: 2797, power: 144800, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "네오", name: "겨울정령[바카]", cls: "정령성", itemLevel: 2218, power: 118800, updatedAt: 0 },
+
+    // { id: crypto.randomUUID(), operator: "May", name: "MayCat[코치룽]", cls: "치유성", itemLevel: 3073, power: 190500, updatedAt: 0 },
+
+    { id: crypto.randomUUID(), operator: "수사불패", name: "뷔제클로스[아리]", cls: "검성", itemLevel: 3984, power: 466600, updatedAt: 0 },
   ],
   rudraPresets: [makePreset("루드라 1")],
   erosionPresets: [makePreset("침식 1")],
 };
 
-// const classToRole = (cls) => {
-//   switch (cls) {
-//     case "수호성": return "탱";
-//     case "검성":
-//     case "살성": return "근딜";
-//     case "궁성":
-//     case "마도성":
-//     case "정령성": return "원딜";
-//     case "호법성":
-//     case "치유성": return "힐";
-//     default: return "기타";
-//   }
-// };
-
 const clsBackground = (cls) => {
   switch (cls) {
-    case "수호성": return "#5175a3";
-    case "검성": return "#8961bc";
-    case "살성": return "#a45a5a";
-    case "궁성": return "#b2844f";
-    case "마도성": return "#ba6cbc";
-    case "정령성": return "#50a9ac";
-    case "호법성": return "#867700";
+    case "수호성": return "#4369c0";
+    case "검성": return "#51c3c7";
+    case "살성": return "#c24c4c";
+    case "궁성": return "#ec9634";
+    case "마도성": return "#7d4abf";
+    case "정령성": return "#d075d2";
+    case "호법성": return "#f5ed05";
     case "치유성": return "#5ea15d";
     default: return "#222";
   }
@@ -77,28 +67,6 @@ const slotLabel = (i) => {
   const pos = (i % 4) + 1;
   return `P${p}-${pos}`;
 };
-
-// const clsBadgeStyle = (cls) => {
-//   const base = {
-//     display: "inline-block",
-//     padding: "2px 8px",
-//     borderRadius: 0,
-//     fontSize: 13,
-//     fontWeight: "bold",
-//     border: "1px solid #000000",
-//     background: "#ffffff",
-//     color: "#000000",
-//   };
-//   if (cls === "수호성") return { ...base, background: "rgb(23, 19, 244)", color: "rgb(255, 255, 255)" };
-//   if (cls === "검성") return { ...base, background: "rgb(128, 0, 255)", color: "rgb(255, 255, 255)" };
-//   if (cls === "살성") return { ...base, background: "rgb(255, 0, 0)", color: "rgb(255, 255, 255)" };
-//   if (cls === "궁성") return { ...base, background: "rgb(255, 128, 0)" };
-//   if (cls === "마도성") return { ...base, background: "rgb(255, 0, 255)" };
-//   if (cls === "정령성") return { ...base, background: "rgb(0, 255, 255)" };
-//   if (cls === "호법성") return { ...base, background: "rgb(255, 255, 0)" };
-//   if (cls === "치유성") return { ...base, background: "rgb(0, 255, 0)" };
-//   return base;
-// };
 
 const SERVER_SHORT_SET = new Set(AION2_SERVERS.map(s => s.short));
 
@@ -236,7 +204,7 @@ export default function Aion2_RaidPartyBuilder() {
       const key = type === "rudra" ? "rudraPresets" : "erosionPresets";
       return {
         ...prev,
-        candidates: [...prev.candidates, { id: newId, name: `(임시멤버${maxN + 1})`, cls: "수호성", itemLevel: 0, power: 0, updatedAt: Date.now() }],
+        candidates: [...prev.candidates, { id: newId, operator: "", name: `(임시멤버${maxN + 1})`, cls: "수호성", itemLevel: 0, power: 0, updatedAt: Date.now() }],
         [key]: prev[key].map(p => {
           if (p.id !== presetId) return p;
           const s = [...p.slots]; s[slotIndex] = newId; return { ...p, slots: s };
@@ -385,54 +353,12 @@ export default function Aion2_RaidPartyBuilder() {
   const [editingFieldId, setEditingFieldId] = useState(null);
   const [editingPower, setEditingPower] = useState("");
 
-  // const addCandidate = async () => {
-  //   const name = (newName || "").trim();
-  //   if (!name) return;
-
-  //   // 1) 먼저 후보를 기본값으로 추가(바로 UI에 보이게)
-  //   const newId = crypto.randomUUID();
-  //   setState((prev) => ({
-  //     ...prev,
-  //     candidates: [
-  //       ...prev.candidates,
-  //       {
-  //         id: newId,
-  //         name,
-  //         cls: newCls,
-  //         itemLevel: null,
-  //         power: null,
-  //         atool: null,
-  //         updatedAt: 0,
-  //       },
-  //     ],
-  //   }));
-  //   setNewName("");
-
-  //   // 2) 추가된 후보의 전투력/아툴을 아툴에서 가져와서 업데이트
-  //   fetchScoreAndApply(name, newId);
-  // };
-
   const sortedCandidates = [...state.candidates].sort((a, b) => {
     if (candidateSortMode === "itemLevel") return (b.itemLevel ?? 0) - (a.itemLevel ?? 0);
     if (candidateSortMode === "power") return (b.power ?? 0) - (a.power ?? 0);
+    if (candidateSortMode === "operator") return String(a.operator || "").localeCompare(String(b.operator || ""), "ko");
     return 0;
   });
-
-  // const moveCandidateTo = (id, toIndex) => {
-  //   setState((prev) => {
-  //     const idx = prev.candidates.findIndex((c) => c.id === id);
-  //     if (idx === -1) return prev;
-  //     if (toIndex < 0) toIndex = 0;
-  //     if (toIndex >= prev.candidates.length) toIndex = prev.candidates.length - 1;
-  //     if (idx === toIndex) return prev;
-
-  //     const next = [...prev.candidates];
-  //     const [item] = next.splice(idx, 1);
-  //     next.splice(toIndex, 0, item);
-
-  //     return { ...prev, candidates: next };
-  //   });
-  // };
 
   const removeCandidate = (id) => {
     setState((prev) => ({
@@ -447,6 +373,15 @@ export default function Aion2_RaidPartyBuilder() {
     setState((prev) => ({
       ...prev,
       candidates: prev.candidates.map((c) => (c.id === id ? { ...c, cls } : c)),
+    }));
+  };
+
+  const updateCandidateOperator = (id, operator) => {
+    setState((prev) => ({
+      ...prev,
+      candidates: prev.candidates.map((c) =>
+        c.id === id ? { ...c, operator } : c
+      ),
     }));
   };
 
@@ -522,7 +457,7 @@ export default function Aion2_RaidPartyBuilder() {
       const newId = crypto.randomUUID();
       return {
         ...prev,
-        candidates: [...prev.candidates, { id: newId, name: `(임시멤버${maxN + 1})`, cls: cls || "수호성", itemLevel: 0, power: 0, updatedAt: Date.now() }],
+        candidates: [...prev.candidates, { id: newId, operator: "", name: `(임시멤버${maxN + 1})`, cls: cls || "수호성", itemLevel: 0, power: 0, updatedAt: Date.now() }],
       };
     });
   };
@@ -584,6 +519,13 @@ export default function Aion2_RaidPartyBuilder() {
                 const slotIndex = (party === 1 ? 0 : 4) + k;
                 const cid = slots[slotIndex];
                 const c = cid ? candMap.get(cid) : null;
+                const sameTypeSlots = (type === "rudra" ? rudraPresets : erosionPresets).flatMap(p => p.slots).filter(Boolean);
+                const isDupChar = !!cid && sameTypeSlots.filter(x => x === cid).length >= 2;
+                const isDupOperatorInPreset = !!c && slots
+                  .map(id => (id ? candMap.get(id) : null))
+                  .filter(Boolean)
+                  .filter(x => ((x.operator || "").trim() || "") === ((c.operator || "").trim() || ""))
+                  .length >= 2;
                 return (
                   <div
                     key={slotIndex}
@@ -594,9 +536,22 @@ export default function Aion2_RaidPartyBuilder() {
                     onClick={() => { if (!c) addTempMemberToSlot(type, preset.id, slotIndex); }}
                     style={{
                       border: "1px solid #555", borderRadius: 8, padding: "6px 8px", marginBottom: 6,
-                      background: c ? clsBackground(c.cls) : "#111",
+                      background: c
+                        ? (
+                            isDupChar
+                              ? `repeating-linear-gradient(135deg, ${clsBackground(c.cls)}, ${clsBackground(c.cls)} 8px, rgba(255,255,255,0.22) 8px, rgba(255,255,255,0.22) 16px)`
+                              : isDupOperatorInPreset
+                                ? `repeating-linear-gradient(135deg, ${clsBackground(c.cls)}, ${clsBackground(c.cls)} 8px, rgba(255,230,120,0.22) 8px, rgba(255,230,120,0.22) 16px)`
+                                : clsBackground(c.cls)
+                          )
+                        : "#111",
                       cursor: c ? "grab" : "default",
                       display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, minHeight: 44,
+                      boxShadow: isDupChar
+                        ? "0 0 0 2px #ff5a5a inset, 0 0 12px rgba(255,90,90,0.55)"
+                        : isDupOperatorInPreset
+                          ? "0 0 0 2px #ffd24d inset, 0 0 12px rgba(255,210,77,0.45)"
+                          : "none",
                     }}
                   >
                     <div style={{ display: "flex", gap: 8, alignItems: "center", flex: 1 }}>
@@ -754,6 +709,7 @@ export default function Aion2_RaidPartyBuilder() {
                   }}
                 >
                   <option value="class">정렬: 직업</option>
+                  <option value="operator">정렬: Player</option>
                   <option value="itemLevel">정렬: 아이템레벨</option>
                   <option value="power">정렬: 전투력</option>
                 </select>
@@ -779,9 +735,12 @@ export default function Aion2_RaidPartyBuilder() {
           </div>
 
           {/* 직업별 그룹 */}
-          {candidateSortMode === "class" && AION2_CLASSES.map(cls => {
+          {(candidateSortMode === "class" || candidateSortMode === "operator") && (candidateSortMode === "class" ? AION2_CLASSES : [...new Set(sortedCandidates.map(c => (c.operator || "").trim() || "(미지정)"))].sort((a, b) => a.localeCompare(b, "ko"))).map(cls => {
             const clsCands = candidates
-              .filter(c => c.cls === cls)
+              .filter(c => candidateSortMode === "class"
+                ? c.cls === cls
+                : ((c.operator || "").trim() || "(미지정)") === cls
+              )
               .slice()
               .sort((a, b) => {
                 return toNum(b.power) - toNum(a.power);
@@ -811,6 +770,7 @@ export default function Aion2_RaidPartyBuilder() {
                       <CandidateCard key={c.id} c={c}
                         onDragStartCandidate={onDragStartCandidate}
                         updateCandidateCls={updateCandidateCls}
+                        updateCandidateOperator={updateCandidateOperator}
                         editingNameId={editingNameId} setEditingNameId={setEditingNameId}
                         editingName={editingName} setEditingName={setEditingName}
                         commitCandidateName={commitCandidateName} cancelEditName={cancelEditName}
@@ -830,7 +790,7 @@ export default function Aion2_RaidPartyBuilder() {
             );
           })}
 
-          {candidateSortMode !== "class" && (
+          {candidateSortMode !== "class" && candidateSortMode !== "operator" && (
             <div
               style={{
                 display: "grid",
@@ -863,6 +823,7 @@ export default function Aion2_RaidPartyBuilder() {
                           c={c}
                           onDragStartCandidate={onDragStartCandidate}
                           updateCandidateCls={updateCandidateCls}
+                          updateCandidateOperator={updateCandidateOperator}
                           editingNameId={editingNameId}
                           setEditingNameId={setEditingNameId}
                           editingName={editingName}
@@ -918,6 +879,7 @@ function CandidateCard(props) {
     c,
     onDragStartCandidate,
     updateCandidateCls,
+    updateCandidateOperator,
     editingNameId,
     setEditingNameId,
     editingName,
@@ -943,7 +905,7 @@ function CandidateCard(props) {
       draggable
       onDragStart={(e) => onDragStartCandidate(e, c.id)}
       style={{
-        width: 240,
+        width: 240, // 후보 카드 가로 길이
         flexShrink: 0,
         boxSizing: "border-box",
         border: "1px solid #555",
@@ -1018,6 +980,26 @@ function CandidateCard(props) {
               </option>
             ))}
           </select>
+          {/* <input
+            value={c.operator || ""}
+            onChange={(e) => {
+              e.stopPropagation();
+              updateCandidateOperator(c.id, e.target.value);
+            }}
+            onClick={(e) => e.stopPropagation()}
+            placeholder="조종자"
+            style={{
+              width: 62,
+              padding: "4px 6px",
+              borderRadius: 6,
+              border: "1px solid #333",
+              background: "rgba(0,0,0,0.35)",
+              color: "#fff",
+              fontWeight: "bold",
+              marginLeft: "4px",
+            }}
+            title="조종자 입력"
+          /> */}
         </div>
 
         <div style={{ marginTop: 3, fontSize: 11, display: "flex", gap: 8, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
