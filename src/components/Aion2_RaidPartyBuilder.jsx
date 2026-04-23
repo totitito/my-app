@@ -40,7 +40,7 @@ const defaultState = {
     { id: crypto.randomUUID(), operator: "네오", name: "겨울살성[바카]", cls: "살성", itemLevel: 3066, power: 175000, updatedAt: 0 },
     { id: crypto.randomUUID(), operator: "네오", name: "겨울정령[바카]", cls: "정령성", itemLevel: 2767, power: 145700, updatedAt: 0 },
 
-    { id: crypto.randomUUID(), operator: "May", name: "MayCat[코치룽]", cls: "치유성", itemLevel: 3511, power: 249700, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "May", name: "MayCat[코치]", cls: "치유성", itemLevel: 3511, power: 249700, updatedAt: 0 },
 
     { id: crypto.randomUUID(), operator: "수사불패", name: "뷔제클로스[아리]", cls: "검성", itemLevel: 3991, power: 469200, updatedAt: 0 },
   ],
