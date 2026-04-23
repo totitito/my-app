@@ -125,7 +125,13 @@ export default async function handler(req, res) {
         },
       });
 
-      const infoJson = await infoRes.json();
+      const infoText = await infoRes.text();
+      let infoJson = null;
+      try {
+        infoJson = JSON.parse(infoText);
+      } catch {
+        infoJson = null;
+      }
 
       const equipmentUrl = `https://aion2.plaync.com/api/character/equipment?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
@@ -137,7 +143,13 @@ export default async function handler(req, res) {
         },
       });
 
-      const equipmentJson = await equipmentRes.json();
+      const equipmentText = await equipmentRes.text();
+      let equipmentJson = null;
+      try {
+        equipmentJson = JSON.parse(equipmentText);
+      } catch {
+        equipmentJson = null;
+      }
       const equippedItems = equipmentJson?.equipment?.equipmentList ?? [];
 
       const officialSlotMap = {
@@ -240,6 +252,12 @@ export default async function handler(req, res) {
         officialItemLevel,
         officialCombatPower,
         officialAvatarUrl,
+        infoStatus: infoRes.status,
+        equipmentStatus: equipmentRes.status,
+        infoKeys: infoJson ? Object.keys(infoJson) : null,
+        equipmentKeys: equipmentJson ? Object.keys(equipmentJson) : null,
+        infoPreview: infoText.slice(0, 500),
+        equipmentPreview: equipmentText.slice(0, 500),
       },
     });
 
