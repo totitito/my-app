@@ -1,90 +1,69 @@
 export default async function handler(req, res) {
   try {
     const name = req.query.name;
-    const serverid = req.query.serverid ?? "1016";
+    const serverid = Number(req.query.serverid ?? "1016");
 
     if (!name) {
       return res.status(400).json({ error: "name required" });
     }
 
-    const searchUrl = `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(name)}&serverId=${serverid}&page=1&size=30`;
+    const race = serverid >= 2000 ? 2 : 1;
 
-    const searchRes = await fetch(searchUrl, {
+    const r = await fetch("https://aion2tool.com/api/character/search", {
+      method: "POST",
       headers: {
-        "user-agent": "Mozilla/5.0",
-        "accept": "application/json",
-        "referer": "https://aion2.plaync.com/",
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json;charset=UTF-8",
+        "origin": "https://aion2tool.com",
+        "referer": "https://aion2tool.com/",
+        "user-agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
       },
+      body: JSON.stringify({
+        keyword: String(name).trim(),
+        server_id: serverid,
+        serverId: serverid,
+        race,
+        raceId: race,
+        page: 1,
+        limit: 20,
+      }),
     });
 
-    const searchText = await searchRes.text();
+    const text = await r.text();
 
-    if (!searchRes.ok) {
-      return res.status(searchRes.status).json({
-        error: `search HTTP ${searchRes.status}`,
-        preview: searchText.slice(0, 500),
+    if (!r.ok) {
+      return res.status(r.status).json({
+        error: `HTTP ${r.status}`,
+        preview: text.slice(0, 200),
       });
     }
 
-    let searchJson;
-    try {
-      searchJson = JSON.parse(searchText);
-    } catch {
+    if (!text.trimStart().startsWith("{") && !text.trimStart().startsWith("[")) {
       return res.status(502).json({
-        error: "search API가 JSON을 반환하지 않음",
-        preview: searchText.slice(0, 500),
+        error: "외부 API가 JSON을 반환하지 않음",
+        preview: text.slice(0, 200),
       });
     }
 
-    const searchList =
-      searchJson?.list ??
-      searchJson?.data?.list ??
-      searchJson?.data?.result?.list ??
-      searchJson?.result?.list ??
-      [];
-
-    const found =
-      searchList.find((x) => x?.characterName === name) ??
-      searchList.find((x) => x?.character_name === name) ??
-      searchList[0] ??
-      null;
-
-    const characterId =
-      found?.characterId ??
-      found?.character_id ??
-      null;
-
-    if (!characterId) {
-      return res.status(404).json({
-        error: "캐릭터를 찾을 수 없습니다",
-        debug: {
-          keys: Object.keys(searchJson || {}),
-          firstItem: searchList?.[0] ?? null,
-        },
-      });
-    }
-
-    if (!characterId) {
-      return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
-    }
-
-    const decodedId = decodeURIComponent(characterId);    
+    const obj = JSON.parse(text);
+    const data = obj?.data?.result ?? obj?.data ?? obj?.result ?? obj;
 
     const SLOT_MAP = {
-      Necklace:  "necklace",
-      Earring1:  "earring1",
-      Earring2:  "earring2",
-      Ring1:     "ring1",
-      Ring2:     "ring2",
-      Weapon:    "weapon",
-      Gauntlet:  "gauntlet",
-      Helm:      "head",
-      Shoulder:  "shoulder",
-      Torso:     "chest",
-      Pants:     "legs",
-      Gloves:    "hands",
-      Boots:     "feet",
-      Cape:      "cloak",
+      MainHand: "weapon",
+      SubHand: "gauntlet",
+      Helmet: "head",
+      Shoulder: "shoulder",
+      Torso: "chest",
+      Pants: "legs",
+      Gloves: "hands",
+      Boots: "feet",
+      Cape: "cloak",
+      Necklace: "necklace",
+      Earring1: "earring1",
+      Earring2: "earring2",
+      Ring1: "ring1",
+      Ring2: "ring2",
     };
 
     const ARCANA_SLOT_MAP = {
@@ -97,184 +76,73 @@ export default async function handler(req, res) {
     };
 
     const gear = {
-      weapon: [], gauntlet: [],
-      head: [], shoulder: [], chest: [], legs: [], hands: [], feet: [], cloak: [],
-      necklace: [], earring1: [], earring2: [], ring1: [], ring2: [],
+      weapon: [],
+      gauntlet: [],
+      head: [],
+      shoulder: [],
+      chest: [],
+      legs: [],
+      hands: [],
+      feet: [],
+      cloak: [],
+      necklace: [],
+      earring1: [],
+      earring2: [],
+      ring1: [],
+      ring2: [],
     };
 
     const arcana = {
-      성배: [], 양피지: [], 나침반: [], 종: [], 거울: [], 천칭: [],
+      성배: [],
+      양피지: [],
+      나침반: [],
+      종: [],
+      거울: [],
+      천칭: [],
     };
 
-    let officialJob = null;
-    let officialLevel = null;
-    let officialItemLevel = null;
-    let officialCombatPower = null;
-    let officialAvatarUrl = null;
+    const equipmentList = data?.equipment ?? [];
 
-    let infoRes = null;
-    let equipmentRes = null;
-    let infoText = "";
-    let equipmentText = "";
-    let infoJson = null;
-    let equipmentJson = null;
+    for (const item of equipmentList) {
+      const skills = (item?.sub_skills ?? [])
+        .filter((s) => s?.name)
+        .map((s) => ({
+          skillName: s.name,
+          level: Number(s.level ?? 1),
+        }));
 
-    if (characterId) {
-      const decodedId = decodeURIComponent(characterId);
+      if (skills.length === 0) continue;
 
-      const infoUrl = `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
+      const posName =
+        item?.slot_pos_name ??
+        item?.raw_data?.slotPosName ??
+        "";
 
-      infoRes = await fetch(infoUrl, {
-        headers: {
-          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
-          "accept": "application/json, text/plain, */*",
-          "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-          "referer": `https://aion2.plaync.com/ko-kr/characters/${serverid}/${encodeURIComponent(decodedId)}`,
-          "origin": "https://aion2.plaync.com",
-          "x-requested-with": "XMLHttpRequest",
-        },
-      });
-
-      infoText = await infoRes.text();
-      infoJson = null;
-      try {
-        infoJson = JSON.parse(infoText);
-      } catch {
-        infoJson = null;
+      if (ARCANA_SLOT_MAP[posName]) {
+        arcana[ARCANA_SLOT_MAP[posName]].push(...skills);
+        continue;
       }
 
-      const equipmentUrl = `https://aion2.plaync.com/api/character/equipment?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
-
-      equipmentRes = await fetch(equipmentUrl, {
-        headers: {
-          "user-agent": "Mozilla/5.0",
-          "accept": "application/json",
-          "referer": "https://aion2.plaync.com/",
-        },
-      });
-
-      equipmentText = await equipmentRes.text();
-      equipmentJson = null;
-      try {
-        equipmentJson = JSON.parse(equipmentText);
-      } catch {
-        equipmentJson = null;
+      const slotId = SLOT_MAP[posName];
+      if (slotId && gear[slotId]) {
+        gear[slotId].push(...skills);
       }
-      const equippedItems = equipmentJson?.equipment?.equipmentList ?? [];
-
-      const officialSlotMap = {
-        MainHand: "weapon",
-        SubHand: "gauntlet",
-        Helmet: "head",
-        Shoulder: "shoulder",
-        Torso: "chest",
-        Pants: "legs",
-        Gloves: "hands",
-        Boots: "feet",
-        Cape: "cloak",
-        Necklace: "necklace",
-        Earring1: "earring1",
-        Earring2: "earring2",
-        Ring1: "ring1",
-        Ring2: "ring2",
-      };
-
-      const itemDetails = await Promise.all(
-        equippedItems.map(async (eq) => {
-          try {
-            const itemUrl =
-              `https://aion2.plaync.com/api/character/equipment/item` +
-              `?id=${eq.id}` +
-              `&enchantLevel=${eq.enchantLevel ?? 0}` +
-              `&characterId=${encodeURIComponent(decodedId)}` +
-              `&serverId=${serverid}` +
-              `&slotPos=${eq.slotPos}` +
-              `&lang=ko`;
-
-            const itemRes = await fetch(itemUrl, {
-              headers: {
-                "user-agent": "Mozilla/5.0",
-                "accept": "application/json",
-                "referer": "https://aion2.plaync.com/",
-              },
-            });
-
-            if (!itemRes.ok) return null;
-
-            const itemJson = await itemRes.json();
-            return { eq, itemJson };
-          } catch (_) {
-            return null;
-          }
-        })
-      );
-
-      for (const item of itemDetails) {
-        if (!item) continue;
-        const { eq, itemJson } = item;
-        const skills = (itemJson?.subSkills ?? [])
-          .filter((s) => s?.name)
-          .map((s) => ({
-            skillName: s.name,
-            level: Number(s.level ?? 1),
-          }));
-
-        if (skills.length === 0) continue;
-
-        const posName = eq?.slotPosName ?? "";
-
-        if (ARCANA_SLOT_MAP[posName]) {
-          arcana[ARCANA_SLOT_MAP[posName]].push(...skills);
-          continue;
-        }
-
-        const slotId = officialSlotMap[posName];
-        if (slotId && gear[slotId]) {
-          gear[slotId].push(...skills);
-        }
-      }
-
-      const profile = infoJson?.profile ?? {};
-      const stats = infoJson?.stat?.statList ?? [];
-
-      officialJob = profile?.className ?? null;
-      officialLevel = profile?.characterLevel ?? null;
-      officialCombatPower = profile?.combatPower ?? null;
-      officialAvatarUrl = profile?.profileImage ?? null;
-      officialItemLevel =
-        stats.find((s) => s?.type === "ItemLevel" || s?.name === "아이템레벨")?.value ?? null;
     }
 
     return res.status(200).json({
-      ok: true,
       name,
-      job: officialJob ?? null,
-      level: officialLevel ?? null,
-      item_level: officialItemLevel,
-      combat_power: officialCombatPower,
-      avatar_url: officialAvatarUrl,
+      job: data?.job ?? null,
+      level: data?.level ?? null,
+      item_level: data?.combat_power ?? null,
+      combat_power: data?.combat_power2 ?? null,
+      avatar_url: data?.avatar_url ?? null,
       gear,
       arcana,
-      debug: {
-        characterId,
-        officialJob,
-        officialLevel,
-        officialItemLevel,
-        officialCombatPower,
-        officialAvatarUrl,
-        infoStatus: infoRes?.status ?? null,
-        equipmentStatus: equipmentRes?.status ?? null,
-        infoKeys: infoJson ? Object.keys(infoJson) : null,
-        equipmentKeys: equipmentJson ? Object.keys(equipmentJson) : null,
-        infoPreview: infoText.slice(0, 500),
-        equipmentPreview: equipmentText.slice(0, 500),
-      },
+      raw: data ?? null,
     });
-
   } catch (e) {
     return res.status(500).json({
       error: String(e?.message ?? e),
-      stack: String(e?.stack ?? ""),
     });
   }
 }
