@@ -112,6 +112,13 @@ export default async function handler(req, res) {
     let officialCombatPower = null;
     let officialAvatarUrl = null;
 
+    let infoRes = null;
+    let equipmentRes = null;
+    let infoText = "";
+    let equipmentText = "";
+    let infoJson = null;
+    let equipmentJson = null;
+
     if (characterId) {
       const decodedId = decodeURIComponent(characterId);
 
