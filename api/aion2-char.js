@@ -122,7 +122,7 @@ export default async function handler(req, res) {
     if (characterId) {
       const decodedId = decodeURIComponent(characterId);
 
-      const infoUrl = `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
+      const infoUrl = `https://aion2.plaync.com/ko-kr/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
       infoRes = await fetch(infoUrl, {
         headers: {
@@ -140,7 +140,7 @@ export default async function handler(req, res) {
         infoJson = null;
       }
 
-      const equipmentUrl = `https://aion2.plaync.com/api/character/equipment?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
+      const equipmentUrl = `https://aion2.plaync.com/ko-kr/api/character/equipment?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
       equipmentRes = await fetch(equipmentUrl, {
         headers: {
