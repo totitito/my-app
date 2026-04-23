@@ -17,9 +17,52 @@ export default async function handler(req, res) {
       },
     });
 
-    const searchJson = await searchRes.json();
-    const found = (searchJson?.list ?? []).find((x) => x?.characterName === name) ?? searchJson?.list?.[0] ?? null;
-    const characterId = found?.characterId;
+    const searchText = await searchRes.text();
+
+    if (!searchRes.ok) {
+      return res.status(searchRes.status).json({
+        error: `search HTTP ${searchRes.status}`,
+        preview: searchText.slice(0, 500),
+      });
+    }
+
+    let searchJson;
+    try {
+      searchJson = JSON.parse(searchText);
+    } catch {
+      return res.status(502).json({
+        error: "search API가 JSON을 반환하지 않음",
+        preview: searchText.slice(0, 500),
+      });
+    }
+
+    const searchList =
+      searchJson?.list ??
+      searchJson?.data?.list ??
+      searchJson?.data?.result?.list ??
+      searchJson?.result?.list ??
+      [];
+
+    const found =
+      searchList.find((x) => x?.characterName === name) ??
+      searchList.find((x) => x?.character_name === name) ??
+      searchList[0] ??
+      null;
+
+    const characterId =
+      found?.characterId ??
+      found?.character_id ??
+      null;
+
+    if (!characterId) {
+      return res.status(404).json({
+        error: "캐릭터를 찾을 수 없습니다",
+        debug: {
+          keys: Object.keys(searchJson || {}),
+          firstItem: searchList?.[0] ?? null,
+        },
+      });
+    }
 
     if (!characterId) {
       return res.status(404).json({ error: "캐릭터를 찾을 수 없습니다" });
