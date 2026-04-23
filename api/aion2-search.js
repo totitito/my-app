@@ -56,6 +56,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       combat_power: data?.combat_power ?? null,
+      combat_power2: data?.combat_power2 ?? null,
       combat_score: data?.combat_score ?? null,
       combat_score_max: data?.combat_score_max ?? null,
       character_id: data?.character_id ?? null,
