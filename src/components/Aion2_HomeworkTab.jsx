@@ -342,23 +342,35 @@ export default function Aion2_HomeworkTab({
         server_id = server ? server.id : 1016;
       }
 
-      const official = await fetch(`/api/aion2-char?serverid=${server_id}&name=${encodeURIComponent(charName)}`);
-      const officialJson = await official.json();
+      // 1. search
+      const searchRes = await fetch(
+        `https://aion2.plaync.com/ko-kr/api/search/aion2/search/v2/character?keyword=${encodeURIComponent(charName)}&serverId=${server_id}&page=1&size=30`,
+        { credentials: "include" }
+      );
+      const searchJson = await searchRes.json();
+      const characterId = searchJson?.list?.[0]?.characterId;
 
-      if (!official.ok) {
-        const text = JSON.stringify(officialJson).slice(0, 200);
-        throw new Error(`공홈 캐릭 API ${official.status} / ${text}`);
-      }
+      if (!characterId) throw new Error("characterId 못 찾음");
+
+      // 2. info
+      const infoRes = await fetch(
+        `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(characterId)}&serverId=${server_id}`,
+        { credentials: "include" }
+      );
+      const infoJson = await infoRes.json();
+
+      const profile = infoJson?.profile ?? {};
+      const stats = infoJson?.stat?.statList ?? [];
 
       setScores(prev => ({
         ...prev,
         [rawFull]: {
-          itemLevel: officialJson.item_level ?? prev?.[rawFull]?.itemLevel ?? 0,
-          combatPower: officialJson.combat_power ?? prev?.[rawFull]?.combatPower ?? 0,
+          itemLevel: stats.find((s) => s?.type === "ItemLevel")?.value ?? prev?.[rawFull]?.itemLevel ?? 0,
+          combatPower: profile?.combatPower ?? prev?.[rawFull]?.combatPower ?? 0,
           updatedAt: getNowMs(),
-          portrait: officialJson.avatar_url ?? prev?.[rawFull]?.portrait ?? null,
-          job: officialJson.job ?? prev?.[rawFull]?.job ?? null,
-          level: officialJson.level ?? prev?.[rawFull]?.level ?? null,
+          portrait: profile?.profileImage ?? prev?.[rawFull]?.portrait ?? null,
+          job: profile?.className ?? prev?.[rawFull]?.job ?? null,
+          level: profile?.characterLevel ?? prev?.[rawFull]?.level ?? null,
         }
       }));
     } catch (e) {
