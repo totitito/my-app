@@ -224,6 +224,7 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({
+      ok: true,
       name,
       job: officialJob ?? null,
       level: officialLevel ?? null,
@@ -232,9 +233,20 @@ export default async function handler(req, res) {
       avatar_url: officialAvatarUrl,
       gear,
       arcana,
+      debug: {
+        characterId,
+        officialJob,
+        officialLevel,
+        officialItemLevel,
+        officialCombatPower,
+        officialAvatarUrl,
+      },
     });
 
   } catch (e) {
-    return res.status(500).json({ error: String(e) });
+    return res.status(500).json({
+      error: String(e?.message ?? e),
+      stack: String(e?.stack ?? ""),
+    });
   }
 }
