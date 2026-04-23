@@ -122,13 +122,16 @@ export default async function handler(req, res) {
     if (characterId) {
       const decodedId = decodeURIComponent(characterId);
 
-      const infoUrl = `https://aion2.plaync.com/ko-kr/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
+      const infoUrl = `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
       infoRes = await fetch(infoUrl, {
         headers: {
-          "user-agent": "Mozilla/5.0",
-          "accept": "application/json",
-          "referer": "https://aion2.plaync.com/",
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+          "accept": "application/json, text/plain, */*",
+          "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+          "referer": `https://aion2.plaync.com/ko-kr/characters/${serverid}/${encodeURIComponent(decodedId)}`,
+          "origin": "https://aion2.plaync.com",
+          "x-requested-with": "XMLHttpRequest",
         },
       });
 
@@ -140,7 +143,7 @@ export default async function handler(req, res) {
         infoJson = null;
       }
 
-      const equipmentUrl = `https://aion2.plaync.com/ko-kr/api/character/equipment?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
+      const equipmentUrl = `https://aion2.plaync.com/api/character/equipment?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
       equipmentRes = await fetch(equipmentUrl, {
         headers: {
