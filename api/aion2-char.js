@@ -124,7 +124,7 @@ export default async function handler(req, res) {
 
       const infoUrl = `https://aion2.plaync.com/api/character/info?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
-      const infoRes = await fetch(infoUrl, {
+      infoRes = await fetch(infoUrl, {
         headers: {
           "user-agent": "Mozilla/5.0",
           "accept": "application/json",
@@ -132,8 +132,8 @@ export default async function handler(req, res) {
         },
       });
 
-      const infoText = await infoRes.text();
-      let infoJson = null;
+      infoText = await infoRes.text();
+      infoJson = null;
       try {
         infoJson = JSON.parse(infoText);
       } catch {
@@ -142,7 +142,7 @@ export default async function handler(req, res) {
 
       const equipmentUrl = `https://aion2.plaync.com/api/character/equipment?lang=ko&characterId=${encodeURIComponent(decodedId)}&serverId=${serverid}`;
 
-      const equipmentRes = await fetch(equipmentUrl, {
+      equipmentRes = await fetch(equipmentUrl, {
         headers: {
           "user-agent": "Mozilla/5.0",
           "accept": "application/json",
@@ -150,8 +150,8 @@ export default async function handler(req, res) {
         },
       });
 
-      const equipmentText = await equipmentRes.text();
-      let equipmentJson = null;
+      equipmentText = await equipmentRes.text();
+      equipmentJson = null;
       try {
         equipmentJson = JSON.parse(equipmentText);
       } catch {
@@ -259,8 +259,8 @@ export default async function handler(req, res) {
         officialItemLevel,
         officialCombatPower,
         officialAvatarUrl,
-        infoStatus: infoRes.status,
-        equipmentStatus: equipmentRes.status,
+        infoStatus: infoRes?.status ?? null,
+        equipmentStatus: equipmentRes?.status ?? null,
         infoKeys: infoJson ? Object.keys(infoJson) : null,
         equipmentKeys: equipmentJson ? Object.keys(equipmentJson) : null,
         infoPreview: infoText.slice(0, 500),
