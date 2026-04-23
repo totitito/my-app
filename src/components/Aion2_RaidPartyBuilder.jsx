@@ -72,6 +72,21 @@ const slotLabel = (i) => {
 
 const SERVER_SHORT_SET = new Set(AION2_SERVERS.map(s => s.short));
 
+const compareOperator = (a, b) => {
+  const aStr = String(a || "").trim();
+  const bStr = String(b || "").trim();
+
+  const aIsKo = /[가-힣]/.test(aStr);
+  const bIsKo = /[가-힣]/.test(bStr);
+
+  // 한글 먼저
+  if (aIsKo && !bIsKo) return -1;
+  if (!aIsKo && bIsKo) return 1;
+
+  // 같은 그룹 안에서는 가나다 / ABC
+  return aStr.localeCompare(bStr, "ko", { sensitivity: "base" });
+};
+
 export default function Aion2_RaidPartyBuilder() {
   const [state, setState] = useState(() => {
     try {
@@ -362,7 +377,8 @@ export default function Aion2_RaidPartyBuilder() {
   const sortedCandidates = [...state.candidates].sort((a, b) => {
     if (candidateSortMode === "itemLevel") return (b.itemLevel ?? 0) - (a.itemLevel ?? 0);
     if (candidateSortMode === "power") return (b.power ?? 0) - (a.power ?? 0);
-    if (candidateSortMode === "operator") return String(a.operator || "").localeCompare(String(b.operator || ""), "ko");
+    if (candidateSortMode === "operator")
+      return compareOperator(a.operator, b.operator);
     return 0;
   });
 
@@ -795,9 +811,11 @@ export default function Aion2_RaidPartyBuilder() {
             const groups = candidateSortMode === "class"
               ? AION2_CLASSES
               : [
-                  ...players,
-                  ...[...new Set(candidates.map(c => (c.operator || "").trim()).filter(op => op && !players.includes(op)))],
-                  ...( candidates.some(c => !(c.operator || "").trim()) ? ["(미지정)"] : [] ),
+                  ...[...new Set([
+                    ...players,
+                    ...candidates.map(c => (c.operator || "").trim()).filter(Boolean),
+                  ])].sort(compareOperator),
+                  ...(candidates.some(c => !(c.operator || "").trim()) ? ["(미지정)"] : []),
                 ];
             return groups.map(grp => {
               const isPlayerMode = candidateSortMode === "operator";
