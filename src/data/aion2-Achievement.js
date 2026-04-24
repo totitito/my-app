@@ -73,14 +73,20 @@ export const AION2_ACHIEVEMENTS = [
   { id: "aion2-Altgarde-Bishveda", game: "aion2", name: "[알트가르드] 흑암의 비슈베다", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "필드보스(마족)", scope: "character", lastUpdated: {} },
   
   // 아이온2 - 업적 - 날개
-  { id: "aion2-wing-ancient-aulaou-wings", game: "aion2", name: "[우루구구] 고대 아울라우의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
-  { id: "aion2-wing-wings-of-blue-waves", game: "aion2", name: "[드라웁니르] 푸른 파도의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
-  { id: "aion2-wing-black-fragmented-wings", game: "aion2", name: "[크라오] 검은 파편의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },  
-  { id: "aion2-wing-forest-spirit-wings", game: "aion2", name: "[바크론] 숲의 정령의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-fire-temple", game: "aion2", name: "[불신] 크로메데의 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-horn-cave", game: "aion2", name: "[암굴] 어둠의 장막 날개 깃털", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
-  { id: "aion2-dramata-nest", game: "aion2", name: "[드라마타] 드라마타 둥지의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-void-talisra-wings", game: "aion2", name: "[시즌3] 공허의 탈리스라 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-nightmare-wings", game: "aion2", name: "[악몽] 악몽의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+
+  { id: "aion2-wing-wings-of-blue-lightning", game: "aion2", name: "[푸른숨의섬] 푸른 전광의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-wings-of-illusory-echo", game: "aion2", name: "[환영의회랑] 허상의 메아리 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   { id: "aion2-wing-cradle-of-nothingness", game: "aion2", name: "[무의요람] 무아의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-dramata-nest", game: "aion2", name: "[드라마타] 드라마타 둥지의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-horn-cave", game: "aion2", name: "[암굴] 어둠의 장막 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-fire-temple", game: "aion2", name: "[불신] 크로메데의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-forest-spirit-wings", game: "aion2", name: "[바크론] 숲의 정령의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-ancient-aulaou-wings", game: "aion2", name: "[우루구구] 고대 아울라우의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-wings-of-blue-waves", game: "aion2", name: "[드라웁니르] 푸른 파도의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+  { id: "aion2-wing-black-fragmented-wings", game: "aion2", name: "[크라오] 검은 파편의 날개", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
+
   { id: "aion2-wing-wings-of-sealing", game: "aion2", name: "[봉인 던전] 봉인의 날개", color: "#2f4bc8", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   { id: "aion2-wing-wings-of-glory", game: "aion2", name: "[봉인 던전] 영광의 날개", color: "#2f4bc8", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "날개", scope: "character", lastUpdated: {} },
   
@@ -88,7 +94,11 @@ export const AION2_ACHIEVEMENTS = [
   { id: "aion2-statue-wings-of-sealing", game: "aion2", name: "봉인의 날개", color: "#53ee37", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "조각상", scope: "character", lastUpdated: {} },
 
   // 아이온2 - 업적 - 명화(던전)
+  { id: "aion2-masterpiece-sanctuary-of-erosion", game: "aion2", name: "침식의 정화소", color: "#ff4444", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
   { id: "aion2-masterpiece-abyssal-reforging-rudra", game: "aion2", name: "심연의 루드라", color: "#ff4444", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
+
+  { id: "aion2-masterpiece-blue-breath-island", game: "aion2", name: "푸른 숨의 섬", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
+  { id: "aion2-masterpiece-corridor-of-illusions", game: "aion2", name: "환영의 회랑", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
   { id: "aion2-masterpiece-cradle-of-nothingness", game: "aion2", name: "무의 요람", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
   { id: "aion2-masterpiece-dramata-nest", game: "aion2", name: "죽은 드라마타의 둥지", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
   { id: "aion2-masterpiece-fierce-horn-cave", game: "aion2", name: "사나운 뿔 암굴", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
@@ -97,6 +107,7 @@ export const AION2_ACHIEVEMENTS = [
   { id: "aion2-masterpiece-dungeon-urugugu", game: "aion2", name: "우루구구", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
   { id: "aion2-masterpiece-dungeon-draupnir", game: "aion2", name: "드라웁니르", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
   { id: "aion2-masterpiece-dungeon-krao", game: "aion2", name: "크라오", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(던전)", scope: "character", lastUpdated: {} },
+  
   // 아이온2 - 업적 - 명화(슈고)
   { id: "aion2-masterpiece-shugofesta-temple-eldes", game: "aion2", name: "엘데스 신전", color: "#ff8c00", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(슈고)", scope: "character", lastUpdated: {} },
   { id: "aion2-duduka-worker", game: "aion2", name: "두두카 일꾼", color: "#2f4bc8", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "명화(슈고)", scope: "character", lastUpdated: {} },
