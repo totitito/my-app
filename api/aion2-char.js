@@ -101,7 +101,10 @@ export default async function handler(req, res) {
       천칭: [],
     };
 
-    const equipmentList = data?.equipment ?? [];
+    const equipmentList = [
+      ...(data?.equipment ?? []),
+      ...(data?.accessories ?? []),
+    ];
 
     for (const item of equipmentList) {
       const skills = (item?.sub_skills ?? [])
@@ -116,6 +119,7 @@ export default async function handler(req, res) {
       const posName =
         item?.slot_pos_name ??
         item?.raw_data?.slotPosName ??
+        item?.slotPosName ??
         "";
 
       if (ARCANA_SLOT_MAP[posName]) {
