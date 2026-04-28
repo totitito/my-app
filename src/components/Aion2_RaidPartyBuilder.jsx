@@ -13,7 +13,7 @@ const makePreset = (name) => ({
 
 const defaultState = {
   candidateSortMode: "operator",
-  players: ["강력공격맨", "네오", "수사불패", "재미니맨", "Adele", "Pdoll"],
+  players: ["강력공격맨", "네오", "재미니맨", "Adele", "May", "Pdoll"],
   candidates: [
     { id: crypto.randomUUID(), operator: "강력공격맨", name: "카니쵸니[바카]", cls: "궁성", itemLevel: 3817, power: 405600, updatedAt: 0 },
     { id: crypto.randomUUID(), operator: "강력공격맨", name: "까니쵸니[바카]", cls: "호법성", itemLevel: 3604, power: 323200, updatedAt: 0 },
