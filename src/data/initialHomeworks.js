@@ -43,6 +43,7 @@ export const initialHomeworks = [
   { id: "aion2-account-buy-odd", game: "aion2", name: "오드 구입", max: 21, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-account-buy-dungeon-instant-complete", game: "aion2", name: "일던 즉완권 구매", max: 21, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-account-buy-nightmare-instant-complete", game: "aion2", name: "악몽 즉완권 구매", max: 14, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-account-buy-abyss-reforge-reward-ticket", game: "aion2", name: "심연의 재련 충전권 구매", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
 
   // 아이온2 - character - Daily
   { id: "aion2-login", game: "aion2", name: "출석", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 0, scope: "character", lastResetDate: "", lastUpdated: {} },
