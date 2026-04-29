@@ -8,6 +8,7 @@ export const AION2_ACHIEVEMENTS = [
   { id: "aion2-devapass-260408-starguidance", game: "aion2", name: "별의 인도", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "character", lastUpdated: {} },
   { id: "aion2-devapass-260408-rich-journey", game: "aion2", name: "풍요로운 여정", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "account", lastUpdated: {} },
   { id: "aion2-devapass-260408-hero-invitation", game: "aion2", name: "영웅의 초대장", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "account", lastUpdated: {} },
+  { id: "aion2-devapass-260429-refreshing-season", game: "aion2", name: "싱그러운 계절", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "데바 패스", scope: "account", lastUpdated: {} },
 
   // 아이온2 - 업적 - 시즌
   { id: "aion2-season-season2-reward-chest", game: "aion2", name: "시즌2 랭킹 보상 상자", max: 1, counts: {}, excluded: {}, resetType: "once", resetPeriod: "once", category: "시즌", scope: "character", lastUpdated: {} },
