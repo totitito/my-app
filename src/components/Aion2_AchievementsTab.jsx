@@ -85,8 +85,11 @@ export default function Aion2_AchievementsTab({ characters = [], accounts = [] }
               {list.map((item, idx) => {
                 const targetKey = getName(item); // 저장 키값도 동일하게 추출
                 const stateGroup = isChar ? achievementsState.byCharacter : achievementsState.byAccount;
-                const count = stateGroup?.[targetKey]?.[a.id] || 0;
+                const savedCount = stateGroup?.[targetKey]?.[a.id];
                 const max = a.max || 1;
+                const count = a.id === "aion2-season-coin-of-oath"
+                  ? (savedCount ?? max)
+                  : (savedCount || 0);
 
                 return (
                   <td
@@ -96,7 +99,11 @@ export default function Aion2_AchievementsTab({ characters = [], accounts = [] }
                       setAchievementsState(prev => {
                         const newGroup = { ...(isChar ? prev.byCharacter : prev.byAccount) };
                         const targetData = { ...(newGroup[targetKey] || {}) };
-                        targetData[a.id] = (count + 1) % (max + 1);
+                        if (a.id === "aion2-season-coin-of-oath") {
+                          targetData[a.id] = count <= 0 ? max : count - 1;
+                        } else {
+                          targetData[a.id] = (count + 1) % (max + 1);
+                        }
                         newGroup[targetKey] = targetData;
                         return isChar ? { ...prev, byCharacter: newGroup } : { ...prev, byAccount: newGroup };
                       });
@@ -104,15 +111,24 @@ export default function Aion2_AchievementsTab({ characters = [], accounts = [] }
                     style={{
                       border: "1px solid #333",
                       cursor: "pointer",
-                      background: count > 0 ? (count === max ? "#222" : "#3d3d3d") : "#5a4f2a",
+                      background: a.id === "aion2-season-coin-of-oath"
+                        // ? (count === 0 ? "#222" : (count === max ? "#5a4f2a" : "#1d271d"))
+                        ? (count === 0 ? "#222" : "#5a4f2a")
+                        : (count > 0 ? (count === max ? "#222" : "#3d3d3d") : "#5a4f2a"),
                       textAlign: "center",
                       fontSize: 11,
-                      color: count > 0 ? "#fff" : "#666",
+                      color: a.id === "aion2-season-coin-of-oath"
+                        ? (count === 0 ? "#666" : "#fff")
+                        : (count > 0 ? "#666" : "#fff"),
                       userSelect: "none",
-                      fontWeight: count > 0 ? "bold" : "normal",
+                      fontWeight: a.id === "aion2-season-coin-of-oath"
+                        ? (count === 0 ? "normal" : "bold")
+                        : (count > 0 ? "normal" : "bold"),
                     }}
                   >
-                    {max > 1 ? `${count}/${max}` : (count > 0 ? "완료" : "미완료")}
+                    {max > 1
+                      ? (a.id === "aion2-season-coin-of-oath" ? `${count}/${max}` : `${count}/${max}`)
+                      : (count > 0 ? "완료" : "미완료")}
                   </td>
                 );
               })}
@@ -126,16 +142,37 @@ export default function Aion2_AchievementsTab({ characters = [], accounts = [] }
   return (
     <div style={{ padding: 12 }}>
       {/* 닫혀있는 카테고리 필터 */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-        {CATS.filter(cat => achievementsState.collapsed?.[cat]).map(cat => (
-          <button key={cat} onClick={() => toggleCat(cat)} style={{ background: "#2a2a2a", border: "1px solid #666", color: "#fff", padding: "6px 14px", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: "bold", display: "flex", alignItems: "center", gap: 6 }}>
-            <span>{cat}</span><span>➕</span>
-          </button>
-        ))}
-      </div>
+      {CATS.some(cat => achievementsState.collapsed?.[cat]) && (
+        <>
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              flexWrap: "wrap",
+              position: "fixed",
+              top: 88,
+              left: 15,
+              right: 15,
+              zIndex: 999,
+              background: "#1e1e1e",
+              padding: "8px 0",
+              borderBottom: "1px solid #333",
+            }}
+          >
+            {CATS.filter(cat => achievementsState.collapsed?.[cat]).map(cat => (
+              <button key={cat} onClick={() => toggleCat(cat)} style={{ background: "#2a2a2a", border: "1px solid #666", color: "#fff", padding: "6px 14px", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: "bold", display: "flex", alignItems: "center", gap: 6 }}>
+                <span>{cat}</span><span>➕</span>
+              </button>
+            ))}
+          </div>
+
+          <div style={{ height: 10 }} />
+        </>
+      )}
 
       {/* 업적 리스트 */}
-      {CATS.filter(cat => !achievementsState.collapsed?.[cat]).map(cat => {
+      {CATS.map(cat => {
+        const isCollapsed = achievementsState.collapsed?.[cat];
         const achvsInCat = AION2_ACHIEVEMENTS.filter(a => a.category === cat);
         const hasCharScope = achvsInCat.some(a => a.scope === "character");
         const hasAcctScope = achvsInCat.some(a => a.scope === "account");
@@ -144,28 +181,35 @@ export default function Aion2_AchievementsTab({ characters = [], accounts = [] }
           <div key={cat} style={{ marginBottom: 32, borderBottom: "1px solid #333", paddingBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <span style={{ fontWeight: "bold", fontSize: 18, color: "#ffd400" }}>{cat}</span>
-              <button onClick={() => toggleCat(cat)} style={{ background: "#1e1e1e", border: "1px solid #444", color: "#ccc", padding: "2px 10px", borderRadius: 6, cursor: "pointer" }}>➖ 접기</button>
+              <button onClick={() => toggleCat(cat)} style={{ background: "#1e1e1e", border: "1px solid #444", color: "#ccc", padding: "2px 10px", borderRadius: 6, cursor: "pointer" }}>
+                {isCollapsed ? "➕ 열기" : "➖ 접기"}
+              </button>
             </div>
 
-            {/* 계정별 업적 (위쪽) */}
-            {hasAcctScope && (
-              <div style={{ marginBottom: hasCharScope ? 20 : 0 }}>
-                <div style={{ fontSize: 13, color: "#aaa", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
-                    <span style={{ background: "#444", padding: "2px 6px", borderRadius: 4 }}>계정 공통</span>
-                </div>
-                {renderTable("account", accounts, achvsInCat)}
-              </div>
+            {!isCollapsed && (
+              <>
+                {/* 계정별 업적 (위쪽) */}
+                {hasAcctScope && (
+                  <div style={{ marginBottom: hasCharScope ? 20 : 0 }}>
+                    <div style={{ fontSize: 13, color: "#aaa", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+                        <span style={{ background: "#444", padding: "2px 6px", borderRadius: 4 }}>계정 공통</span>
+                    </div>
+                    {renderTable("account", accounts, achvsInCat)}
+                  </div>
+                )}
+
+                {/* 캐릭터별 업적 (아래쪽) */}
+                {hasCharScope && (
+                  <div>
+                    <div style={{ fontSize: 13, color: "#aaa", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+                        <span style={{ background: "#444", padding: "2px 6px", borderRadius: 4 }}>캐릭터 개별</span>
+                    </div>
+                    {renderTable("character", characters, achvsInCat)}
+                  </div>
+                )}
+              </>
             )}
 
-            {/* 캐릭터별 업적 (아래쪽) */}
-            {hasCharScope && (
-              <div>
-                <div style={{ fontSize: 13, color: "#aaa", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
-                    <span style={{ background: "#444", padding: "2px 6px", borderRadius: 4 }}>캐릭터 개별</span>
-                </div>
-                {renderTable("character", characters, achvsInCat)}
-              </div>
-            )}
           </div>
         );
       })}
