@@ -1,5 +1,5 @@
 export const CORRIDOR_LOW = ["뿌리", "유황", "시엘"];
-export const CORRIDOR_MID = ["관측", "성채", "사원"];
+export const CORRIDOR_MID = ["침식", "늪지", "고목"];
 
 export const initialHomeworks = [
   // 와우 - 반복
