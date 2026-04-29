@@ -1199,6 +1199,24 @@ export default function Aion2_HomeworkTab({
                                   />
                                 </div>
                               )}
+
+                              {hw.name === "성역1" && (
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "3px", marginTop: "4px" }} onClick={(e) => e.stopPropagation()}>
+                                  <input
+                                    type="number"
+                                    value={extraDungeon[`sanctuary1:${targetName}`] ?? 0}
+                                    min={0}
+                                    max={30}
+                                    onChange={(e) => {
+                                      const v = Math.max(0, Math.min(30, Number(e.target.value) || 0));
+                                      setExtraDungeon(prev => ({ ...prev, [`sanctuary1:${targetName}`]: v }));
+                                    }}
+                                    onFocus={(e) => e.target.select()}
+                                    onKeyDown={(e) => { if (e.key === "Enter") e.target.blur(); }}
+                                    style={{ width: "30px", textAlign: "center", backgroundColor: isPending ? "#3b2c63" : "#1e1e1e", color: "#39b3ff", border: "1px solid #39b3ff", borderRadius: "2px", fontSize: "12px", padding: "3px 2px" }}
+                                  />
+                                </div>
+                              )}
                               
                               {/* 3. 하단 버튼군: -, 0, + 가로 배치
                               <div style={{ display: "flex", justifyContent: "center", gap: "3px" }}>
