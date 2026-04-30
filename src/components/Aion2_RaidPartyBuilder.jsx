@@ -34,6 +34,7 @@ const defaultState = {
     { id: crypto.randomUUID(), operator: "재미니맨", name: "델[아리]", cls: "정령성", itemLevel: 3939, power: 396700, updatedAt: 0 },
     { id: crypto.randomUUID(), operator: "재미니맨", name: "히푸[아리]", cls: "치유성", itemLevel: 3391, power: 204000, updatedAt: 0 },
     { id: crypto.randomUUID(), operator: "재미니맨", name: "뱐[아리]", cls: "궁성", itemLevel: 3021, power: 174100, updatedAt: 0 },
+    { id: crypto.randomUUID(), operator: "재미니맨", name: "Glo[아리]", cls: "호법성", itemLevel: 2910, power: 150757, updatedAt: 0 },
         
     { id: crypto.randomUUID(), operator: "네오", name: "갱e[바카]", cls: "궁성", itemLevel: 4115, power: 508300, updatedAt: 0 },
     { id: crypto.randomUUID(), operator: "네오", name: "겨울마도[바카]", cls: "마도성", itemLevel: 3675, power: 354200, updatedAt: 0 },
@@ -117,6 +118,7 @@ export default function Aion2_RaidPartyBuilder() {
   const [editingPresetId, setEditingPresetId] = useState(null);
   const [editingPresetName, setEditingPresetName] = useState("");
   const [isRefreshingAll, setIsRefreshingAll] = useState(false);
+  const [compactView, setCompactView] = useState(false);
 
   // 프리셋 슬롯 조작 헬퍼
   const updatePresetSlots = (type, presetId, updater) => {
@@ -141,6 +143,25 @@ export default function Aion2_RaidPartyBuilder() {
     setState(prev => {
       const n = prev[key].length + 1;
       return { ...prev, [key]: [...prev[key], makePreset(`${label} ${n}`)] };
+    });
+  };
+
+  const movePreset = (type, presetId, direction) => {
+    const key = type === "rudra" ? "rudraPresets" : "erosionPresets";
+
+    setState(prev => {
+      const arr = [...prev[key]];
+      const idx = arr.findIndex(p => p.id === presetId);
+      if (idx === -1) return prev;
+
+      const target = direction === "up" ? idx - 1 : idx + 1;
+      if (target < 0 || target >= arr.length) return prev;
+
+      const temp = arr[idx];
+      arr[idx] = arr[target];
+      arr[target] = temp;
+
+      return { ...prev, [key]: arr };
     });
   };
 
@@ -575,6 +596,15 @@ export default function Aion2_RaidPartyBuilder() {
             >{preset.name}</span>
           )}
           <div style={{ display: "flex", gap: 6 }}>
+            <button onClick={() => movePreset(type, preset.id, "up")}
+              style={{ padding: "3px 6px", borderRadius: 6, border: "1px solid #555", background: "#222", color: "#ddd", cursor: "pointer", fontSize: 12 }}>
+              ↑
+            </button>
+
+            <button onClick={() => movePreset(type, preset.id, "down")}
+              style={{ padding: "3px 6px", borderRadius: 6, border: "1px solid #555", background: "#222", color: "#ddd", cursor: "pointer", fontSize: 12 }}>
+              ↓
+            </button>
             <button onClick={() => clearAllSlots(type, preset.id)} style={{ padding: "3px 8px", borderRadius: 8, border: "1px solid #555", background: "#222", color: "#ddd", cursor: "pointer", fontSize: 12 }}>전체 비우기</button>
             <button onClick={() => removePreset(type, preset.id)} style={{ padding: "3px 8px", borderRadius: 8, border: "1px solid #553", background: "#201010", color: "#f0b0b0", cursor: "pointer", fontSize: 12 }} title="이 프리셋 삭제">삭제</button>
           </div>
@@ -584,7 +614,11 @@ export default function Aion2_RaidPartyBuilder() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           {[1, 2].map(party => (
             <div key={party} style={{ border: "1px solid #2a2a2a", borderRadius: 8, padding: 8, background: "#111" }}>
-              <div style={{ fontWeight: "bold", marginBottom: 6, color: "#aaa", fontSize: 13 }}>파티 {party}</div>
+              {!compactView && (
+                <div style={{ fontWeight: "bold", marginBottom: 6, color: "#aaa", fontSize: 13 }}>
+                  파티 {party}
+                </div>
+              )}
               {Array.from({ length: 4 }, (_, k) => {
                 const slotIndex = (party === 1 ? 0 : 4) + k;
                 const cid = slots[slotIndex];
@@ -616,7 +650,9 @@ export default function Aion2_RaidPartyBuilder() {
                           )
                         : "#111",
                       cursor: c ? "grab" : "default",
-                      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, minHeight: 44,
+                      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+                      minHeight: compactView ? 24 : 44,
+                      padding: compactView ? "2px 6px" : "6px 8px",
                       boxShadow: isDupChar
                         ? "0 0 0 2px #ff5a5a inset, 0 0 12px rgba(255,90,90,0.55)"
                         : isDupOperatorInPreset
@@ -625,7 +661,11 @@ export default function Aion2_RaidPartyBuilder() {
                     }}
                   >
                     <div style={{ display: "flex", gap: 8, alignItems: "center", flex: 1 }}>
-                      <div style={{ width: 40, color: "#4b4b4b", fontWeight: "bold", fontSize: 12 }}>{slotLabel(slotIndex)}</div>
+                      {!compactView && (
+                        <div style={{ width: 40, color: "#4b4b4b", fontWeight: "bold", fontSize: 12 }}>
+                          {slotLabel(slotIndex)}
+                        </div>
+                      )}
                       {c ? (
                         <div style={{ flex: 1 }}>
                           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
@@ -641,25 +681,47 @@ export default function Aion2_RaidPartyBuilder() {
                                 onClick={e => { e.stopPropagation(); setEditingNameId(c.id); setEditingName(c.name || ""); }}
                                 style={{ color: "#000", fontWeight: "bold", cursor: "text", userSelect: "none", fontSize: 13 }}>{c.name}</span>
                             )}
-                            <select value={c.cls} onChange={e => { e.stopPropagation(); updateCandidateCls(c.id, e.target.value); }}
-                              onMouseDown={stopBubble} onDragStart={stopDrag} onClick={e => e.stopPropagation()}
-                              style={{ padding: "2px 4px", borderRadius: 4, border: "1px solid rgba(0,0,0,0.35)", background: "rgba(0,0,0,0.25)", color: "#000", fontWeight: "bold", fontSize: 12 }}>
-                              {AION2_CLASSES.map(cls => <option key={cls} value={cls} style={{ backgroundColor: "#2b2b2b", color: "#fff" }}>{cls}</option>)}
-                            </select>
+                            {compactView ? (
+                              <span style={{ color: "#111", fontSize: 12, whiteSpace: "nowrap" }}>
+                                {c.itemLevel?.toLocaleString()} · {formatK(c.power)}
+                              </span>
+                            ) : (
+                              <select value={c.cls} onChange={e => { e.stopPropagation(); updateCandidateCls(c.id, e.target.value); }}
+                                onMouseDown={stopBubble} onDragStart={stopDrag} onClick={e => e.stopPropagation()}
+                                style={{ padding: "2px 4px", borderRadius: 4, border: "1px solid rgba(0,0,0,0.35)", background: "rgba(0,0,0,0.25)", color: "#000", fontWeight: "bold", fontSize: 12 }}>
+                                {AION2_CLASSES.map(cls => <option key={cls} value={cls} style={{ backgroundColor: "#2b2b2b", color: "#fff" }}>{cls}</option>)}
+                              </select>
+                            )}
                           </div>
-                          <div style={{ marginTop: 3, fontSize: 11, color: "#111" }}>
-                            iLvl {c.itemLevel?.toLocaleString()} · CP {formatK(c.power)}
-                          </div>
+                          {!compactView && (
+                            <div style={{ marginTop: 3, fontSize: 11, color: "#111" }}>
+                              템렙 {c.itemLevel?.toLocaleString()} · 전투력 {formatK(c.power)}
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div style={{ color: "#555", fontSize: 12 }}>드래그 / 클릭: 신규</div>
                       )}
                     </div>
                     {c && (
-                      <button onMouseDown={stopDrag} onDragStart={stopDrag}
+                      <button
+                        onMouseDown={stopDrag}
+                        onDragStart={stopDrag}
                         onClick={e => { e.stopPropagation(); clearSlot(type, preset.id, slotIndex); }}
-                        style={{ padding: "4px 8px", borderRadius: 8, border: "1px solid #555", background: "#1f1f1f", color: "#ddd", cursor: "pointer", fontSize: 12 }}>
-                        비우기
+                        style={{
+                          padding: compactView ? "0px" : "4px 8px",
+                          width: compactView ? 18 : "auto",
+                          height: compactView ? 18 : "auto",
+                          borderRadius: 6,
+                          border: "1px solid #555",
+                          background: "#1f1f1f",
+                          color: "#ddd",
+                          cursor: "pointer",
+                          fontSize: compactView ? 11 : 12,
+                          lineHeight: "16px"
+                        }}
+                      >
+                        {compactView ? "×" : "비우기"}
                       </button>
                     )}
                   </div>
@@ -717,7 +779,13 @@ export default function Aion2_RaidPartyBuilder() {
   };
 
   return (
-    <div style={{ marginTop: 12 }}>
+    <div style={{ marginTop: -30 }}>
+      <div style={{ marginBottom: 8 }}>
+        <button onClick={() => setCompactView(v => !v)} style={{ fontSize: 12, padding: "4px 8px", borderRadius: 6, border: "1px solid #555", background: "#222", color: "#ccc", cursor: "pointer" }}>
+          {compactView ? "크게 보기" : "작게 보기"}
+        </button>
+      </div>
+
       <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
 
         {/* 좌: 루드라 + 침식 */}
@@ -726,15 +794,23 @@ export default function Aion2_RaidPartyBuilder() {
 
             {/* 루드라 */}
             <div>
-              <div style={{ fontWeight: "bold", color: "#e0a060", fontSize: 15, marginBottom: 10, borderBottom: "1px solid #333", paddingBottom: 6 }}>루드라</div>
-              {rudraPresets.map(p => renderPresetBlock("rudra", p))}
+              <div style={{ fontWeight: "bold", color: "#aa00ff", fontSize: 15, marginBottom: 10, borderBottom: "1px solid #333", paddingBottom: 6 }}>루드라</div>
+              {rudraPresets.map(p => (
+                <div key={p.id}>
+                  {renderPresetBlock("rudra", p)}
+                </div>
+              ))}
               <button onClick={() => addPreset("rudra")} style={{ width: "100%", padding: "8px", borderRadius: 10, border: "1px dashed #555", background: "#1a1a1a", color: "#aaa", cursor: "pointer", fontSize: 13 }}>+ 프리셋 추가</button>
             </div>
 
             {/* 침식 */}
             <div>
-              <div style={{ fontWeight: "bold", color: "#60a0e0", fontSize: 15, marginBottom: 10, borderBottom: "1px solid #333", paddingBottom: 6 }}>침식</div>
-              {erosionPresets.map(p => renderPresetBlock("erosion", p))}
+              <div style={{ fontWeight: "bold", color: "#ff3535", fontSize: 15, marginBottom: 10, borderBottom: "1px solid #333", paddingBottom: 6 }}>침식</div>
+              {erosionPresets.map(p => (
+                <div key={p.id}>
+                  {renderPresetBlock("erosion", p)}
+                </div>
+              ))}
               <button onClick={() => addPreset("erosion")} style={{ width: "100%", padding: "8px", borderRadius: 10, border: "1px dashed #555", background: "#1a1a1a", color: "#aaa", cursor: "pointer", fontSize: 13 }}>+ 프리셋 추가</button>
             </div>
 
@@ -742,8 +818,18 @@ export default function Aion2_RaidPartyBuilder() {
         </div>
 
         {/* 우: 후보 패널 (직업별) */}
-        <div style={{ ...panelStyle }}
-          onDragOver={allowDrop} onDrop={onDropToGroup}>
+        <div
+          style={{
+            ...panelStyle,
+            position: "sticky",
+            top: 90,        // 필요하면 60~100 사이 조절
+            alignSelf: "flex-start",
+            maxHeight: "calc(100vh - 80px)",
+            overflowY: "auto",
+          }}
+          onDragOver={allowDrop}
+          onDrop={onDropToGroup}
+        >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
 
             <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
@@ -846,6 +932,8 @@ export default function Aion2_RaidPartyBuilder() {
                     <div style={{ display: "flex", flexWrap: "nowrap", gap: 6 }}>
                       {grpCands.map(c => (
                         <CandidateCard key={c.id} c={c}
+                          rudraCount={rudraPresets.flatMap(p => p.slots).filter(id => id === c.id).length}
+                          erosionCount={erosionPresets.flatMap(p => p.slots).filter(id => id === c.id).length}
                           onDragStartCandidate={onDragStartCandidate}
                           updateCandidateCls={updateCandidateCls}
                           updateCandidateOperator={updateCandidateOperator}
@@ -905,6 +993,8 @@ export default function Aion2_RaidPartyBuilder() {
 
                         <CandidateCard
                           c={c}
+                          rudraCount={rudraPresets.flatMap(p => p.slots).filter(id => id === c.id).length}
+                          erosionCount={erosionPresets.flatMap(p => p.slots).filter(id => id === c.id).length}
                           onDragStartCandidate={onDragStartCandidate}
                           updateCandidateCls={updateCandidateCls}
                           updateCandidateOperator={updateCandidateOperator}
@@ -962,6 +1052,8 @@ function formatK(value) {
 function CandidateCard(props) {
   const {
     c,
+    rudraCount,
+    erosionCount,
     onDragStartCandidate,
     updateCandidateCls,
     updateCandidateOperator,
@@ -991,7 +1083,7 @@ function CandidateCard(props) {
       draggable
       onDragStart={(e) => onDragStartCandidate(e, c.id)}
       style={{
-        width: 240, // 후보 카드 가로 길이
+        width: 280, // 후보 카드 가로 길이
         flexShrink: 0,
         boxSizing: "border-box",
         border: "1px solid #555",
@@ -1005,6 +1097,59 @@ function CandidateCard(props) {
       }}
       title="드래그해서 슬롯에 넣기"
     >
+
+      {/* 좌측 카운트 */}
+      <div
+        style={{
+          width: 26,
+          height: 54,
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          // borderRight: "1px solid rgba(0,0,0,0.4)",
+        }}
+      >
+        <div
+          style={{
+            flex: 1,
+            background: "#b45ad6",
+            color: "#111",
+            fontWeight: "bold",
+            fontSize: 16,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: rudraCount === 1
+              ? "#666"
+              : "#b45ad6",
+            backgroundBlendMode: rudraCount === 1 ? "normal" : "overlay",
+            opacity: rudraCount === 1 ? 0 : 1,
+          }}
+        >
+          {rudraCount}
+        </div>
+
+        <div
+          style={{
+            flex: 1,
+            background: "#ff1f35",
+            color: "#111",
+            fontWeight: "bold",
+            fontSize: 16,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: erosionCount === 1
+              ? "#666"
+              : "#ff1f35",
+            backgroundBlendMode: erosionCount === 1 ? "normal" : "overlay",
+            opacity: erosionCount === 1 ? 0 : 1,
+          }}
+        >
+        {erosionCount}
+        </div>
+      </div>
+
       {/* 가운데: 정보 */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -1046,7 +1191,7 @@ function CandidateCard(props) {
             </span>
           )}
 
-          <select
+          {/* <select
             value={c.cls}
             onChange={(e) => { e.stopPropagation(); updateCandidateCls(c.id, e.target.value); }}
             onClick={(e) => e.stopPropagation()}
@@ -1065,16 +1210,16 @@ function CandidateCard(props) {
                 {cls}
               </option>
             ))}
-          </select>
+          </select> */}
         </div>
 
         <div style={{ marginTop: 3, fontSize: 11, display: "flex", gap: 8, flexWrap: "nowrap", whiteSpace: "nowrap" }}>
           <span style={{ color: "#111" }}>
-            iLvl : <span style={{ fontWeight: "bold" }}>{c.itemLevel?.toLocaleString()}</span>
+            템렙 : <span style={{ fontWeight: "bold" }}>{c.itemLevel?.toLocaleString()}</span>
           </span>
           {/* 전투력 */}
           <span style={{ color: "#000000" }}>
-            CP :{" "}
+            전투력 :{" "}
             {editingFieldId === c.id && editingField === "power" ? (
               <input
                 autoFocus
@@ -1135,24 +1280,50 @@ function CandidateCard(props) {
 
       {/* 오른쪽: 삭제 / Update */}
       <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "flex-end", justifyContent: "flex-start" }}>
-        <button
-          onClick={(e) => { e.stopPropagation(); fetchScoreAndApply(c.name, c.id); }}
-          style={{
-            padding: "0px 0px",
-            borderRadius: 6,
-            border: "2px solid #000000",
-            background: "#215ba6",
-            color: "#c7d1e7",
-            cursor: "pointer",
-            width: 40,
-            height: 26,
-            whiteSpace: "nowrap",
-            fontSize: 12,
-          }}
-          title="아이템레벨, 전투력 갱신"
-        >
-          갱신
-        </button>
+        <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+          <select
+            value={c.cls}
+            onChange={(e) => { e.stopPropagation(); updateCandidateCls(c.id, e.target.value); }}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: 68,
+              height: 26,
+              padding: "0px 4px",
+              borderRadius: 6,
+              border: "1px solid #333",
+              background: "rgba(0,0,0,0.35)",
+              color: "#fff",
+              fontWeight: "bold",
+              fontSize: 12,
+            }}
+            title="직업 선택"
+          >
+            {AION2_CLASSES.map((cls) => (
+              <option key={cls} value={cls} style={{ backgroundColor: "#2b2b2b", color: "#ffffff" }}>
+                {cls}
+              </option>
+            ))}
+          </select>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); fetchScoreAndApply(c.name, c.id); }}
+            style={{
+              padding: "0px 0px",
+              borderRadius: 6,
+              border: "2px solid #000000",
+              background: "#215ba6",
+              color: "#c7d1e7",
+              cursor: "pointer",
+              width: 40,
+              height: 26,
+              whiteSpace: "nowrap",
+              fontSize: 12,
+            }}
+            title="아이템레벨, 전투력 갱신"
+          >
+            갱신
+          </button>
+        </div>
 
         <div style={{ display: "flex", gap: 4 }}>
           <button
