@@ -111,15 +111,24 @@ function App() {
   const normalizeGameId = (g) => LEGACY_GAME_KEY_MAP[g] ?? g;
 
   const [game, setGame] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("share")) {
+      localStorage.setItem("lastSelectedGame", "aion2");
+      return "aion2";
+    }
+
     const saved = localStorage.getItem("lastSelectedGame");
     const normalized = normalizeGameId(saved || "wow");
     if (saved && saved !== normalized) localStorage.setItem("lastSelectedGame", normalized);
     return normalized;
   });
 
-  const [viewMode, setViewMode] = useState(
-    () => localStorage.getItem(`viewMode-${game}`) || "repeat"
-  );
+  const [viewMode, setViewMode] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("share")) return "aion2_party";
+
+    return localStorage.getItem(`viewMode-${game}`) || "repeat";
+  });
 
   const [achvResetKey, setAchvResetKey] = useState(0);
 
@@ -522,7 +531,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-05-06 09:28
+              업데이트 : 2026-05-06 09:33
             </div>
           </div>
 
