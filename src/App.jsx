@@ -133,6 +133,12 @@ function App() {
   const [achvResetKey, setAchvResetKey] = useState(0);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("share")) {
+      setViewMode("aion2_party");
+      return;
+    }
+
     const saved = localStorage.getItem(`viewMode-${game}`);
     setViewMode(saved || "repeat");
   }, [game]);
@@ -531,7 +537,7 @@ function App() {
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ margin: "3px", marginLeft: "10px", fontSize: "56px", lineHeight: "0.9", fontWeight: "bold" }}>GHW</h1>
             <div style={{ fontSize: "11px", color: "#888", marginLeft: "10px", marginTop: "8px", whiteSpace: "nowrap" }}>
-              업데이트 : 2026-05-06 09:33
+              업데이트 : 2026-05-06 09:40
             </div>
           </div>
 
