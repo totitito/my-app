@@ -118,7 +118,7 @@ export default function Aion2_RaidPartyBuilder() {
   const [editingPresetId, setEditingPresetId] = useState(null);
   const [editingPresetName, setEditingPresetName] = useState("");
   const [isRefreshingAll, setIsRefreshingAll] = useState(false);
-  const [compactView, setCompactView] = useState(false);
+  const [compactView, setCompactView] = useState(true);
 
   // 프리셋 슬롯 조작 헬퍼
   const updatePresetSlots = (type, presetId, updater) => {
@@ -338,6 +338,25 @@ export default function Aion2_RaidPartyBuilder() {
         power: c.power ?? 0,
       })),
     }));
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const share = params.get("share");
+    if (!share) return;
+
+    try {
+      const parsed = JSON.parse(decodeURIComponent(share));
+
+      setState(prev => ({
+        ...prev,
+        candidates: parsed.candidates ?? prev.candidates,
+        rudraPresets: parsed.rudraPresets ?? prev.rudraPresets,
+        erosionPresets: parsed.erosionPresets ?? prev.erosionPresets,
+      }));
+    } catch (e) {
+      console.error("공유 데이터 복원 실패", e);
+    }
   }, []);
 
   const commitCandidateName = (candidateId, nextName) => {
@@ -780,9 +799,45 @@ export default function Aion2_RaidPartyBuilder() {
 
   return (
     <div style={{ marginTop: -30 }}>
-      <div style={{ marginBottom: 8 }}>
-        <button onClick={() => setCompactView(v => !v)} style={{ fontSize: 12, padding: "4px 8px", borderRadius: 6, border: "1px solid #555", background: "#222", color: "#ccc", cursor: "pointer" }}>
+      <div style={{ marginBottom: 8, display: "flex", gap: 6 }}>
+        <button
+          onClick={() => setCompactView(v => !v)}
+          style={{
+            fontSize: 12,
+            padding: "4px 8px",
+            borderRadius: 6,
+            border: "1px solid #555",
+            background: "#222",
+            color: "#ccc",
+            cursor: "pointer"
+          }}
+        >
           {compactView ? "크게 보기" : "작게 보기"}
+        </button>
+
+        <button
+          onClick={() => {
+            const shareData = {
+              candidates: state.candidates,
+              rudraPresets: state.rudraPresets,
+              erosionPresets: state.erosionPresets,
+            };
+            const encoded = encodeURIComponent(JSON.stringify(shareData));
+            const url = `${window.location.origin}?share=${encoded}`;
+            navigator.clipboard.writeText(url);
+            alert("공유 링크 복사됨");
+          }}
+          style={{
+            fontSize: 12,
+            padding: "4px 8px",
+            borderRadius: 6,
+            border: "1px solid #555",
+            background: "#1a3a1a",
+            color: "#9fdf9f",
+            cursor: "pointer"
+          }}
+        >
+          공유
         </button>
       </div>
 
