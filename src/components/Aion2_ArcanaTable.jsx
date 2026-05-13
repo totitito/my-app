@@ -254,9 +254,9 @@ function createPreset(name = "새 프리셋") {
     id: crypto.randomUUID(),
     name,
     selections: {
-      성배: "징벌",
+      성배: "수호",
       양피지: "징벌",
-      나침반: "징벌",
+      나침반: "수호",
       종: "징벌",
       거울: "징벌",
       천칭: "징벌",
