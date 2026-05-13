@@ -38,8 +38,8 @@ export const initialHomeworks = [
   { id: "aion2-account-weekly-temp", game: "aion2", name: "임시 주간(계정)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-account-weeklydungeon", game: "aion2", name: "일일던전", max: 14, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-account-abyss-order", game: "aion2", name: "지령서", max: 12, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-account-transform-odd", game: "aion2", name: "오드 변환", max: 20, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
-  { id: "aion2-account-buy-odd", game: "aion2", name: "오드 구입", max: 21, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-account-transform-odd", game: "aion2", name: "오드 변환(서버)", max: 16, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-account-buy-odd", game: "aion2", name: "오드 구입(서버)", max: 16, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-account-buy-dungeon-instant-complete", game: "aion2", name: "일던 즉완권 구매", max: 21, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-account-buy-nightmare-instant-complete", game: "aion2", name: "악몽 즉완권 구매", max: 14, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-account-buy-abyss-reforge-reward-ticket", game: "aion2", name: "심연의 재련 충전권 구매", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "account", lastResetDate: "", lastUpdated: {} },
@@ -66,10 +66,12 @@ export const initialHomeworks = [
   { id: "aion2-character-event-daily", game: "aion2", name: "일간 이벤트", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "day", resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
 
   // 아이온2 - character - Weekly (이벤트)
-  { id: "aion2-weekly-donation", game: "aion2", name: "보급의뢰(주간)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-character-event-weekly", game: "aion2", name: "주간 이벤트", category: "event", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   
   // 아이온2 - character - Weekly
+  { id: "aion2-weekly-donation", game: "aion2", name: "보급의뢰(주간)", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-character-transform-odd", game: "aion2", name: "오드 변환(캐릭)", max: 4, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
+  { id: "aion2-character-buy-odd", game: "aion2", name: "오드 구입(캐릭)", max: 4, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-character-weekly-temp", game: "aion2", name: "임시 주간", max: 1, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-awaken", game: "aion2", name: "각성전", max: 3, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
   { id: "aion2-rudra-boss", game: "aion2", name: "성역1", max: 4, counts: {}, excluded: {}, resetType: "reset", resetPeriod: "week", resetDay: 3, resetTime: 5, scope: "character", lastResetDate: "", lastUpdated: {} },
