@@ -3,18 +3,26 @@ import { CLASS_SKILLS } from "../data/aion2-SkillList";
 import { getSkillMeta } from "../data/aion2-SkillMetaUtils";
 
 const RECOMMENDED_COLORS = {
-  활력: "#f0c040",
-  순수: "#ff4444",
-  광분: "#aa44ff",
+  활력: "#f7e73a",
   마력: "#4499ff",
+  광분: "#aa44ff",
+  순수: "#ffffff",
+  징벌: "#000000",
+  수호: "#02e184",
+  불굴: "#ff4444",
 };
 
 const RECOMMENDED_BG = {
-  활력: "#76622c",
-  순수: "#762e2e",
+  활력: "#fffb1e",
+  마력: "#1d4ed6",
   광분: "#5d2d7f",
-  마력: "#2c4375",
+  순수: "#ffffff",
+  징벌: "#000000",
+  수호: "#02e184",
+  불굴: "#dd4545",
 };
+
+const DARK_TEXT_ARCANA_TYPES = ["활력", "순수", "수호"];
 
 const CLASSES = ["수호성", "검성", "살성", "궁성", "마도성", "정령성", "호법성", "치유성"];
 
@@ -33,7 +41,7 @@ const S = {
 
 const ARCANA_NAMES = ["성배", "양피지", "나침반", "종", "거울", "천칭"];
 
-const ARCANA_OPTIONS = ["활력", "마력", "광분", "순수"];
+const ARCANA_OPTIONS = ["활력", "마력", "광분", "순수", "징벌", "수호", "불굴"];
 
 const GOD_STAT_TO_DETAIL = {
   정의: "방어력, 완벽",
@@ -54,30 +62,45 @@ const ARCANA_SIM_RESULT = {
     광분: { godStats: ["시간 20"], detailStats: ["전투 속도, 강타 저항"] },
     마력: { godStats: ["공간 20"], detailStats: ["이동 속도, 막기"] },
     순수: { godStats: ["공간 20"], detailStats: ["이동 속도, 막기"] },
+    징벌: { godStats: ["공간 20"], detailStats: ["이동 속도, 막기"] },
+    수호: { godStats: ["시간 20"], detailStats: ["전투 속도, 강타 저항"] },
+    불굴: { godStats: ["시간 20"], detailStats: ["전투 속도, 강타 저항"] },
   },
   양피지: {
     활력: { godStats: ["생명 20"], detailStats: ["생명력, 재생 확률"] },
     광분: { godStats: ["생명 20"], detailStats: ["생명력, 재생 확률"] },
     마력: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
     순수: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
+    징벌: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
+    수호: { godStats: ["생명 20"], detailStats: ["생명력, 재생 확률"] },
+    불굴: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
   },
   나침반: {
     활력: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
     광분: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
     마력: { godStats: ["죽음 20"], detailStats: ["치명타, 재생 관통"] },
     순수: { godStats: ["죽음 20"], detailStats: ["치명타, 재생 관통"] },
+    징벌: { godStats: ["죽음 20"], detailStats: ["치명타, 재생 관통"] },
+    수호: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
+    불굴: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
   },
   종: {
     활력: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
     광분: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
     마력: { godStats: ["파괴 20"], detailStats: ["공격력, 완벽 저항"] },
     순수: { godStats: ["파괴 20"], detailStats: ["공격력, 완벽 저항"] },
+    징벌: { godStats: ["파괴 20"], detailStats: ["공격력, 완벽 저항"] },
+    수호: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
+    불굴: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
   },
   거울: {
     활력: { godStats: ["환상 20"], detailStats: ["쿨감, 철벽 관통"] },
     광분: { godStats: ["환상 20"], detailStats: ["쿨감, 철벽 관통"] },
     마력: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
     순수: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
+    징벌: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
+    수호: { godStats: ["환상 20"], detailStats: ["쿨감, 철벽 관통"] },
+    불굴: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
   },
   천칭: {
     활력: { godStats: [], detailStats: [] },
@@ -89,6 +112,19 @@ const ARCANA_SIM_RESULT = {
     순수: {
       godStats: ["파괴 10", "운명 10"],
       detailStats: ["공격력, 완벽 저항", "정신력, 철벽"],
+    },
+    
+    징벌: {
+      godStats: ["파괴 10", "운명 10"],
+      detailStats: ["공격력, 완벽 저항", "정신력, 철벽"],
+    },
+    수호: {
+      godStats: ["정의 10", "생명 10"],
+      detailStats: ["방어력, 완벽", "생명력, 재생 확률"],
+    },
+    불굴: {
+      godStats: ["생명 10", "파괴 10"],
+      detailStats: ["생명력, 재생 확률", "공격력, 완벽 저항"],
     },
   },
 };
@@ -167,14 +203,14 @@ const STAT_COLORS = {
   "이동 속도": "#bbbbbb",
   "철벽 관통": "#bbbbbb",
   "재생 관통": "#bbbbbb",
-  철벽: "#00ffff",
-  생명력: "#4da6ff",
-  방어력: "#4da6ff",
-  회피: "#4da6ff",
-  막기: "#4da6ff",
-  "재생 확률": "#4da6ff",
-  "정신력 소모": "#3bd16f",
-  정신력: "#3bd16f",
+  철벽: "#3bd16f",
+  생명력: "#3bd16f",
+  방어력: "#3bd16f",
+  회피: "#3bd16f",
+  막기: "#3bd16f",
+  "재생 확률": "#3bd16f",
+  "정신력 소모": "#4da6ff",
+  정신력: "#4da6ff",
   "강타 저항": "#b06cff",
   "완벽 저항": "#b06cff",
 };
@@ -196,6 +232,19 @@ const SET_EFFECTS = {
     2: { type: "순수", count: 2, desc: "PVE 방어력 500" },
     4: { type: "순수", count: 4, desc: "치피증 5%, 방어력 1000" },
   },
+
+  징벌: {
+    2: { type: "징벌", count: 2, desc: "보피내 5%" },
+    4: { type: "징벌", count: 4, desc: "PVE 공격력 60, PVE 피증 10%" },
+  },
+  수호: {
+    2: { type: "수호", count: 2, desc: "재생 5%" },
+    4: { type: "수호", count: 4, desc: "무피증 5%, (보호막)" },
+  },
+  불굴: {
+    2: { type: "불굴", count: 2, desc: "무피내 5%" },
+    4: { type: "불굴", count: 4, desc: "치피내 5%, (피내 50%)" },
+  },
 };
 
 const LS_KEY = "aion2-arcana-sim-v2";
@@ -205,12 +254,12 @@ function createPreset(name = "새 프리셋") {
     id: crypto.randomUUID(),
     name,
     selections: {
-      성배: "활력",
-      양피지: "활력",
-      나침반: "활력",
-      종: "활력",
-      거울: "활력",
-      천칭: "광분",
+      성배: "징벌",
+      양피지: "징벌",
+      나침반: "징벌",
+      종: "징벌",
+      거울: "징벌",
+      천칭: "징벌",
     },
   };
 }
@@ -235,8 +284,15 @@ function ArcanaStatCell({ arcName, selectedType, locked = false, onChange, isPre
   return (
     <td style={{ ...styles.td, background: isPreset ? "#242424" : "#181818", verticalAlign: "middle", textAlign: "center", padding: "4px" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
-        <div style={{ display: "flex", gap: 4 }}>
-          {["활력", "마력", "광분", "순수"].map((opt) => {
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, auto)",
+            gap: 4,
+            justifyContent: "center",
+          }}
+        >
+          {["활력", "마력", "광분", "순수", "징벌", "수호", "불굴"].map((opt) => {
             const disabled = locked || (arcName === "천칭" && (opt === "활력" || opt === "마력"));
             const isActive = selectedType === opt;
             return (
@@ -250,7 +306,7 @@ function ArcanaStatCell({ arcName, selectedType, locked = false, onChange, isPre
                   borderRadius: 6,
                   border: "1px solid #555",
                   background: isActive ? (RECOMMENDED_BG[opt] || "#222") : "#222",
-                  color: "#fff",
+                  color: isActive && DARK_TEXT_ARCANA_TYPES.includes(opt) ? "#000" : "#fff",
                   whiteSpace: "nowrap",
                   opacity: disabled && !isActive ? 0.35 : 1,
                   cursor: disabled ? "default" : "pointer",
@@ -365,8 +421,8 @@ export default function Aion2_ArcanaTable() {
     "공격력", "명중", "치명타",
     "이동 속도",
     "철벽 관통", "재생 관통",
-    "철벽",
-    "생명력", "방어력", "회피", "막기", "재생 확률",
+    "생명력", "철벽",
+    "방어력", "회피", "막기", "재생 확률",
     "정신력 소모", "정신력",
     "강타 저항", "완벽 저항",
   ];
@@ -398,19 +454,13 @@ export default function Aion2_ArcanaTable() {
 
   function getSetEffects(typeCounts) {
     const result = [];
-    ["활력", "마력", "광분", "순수"].forEach((type) => {
+    ["활력", "마력", "광분", "순수", "징벌", "수호", "불굴"].forEach((type) => {
       const count = typeCounts[type] || 0;
       if (count >= 2) result.push(SET_EFFECTS[type][2]);
       if (count >= 4) result.push(SET_EFFECTS[type][4]);
     });
     return result;
   }
-
-  const REC_COLS = [
-    { key: "rec1", label: "추천1\n2활력+4순수\n(활력 성배 잘 뜬 경우)", selections: Object.fromEntries(ARCANA_DATA.map((a) => [a.name, a.recommended[0]?.main])) },
-    { key: "rec2", label: "추천2\n4광분+2순수", selections: Object.fromEntries(ARCANA_DATA.map((a) => [a.name, a.recommended[1]?.main])) },
-    { key: "rec3", label: "추천3\n4광분+2마력", selections: Object.fromEntries(ARCANA_DATA.map((a) => [a.name, a.recommended[2]?.main])) },
-  ];
 
   return (
     <div style={{ marginTop: 12 }}>
@@ -423,21 +473,14 @@ export default function Aion2_ArcanaTable() {
           <table style={styles.table}>
             {/* 표 열 크기 조정 */}
             <colgroup>
-              <col style={{ width: 110 }} />
-              <col style={{ width: 200 }} />
-              <col style={{ width: 200 }} />
-              <col style={{ width: 200 }} />
+              <col style={{ width: 80 }} />
               {presets.map((p) => <col key={p.id} style={{ width: 200 }} />)}
-              <col style={{ width: 220 }} />
-              <col style={{ width: 110 }} />
+              <col style={{ width: 260 }} />
             </colgroup>
 
             <thead>
               <tr>
                 <th style={styles.th}>아르카나</th>
-                <th style={styles.th}>{"추천1\n2활력+4순수".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
-                <th style={styles.th}>{"추천2\n4광분+2순수".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
-                <th style={styles.th}>{"추천3\n4광분+2마력".split("\n").map((l, i) => <div key={i}>{l}</div>)}</th>
                 {presets.map((p, idx) => (
                   <th key={p.id} style={styles.th}>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
@@ -490,18 +533,6 @@ export default function Aion2_ArcanaTable() {
                   </th>
                 ))}
                 <th style={styles.th}>주신 스탯 우선순위<br/>(딜러 기준)</th>
-                <th style={styles.th}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "center" }}>
-                    <div>추천 스킬</div>
-                    <select
-                      value={selectedClass}
-                      onChange={(e) => setSelectedClass(e.target.value)}
-                      style={{ background: "#1f1f1f", color: "#fff", border: "1px solid #555", borderRadius: 6, padding: "4px 8px", fontSize: 12 }}
-                    >
-                      {CLASSES.map((cls) => <option key={cls} value={cls}>{cls}</option>)}
-                    </select>
-                  </div>
-                </th>
               </tr>
             </thead>
 
@@ -512,10 +543,6 @@ export default function Aion2_ArcanaTable() {
                     <div style={{ fontWeight: 800 }}>{arc.name}</div>
                     <div style={styles.note}>{arc.note}</div>
                   </td>
-
-                  {arc.recommended.map((rec, i) => (
-                    <ArcanaStatCell key={i} arcName={arc.name} selectedType={rec.main} locked={true} />
-                  ))}
 
                   {presets.map((p) => (
                     <ArcanaStatCell
@@ -539,9 +566,9 @@ export default function Aion2_ArcanaTable() {
                     >
                       <div style={{ fontSize: 12, lineHeight: 1.5, height: "100%", display: "flex", flexDirection: "column" }}>
                         <div style={{ color: "#ff4d4d", fontWeight: 700 }}>&lt;1티어&gt;</div>
-                        <div style={{ color: "#ff4d4d" }}>파괴 : 공격력, 완벽 저항</div>
-                        <div style={{ color: "#ff4d4d" }}>시간 : 전투 속도, 강타 저항</div>
                         <div style={{ color: "#ff4d4d" }}>지혜 : 강타, 정신력 소모</div>
+                        <div style={{ color: "#ff4d4d" }}>시간 : 전투 속도, 강타 저항</div>
+                        <div style={{ color: "#ff4d4d" }}>파괴 : 공격력, 완벽 저항</div>
                         <div style={{ marginTop: 6, color: "#ff9a3c", fontWeight: 700 }}>&lt;2티어&gt;</div>
                         <div style={{ color: "#ff9a3c" }}>죽음 : 치명타, 재생 관통</div>
                         <div style={{ color: "#ff9a3c" }}>환상 : 쿨감, 철벽 관통</div>
@@ -568,7 +595,7 @@ export default function Aion2_ArcanaTable() {
                                     borderRadius: 6,
                                     border: "1px solid #555",
                                     background: RECOMMENDED_BG[s.type] || "#222",
-                                    color: "#fff",
+                                    color: DARK_TEXT_ARCANA_TYPES.includes(s.type) ? "#000" : "#fff",
                                     whiteSpace: "nowrap",
                                     lineHeight: 1.1,
                                     fontWeight: 400,
@@ -590,19 +617,6 @@ export default function Aion2_ArcanaTable() {
                     </td>
                   )}
 
-                  <td style={{ ...styles.td, verticalAlign: "middle" }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 2, padding: "3px 0" }}>
-                      {(selectedSkillsByArcana[arc.name] ?? []).map((skill, idx) => (
-                        <InlineSkillDropdown
-                          key={`${arc.name}-${idx}`}
-                          job={selectedClass}
-                          value={skill ?? ""}
-                          allowedSkills={CLASS_SKILLS[selectedClass]?.[arc.name] ?? []}
-                          onSelect={(value) => handleSkillChange(arc.name, idx, value)}
-                        />
-                      ))}
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -610,31 +624,7 @@ export default function Aion2_ArcanaTable() {
             <tfoot>
               <tr>
                 <td style={{ ...styles.tdArcana, textAlign: "center" }}>합계</td>
-                {REC_COLS.map(({ key, selections }) => {
-                  const map = buildDetailStatsMap(selections);
-                  const list = Object.keys(map).sort((a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b));
-                  return (
-                    <td key={key} style={styles.td}>
-                      <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-                        {list.map((stat, idx) => (
-                          <li key={`${key}-${stat}-${idx}`} style={{
-                            display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
-                            color: STAT_COLORS[stat] || "#fff",
-                            borderBottom: idx < list.length - 1 ? "1px solid #2a2a2a" : "none",
-                            padding: "2px 0",
-                          }}>
-                            <span>{stat}</span>
-                            <div style={{ display: "flex", gap: 3 }}>
-                              {Array.from({ length: Math.round(map[stat] * 2) }).map((_, i) => (
-                                <div key={i} style={{ width: 30, height: 6, borderRadius: 1, background: STAT_COLORS[stat] || "#fff" }} />
-                              ))}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </td>
-                  );
-                })}
+                
                 {presets.map((p) => {
                   const map = buildDetailStatsMap(p.selections);
                   const list = Object.keys(map).sort((a, b) => STAT_ORDER.indexOf(a) - STAT_ORDER.indexOf(b));
@@ -664,11 +654,6 @@ export default function Aion2_ArcanaTable() {
 
               <tr>
                 <td style={{ ...styles.tdArcana, textAlign: "center" }}>세트효과</td>
-                {REC_COLS.map(({ key, selections }) => (
-                  <td key={key} style={styles.td}>
-                    {renderSetEffectsList(getSetEffects(buildTypeCounts(selections)))}
-                  </td>
-                ))}
                 {presets.map((p) => (
                   <td key={p.id} style={styles.td}>
                     {renderSetEffectsList(getSetEffects(buildTypeCounts(p.selections)))}
@@ -1006,7 +991,8 @@ function renderSetEffectsList(items) {
           <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
             <span style={{
               padding: "4px 8px", fontSize: 11, borderRadius: 6, border: "1px solid #555",
-              background: RECOMMENDED_BG[item.type] || "#222", color: "#fff",
+              background: RECOMMENDED_BG[item.type] || "#222",
+              color: DARK_TEXT_ARCANA_TYPES.includes(item.type) ? "#000" : "#fff",
               whiteSpace: "nowrap", lineHeight: 1.1, fontWeight: 400,
             }}>
               {item.type} ({item.count})
@@ -1030,8 +1016,11 @@ const styles = {
   sub: { fontSize: 12, opacity: 0.7 },
   tableWrap: { overflowX: "auto", border: "1px solid #333", borderRadius: 10 },
   table: {
-    width: "100%", borderCollapse: "separate", borderSpacing: 0,
-    minWidth: 110 + 5 * 200 + 180, background: "#181818",
+    width: "max-content",
+    borderCollapse: "separate",
+    borderSpacing: 0,
+    minWidth: 80 + 200 + 260,
+    background: "#181818",
   },
   th: {
     position: "sticky", top: 0, background: "#2a2a2a",
