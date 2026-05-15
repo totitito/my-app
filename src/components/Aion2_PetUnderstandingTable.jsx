@@ -2,41 +2,41 @@
 
 export default function Aion2_PetUnderstandingTable() {
   const columns = [
-    { key: "type", label: "종류", headBg: "#222" },
-    { key: "slot1", label: "1슬롯", headBg: "#222" },
-    { key: "slot2", label: "2슬롯", headBg: "#222" },
-    { key: "slot3", label: "3슬롯", headBg: "#8d3131" },
-    { key: "slot4", label: "4슬롯", headBg: "#222" },
-    { key: "slot5", label: "5슬롯", headBg: "#222" },
-    { key: "slot6", label: "6슬롯", headBg: "#1d337b" },
-    { key: "slot7", label: "7슬롯", headBg: "#222" },
-    { key: "slot8", label: "8슬롯", headBg: "#222" },
-    { key: "slot9", label: "9슬롯", headBg: "#8d3131" },
+    { key: "type", label: "펫 종류", headBg: "#222" },
+    { key: "slot1", label: "1/4/7 슬롯", headBg: "#464646" },
+    { key: "slot2", label: "2/5/8 슬롯", headBg: "#5a4c29" },
+    { key: "slot3", label: "3/9 슬롯", headBg: "#8d3131" },
+    // { key: "slot4", label: "4 슬롯", headBg: "#464646" },
+    // { key: "slot5", label: "5슬롯", headBg: "#5a4c29" },
+    { key: "slot6", label: "6 슬롯", headBg: "#1d337b" },
+    // { key: "slot7", label: "7슬롯", headBg: "#464646" },
+    // { key: "slot8", label: "8슬롯", headBg: "#5a4c29" },
+    // { key: "slot9", label: "9슬롯", headBg: "#8d3131" },
   ];
 
   const optionA = [
-    { t: "보스 공격력 20 (10-20)" },
-    { t: "치명타 30 (15-30)" },
-    { t: "추가 명중 40 (20-40)" },
+    { t: "보스 공격력 10~20" },
+    { t: "치명타 15~30" },
+    { t: "추가 명중 20~40" },
   ];
 
   const optionB = [
-    { t: "최대 공격력 20 (10-20)", c: "orange" },
-    { t: "추가 공격력 16 (8-16)", c: "orange" },
+    { t: "최대 공격력 10~20", c: "orange" },
+    { t: "추가 공격력 8~16", c: "orange" },
   ];
 
   const optionC = [
-    { t: "강타 2.2% (1.2-2.4)", c: "red" },
-    { t: "피해 증폭 2.2% (1.2-2.4)" },
-    { t: "완벽 2.2% (1.2-2.4)" },
+    { t: "강타 1.2~2.4%", c: "red" },
+    { t: "피해 증폭 1.2~2.4%", c: "orange" },
+    { t: "완벽 1.2~2.4%", c: "orange" },
   ];
 
   const optionD = [
-    { t: "PVE 피해 내성 2.7% (1.5-3.0)", c: "blue" },
-    { t: "피해 내성 2.2% (1.2-2.4)", c: "blue" },    
-    { t: "보스 공격력 20 (10-20)" },
-    { t: "치명타 30 (15-30)" },
-    { t: "추가 명중 40 (20-40)" },
+    { t: "PVE 피해 내성 1.5~3.0%", c: "blue" },
+    { t: "피해 내성 1.2~2.4%", c: "blue" },    
+    { t: "보스 공격력 10~20" },
+    { t: "치명타 15~30" },
+    { t: "추가 명중 20~40" },
   ];
 
   const rows = [
@@ -156,9 +156,20 @@ export default function Aion2_PetUnderstandingTable() {
               {columns
                 .filter((c) => c.key !== "type")
                 .map((col) => {
+                  const mergedSlots = ["slot2", "slot3", "slot6"];
+                  const isMergedSlot = mergedSlots.includes(col.key);
+
+                  // 합쳐지는 슬롯은 두 번째 행에서는 td를 그리지 않음
+                  if (idx === 1 && isMergedSlot) return null;
+
                   const items = row.cells[col.key] ?? [];
+
                   return (
-                    <td key={col.key} style={styles.td}>
+                    <td
+                      key={col.key}
+                      style={styles.td}
+                      rowSpan={idx === 0 && isMergedSlot ? 2 : undefined}
+                    >
                       {items.map((it, i) => (
                         <div
                           key={i}
