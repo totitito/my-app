@@ -58,72 +58,72 @@ const GOD_STAT_TO_DETAIL = {
 
 const ARCANA_SIM_RESULT = {
   성배: {
-    활력: { godStats: ["시간 20"], detailStats: ["전투 속도, 강타 저항"] },
-    광분: { godStats: ["시간 20"], detailStats: ["전투 속도, 강타 저항"] },
-    마력: { godStats: ["공간 20"], detailStats: ["이동 속도, 막기"] },
-    순수: { godStats: ["공간 20"], detailStats: ["이동 속도, 막기"] },
-    징벌: { godStats: ["공간 20"], detailStats: ["이동 속도, 막기"] },
-    수호: { godStats: ["시간 20"], detailStats: ["전투 속도, 강타 저항"] },
-    불굴: { godStats: ["시간 20"], detailStats: ["전투 속도, 강타 저항"] },
+    활력: { godStats: ["시간 25"], detailStats: ["전투 속도, 강타 저항"] },
+    광분: { godStats: ["시간 25"], detailStats: ["전투 속도, 강타 저항"] },
+    마력: { godStats: ["공간 25"], detailStats: ["이동 속도, 막기"] },
+    순수: { godStats: ["공간 25"], detailStats: ["이동 속도, 막기"] },
+    징벌: { godStats: ["공간 30"], detailStats: ["이동 속도, 막기"] },
+    수호: { godStats: ["시간 30"], detailStats: ["전투 속도, 강타 저항"] },
+    불굴: { godStats: ["시간 30"], detailStats: ["전투 속도, 강타 저항"] },
   },
   양피지: {
-    활력: { godStats: ["생명 20"], detailStats: ["생명력, 재생 확률"] },
-    광분: { godStats: ["생명 20"], detailStats: ["생명력, 재생 확률"] },
-    마력: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
-    순수: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
-    징벌: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
-    수호: { godStats: ["생명 20"], detailStats: ["생명력, 재생 확률"] },
-    불굴: { godStats: ["운명 20"], detailStats: ["정신력, 철벽"] },
+    활력: { godStats: ["생명 25"], detailStats: ["생명력, 재생 확률"] },
+    광분: { godStats: ["생명 25"], detailStats: ["생명력, 재생 확률"] },
+    마력: { godStats: ["운명 25"], detailStats: ["정신력, 철벽"] },
+    순수: { godStats: ["운명 25"], detailStats: ["정신력, 철벽"] },
+    징벌: { godStats: ["운명 30"], detailStats: ["정신력, 철벽"] },
+    수호: { godStats: ["생명 30"], detailStats: ["생명력, 재생 확률"] },
+    불굴: { godStats: ["운명 30"], detailStats: ["정신력, 철벽"] },
   },
   나침반: {
-    활력: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
-    광분: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
-    마력: { godStats: ["죽음 20"], detailStats: ["치명타, 재생 관통"] },
-    순수: { godStats: ["죽음 20"], detailStats: ["치명타, 재생 관통"] },
-    징벌: { godStats: ["죽음 20"], detailStats: ["치명타, 재생 관통"] },
-    수호: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
-    불굴: { godStats: ["자유 20"], detailStats: ["명중, 회피"] },
+    활력: { godStats: ["자유 25"], detailStats: ["명중, 회피"] },
+    광분: { godStats: ["자유 25"], detailStats: ["명중, 회피"] },
+    마력: { godStats: ["죽음 25"], detailStats: ["치명타, 재생 관통"] },
+    순수: { godStats: ["죽음 25"], detailStats: ["치명타, 재생 관통"] },
+    징벌: { godStats: ["죽음 30"], detailStats: ["치명타, 재생 관통"] },
+    수호: { godStats: ["자유 30"], detailStats: ["명중, 회피"] },
+    불굴: { godStats: ["자유 30"], detailStats: ["명중, 회피"] },
   },
   종: {
-    활력: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
-    광분: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
-    마력: { godStats: ["파괴 20"], detailStats: ["공격력, 완벽 저항"] },
-    순수: { godStats: ["파괴 20"], detailStats: ["공격력, 완벽 저항"] },
-    징벌: { godStats: ["파괴 20"], detailStats: ["공격력, 완벽 저항"] },
-    수호: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
-    불굴: { godStats: ["정의 20"], detailStats: ["방어력, 완벽"] },
+    활력: { godStats: ["정의 25"], detailStats: ["방어력, 완벽"] },
+    광분: { godStats: ["정의 25"], detailStats: ["방어력, 완벽"] },
+    마력: { godStats: ["파괴 25"], detailStats: ["공격력, 완벽 저항"] },
+    순수: { godStats: ["파괴 25"], detailStats: ["공격력, 완벽 저항"] },
+    징벌: { godStats: ["파괴 30"], detailStats: ["공격력, 완벽 저항"] },
+    수호: { godStats: ["정의 30"], detailStats: ["방어력, 완벽"] },
+    불굴: { godStats: ["정의 30"], detailStats: ["방어력, 완벽"] },
   },
   거울: {
-    활력: { godStats: ["환상 20"], detailStats: ["쿨감, 철벽 관통"] },
-    광분: { godStats: ["환상 20"], detailStats: ["쿨감, 철벽 관통"] },
-    마력: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
-    순수: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
-    징벌: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
-    수호: { godStats: ["환상 20"], detailStats: ["쿨감, 철벽 관통"] },
-    불굴: { godStats: ["지혜 20"], detailStats: ["정신력 소모, 강타"] },
+    활력: { godStats: ["환상 25"], detailStats: ["쿨감, 철벽 관통"] },
+    광분: { godStats: ["환상 25"], detailStats: ["쿨감, 철벽 관통"] },
+    마력: { godStats: ["지혜 25"], detailStats: ["정신력 소모, 강타"] },
+    순수: { godStats: ["지혜 25"], detailStats: ["정신력 소모, 강타"] },
+    징벌: { godStats: ["지혜 30"], detailStats: ["정신력 소모, 강타"] },
+    수호: { godStats: ["환상 30"], detailStats: ["쿨감, 철벽 관통"] },
+    불굴: { godStats: ["지혜 30"], detailStats: ["정신력 소모, 강타"] },
   },
   천칭: {
     활력: { godStats: [], detailStats: [] },
     마력: { godStats: [], detailStats: [] },
     광분: {
-      godStats: ["정의 10", "생명 10"],
+      godStats: ["정의 15", "생명 15"],
       detailStats: ["방어력, 완벽", "생명력, 재생 확률"],
     },
     순수: {
-      godStats: ["파괴 10", "운명 10"],
+      godStats: ["파괴 15", "운명 15"],
       detailStats: ["공격력, 완벽 저항", "정신력, 철벽"],
     },
     
     징벌: {
-      godStats: ["파괴 10", "운명 10"],
+      godStats: ["파괴 20", "운명 20"],
       detailStats: ["공격력, 완벽 저항", "정신력, 철벽"],
     },
     수호: {
-      godStats: ["정의 10", "생명 10"],
+      godStats: ["정의 20", "생명 20"],
       detailStats: ["방어력, 완벽", "생명력, 재생 확률"],
     },
     불굴: {
-      godStats: ["생명 10", "파괴 10"],
+      godStats: ["생명 20", "파괴 20"],
       detailStats: ["생명력, 재생 확률", "공격력, 완벽 저항"],
     },
   },
@@ -217,33 +217,33 @@ const STAT_COLORS = {
 
 const SET_EFFECTS = {
   활력: {
-    2: { type: "활력", count: 2, desc: "PVE 공격력 60" },
-    4: { type: "활력", count: 4, desc: "PVE 공격력 150" },
+    2: { type: "활력", count: 2, desc: "(HP 70% ↑) PVE 공 60" },
+    4: { type: "활력", count: 4, desc: "(HP 70% ↑) PVE 공 150" },
   },
   마력: {
-    2: { type: "마력", count: 2, desc: "정신력 1500 회복" },
-    4: { type: "마력", count: 4, desc: "PVE 방어력 1000" },
+    2: { type: "마력", count: 2, desc: "(MP 20% ↓) MP 1500 회복 (쿨: 30초)" },
+    4: { type: "마력", count: 4, desc: "(MP 50% ↑) PVE 방 1000" },
   },
   광분: {
-    2: { type: "광분", count: 2, desc: "PVE 공격력 50" },
-    4: { type: "광분", count: 4, desc: "보피증 5%, 보피내 10%" },
+    2: { type: "광분", count: 2, desc: "PVE 공 50" },
+    4: { type: "광분", count: 4, desc: "보피증 5%, (HP 70% ↓) 보피내 10%" },
   },
   순수: {
-    2: { type: "순수", count: 2, desc: "PVE 방어력 500" },
-    4: { type: "순수", count: 4, desc: "치피증 5%, 방어력 1000" },
+    2: { type: "순수", count: 2, desc: "PVE 방 500" },
+    4: { type: "순수", count: 4, desc: "치피증 5%, (HP 70% ↓) 방 1000" },
   },
 
   징벌: {
     2: { type: "징벌", count: 2, desc: "보피내 5%" },
-    4: { type: "징벌", count: 4, desc: "PVE 공격력 60, PVE 피증 10%" },
+    4: { type: "징벌", count: 4, desc: "PVE 공 60, (HP 70% ↑) PVE 피증 10%" },
   },
   수호: {
     2: { type: "수호", count: 2, desc: "재생 5%" },
-    4: { type: "수호", count: 4, desc: "무피증 5%, (보호막)" },
+    4: { type: "수호", count: 4, desc: "무피증 5%, (HP 30%↓) 5초간 보호막 1만 (쿨: 2분)" },
   },
   불굴: {
     2: { type: "불굴", count: 2, desc: "무피내 5%" },
-    4: { type: "불굴", count: 4, desc: "치피내 5%, (피내 50%)" },
+    4: { type: "불굴", count: 4, desc: "치피내 5%, (CC 시) 5초간 PVP 피내 50%" },
   },
 };
 
@@ -429,17 +429,34 @@ export default function Aion2_ArcanaTable() {
 
   function buildDetailStatsMap(selections) {
     const map = {};
+
     ARCANA_DATA.forEach((arc) => {
       const type = selections?.[arc.name];
       if (!type) return;
-      const result = ARCANA_SIM_RESULT[arc.name]?.[type] ?? { detailStats: [] };
-      const weight = arc.name === "천칭" ? 0.5 : 1;
-      result.detailStats.forEach((s) => {
-        s.split(",").map((x) => x.trim()).forEach((stat) => {
-          map[stat] = (map[stat] || 0) + weight;
-        });
+
+      const result = ARCANA_SIM_RESULT[arc.name]?.[type] ?? { godStats: [] };
+
+      result.godStats.forEach((godStat) => {
+        // 예: "시간 30", "파괴 20"
+        const match = String(godStat).match(/^(.+?)\s+(\d+)$/);
+        if (!match) return;
+
+        const godName = match[1].trim();
+        const godValue = Number(match[2]) || 0;
+
+        const detailText = GOD_STAT_TO_DETAIL[godName];
+        if (!detailText) return;
+
+        detailText
+          .split(",")
+          .map((x) => x.trim())
+          .filter(Boolean)
+          .forEach((stat) => {
+            map[stat] = (map[stat] || 0) + godValue;
+          });
       });
     });
+
     return map;
   }
 
@@ -475,7 +492,7 @@ export default function Aion2_ArcanaTable() {
             <colgroup>
               <col style={{ width: 80 }} />
               {presets.map((p) => <col key={p.id} style={{ width: 200 }} />)}
-              <col style={{ width: 260 }} />
+              <col style={{ width: 360 }} />
             </colgroup>
 
             <thead>
@@ -640,9 +657,21 @@ export default function Aion2_ArcanaTable() {
                           }}>
                             <span>{stat}</span>
                             <div style={{ display: "flex", gap: 3 }}>
-                              {Array.from({ length: Math.round(map[stat] * 2) }).map((_, i) => (
-                                <div key={i} style={{ width: 30, height: 6, borderRadius: 1, background: STAT_COLORS[stat] || "#fff" }} />
-                              ))}
+                              {Array.from({ length: Math.ceil(map[stat] / 10) }).map((_, i) => {
+                                const isHalf = i === 0 && map[stat] % 10 === 5;
+
+                                return (
+                                  <div
+                                    key={i}
+                                    style={{
+                                      width: isHalf ? 6 : 12,
+                                      height: 12,
+                                      borderRadius: 2,
+                                      background: STAT_COLORS[stat] || "#fff",
+                                    }}
+                                  />
+                                );
+                              })}
                             </div>
                           </li>
                         ))}
